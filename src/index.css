@@ -14,40 +14,6 @@ html, body, #root {
   100% { background-position: 200% 50%; }
 }
 
-/* Hero title word-pop intro — each word rotates in from a flat perspective
- * fold ("Schitt's Creek" title-card effect), second word lands in the
- * accent green a beat later and finishes with a brief shimmer glow. */
-@keyframes heroWordShow {
-  to { opacity: 1; }
-}
-@keyframes heroWordPop {
-  to { transform: rotateX(0); }
-}
-@keyframes heroWordShimmer {
-  0% { text-shadow: 0 0 0 rgba(133, 171, 139, 0); }
-  50% { text-shadow: 0 0 14px rgba(133, 171, 139, 0.85); }
-  100% { text-shadow: 0 0 0 rgba(133, 171, 139, 0); }
-}
-.hero-intro {
-  perspective: 600px;
-  line-height: 0.9;
-}
-.hero-intro-word {
-  display: block;
-  opacity: 0;
-  transform: rotateX(120deg);
-  transform-origin: 50% 100%;
-  animation: heroWordShow 0.01s forwards, heroWordPop 1.4s forwards;
-  animation-timing-function: cubic-bezier(0.14, 1.23, 0.33, 1.16);
-}
-.hero-intro-word:nth-of-type(2) {
-  color: #85ab8b;
-  animation-name: heroWordShow, heroWordPop, heroWordShimmer;
-  animation-duration: 0.01s, 1.4s, 0.6s;
-  animation-fill-mode: forwards, forwards, forwards;
-  animation-delay: 1s, 1s, 2.4s;
-  animation-timing-function: cubic-bezier(0.14, 1.23, 0.33, 1.16), cubic-bezier(0.14, 1.23, 0.33, 1.16), linear;
-}
 
 /* 3D "sliced image" turntable — a stack of thin horizontal bands of the same
  * image, each showing a different vertical crop via background-position,
