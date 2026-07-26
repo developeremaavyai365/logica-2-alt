@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 
-/** Types out `text` whenever this element scrolls into view, and resets so
- *  it replays every time the section is re-entered — same replay-on-view
- *  pattern used by StatsCounter / FollowUs. */
+/** Types `text` out, pauses, deletes it, and retypes — looping continuously
+ *  for as long as this element is scrolled into view. Stops and resets the
+ *  moment it leaves the viewport, then starts the loop fresh on re-entry. */
 export default function TypewriterOnView({
   text,
   className,
-  speed = 65,
+  typeSpeed = 65,
+  deleteSpeed = 32,
+  holdMs = 1400,
 }: {
   text: string;
   className?: string;
-  speed?: number;
+  typeSpeed?: number;
+  deleteSpeed?: number;
+  holdMs?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState('');
@@ -18,20 +22,44 @@ export default function TypewriterOnView({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    let interval: ReturnType<typeof setInterval>;
+    let timeout: ReturnType<typeof setTimeout>;
+
+    const loop = () => {
+      let i = 0;
+      let deleting = false;
+
+      const tick = () => {
+        if (!deleting) {
+          i += 1;
+          setDisplay(text.slice(0, i));
+          if (i >= text.length) {
+            deleting = true;
+            timeout = setTimeout(tick, holdMs);
+            return;
+          }
+          timeout = setTimeout(tick, typeSpeed);
+        } else {
+          i -= 1;
+          setDisplay(text.slice(0, i));
+          if (i <= 0) {
+            deleting = false;
+            timeout = setTimeout(tick, 300);
+            return;
+          }
+          timeout = setTimeout(tick, deleteSpeed);
+        }
+      };
+
+      timeout = setTimeout(tick, typeSpeed);
+    };
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          clearInterval(interval);
+          clearTimeout(timeout);
           if (entry.isIntersecting) {
-            let i = 0;
             setDisplay('');
-            interval = setInterval(() => {
-              i += 1;
-              setDisplay(text.slice(0, i));
-              if (i >= text.length) clearInterval(interval);
-            }, speed);
+            loop();
           } else {
             setDisplay('');
           }
@@ -41,10 +69,10 @@ export default function TypewriterOnView({
     );
     observer.observe(el);
     return () => {
-      clearInterval(interval);
+      clearTimeout(timeout);
       observer.disconnect();
     };
-  }, [text, speed]);
+  }, [text, typeSpeed, deleteSpeed, holdMs]);
 
   return (
     <span ref={ref} className={`inline-block ${className ?? ''}`}>
