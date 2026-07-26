@@ -36,15 +36,6 @@ export default function Home() {
 
         {/* Hero copy */}
         <div className="relative z-10 flex flex-col items-center text-center pt-24 sm:pt-28 md:pt-32 px-4 sm:px-6">
-          <img
-            src="/logica-logo-shine.png"
-            alt="Logica Infoway"
-            className="h-10 sm:h-14 w-auto mb-3 sm:mb-4 drop-shadow-lg"
-          />
-          <h2 className="hero-intro flex flex-wrap justify-center text-3xl sm:text-5xl md:text-6xl font-bold text-[#1f2a1d] mb-2 sm:mb-3" style={{ letterSpacing: '-0.02em' }}>
-            <span className="hero-intro-word">Logica</span>
-            <span className="hero-intro-word">Infoway</span>
-          </h2>
           <h1
             className="font-normal leading-[0.95] text-[#336443] text-[2rem] sm:text-4xl md:text-5xl lg:text-[4.75rem] xl:text-[5.25rem] max-w-5xl"
             style={{ letterSpacing: '-0.035em' }}
@@ -64,7 +55,10 @@ export default function Home() {
         <div className="absolute left-4 right-4 sm:right-auto sm:left-6 md:left-10 bottom-6 sm:bottom-8 md:bottom-10 z-10 max-w-sm">
           <div className="flex items-center gap-2 text-[#3d5638] sm:text-white/95 mb-3">
             <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-semibold sm:font-medium">Logica Infoway</span>
+            <span className="hero-intro flex text-sm font-semibold sm:font-medium">
+              <span className="hero-intro-word">Logica</span>
+              <span className="hero-intro-word">Infoway</span>
+            </span>
           </div>
           <p className="text-[#3d5638]/90 sm:text-white/85 text-xs leading-relaxed mb-6 max-w-xs font-medium sm:font-normal">
             Multi-brand retail and distribution of branded smartphones, IT hardware, software and
