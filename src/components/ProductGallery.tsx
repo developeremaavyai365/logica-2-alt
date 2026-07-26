@@ -1,0 +1,39 @@
+import { useState } from 'react';
+
+export default function ProductGallery({ images, alt }: { images: string[]; alt: string }) {
+  const [active, setActive] = useState(0);
+  const current = images[active] ?? images[0];
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Main image — horizontal display */}
+      <div className="w-full rounded-2xl bg-[#f4f8f3] aspect-[4/3] flex items-center justify-center overflow-hidden">
+        <img
+          key={current}
+          src={current}
+          alt={alt}
+          className="w-full h-full object-contain mix-blend-multiply"
+        />
+      </div>
+
+      {/* Angle thumbnail cards — row below the main image */}
+      {images.length > 1 && (
+        <div className="flex gap-2.5 overflow-x-auto">
+          {images.map((src, i) => (
+            <button
+              key={src}
+              type="button"
+              onClick={() => setActive(i)}
+              aria-label={`View angle ${i + 1}`}
+              className={`relative shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-[#f4f8f3] border-2 transition-colors ${
+                active === i ? 'border-[#1f2a1d]' : 'border-transparent hover:border-[#1f2a1d]/30'
+              }`}
+            >
+              <img src={src} alt={`${alt} — angle ${i + 1}`} className="w-full h-full object-contain mix-blend-multiply p-1" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
