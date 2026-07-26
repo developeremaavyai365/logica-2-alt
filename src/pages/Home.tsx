@@ -55,10 +55,7 @@ export default function Home() {
         <div className="absolute left-4 right-4 sm:right-auto sm:left-6 md:left-10 bottom-6 sm:bottom-8 md:bottom-10 z-10 max-w-sm">
           <div className="flex items-center gap-2 text-[#3d5638] sm:text-white/95 mb-3">
             <Sparkles className="w-4 h-4" />
-            <span className="hero-intro flex text-sm font-semibold sm:font-medium">
-              <span className="hero-intro-word">Logica</span>
-              <span className="hero-intro-word">Infoway</span>
-            </span>
+            <span className="text-sm font-semibold sm:font-medium">Logica Infoway</span>
           </div>
           <p className="text-[#3d5638]/90 sm:text-white/85 text-xs leading-relaxed mb-6 max-w-xs font-medium sm:font-normal">
             Multi-brand retail and distribution of branded smartphones, IT hardware, software and
