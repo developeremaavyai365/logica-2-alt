@@ -26,7 +26,7 @@ export default function Header({ transparent = false }: Props) {
         className={`${transparent ? 'absolute' : 'relative'} top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-6 md:px-10 py-4 sm:py-6`}
       >
         <Link to="/" className="flex items-center gap-2 text-[#2d3a2a] shrink-0">
-          <span className="hero-intro flex text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
+          <span className="hero-intro text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
             <span className="hero-intro-word">Logica</span>
             <span className="hero-intro-word">Infoway</span>
           </span>
