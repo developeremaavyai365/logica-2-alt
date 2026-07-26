@@ -36,6 +36,15 @@ export default function Home() {
 
         {/* Hero copy */}
         <div className="relative z-10 flex flex-col items-center text-center pt-24 sm:pt-28 md:pt-32 px-4 sm:px-6">
+          <img
+            src="/logica-logo-shine.png"
+            alt="Logica Infoway"
+            className="h-10 sm:h-14 w-auto mb-3 sm:mb-4 drop-shadow-lg"
+          />
+          <h2 className="hero-intro flex flex-wrap justify-center text-3xl sm:text-5xl md:text-6xl font-bold text-[#1f2a1d] mb-2 sm:mb-3" style={{ letterSpacing: '-0.02em' }}>
+            <span className="hero-intro-word">Logica</span>
+            <span className="hero-intro-word">Infoway</span>
+          </h2>
           <h1
             className="font-normal leading-[0.95] text-[#336443] text-[2rem] sm:text-4xl md:text-5xl lg:text-[4.75rem] xl:text-[5.25rem] max-w-5xl"
             style={{ letterSpacing: '-0.035em' }}
