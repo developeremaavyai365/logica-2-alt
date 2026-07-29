@@ -15,6 +15,7 @@ import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import InvestorHub from './pages/investor/InvestorHub';
 import InvestorSection from './pages/investor/InvestorSection';
+import NotFound from './pages/NotFound';
 import FeedbackWidget from './components/FeedbackWidget';
 import ChatWidget from './components/ChatWidget';
 
@@ -37,6 +38,7 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/investor" element={<InvestorHub />} />
         <Route path="/investor/:slug" element={<InvestorSection />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <FeedbackWidget />
       <ChatWidget />
