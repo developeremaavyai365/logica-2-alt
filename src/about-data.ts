@@ -113,12 +113,6 @@ export const BOARD_MEMBERS: BoardMember[] = [
     details: ['Appointed September 24, 2024', 'Associate ICSI; Master\'s in Commerce; Bachelor in Law'],
   },
   {
-    name: 'Mr. Ankur Bhutani',
-    designation: 'Chief Operating Officer (North)',
-    photo: '/about/board/ankur-bhutani.png',
-    details: ['Appointed July 18, 2023', '22+ years with major MNCs including HP, Dell, and Samsung'],
-  },
-  {
     name: 'Mr. Kshitij Goel',
     designation: 'Chief Information Officer',
     photo: '/about/board/kshitij-goel.jpg',
