@@ -14,6 +14,87 @@ html, body, #root {
   100% { background-position: 200% 50%; }
 }
 
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== Hero landing reveal animations ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes wordReveal {
+  from { opacity: 0; transform: translateY(100%); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0px); }
+}
+
+.animate-fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in { animation: fadeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-slide-left { animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-slide-right { animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-scale-in { animation: scaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-word-reveal > span {
+  animation: wordReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-800 { animation-delay: 0.8s; }
+.delay-900 { animation-delay: 0.9s; }
+.delay-1000 { animation-delay: 1s; }
+.delay-1100 { animation-delay: 1.1s; }
+
+/* ===== Hero logo assembly — three colored pieces of the mark fly in from
+ * different directions and converge, then crossfade into the crisp logo. */
+@keyframes logoPieceBlue {
+  0% { opacity: 0; transform: translate(-120px, -80px) rotate(-25deg) scale(0.6); }
+  100% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+}
+@keyframes logoPieceYellow {
+  0% { opacity: 0; transform: translate(0, -140px) scale(0.6); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+@keyframes logoPieceGreen {
+  0% { opacity: 0; transform: translate(120px, 80px) rotate(25deg) scale(0.6); }
+  100% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+}
+@keyframes logoPiecesFadeOut {
+  0%, 70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes logoMarkFadeIn {
+  0%, 65% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.logo-piece-blue { animation: logoPieceBlue 0.9s cubic-bezier(0.16, 1, 0.3, 1) both, logoPiecesFadeOut 1.6s ease-in both; }
+.logo-piece-yellow { animation: logoPieceYellow 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both, logoPiecesFadeOut 1.6s ease-in 0.15s both; }
+.logo-piece-green { animation: logoPieceGreen 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both, logoPiecesFadeOut 1.6s ease-in 0.3s both; }
+.logo-mark-reveal { animation: logoMarkFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+
 
 /* 3D "sliced image" turntable — a stack of thin horizontal bands of the same
  * image, each showing a different vertical crop via background-position,

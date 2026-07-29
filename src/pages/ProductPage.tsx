@@ -8,6 +8,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import ProductGallery from '../components/ProductGallery';
+import ProductReviews from '../components/ProductReviews';
 import { categories, products, formatINR } from '../data';
 import { PRODUCT_DETAILS } from '../product-details-data';
 import { PRODUCT_GALLERY } from '../product-gallery-data';
@@ -85,7 +86,7 @@ export default function ProductPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
           {/* Image gallery — multi-angle views */}
-          <ProductGallery images={galleryImages} alt={product.name} />
+          <ProductGallery images={galleryImages} alt={product.name} productId={product.id} />
 
           {/* Info */}
           <div>
@@ -191,6 +192,8 @@ export default function ProductPage() {
             )}
           </div>
         </div>
+
+        <ProductReviews productId={product.id} />
 
         {/* Related products */}
         {related.length > 0 && (

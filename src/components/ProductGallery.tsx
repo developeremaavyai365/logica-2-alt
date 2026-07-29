@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
-export default function ProductGallery({ images, alt }: { images: string[]; alt: string }) {
+export default function ProductGallery({ images, alt, productId }: { images: string[]; alt: string; productId: string }) {
   const [active, setActive] = useState(0);
   const current = images[active] ?? images[0];
 
@@ -8,8 +9,9 @@ export default function ProductGallery({ images, alt }: { images: string[]; alt:
     <div className="flex flex-col gap-4">
       {/* Main image — horizontal display */}
       <div className="w-full rounded-2xl bg-[#f4f8f3] aspect-[4/3] flex items-center justify-center overflow-hidden">
-        <img
+        <motion.img
           key={current}
+          layoutId={active === 0 ? `product-photo-${productId}` : undefined}
           src={current}
           alt={alt}
           className="w-full h-full object-contain mix-blend-multiply"

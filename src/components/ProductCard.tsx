@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Heart, ArrowRight } from 'lucide-react';
 import { formatINR, type Product } from '../data';
 import { useShopStore } from '../store';
@@ -38,7 +39,8 @@ export default function ProductCard({ product }: Props) {
         >
           <Heart className="w-3.5 h-3.5" fill={wished ? 'currentColor' : 'none'} />
         </button>
-        <img
+        <motion.img
+          layoutId={`product-photo-${product.id}`}
           src={product.image}
           alt={product.name}
           loading="lazy"

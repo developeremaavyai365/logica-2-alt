@@ -1,0 +1,305 @@
+{
+  "_meta": {
+    "description": "Queryable FAQ/knowledge-base seed data for the Logica Infoway chatbot. Each entry has a confidence tag — 'confirmed' answers are safe to serve as-is; 'needs_confirmation' answers contain a placeholder and must NOT be edited with invented specifics until real business data is supplied.",
+    "schema": {
+      "id": "stable slug, unique per entry",
+      "category": "one of the 8 FAQ categories",
+      "question": "canonical user-facing question",
+      "answer": "stored answer text; may contain a literal [NEEDS CONFIRMATION: ...] placeholder",
+      "tags": "keywords for retrieval matching",
+      "last_updated": "ISO date this entry's content was last reviewed",
+      "confidence": "confirmed | needs_confirmation"
+    },
+    "last_updated": "2026-07-29"
+  },
+  "entries": [
+    {
+      "id": "orders-track-order",
+      "category": "Orders & Shipping",
+      "question": "How can I track my order?",
+      "answer": "Once your order ships, you'll get a tracking link via email/SMS. You can also check status anytime in \"My Account → Order History.\"",
+      "tags": ["tracking", "order status", "shipment"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "orders-delivery-time",
+      "category": "Orders & Shipping",
+      "question": "How long does delivery take?",
+      "answer": "[NEEDS CONFIRMATION: exact delivery timelines per city — e.g. Kolkata same-day/next-day vs Delhi/Mumbai/Bangalore 3-5 days? Any difference for mobiles vs laptops vs bulky items like monitors/desktops?]",
+      "tags": ["delivery time", "shipping speed", "eta"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "orders-free-shipping",
+      "category": "Orders & Shipping",
+      "question": "Do you offer free shipping?",
+      "answer": "[NEEDS CONFIRMATION: is shipping free on all orders, or only above a minimum order value? Existing site says \"Free Shipping on all products\" — confirm if still accurate and whether it applies pan-India or only serviceable cities.]",
+      "tags": ["free shipping", "shipping cost", "minimum order"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "orders-delivery-cities",
+      "category": "Orders & Shipping",
+      "question": "Which cities do you deliver to?",
+      "answer": "We currently serve Kolkata, Delhi, Noida, Gurugram, Lucknow, Hyderabad, Mumbai, and Bangalore, with wider pan-India shipping available for most products. [NEEDS CONFIRMATION: is pan-India shipping actually available, or only these 8 cities?]",
+      "tags": ["delivery cities", "coverage", "service area", "pan-india"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "orders-delayed-lost",
+      "category": "Orders & Shipping",
+      "question": "What happens if my order is delayed or lost in transit?",
+      "answer": "[NEEDS CONFIRMATION: actual escalation process — refund, replacement, courier claim timeline?]",
+      "tags": ["delayed order", "lost package", "escalation", "courier claim"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "returns-policy",
+      "category": "Returns, Refunds & Cancellations",
+      "question": "What is your return policy?",
+      "answer": "[NEEDS CONFIRMATION: return window in days — commonly 7 days for electronics, sometimes shorter for mobiles/opened items. Does it vary by category?]",
+      "tags": ["return policy", "return window", "returns"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "returns-cancel-order",
+      "category": "Returns, Refunds & Cancellations",
+      "question": "Can I cancel my order after placing it?",
+      "answer": "You can cancel any order that hasn't shipped yet from \"My Account → Orders.\" Once shipped, cancellation may not be possible and you'll need to use the return process instead.",
+      "tags": ["cancel order", "cancellation"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "returns-refund-time",
+      "category": "Returns, Refunds & Cancellations",
+      "question": "How long do refunds take?",
+      "answer": "[NEEDS CONFIRMATION: refund timeline after return approval — e.g. 5-7 business days? Same for all payment methods (UPI vs card vs netbanking)?]",
+      "tags": ["refund", "refund time", "money back"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "returns-damaged-defective",
+      "category": "Returns, Refunds & Cancellations",
+      "question": "What if my product arrives damaged or defective?",
+      "answer": "Contact us within [NEEDS CONFIRMATION: number of hours/days] of delivery with photos of the damage, and we'll arrange a replacement or refund. [NEEDS CONFIRMATION: is return shipping free for damaged/defective items?]",
+      "tags": ["damaged product", "defective", "replacement"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "returns-opened-box",
+      "category": "Returns, Refunds & Cancellations",
+      "question": "Do opened/used electronics qualify for return?",
+      "answer": "[NEEDS CONFIRMATION: policy on opened-box returns — many retailers restrict this for mobiles/laptops due to activation/serial number tracking.]",
+      "tags": ["opened box", "used return", "activation"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "payments-methods",
+      "category": "Payments",
+      "question": "What payment methods do you accept?",
+      "answer": "We accept UPI, all major debit/credit cards, net banking, and popular wallets. [NEEDS CONFIRMATION: which specific wallets, and is EMI available — and if so, on which banks/card types and above what order value?]",
+      "tags": ["payment methods", "upi", "cards", "emi", "wallets"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "payments-safety",
+      "category": "Payments",
+      "question": "Is it safe to pay on your website?",
+      "answer": "Yes — all payments are processed through secure, encrypted payment gateways. We never see or store your full card details. [NEEDS CONFIRMATION: which gateway — Razorpay/PayU/other — worth naming for trust if you want.]",
+      "tags": ["payment security", "safe checkout", "gateway"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "payments-deducted-order-failed",
+      "category": "Payments",
+      "question": "My payment was deducted but the order didn't go through. What now?",
+      "answer": "This usually resolves automatically within [NEEDS CONFIRMATION: timeframe, e.g. 5-7 business days] as the amount is refunded by your bank. If it's not resolved by then, contact our support team with your transaction ID.",
+      "tags": ["payment failed", "deducted", "transaction issue"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "payments-gst-invoice",
+      "category": "Payments",
+      "question": "Can I get a GST invoice?",
+      "answer": "Yes, a GST-compliant invoice is generated automatically for every order and available in \"My Account → Orders.\" For business/bulk orders needing a specific GSTIN on the invoice, [NEEDS CONFIRMATION: process — checkout field, or a support request?]",
+      "tags": ["gst invoice", "tax invoice", "gstin"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "products-genuine",
+      "category": "Products & Warranty",
+      "question": "Are your products genuine/original?",
+      "answer": "Yes, we are an authorized retailer for all brands we sell, including Samsung, Apple, HP, Dell, Lenovo, Asus, Acer, and others. Every product comes with full manufacturer warranty.",
+      "tags": ["genuine", "authorized retailer", "original product"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "products-warranty-period",
+      "category": "Products & Warranty",
+      "question": "What's the warranty period on my product?",
+      "answer": "Warranty periods vary by brand and category. [NEEDS CONFIRMATION: standard warranty lengths — e.g. mobiles 1 year, laptops 1-2 years, accessories 6 months? Or does this vary entirely by manufacturer terms?]",
+      "tags": ["warranty period", "warranty length"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "products-warranty-claim",
+      "category": "Products & Warranty",
+      "question": "How do I claim warranty service?",
+      "answer": "[NEEDS CONFIRMATION: is this handled in-house by Logica service centers, or does the customer go directly to the brand's authorized service center? Matters a lot for the actual answer.]",
+      "tags": ["warranty claim", "service center", "repair"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "products-stock-status",
+      "category": "Products & Warranty",
+      "question": "How do I know if a product is in stock?",
+      "answer": "Stock status is shown live on every product page. If an item shows \"Out of stock,\" you can request to be notified when it's back.",
+      "tags": ["stock status", "availability", "out of stock"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "products-compare",
+      "category": "Products & Warranty",
+      "question": "Can I compare products before buying?",
+      "answer": "Yes, use the \"Compare\" option on any product listing to compare specs side-by-side across similar products.",
+      "tags": ["compare products", "spec comparison"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "account-create",
+      "category": "Account & Orders Management",
+      "question": "How do I create an account?",
+      "answer": "Click \"My Account\" in the top menu and sign up with your email/phone number. You can also check out as a guest without creating an account.",
+      "tags": ["create account", "sign up", "register"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "account-order-history",
+      "category": "Account & Orders Management",
+      "question": "How do I view my past orders?",
+      "answer": "Go to \"My Account → Order History\" to see all past and current orders, invoices, and tracking info.",
+      "tags": ["order history", "past orders"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "account-forgot-password",
+      "category": "Account & Orders Management",
+      "question": "I forgot my password. How do I reset it?",
+      "answer": "Click \"Forgot Password\" on the login page and follow the reset link sent to your registered email.",
+      "tags": ["forgot password", "reset password", "login help"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "account-multiple-addresses",
+      "category": "Account & Orders Management",
+      "question": "Can I save multiple delivery addresses?",
+      "answer": "Yes, you can save and manage multiple addresses under \"My Account → Addresses\" for faster checkout.",
+      "tags": ["multiple addresses", "address book"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "corporate-bulk-pricing",
+      "category": "Corporate & Bulk Orders",
+      "question": "Do you offer bulk pricing for businesses/institutions?",
+      "answer": "Yes, we work with corporate, government, and educational institutions on bulk orders with dedicated pricing. Submit a request through our Corporate Orders page and our team will get in touch. [NEEDS CONFIRMATION: typical response time for bulk quote requests?]",
+      "tags": ["bulk pricing", "corporate orders", "b2b"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "corporate-account-manager",
+      "category": "Corporate & Bulk Orders",
+      "question": "Can I get a dedicated account manager for ongoing orders?",
+      "answer": "[NEEDS CONFIRMATION: is this actually offered, and at what order volume/relationship threshold?]",
+      "tags": ["account manager", "dedicated support"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "corporate-amc-it-support",
+      "category": "Corporate & Bulk Orders",
+      "question": "Do you provide AMC (Annual Maintenance Contracts) or IT support services?",
+      "answer": "Yes — beyond retail, we provide networking, hardware, and IT infrastructure solutions with maintenance support for institutional clients. [NEEDS CONFIRMATION: is this still an active offering, and who should bulk/enterprise IT-solution buyers contact?]",
+      "tags": ["amc", "it support", "maintenance contract"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "company-physical-stores",
+      "category": "Store & Company Info",
+      "question": "Do you have physical stores I can visit?",
+      "answer": "We have a presence across Kolkata, Delhi, Noida, Gurugram, Lucknow, Hyderabad, Mumbai, and Bangalore. [NEEDS CONFIRMATION: exact store addresses per city for a store locator — or is this purely an online + B2B delivery presence with no walk-in retail stores?]",
+      "tags": ["physical store", "store locator", "visit"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "company-contact-support",
+      "category": "Store & Company Info",
+      "question": "How can I contact customer support?",
+      "answer": "[NEEDS CONFIRMATION: current support phone number and hours — existing site lists +91 7003999192, Mon-Sat 10AM-7PM — confirm this is still accurate.]",
+      "tags": ["customer support", "contact number", "support hours"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "company-history",
+      "category": "Store & Company Info",
+      "question": "How long has Logica been in business?",
+      "answer": "Logica Infoway (formerly Eastern Logica Infoway Limited) has been serving customers for over 30 years, with headquarters in Kolkata and a pan-India presence.",
+      "tags": ["company history", "about us", "years in business"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    },
+    {
+      "id": "company-registered-listed",
+      "category": "Store & Company Info",
+      "question": "Is Logica a registered/listed company?",
+      "answer": "Yes, Logica Infoway Limited is a publicly listed company. CIN L30007WB1995PLC073218, GSTIN 19AABCE0772B1Z1. [NEEDS CONFIRMATION: confirm these should be surfaced via chatbot if asked — likely fine since already public on the website.]",
+      "tags": ["cin", "gstin", "listed company", "registered"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "security-fraud-outside-payment",
+      "category": "Security & Fraud Awareness",
+      "question": "I got a call/email asking me to pay outside your website. Is this legitimate?",
+      "answer": "No — this is fraudulent. Logica Infoway never requests payment outside our official website or asks for OTPs, card details, or UPI PINs over phone/email. Do not share any payment information, and report the incident to us immediately at [NEEDS CONFIRMATION: fraud-reporting email/number — likely info@logicainfoway.com, confirm].",
+      "tags": ["fraud", "scam", "phishing", "otp"],
+      "last_updated": "2026-07-29",
+      "confidence": "needs_confirmation"
+    },
+    {
+      "id": "security-verify-representative",
+      "category": "Security & Fraud Awareness",
+      "question": "How do I verify if a Logica representative contacting me is real?",
+      "answer": "Genuine Logica communication will never ask for your card number, CVV, OTP, or UPI PIN. If in doubt, hang up/ignore the message and contact us directly through the official number on our website.",
+      "tags": ["verify representative", "fraud prevention", "security"],
+      "last_updated": "2026-07-29",
+      "confidence": "confirmed"
+    }
+  ]
+}

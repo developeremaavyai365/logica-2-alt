@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, Heart, Menu, ShoppingCart, X } from 'lucide-react';
 import { useShopStore } from '../store';
-import TypewriterOnView from './TypewriterOnView';
 import { SHOP_MEGA, ABOUT_MENU, INVESTOR_MEGA } from '../nav-data';
 
 type Props = {
@@ -24,13 +23,15 @@ export default function Header({ transparent = false }: Props) {
   return (
     <>
       <nav
-        className={`${transparent ? 'absolute' : 'relative'} top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-6 md:px-10 py-4 sm:py-6`}
+        className={`${transparent ? 'absolute' : 'relative'} top-0 left-0 right-0 z-30 flex items-center justify-end px-4 sm:px-6 md:px-10 py-4 sm:py-6`}
       >
-        <Link to="/" className="flex items-center gap-2 text-[#2d3a2a] shrink-0">
-          <TypewriterOnView text="Logica Infoway" className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight" />
+        <Link to="/" className={`mr-auto flex items-center gap-2 shrink-0 ${transparent ? 'text-white' : 'text-[#2d3a2a]'}`}>
+          <span className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
+            Logica Infoway
+          </span>
         </Link>
 
-        <div className="hidden lg:flex items-center gap-1 bg-white/85 backdrop-blur-md rounded-full pl-2 pr-1 py-1 shadow-sm border border-white/60">
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-white/60 bg-white/85 pl-2 pr-1 py-1 shadow-sm backdrop-blur-md lg:flex">
           <Link to="/" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#4b5b47] hover:text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors">
             Home
           </Link>
