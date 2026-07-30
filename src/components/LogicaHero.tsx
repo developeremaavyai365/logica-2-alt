@@ -51,15 +51,13 @@ export default function LogicaHero() {
       <Header transparent />
       {/* ================= HERO CONTENT ================= */}
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pt-24 text-center sm:px-8 sm:pt-28 lg:px-10 lg:pt-32">
-        {/* Logo assembly — three pieces fly in and converge, then crossfade into the crisp mark */}
+        {/* Radial wipe reveal — a circular sweep mask uncovers the logo,
+            matching the Mixkit "radial wipe logo reveal" reference. */}
         <div
           className="relative mx-auto mb-6 sm:mb-8 lg:mb-10"
           style={{ width: 'clamp(220px, 32vw, 380px)', height: 'clamp(95px, 14vw, 165px)' }}
         >
-          <div className="logo-piece-blue absolute inset-y-0" style={{ left: '4%', width: '52%', background: '#7EC8E8', transform: 'skewX(-32deg)' }} />
-          <div className="logo-piece-yellow absolute inset-y-0" style={{ left: '26%', width: '52%', background: '#F5E663', transform: 'skewX(-32deg)' }} />
-          <div className="logo-piece-green absolute inset-y-0" style={{ left: '48%', width: '52%', background: '#8BC34A', transform: 'skewX(-32deg)' }} />
-          <img src={PRODUCT_IMAGE} alt="Logica Infoway" className="logo-mark-reveal absolute inset-0 h-full w-full object-contain" />
+          <img src={PRODUCT_IMAGE} alt="Logica Infoway" className="logo-radial-wipe h-full w-full object-contain" />
         </div>
 
         <h1

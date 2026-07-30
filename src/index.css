@@ -68,32 +68,24 @@ html, body, #root {
 .delay-1000 { animation-delay: 1s; }
 .delay-1100 { animation-delay: 1.1s; }
 
-/* ===== Hero logo assembly — three colored pieces of the mark fly in from
- * different directions and converge, then crossfade into the crisp logo. */
-@keyframes logoPieceBlue {
-  0% { opacity: 0; transform: translate(-120px, -80px) rotate(-25deg) scale(0.6); }
-  100% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+/* ===== Radial wipe logo reveal — a circular sweep (conic-gradient mask)
+ * uncovers the logo clockwise from 12 o'clock, matching the Mixkit
+ * "radial wipe logo reveal" template. Registering --wipe-angle as a typed
+ * custom property is what lets the browser interpolate it smoothly. */
+@property --wipe-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
 }
-@keyframes logoPieceYellow {
-  0% { opacity: 0; transform: translate(0, -140px) scale(0.6); }
-  100% { opacity: 1; transform: translate(0, 0) scale(1); }
+@keyframes radialWipeReveal {
+  from { --wipe-angle: 0deg; }
+  to { --wipe-angle: 360deg; }
 }
-@keyframes logoPieceGreen {
-  0% { opacity: 0; transform: translate(120px, 80px) rotate(25deg) scale(0.6); }
-  100% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+.logo-radial-wipe {
+  animation: radialWipeReveal 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
+  -webkit-mask-image: conic-gradient(from 0deg, #000 var(--wipe-angle), transparent 0deg);
+  mask-image: conic-gradient(from 0deg, #000 var(--wipe-angle), transparent 0deg);
 }
-@keyframes logoPiecesFadeOut {
-  0%, 70% { opacity: 1; }
-  100% { opacity: 0; }
-}
-@keyframes logoMarkFadeIn {
-  0%, 65% { opacity: 0; transform: scale(0.92); }
-  100% { opacity: 1; transform: scale(1); }
-}
-.logo-piece-blue { animation: logoPieceBlue 0.9s cubic-bezier(0.16, 1, 0.3, 1) both, logoPiecesFadeOut 1.6s ease-in both; }
-.logo-piece-yellow { animation: logoPieceYellow 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both, logoPiecesFadeOut 1.6s ease-in 0.15s both; }
-.logo-piece-green { animation: logoPieceGreen 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both, logoPiecesFadeOut 1.6s ease-in 0.3s both; }
-.logo-mark-reveal { animation: logoMarkFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
 
 
 /* 3D "sliced image" turntable — a stack of thin horizontal bands of the same
