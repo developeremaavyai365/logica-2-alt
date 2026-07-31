@@ -81,10 +81,28 @@ html, body, #root {
   from { --wipe-angle: 0deg; }
   to { --wipe-angle: 360deg; }
 }
+@keyframes logoRevealScale {
+  0% { transform: scale(0.88); }
+  75% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
 .logo-radial-wipe {
-  animation: radialWipeReveal 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
+  animation:
+    radialWipeReveal 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both,
+    logoRevealScale 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
   -webkit-mask-image: conic-gradient(from 0deg, #000 var(--wipe-angle), transparent 0deg);
   mask-image: conic-gradient(from 0deg, #000 var(--wipe-angle), transparent 0deg);
+}
+
+@keyframes logoGlowIn {
+  0% { opacity: 0; transform: scale(0.6); }
+  55% { opacity: 0.55; }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+.logo-reveal-glow {
+  animation: logoGlowIn 1.7s ease-out 0.1s both;
+  background: radial-gradient(circle, rgba(159, 216, 240, 0.5) 0%, rgba(168, 217, 107, 0.25) 45%, transparent 70%);
+  filter: blur(20px);
 }
 
 

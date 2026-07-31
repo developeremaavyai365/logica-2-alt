@@ -3,11 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, ShieldCheck, Building2, Truck, Headset, type LucideIcon } from 'lucide-react';
 import Header from './Header';
 
-// Placeholder imagery — swap for the real hero photo / product cutouts /
-// isolated PNGs once they're ready. Using existing local assets for now.
-const HERO_BACKGROUNDS = ['/hero/hero-1.jpg', '/hero/hero-2.jpg', '/hero/hero-3.jpg'];
 const PRODUCT_IMAGE = '/logica-logo-shine.png';
-const BG_INTERVAL_MS = 5000;
 
 const PANEL2_CARDS: { icon: LucideIcon; bg: string; text: string }[] = [
   { icon: ShieldCheck, bg: 'bg-black', text: 'Genuine products, backed by authorized brand partnerships' },
@@ -18,35 +14,14 @@ const PANEL2_CARDS: { icon: LucideIcon; bg: string; text: string }[] = [
 
 export default function LogicaHero() {
   const [activeCard, setActiveCard] = useState(0);
-  const [bgIndex, setBgIndex] = useState(0);
 
   useEffect(() => {
     const id = setInterval(() => setActiveCard((c) => (c + 1) % PANEL2_CARDS.length), 3500);
     return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    const id = setInterval(() => setBgIndex((i) => (i + 1) % HERO_BACKGROUNDS.length), BG_INTERVAL_MS);
-    return () => clearInterval(id);
-  }, []);
-
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden">
-      {/* ================= BACKGROUND CROSSFADE ================= */}
-      <div className="absolute inset-0 z-0">
-        {HERO_BACKGROUNDS.map((src, i) => (
-          <img
-            key={src}
-            src={src}
-            alt=""
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1500ms] ease-in-out ${
-              i === bgIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
-        ))}
-        <div className="absolute inset-0 bg-black/45" />
-      </div>
-
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-black">
       {/* ================= NAVBAR ================= */}
       <Header transparent />
       {/* ================= HERO CONTENT ================= */}
@@ -54,10 +29,11 @@ export default function LogicaHero() {
         {/* Radial wipe reveal — a circular sweep mask uncovers the logo,
             matching the Mixkit "radial wipe logo reveal" reference. */}
         <div
-          className="relative mx-auto mb-6 sm:mb-8 lg:mb-10"
-          style={{ width: 'clamp(220px, 32vw, 380px)', height: 'clamp(95px, 14vw, 165px)' }}
+          className="relative mx-auto mb-8 sm:mb-10 lg:mb-12"
+          style={{ width: 'clamp(280px, 42vw, 560px)', height: 'clamp(120px, 18vw, 240px)' }}
         >
-          <img src={PRODUCT_IMAGE} alt="Logica Infoway" className="logo-radial-wipe h-full w-full object-contain" />
+          <div className="logo-reveal-glow pointer-events-none absolute -inset-16" />
+          <img src={PRODUCT_IMAGE} alt="Logica Infoway" className="logo-radial-wipe relative h-full w-full object-contain" />
         </div>
 
         <h1
