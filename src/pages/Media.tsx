@@ -1,76 +1,162 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { MEDIA_ENTRIES, MEDIA_CERTIFICATES } from '../media-data';
+import { MEDIA_ENTRIES, MEDIA_CERTIFICATES, type MediaEntry } from '../media-data';
 
-export default function Media() {
-  const byYear = useMemo(() => {
-    const sorted = [...MEDIA_ENTRIES].sort((a, b) => (a.sortDate < b.sortDate ? 1 : -1));
-    const groups = new Map<string, typeof sorted>();
-    for (const entry of sorted) {
-      const year = entry.sortDate.slice(0, 4);
-      if (!groups.has(year)) groups.set(year, []);
-      groups.get(year)!.push(entry);
-    }
-    return Array.from(groups.entries());
-  }, []);
+function MediaCard({ entry }: { entry: MediaEntry }) {
+  const [expanded, setExpanded] = useState(false);
+  const cover = entry.images[0];
+  const extra = entry.images.length - 1;
 
   return (
-    <div className="w-full bg-[#dbe8d6]">
-      <div className="bg-[#f4f8f3]">
-        <Header />
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-[#3d5638] text-xs sm:text-sm font-semibold uppercase tracking-wide">Media</span>
-          <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443]" style={{ letterSpacing: '-0.03em' }}>
-            Awards &amp; Moments
-          </h1>
+    <div className="group relative overflow-hidden rounded-2xl bg-[#151d13] shadow-sm transition-shadow duration-300 hover:shadow-xl">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="relative block aspect-[4/3] w-full overflow-hidden"
+      >
+        <img
+          src={cover}
+          alt={entry.title}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent transition-opacity duration-300 group-hover:from-black/90" />
+
+        {/* Category badge */}
+        <span
+          className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${
+            entry.category === 'award' ? 'bg-[#F0C94A] text-[#1f2a1d]' : 'bg-white text-[#1f2a1d]'
+          }`}
+        >
+          {entry.category === 'award' ? '★ Award' : 'Celebration'}
+        </span>
+
+        {extra > 0 && (
+          <span className="absolute right-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
+            +{extra} photo{extra > 1 ? 's' : ''}
+          </span>
+        )}
+
+        {/* Title/date */}
+        <div className="absolute inset-x-0 bottom-0 p-4 text-left">
+          <h3 className="text-sm font-bold leading-snug text-white sm:text-base" style={{ letterSpacing: '-0.01em' }}>
+            {entry.title}
+          </h3>
+          <p className="mt-1 text-xs font-medium text-white/70">{entry.date}</p>
+        </div>
+      </button>
+
+      {/* Expanded photo strip */}
+      {expanded && entry.images.length > 1 && (
+        <div className="grid grid-cols-3 gap-1 bg-black p-1">
+          {entry.images.map((img) => (
+            <div key={img} className="aspect-square overflow-hidden">
+              <img src={img} alt={entry.title} className="h-full w-full object-cover" />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Media() {
+  const awards = useMemo(
+    () => [...MEDIA_ENTRIES].filter((e) => e.category === 'award').sort((a, b) => (a.sortDate < b.sortDate ? 1 : -1)),
+    [],
+  );
+  const celebrations = useMemo(
+    () => [...MEDIA_ENTRIES].filter((e) => e.category === 'event').sort((a, b) => (a.sortDate < b.sortDate ? 1 : -1)),
+    [],
+  );
+
+  return (
+    <div className="w-full bg-white">
+      {/* Hero */}
+      <div className="relative overflow-hidden bg-[#151d13]">
+        <img
+          src={awards[0]?.images[0]}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-25"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#151d13]/60 via-[#151d13]/85 to-[#151d13]" />
+        <div className="relative">
+          <Header />
+          <div className="mx-auto max-w-4xl px-4 pb-20 pt-10 text-center sm:px-6 sm:pb-24 md:px-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#85AB8B] sm:text-sm">Newsroom</span>
+            <h1
+              className="mt-4 text-4xl font-bold text-white sm:text-5xl md:text-6xl"
+              style={{ letterSpacing: '-0.03em' }}
+            >
+              Awards &amp; Moments
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-sm text-white/60 sm:text-base">
+              Recognition from the brands we partner with, and the moments that make Logica Infoway what it is.
+            </p>
+          </div>
         </div>
       </div>
 
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        {byYear.map(([year, entries]) => (
-          <div key={year} className="mb-14">
-            <h2 className="text-2xl font-semibold text-[#1f2a1d] mb-6">{year}</h2>
-            <div className="space-y-6">
-              {entries.map((entry) => (
-                <div key={entry.title} className="rounded-2xl border border-[#1f2a1d]/10 p-5 sm:p-6">
-                  <div className={`grid gap-2 mb-4 ${entry.images.length === 1 ? 'grid-cols-1' : entry.images.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
-                    {entry.images.slice(0, 3).map((img) => (
-                      <div key={img} className="aspect-video rounded-xl overflow-hidden bg-[#f4f8f3]">
-                        <img src={img} alt={entry.title} className="w-full h-full object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                  {entry.images.length > 3 && (
-                    <p className="text-xs text-[#4b5b47]/70 mb-2">+{entry.images.length - 3} more</p>
-                  )}
-                  <span
-                    className={`inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-1 rounded-full mb-2 ${
-                      entry.category === 'award' ? 'bg-[#F0F048]/40 text-[#7a6a00]' : 'bg-[#78C0F0]/30 text-[#1f5a8a]'
-                    }`}
-                  >
-                    {entry.category === 'award' ? 'Award' : 'Celebration'}
-                  </span>
-                  <h3 className="text-base font-semibold text-[#1f2a1d]">{entry.title}</h3>
-                  <p className="text-xs text-[#4b5b47] mt-1">{entry.date}</p>
-                </div>
-              ))}
-            </div>
+      {/* Awards */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:px-10">
+        <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10">
+          <div>
+            <h2 className="text-2xl font-bold text-[#1f2a1d] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
+              Awards &amp; Recognitions
+            </h2>
+            <p className="mt-1 text-sm text-[#4b5b47]">{awards.length} accolades from our brand partners</p>
           </div>
-        ))}
+        </div>
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {awards.map((entry) => (
+            <MediaCard key={entry.title} entry={entry} />
+          ))}
+        </div>
+      </section>
 
-        <div className="mt-16">
-          <h2 className="text-xl font-semibold text-[#1f2a1d] mb-6">Brand recognition &amp; certifications</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4">
-            {MEDIA_CERTIFICATES.map((cert) => (
-              <div key={cert.name} className="rounded-xl border border-[#1f2a1d]/10 p-3 flex flex-col items-center text-center">
-                <div className="w-full aspect-square rounded-lg overflow-hidden bg-[#f4f8f3] mb-2">
-                  <img src={cert.image} alt={cert.name} className="w-full h-full object-cover" />
-                </div>
-                <span className="text-[10px] text-[#4b5b47]">{cert.name}</span>
-              </div>
+      {/* Celebrations */}
+      <section className="bg-[#f4f8f3] px-4 py-16 sm:px-6 sm:py-20 md:px-10">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 sm:mb-10">
+            <h2 className="text-2xl font-bold text-[#1f2a1d] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
+              Celebrations &amp; Moments
+            </h2>
+            <p className="mt-1 text-sm text-[#4b5b47]">Life at Logica — festivals, milestones, and team moments</p>
+          </div>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {celebrations.map((entry) => (
+              <MediaCard key={entry.title} entry={entry} />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Brand recognition */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:px-10">
+        <div className="mb-8 sm:mb-10">
+          <h2 className="text-2xl font-bold text-[#1f2a1d] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
+            Brand Recognition &amp; Certifications
+          </h2>
+          <p className="mt-1 text-sm text-[#4b5b47]">Authorized partner certifications from the brands we carry</p>
+        </div>
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6">
+          {MEDIA_CERTIFICATES.map((cert) => (
+            <div
+              key={cert.name}
+              className="group flex flex-col items-center rounded-xl border border-[#1f2a1d]/10 p-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#1f2a1d]/25 hover:shadow-md"
+            >
+              <div className="mb-2 aspect-square w-full overflow-hidden rounded-lg bg-white">
+                <img
+                  src={cert.image}
+                  alt={cert.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+              <span className="text-[10px] font-medium text-[#4b5b47]">{cert.name}</span>
+            </div>
+          ))}
         </div>
       </section>
 
