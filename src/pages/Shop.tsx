@@ -1,19 +1,14 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ShopBrowser from '../components/shop/ShopBrowser';
-import MotionRevealHero from '../components/MotionRevealHero';
 import { products } from '../data';
 
 export default function Shop() {
   return (
     <div className="w-full">
-      {/* ================= MOTION REVEAL HERO ================= */}
-      <section className="relative w-full">
-        <div className="absolute top-0 left-0 right-0 z-20">
-          <Header transparent />
-        </div>
-        <MotionRevealHero />
-      </section>
+      <div className="bg-[#f4f8f3]">
+        <Header />
+      </div>
 
       {/* ================= ALL PRODUCTS ================= */}
       <div className="w-full bg-[#dbe8d6]">
