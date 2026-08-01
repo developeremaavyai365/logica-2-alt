@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../ProductCard';
 import { FilterSidebar, type FilterSelection } from './FilterSidebar';
@@ -356,8 +356,7 @@ export default function ShopBrowser({
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                className="w-full rounded-full py-3 text-sm font-bold text-[#1f2a1d] transition-opacity hover:opacity-90"
-                style={{ backgroundColor: accent } as CSSProperties}
+                className="btn-liquid w-full rounded-full border-2 border-[#1f2a1d] py-3 text-sm font-bold text-[#1f2a1d] transition-colors"
               >
                 Show {filtered.length} results
               </button>

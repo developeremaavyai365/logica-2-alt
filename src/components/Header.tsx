@@ -35,11 +35,8 @@ export default function Header({ transparent = false }: Props) {
       <nav
         className={`${transparent ? 'absolute' : 'relative'} top-0 left-0 right-0 z-30 flex items-center justify-end gap-3 px-4 sm:px-6 md:px-10 py-4 sm:py-6`}
       >
-        <Link to="/" className={`mr-auto flex items-center gap-2 shrink-0 ${transparent ? 'text-white' : 'text-[#2d3a2a]'}`}>
-          <img src="/logica-logo-shine.png" alt="" className="h-7 w-auto object-contain sm:h-8 md:h-9" />
-          <span className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
-            Logica Infoway
-          </span>
+        <Link to="/" className="mr-auto flex items-center shrink-0">
+          <img src="/logica-logo-shine.png" alt="Logica Infoway" className="h-11 w-auto object-contain sm:h-12 md:h-14" />
         </Link>
 
         <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-white/60 bg-white/85 pl-2 pr-1 py-1 shadow-sm backdrop-blur-md lg:flex">

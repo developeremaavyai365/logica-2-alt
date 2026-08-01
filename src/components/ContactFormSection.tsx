@@ -202,7 +202,7 @@ export default function ContactFormSection() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="font-inter flex h-14 w-full items-center justify-center rounded-md bg-black font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="btn-liquid font-inter flex h-14 w-full items-center justify-center rounded-md border-2 border-[#1f2a1d] font-medium text-[#1f2a1d] transition-colors disabled:opacity-60"
             style={{ letterSpacing: '-0.03em', fontSize: '16px' }}
           >
             {status === 'sending' ? 'Sending…' : 'Send Message'}

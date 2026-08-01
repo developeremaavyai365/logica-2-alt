@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, ShieldCheck, Building2, Truck, Headset, type LucideIcon } from 'lucide-react';
 import Header from './Header';
@@ -55,8 +55,8 @@ export default function LogicaHero() {
         >
           <Link
             to="/shop"
-            className="flex h-14 w-full items-center justify-center gap-2 rounded-md bg-black font-inter font-medium text-white transition-opacity hover:opacity-90 sm:h-16 sm:w-[240px] md:w-[280px] lg:h-[72px] lg:w-[310px]"
-            style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 24px)' }}
+            className="btn-liquid flex h-14 w-full items-center justify-center gap-2 rounded-md border-2 border-white font-inter font-medium text-white transition-colors hover:opacity-90 sm:h-16 sm:w-[240px] md:w-[280px] lg:h-[72px] lg:w-[310px]"
+            style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 24px)', '--liquid': '#fff', '--liquid-ink': '#1f2a1d' } as CSSProperties}
           >
             Shop Now
             <ArrowUpRight className="h-5 w-5" />

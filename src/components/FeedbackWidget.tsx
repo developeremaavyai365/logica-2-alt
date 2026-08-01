@@ -90,7 +90,7 @@ export default function FeedbackWidget() {
           <button
             type="submit"
             disabled={status === 'sending'}
-            className="font-inter flex h-11 w-full items-center justify-center rounded-md bg-black text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="btn-liquid font-inter flex h-11 w-full items-center justify-center rounded-md border-2 border-[#1f2a1d] text-sm font-medium text-[#1f2a1d] transition-colors disabled:opacity-60"
             style={{ letterSpacing: '-0.02em' }}
           >
             {status === 'sending' ? 'Sending…' : 'Send Feedback'}

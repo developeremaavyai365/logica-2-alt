@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 import { NEW_ARRIVALS } from '../new-arrivals-data';
@@ -52,8 +53,8 @@ export default function NewArrivalSpotlight() {
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
             <Link
               to={latest.href}
-              className="font-inter flex h-14 w-full items-center justify-center gap-2 rounded-md bg-white font-medium text-black transition-opacity hover:opacity-90 sm:h-16 sm:w-[220px]"
-              style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 20px)' }}
+              className="btn-liquid flex h-14 w-full items-center justify-center gap-2 rounded-md border-2 border-white font-inter font-medium text-white transition-colors sm:h-16 sm:w-[220px]"
+              style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 20px)', '--liquid': '#fff', '--liquid-ink': '#1f2a1d' } as CSSProperties}
             >
               Preorder Now
               <ArrowUpRight className="h-5 w-5" />

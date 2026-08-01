@@ -15,7 +15,7 @@ export default function NotFound() {
         </p>
         <Link
           to="/"
-          className="font-inter mt-8 flex h-12 items-center gap-2 rounded-md bg-black px-6 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          className="btn-liquid font-inter mt-8 flex h-12 items-center gap-2 rounded-md border-2 border-[#1f2a1d] px-6 text-sm font-medium text-[#1f2a1d] transition-colors"
         >
           Back to Home
           <ArrowUpRight className="h-4 w-4" />
