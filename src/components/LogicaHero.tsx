@@ -26,16 +26,6 @@ export default function LogicaHero() {
       <Header transparent />
       {/* ================= HERO CONTENT ================= */}
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pt-24 text-center sm:px-8 sm:pt-28 lg:px-10 lg:pt-32">
-        {/* Radial wipe reveal — a circular sweep mask uncovers the logo,
-            matching the Mixkit "radial wipe logo reveal" reference. */}
-        <div
-          className="relative mx-auto mb-8 sm:mb-10 lg:mb-12"
-          style={{ width: 'clamp(280px, 42vw, 560px)', height: 'clamp(120px, 18vw, 240px)' }}
-        >
-          <div className="logo-reveal-glow pointer-events-none absolute -inset-16" />
-          <img src={PRODUCT_IMAGE} alt="Logica Infoway" className="logo-radial-wipe relative h-full w-full object-contain" />
-        </div>
-
         <h1
           className="animate-word-reveal font-dm-sans font-normal text-white"
           style={{

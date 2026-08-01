@@ -36,6 +36,7 @@ export default function Header({ transparent = false }: Props) {
         className={`${transparent ? 'absolute' : 'relative'} top-0 left-0 right-0 z-30 flex items-center justify-end gap-3 px-4 sm:px-6 md:px-10 py-4 sm:py-6`}
       >
         <Link to="/" className={`mr-auto flex items-center gap-2 shrink-0 ${transparent ? 'text-white' : 'text-[#2d3a2a]'}`}>
+          <img src="/logica-logo-shine.png" alt="" className="h-7 w-auto object-contain sm:h-8 md:h-9" />
           <span className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
             Logica Infoway
           </span>
