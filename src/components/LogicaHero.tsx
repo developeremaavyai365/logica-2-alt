@@ -155,14 +155,6 @@ export default function LogicaHero() {
           </div>
         </div>
       </div>
-
-      {/* ================= DESKTOP FLOATING PRODUCT ================= */}
-      <img
-        src={PRODUCT_IMAGE}
-        alt=""
-        className="animate-scale-in delay-700 pointer-events-none absolute z-0 hidden lg:block"
-        style={{ width: 'clamp(300px, 30vw, 500px)', height: 'auto', bottom: '15%', right: 'clamp(-100px, -10vw, -40px)' }}
-      />
     </div>
   );
 }
