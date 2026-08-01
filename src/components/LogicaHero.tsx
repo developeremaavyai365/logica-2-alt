@@ -23,9 +23,9 @@ export default function LogicaHero() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-black">
       {/* ================= NAVBAR ================= */}
-      <Header transparent />
+      <Header />
       {/* ================= HERO CONTENT ================= */}
-      <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pt-24 text-center sm:px-8 sm:pt-28 lg:px-10 lg:pt-32">
+      <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pt-10 text-center sm:px-8 sm:pt-14 lg:px-10 lg:pt-16">
         <h1
           className="animate-word-reveal font-dm-sans font-normal text-white"
           style={{

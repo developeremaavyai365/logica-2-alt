@@ -5,11 +5,7 @@ import { useShopStore } from '../store';
 import { useAuthStore } from '../auth-store';
 import { SHOP_MEGA, ABOUT_MENU, INVESTOR_MEGA } from '../nav-data';
 
-type Props = {
-  transparent?: boolean;
-};
-
-export default function Header({ transparent = false }: Props) {
+export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>(null);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
@@ -33,13 +29,13 @@ export default function Header({ transparent = false }: Props) {
   return (
     <>
       <nav
-        className={`${transparent ? 'absolute' : 'relative'} top-0 left-0 right-0 z-30 flex items-center justify-end gap-3 px-4 sm:px-6 md:px-10 py-4 sm:py-6`}
+        className="relative top-0 left-0 right-0 z-30 flex items-center justify-end gap-3 bg-white px-4 py-4 shadow-sm sm:px-6 sm:py-6 md:px-10"
       >
         <Link to="/" className="mr-auto flex items-center shrink-0">
           <img src="/logica-logo-shine.png" alt="Logica Infoway" className="h-11 w-auto object-contain sm:h-12 md:h-14" />
         </Link>
 
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-white/60 bg-white/85 pl-2 pr-1 py-1 shadow-sm backdrop-blur-md lg:flex">
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-[#1f2a1d]/10 bg-[#f4f8f3] pl-2 pr-1 py-1 shadow-sm lg:flex">
           <Link to="/" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#4b5b47] hover:text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors">
             Home
           </Link>
@@ -155,7 +151,7 @@ export default function Header({ transparent = false }: Props) {
           </Link>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2 bg-white/85 backdrop-blur-md rounded-full px-1.5 sm:px-2 py-1.5 shadow-sm border border-white/60 text-[#2d3a2a]">
+        <div className="flex items-center gap-1 sm:gap-2 bg-[#f4f8f3] rounded-full px-1.5 sm:px-2 py-1.5 shadow-sm border border-[#1f2a1d]/10 text-[#2d3a2a]">
           <Link
             to="/wishlist"
             className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#f4f8f3] hover:text-[#1f2a1d] transition-colors"
@@ -188,7 +184,7 @@ export default function Header({ transparent = false }: Props) {
             <button
               type="button"
               onClick={() => setAccountMenuOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/85 text-sm font-semibold text-[#1f2a1d] shadow-sm border border-white/60 backdrop-blur-md hover:bg-white transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f4f8f3] text-sm font-semibold text-[#1f2a1d] shadow-sm border border-[#1f2a1d]/10 hover:bg-white transition-colors"
               aria-label="Account menu"
               aria-expanded={accountMenuOpen}
             >
@@ -231,10 +227,10 @@ export default function Header({ transparent = false }: Props) {
             )}
           </div>
         ) : (
-          <div className="hidden lg:flex items-center gap-1 bg-white/85 backdrop-blur-md rounded-full px-1.5 py-1.5 shadow-sm border border-white/60">
+          <div className="hidden lg:flex items-center gap-1 bg-[#f4f8f3] rounded-full px-1.5 py-1.5 shadow-sm border border-[#1f2a1d]/10">
             <Link
               to="/login"
-              className="text-sm font-medium px-4 py-2 rounded-full text-[#2d3a2a] hover:bg-[#f4f8f3] hover:text-[#1f2a1d] transition-colors"
+              className="text-sm font-medium px-4 py-2 rounded-full text-[#2d3a2a] hover:bg-white hover:text-[#1f2a1d] transition-colors"
             >
               Login
             </Link>
@@ -250,7 +246,7 @@ export default function Header({ transparent = false }: Props) {
         <div className="flex items-center gap-3 sm:gap-5 text-[#2d3a2a]">
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="lg:hidden relative flex items-center justify-center w-10 h-10 rounded-full bg-white/70 backdrop-blur-md border border-white/60 text-[#1f2a1d] transition-all duration-300 hover:bg-white/90"
+            className="lg:hidden relative flex items-center justify-center w-10 h-10 rounded-full bg-[#f4f8f3] border border-[#1f2a1d]/10 text-[#1f2a1d] transition-all duration-300 hover:bg-white"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >
