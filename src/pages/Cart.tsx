@@ -1,12 +1,26 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { products, formatINR } from '../data';
 import { useShopStore } from '../store';
+import { useAuthStore } from '../auth-store';
 
 export default function Cart() {
   const { cart, setQty, removeFromCart, ready } = useShopStore();
+  const { user } = useAuthStore();
+  const [showAuthGuard, setShowAuthGuard] = useState(false);
+  const [checkoutNotice, setCheckoutNotice] = useState(false);
+
+  function handleCheckoutClick() {
+    if (!user) {
+      setShowAuthGuard(true);
+      return;
+    }
+    setCheckoutNotice(true);
+    setTimeout(() => setCheckoutNotice(false), 3000);
+  }
 
   const lines = cart
     .map((line) => ({ line, product: products.find((p) => p.id === line.id) }))
@@ -109,17 +123,59 @@ export default function Cart() {
                 <span>{formatINR(subtotal)}</span>
               </div>
               <button
-                disabled
-                title="Checkout isn't wired to a payment provider in this preview"
-                className="mt-6 w-full bg-[#1f2a1d]/40 text-white text-sm font-semibold px-6 py-3 rounded-full cursor-not-allowed"
+                onClick={handleCheckoutClick}
+                className="btn-liquid mt-6 w-full border-2 border-[#1f2a1d] text-[#1f2a1d] text-sm font-semibold px-6 py-3 rounded-full transition-colors"
               >
                 Checkout
               </button>
-              <p className="mt-2 text-[11px] text-[#4b5b47]/70 text-center">Checkout isn't connected to payment in this preview.</p>
+              {checkoutNotice && (
+                <p className="mt-2 text-[11px] text-[#4b5b47]/70 text-center">
+                  Checkout isn't connected to a payment provider in this preview.
+                </p>
+              )}
             </div>
           </div>
         )}
       </section>
+
+      {/* Guest checkout guard */}
+      {showAuthGuard && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowAuthGuard(false)} />
+          <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
+            <button
+              type="button"
+              onClick={() => setShowAuthGuard(false)}
+              aria-label="Close"
+              className="absolute right-4 top-4 text-[#4b5b47] hover:text-[#1f2a1d] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="w-12 h-12 rounded-full bg-[#f4f8f3] flex items-center justify-center mb-4">
+              <ShoppingCart className="w-5 h-5 text-[#3d5638]" />
+            </div>
+            <h2 className="text-lg font-semibold text-[#1f2a1d]">Sign in to continue</h2>
+            <p className="mt-2 text-sm text-[#4b5b47] leading-relaxed">
+              Please sign in or create an account to complete your purchase. Your cart will be right here when you
+              come back.
+            </p>
+            <div className="mt-6 flex flex-col gap-3">
+              <Link
+                to="/login?redirect=/cart"
+                className="w-full rounded-full bg-[#1f2a1d] py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-[#2d4228]"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/signup?redirect=/cart"
+                className="w-full rounded-full border-2 border-[#1f2a1d] py-3 text-center text-sm font-semibold text-[#1f2a1d] transition-colors"
+              >
+                Create Account
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

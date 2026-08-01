@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronDown, Heart, Menu, ShoppingCart, X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ChevronDown, Heart, LogOut, Menu, Package, ShoppingCart, User, X } from 'lucide-react';
 import { useShopStore } from '../store';
+import { useAuthStore } from '../auth-store';
 import { SHOP_MEGA, ABOUT_MENU, INVESTOR_MEGA } from '../nav-data';
 
 type Props = {
@@ -11,7 +12,16 @@ type Props = {
 export default function Header({ transparent = false }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>(null);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const { cartCount, wishlist } = useShopStore();
+  const { user, signOut } = useAuthStore();
+  const navigate = useNavigate();
+
+  function handleSignOut() {
+    signOut();
+    setAccountMenuOpen(false);
+    navigate('/');
+  }
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
@@ -23,7 +33,7 @@ export default function Header({ transparent = false }: Props) {
   return (
     <>
       <nav
-        className={`${transparent ? 'absolute' : 'relative'} top-0 left-0 right-0 z-30 flex items-center justify-end px-4 sm:px-6 md:px-10 py-4 sm:py-6`}
+        className={`${transparent ? 'absolute' : 'relative'} top-0 left-0 right-0 z-30 flex items-center justify-end gap-3 px-4 sm:px-6 md:px-10 py-4 sm:py-6`}
       >
         <Link to="/" className={`mr-auto flex items-center gap-2 shrink-0 ${transparent ? 'text-white' : 'text-[#2d3a2a]'}`}>
           <span className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">
@@ -173,6 +183,72 @@ export default function Header({ transparent = false }: Props) {
             )}
           </Link>
         </div>
+
+        {/* Auth: login/sign up links, or account dropdown once signed in */}
+        {user ? (
+          <div className="relative hidden lg:block">
+            <button
+              type="button"
+              onClick={() => setAccountMenuOpen((v) => !v)}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/85 text-sm font-semibold text-[#1f2a1d] shadow-sm border border-white/60 backdrop-blur-md hover:bg-white transition-colors"
+              aria-label="Account menu"
+              aria-expanded={accountMenuOpen}
+            >
+              {user.name.slice(0, 1).toUpperCase()}
+            </button>
+            {accountMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setAccountMenuOpen(false)} />
+                <div className="absolute right-0 top-full z-40 mt-2 w-56 rounded-2xl border border-[#1f2a1d]/10 bg-white p-2 shadow-xl">
+                  <div className="px-3 py-2 border-b border-[#1f2a1d]/10 mb-1">
+                    <p className="text-sm font-semibold text-[#1f2a1d] truncate">{user.name}</p>
+                    <p className="text-xs text-[#4b5b47] truncate">{user.email}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAccountMenuOpen(false)}
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    Profile
+                  </button>
+                  <Link
+                    to="/cart"
+                    onClick={() => setAccountMenuOpen(false)}
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors"
+                  >
+                    <Package className="w-4 h-4" />
+                    Orders
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="hidden lg:flex items-center gap-2">
+            <Link
+              to="/login"
+              className="text-sm font-medium px-4 py-2.5 text-[#2d3a2a] hover:opacity-70 transition-opacity"
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className="text-sm font-semibold px-4 py-2.5 rounded-full bg-[#1f2a1d] text-white hover:bg-[#2d4228] transition-colors"
+            >
+              Sign Up
+            </Link>
+          </div>
+        )}
+
         <div className="flex items-center gap-3 sm:gap-5 text-[#2d3a2a]">
           <button
             onClick={() => setMenuOpen((v) => !v)}
@@ -292,6 +368,44 @@ export default function Header({ transparent = false }: Props) {
               <Heart className="w-4 h-4" />
               Wishlist {wishlist.length > 0 && `(${wishlist.length})`}
             </Link>
+          </div>
+
+          <div className="mt-6 border-t border-[#1f2a1d]/10 pt-6">
+            {user ? (
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-[#4b5b47]">
+                  Signed in as <span className="font-semibold text-[#1f2a1d]">{user.name}</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    handleSignOut();
+                  }}
+                  className="flex items-center gap-2 text-sm font-medium text-red-600"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full rounded-full border-2 border-[#1f2a1d] py-3 text-center text-sm font-semibold text-[#1f2a1d]"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full rounded-full bg-[#1f2a1d] py-3 text-center text-sm font-semibold text-white"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

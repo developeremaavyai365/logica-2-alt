@@ -16,6 +16,8 @@ import Wishlist from './pages/Wishlist';
 import InvestorHub from './pages/investor/InvestorHub';
 import InvestorSection from './pages/investor/InvestorSection';
 import NotFound from './pages/NotFound';
+import Auth from './pages/Auth';
+import ForgotPassword from './pages/ForgotPassword';
 import FeedbackWidget from './components/FeedbackWidget';
 import ChatWidget from './components/ChatWidget';
 
@@ -36,6 +38,9 @@ function App() {
         <Route path="/media" element={<Media />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/login" element={<Auth mode="signin" />} />
+        <Route path="/signup" element={<Auth mode="signup" />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/investor" element={<InvestorHub />} />
         <Route path="/investor/:slug" element={<InvestorSection />} />
         <Route path="*" element={<NotFound />} />
