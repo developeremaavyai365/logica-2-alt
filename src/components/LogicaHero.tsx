@@ -51,8 +51,8 @@ export default function LogicaHero() {
             className="font-inter max-w-[310px] text-sm text-white sm:text-base lg:text-lg"
             style={{ lineHeight: 1.45, letterSpacing: '-0.03em' }}
           >
-            Genuine hardware, enterprise pricing, and three decades of delivery for corporate and
-            government clients.
+            Genuine hardware, enterprise pricing, and three decades of delivery for every customer,
+            from individuals to businesses.
           </p>
         </div>
       </section>
