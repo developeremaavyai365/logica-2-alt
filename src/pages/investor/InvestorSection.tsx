@@ -1,8 +1,8 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { FileText, ExternalLink } from 'lucide-react';
+import { FileText, Calendar, Building2, ExternalLink } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { INVESTOR_SECTIONS } from '../../investor-sections';
+import { INVESTOR_SECTIONS, CATEGORY_ICONS } from '../../investor-sections';
 
 export default function InvestorSection() {
   const { slug } = useParams<{ slug: string }>();
@@ -12,6 +12,8 @@ export default function InvestorSection() {
     return <Navigate to="/investor" replace />;
   }
 
+  const CategoryIcon = CATEGORY_ICONS[section.category];
+
   return (
     <div className="w-full bg-[#dbe8d6]">
       <div className="bg-[#f4f8f3]">
@@ -20,7 +22,14 @@ export default function InvestorSection() {
           <Link to="/investor" className="text-xs font-medium text-[#3d5638] hover:opacity-80 transition-opacity">
             ← Investor Relations
           </Link>
-          <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-[#3d5638]">{section.category}</p>
+          <div className="mt-4 flex items-center gap-2">
+            {CategoryIcon && (
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[#3d5638]">
+                <CategoryIcon className="h-3.5 w-3.5" />
+              </span>
+            )}
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#3d5638]">{section.category}</p>
+          </div>
           <h1 className="mt-2 text-3xl sm:text-4xl font-normal text-[#336443]" style={{ letterSpacing: '-0.03em' }}>
             {section.label}
           </h1>
@@ -39,13 +48,18 @@ export default function InvestorSection() {
                 href={doc.url}
                 target="_blank"
                 rel="noreferrer"
-                className={`flex items-center justify-between gap-4 px-5 py-4 text-sm hover:bg-[#f4f8f3] transition-colors ${
+                className={`flex items-center gap-4 px-5 py-4 text-sm hover:bg-[#f4f8f3] transition-colors ${
                   i !== section.items.length - 1 ? 'border-b border-[#1f2a1d]/10' : ''
                 }`}
               >
-                <span className="flex items-center gap-3 text-[#1f2a1d] font-medium">
-                  <FileText className="w-4 h-4 text-[#3d5638] shrink-0" />
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                  <FileText className="w-4 h-4" />
+                </span>
+                <span className="flex-1 font-medium text-[#1f2a1d]">
                   {doc.title} {doc.year && <span className="text-[#4b5b47] font-normal">({doc.year})</span>}
+                </span>
+                <span className="shrink-0 rounded-full bg-[#dbe8d6] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#336443]">
+                  PDF
                 </span>
                 <ExternalLink className="w-4 h-4 text-[#4b5b47] shrink-0" />
               </a>
@@ -61,11 +75,14 @@ export default function InvestorSection() {
                 href={p.url}
                 target="_blank"
                 rel="noreferrer"
-                className={`flex items-center justify-between gap-4 px-5 py-4 text-sm hover:bg-[#f4f8f3] transition-colors ${
+                className={`flex items-center gap-4 px-5 py-4 text-sm hover:bg-[#f4f8f3] transition-colors ${
                   i !== section.items.length - 1 ? 'border-b border-[#1f2a1d]/10' : ''
                 }`}
               >
-                <span className="text-[#1f2a1d] font-medium">{p.label}</span>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                  <Calendar className="w-4 h-4" />
+                </span>
+                <span className="flex-1 font-medium text-[#1f2a1d]">{p.label}</span>
                 <ExternalLink className="w-4 h-4 text-[#4b5b47] shrink-0" />
               </a>
             ))}
@@ -77,11 +94,14 @@ export default function InvestorSection() {
             href={section.doc.url}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-between gap-4 rounded-2xl border border-[#1f2a1d]/10 px-5 py-4 text-sm hover:bg-[#f4f8f3] transition-colors"
+            className="flex items-center gap-4 rounded-2xl border border-[#1f2a1d]/10 px-5 py-4 text-sm hover:bg-[#f4f8f3] transition-colors"
           >
-            <span className="flex items-center gap-3 text-[#1f2a1d] font-medium">
-              <FileText className="w-4 h-4 text-[#3d5638] shrink-0" />
-              {section.doc.title}
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+              <FileText className="w-4 h-4" />
+            </span>
+            <span className="flex-1 font-medium text-[#1f2a1d]">{section.doc.title}</span>
+            <span className="shrink-0 rounded-full bg-[#dbe8d6] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#336443]">
+              PDF
             </span>
             <ExternalLink className="w-4 h-4 text-[#4b5b47] shrink-0" />
           </a>
@@ -94,7 +114,10 @@ export default function InvestorSection() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {section.items.map((name) => (
-                <div key={name} className="rounded-xl border border-[#1f2a1d]/10 px-5 py-4 text-sm font-medium text-[#1f2a1d]">
+                <div key={name} className="flex items-center gap-3 rounded-xl border border-[#1f2a1d]/10 px-5 py-4 text-sm font-medium text-[#1f2a1d]">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                    <Building2 className="w-4 h-4" />
+                  </span>
                   {name}
                 </div>
               ))}

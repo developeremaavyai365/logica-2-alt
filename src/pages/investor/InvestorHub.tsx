@@ -1,7 +1,15 @@
 import { Link } from 'react-router-dom';
+import { FileText, Calendar, Building2, ChevronRight } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { INVESTOR_SECTIONS, INVESTOR_CATEGORIES } from '../../investor-sections';
+import { INVESTOR_SECTIONS, INVESTOR_CATEGORIES, CATEGORY_ICONS } from '../../investor-sections';
+
+const KIND_ICONS = {
+  docs: FileText,
+  single: FileText,
+  periods: Calendar,
+  names: Building2,
+} as const;
 
 export default function InvestorHub() {
   return (
@@ -23,19 +31,34 @@ export default function InvestorHub() {
         {INVESTOR_CATEGORIES.map((category) => {
           const sections = INVESTOR_SECTIONS.filter((s) => s.category === category);
           if (sections.length === 0) return null;
+          const CategoryIcon = CATEGORY_ICONS[category];
           return (
             <div key={category} className="mb-12">
-              <h2 className="text-lg font-semibold text-[#1f2a1d] mb-4">{category}</h2>
+              <div className="mb-4 flex items-center gap-2.5">
+                {CategoryIcon && (
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                    <CategoryIcon className="h-4 w-4" />
+                  </span>
+                )}
+                <h2 className="text-lg font-semibold text-[#1f2a1d]">{category}</h2>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {sections.map((s) => (
-                  <Link
-                    key={s.slug}
-                    to={`/investor/${s.slug}`}
-                    className="rounded-xl border border-[#1f2a1d]/10 px-5 py-4 text-sm font-medium text-[#1f2a1d] hover:border-[#1f2a1d]/40 hover:bg-[#f4f8f3] transition-colors"
-                  >
-                    {s.label}
-                  </Link>
-                ))}
+                {sections.map((s) => {
+                  const ItemIcon = KIND_ICONS[s.kind];
+                  return (
+                    <Link
+                      key={s.slug}
+                      to={`/investor/${s.slug}`}
+                      className="flex items-center gap-3 rounded-xl border border-[#1f2a1d]/10 px-5 py-4 text-sm font-medium text-[#1f2a1d] hover:border-[#1f2a1d]/40 hover:bg-[#f4f8f3] transition-colors"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                        <ItemIcon className="h-3.5 w-3.5" />
+                      </span>
+                      <span className="flex-1">{s.label}</span>
+                      <ChevronRight className="h-4 w-4 shrink-0 text-[#4b5b47]" />
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           );

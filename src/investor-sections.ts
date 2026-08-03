@@ -1,3 +1,4 @@
+import { TrendingUp, Users, Landmark, BarChart3, Building2, type LucideIcon } from 'lucide-react';
 import {
   ANNUAL_REPORTS,
   ANNUAL_RETURNS,
@@ -53,3 +54,11 @@ export const INVESTOR_SECTIONS: InvestorSection[] = [
 ];
 
 export const INVESTOR_CATEGORIES = ['Performance', 'Shareholder Information', 'Fund Raising', 'Stock Exchange', 'Group Companies'];
+
+export const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  Performance: TrendingUp,
+  'Shareholder Information': Users,
+  'Fund Raising': Landmark,
+  'Stock Exchange': BarChart3,
+  'Group Companies': Building2,
+};

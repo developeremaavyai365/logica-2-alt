@@ -4,6 +4,7 @@ import { ChevronDown, Heart, LogOut, Menu, Package, ShoppingCart, User, X } from
 import { useShopStore } from '../store';
 import { useAuthStore } from '../auth-store';
 import { SHOP_MEGA, ABOUT_MENU, INVESTOR_MEGA } from '../nav-data';
+import { CATEGORY_ICONS } from '../investor-sections';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -108,37 +109,47 @@ export default function Header() {
             </Link>
             <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-40">
               <div className="w-[52rem] max-w-[90vw] rounded-2xl bg-white shadow-xl border border-[#1f2a1d]/10 p-6 grid grid-cols-5 gap-x-5 gap-y-4">
-                {INVESTOR_MEGA.map((col) => (
-                  <div key={col.label}>
-                    {col.href ? (
-                      <Link to={col.href} className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d] hover:opacity-80 transition-opacity">
-                        {col.label}
-                      </Link>
-                    ) : (
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d]">{col.label}</p>
-                    )}
-                    {col.children && (
-                      <ul className="mt-2 space-y-1.5">
-                        {col.children.map((child) => {
-                          const external = child.href.startsWith('http');
-                          return (
-                            <li key={child.label}>
-                              {external ? (
-                                <a href={child.href} target="_blank" rel="noreferrer" className="text-xs text-[#4b5b47] hover:text-[#1f2a1d] transition-colors">
-                                  {child.label}
-                                </a>
-                              ) : (
-                                <Link to={child.href} className="text-xs text-[#4b5b47] hover:text-[#1f2a1d] transition-colors">
-                                  {child.label}
-                                </Link>
-                              )}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </div>
-                ))}
+                {INVESTOR_MEGA.map((col) => {
+                  const Icon = CATEGORY_ICONS[col.label];
+                  return (
+                    <div key={col.label}>
+                      <div className="flex items-center gap-2">
+                        {Icon && (
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                            <Icon className="h-3.5 w-3.5" />
+                          </span>
+                        )}
+                        {col.href ? (
+                          <Link to={col.href} className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d] hover:opacity-80 transition-opacity">
+                            {col.label}
+                          </Link>
+                        ) : (
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d]">{col.label}</p>
+                        )}
+                      </div>
+                      {col.children && (
+                        <ul className="mt-2 space-y-1.5">
+                          {col.children.map((child) => {
+                            const external = child.href.startsWith('http');
+                            return (
+                              <li key={child.label}>
+                                {external ? (
+                                  <a href={child.href} target="_blank" rel="noreferrer" className="text-xs text-[#4b5b47] hover:text-[#1f2a1d] transition-colors">
+                                    {child.label}
+                                  </a>
+                                ) : (
+                                  <Link to={child.href} className="text-xs text-[#4b5b47] hover:text-[#1f2a1d] transition-colors">
+                                    {child.label}
+                                  </Link>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -324,11 +335,20 @@ export default function Header() {
           </button>
           <div className={`overflow-hidden transition-all duration-300 ${mobileSection === 'investor' ? 'max-h-[36rem]' : 'max-h-0'}`}>
             <div className="py-2 pl-3 space-y-3 max-h-[36rem] overflow-y-auto">
-              {INVESTOR_MEGA.map((col) => (
+              {INVESTOR_MEGA.map((col) => {
+                const Icon = CATEGORY_ICONS[col.label];
+                return (
                 <div key={col.label}>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d]">{col.label}</p>
+                  <div className="flex items-center gap-2">
+                    {Icon && (
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                        <Icon className="h-3 w-3" />
+                      </span>
+                    )}
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d]">{col.label}</p>
+                  </div>
                   {col.children && (
-                    <div className="mt-1 space-y-1">
+                    <div className="mt-1 space-y-1 pl-7">
                       {col.children.map((child) =>
                         child.href.startsWith('http') ? (
                           <a key={child.label} href={child.href} target="_blank" rel="noreferrer" className="block text-sm text-[#4b5b47] py-0.5">
@@ -343,7 +363,8 @@ export default function Header() {
                     </div>
                   )}
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
