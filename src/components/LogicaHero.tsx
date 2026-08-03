@@ -1,31 +1,17 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ShieldCheck, Building2, Truck, Headset, type LucideIcon } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Header from './Header';
 
 const PRODUCT_IMAGE = '/logica-logo-shine.png';
 
-const PANEL2_CARDS: { icon: LucideIcon; bg: string; text: string }[] = [
-  { icon: ShieldCheck, bg: 'bg-black', text: 'Genuine products, backed by authorized brand partnerships' },
-  { icon: Building2, bg: 'bg-emerald-800', text: 'Three decades of corporate and government procurement' },
-  { icon: Truck, bg: 'bg-cyan-800', text: 'Nationwide reach — from our Kolkata roots to 8 cities' },
-  { icon: Headset, bg: 'bg-amber-700', text: 'Hardware, networking and IT support under one roof' },
-];
-
 export default function LogicaHero() {
-  const [activeCard, setActiveCard] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => setActiveCard((c) => (c + 1) % PANEL2_CARDS.length), 3500);
-    return () => clearInterval(id);
-  }, []);
-
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-black">
       {/* ================= NAVBAR ================= */}
       <Header />
       {/* ================= HERO CONTENT ================= */}
-      <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pt-10 text-center sm:px-8 sm:pt-14 lg:px-10 lg:pt-16">
+      <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 py-16 text-center sm:px-8 sm:py-20 lg:px-10 lg:py-24">
         <h1
           className="animate-word-reveal font-dm-sans font-normal text-white"
           style={{
@@ -80,71 +66,6 @@ export default function LogicaHero() {
         />
       </div>
 
-      {/* ================= 3-PANEL FOOTER STRIP ================= */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr]">
-        {/* Panel 1 */}
-        <div className="animate-fade-up delay-900 relative overflow-hidden bg-[#ECEDEC] px-6 py-10 sm:px-10 sm:py-14">
-          <p
-            className="font-dm-sans max-w-[350px] font-normal text-black"
-            style={{ fontSize: 'clamp(24px, 3vw, 35px)', lineHeight: 1.1, letterSpacing: '-0.05em' }}
-          >
-            Find the right technology for your business
-          </p>
-          <Link
-            to="/contact"
-            className="font-inter mt-4 inline-block text-base text-black underline lg:text-lg"
-            style={{ letterSpacing: '-0.03em' }}
-          >
-            Talk to Our Team
-          </Link>
-        </div>
-
-        {/* Panel 2 — auto-rotating carousel */}
-        <div className="animate-fade-up delay-1000 relative flex flex-col justify-between bg-[#FEFDF9] px-6 py-10 sm:px-8 sm:py-14">
-          <div className="relative h-24 sm:h-20">
-            {PANEL2_CARDS.map((card, i) => {
-              const Icon = card.icon;
-              const active = i === activeCard;
-              return (
-                <div
-                  key={i}
-                  className={`flex items-center gap-4 transition-all duration-500 ${
-                    active ? 'relative translate-y-0 opacity-100' : 'absolute inset-0 translate-y-4 opacity-0'
-                  }`}
-                >
-                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white sm:h-12 sm:w-12 ${card.bg}`}>
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <p
-                    className="font-inter text-sm text-black/80 sm:text-base lg:text-lg"
-                    style={{ lineHeight: 1.2, letterSpacing: '-0.03em' }}
-                  >
-                    {card.text}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-          <div className="mt-6 flex gap-2">
-            {PANEL2_CARDS.map((_, i) => (
-              <span key={i} className={`h-0.5 flex-1 rounded-full transition-colors ${i === activeCard ? 'bg-black' : 'bg-black/20'}`} />
-            ))}
-          </div>
-        </div>
-
-        {/* Panel 3 */}
-        <div className="animate-fade-up delay-1100 flex items-center gap-6 bg-black px-6 py-10 sm:px-10 sm:py-14">
-          <img src={PRODUCT_IMAGE} alt="" className="h-[82px] w-[120px] object-contain sm:h-[110px] sm:w-[160px] lg:h-[142px] lg:w-[208px]" />
-          <div>
-            <p className="font-inter font-normal text-white" style={{ fontSize: 'clamp(24px, 3vw, 35px)', letterSpacing: '-0.05em' }}>
-              30+
-            </p>
-            <p className="font-inter text-sm text-white/60 sm:text-base lg:text-lg" style={{ lineHeight: 1.2 }}>
-              Years of trusted corporate &amp; government partnership
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
