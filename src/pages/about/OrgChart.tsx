@@ -1,82 +1,54 @@
+import { ChevronDown } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
-interface OrgNode {
+interface Director {
   name: string;
-  role?: string;
-  root?: boolean;
-  exec?: boolean;
-  children?: OrgNode[];
+  role: string;
+  chairman?: boolean;
+  tag?: string;
 }
 
-const ORG_TREE: OrgNode = {
-  name: 'Board of Directors & KMP',
-  root: true,
-  children: [
-    {
-      name: 'Gaurav Goel',
-      role: 'Chairman Cum Managing Director',
-      exec: true,
-      children: [
-        {
-          name: 'Deepak Kumar Jha',
-          role: 'Chief Financial Officer',
-          children: [{ name: 'Accounting & Finance' }],
-        },
-        {
-          name: 'Priyanka Gera',
-          role: 'Company Secretary & Compliance Officer',
-          children: [{ name: 'Secretarial & Legal' }],
-        },
-        {
-          name: 'Sundeep Mishra',
-          role: 'Chief Operating Officer',
-          children: [{ name: 'Business Development, Sales' }],
-        },
-        {
-          name: 'Kshitij Goel',
-          role: 'Chief Information Officer',
-          children: [{ name: 'Business Development, Exports' }],
-        },
-      ],
-    },
-    { name: 'Shweta Goel', role: 'Whole-Time Director', exec: true },
-    { name: 'Rakesh Kumar Goel', role: 'Non Executive Director', exec: true },
-    { name: 'Dinesh Arya', role: 'Independent Director', exec: true },
-    { name: 'Nil Kamal Samanta', role: 'Independent Director', exec: true },
-    { name: 'Vinita Saraf', role: 'Independent Director', exec: true },
-  ],
-};
+interface KmpNode {
+  name: string;
+  role: string;
+  department: string;
+}
 
-function OrgCard({ node }: { node: OrgNode }) {
+/** Board sits as one peer group (real governance structure — directors don't
+ *  report to each other); the Chairman & Managing Director separately heads
+ *  day-to-day management, so KMP reports there rather than to the full board. */
+const BOARD: Director[] = [
+  { name: 'Gaurav Goel', role: 'Chairman Cum Managing Director', chairman: true },
+  { name: 'Shweta Goel', role: 'Whole-Time Director' },
+  { name: 'Rakesh Kumar Goel', role: 'Non Executive Director' },
+  { name: 'Dinesh Arya', role: 'Independent Director', tag: 'Independent' },
+  { name: 'Nil Kamal Samanta', role: 'Independent Director', tag: 'Independent' },
+  { name: 'Vinita Saraf', role: 'Independent Director', tag: 'Independent' },
+];
+
+const KMP: KmpNode[] = [
+  { name: 'Deepak Kumar Jha', role: 'Chief Financial Officer', department: 'Accounting & Finance' },
+  { name: 'Priyanka Gera', role: 'Company Secretary & Compliance Officer', department: 'Secretarial & Legal' },
+  { name: 'Sundeep Mishra', role: 'Chief Operating Officer', department: 'Business Development, Sales' },
+  { name: 'Kshitij Goel', role: 'Chief Information Officer', department: 'Business Development, Exports' },
+];
+
+function DirectorCard({ d }: { d: Director }) {
   return (
     <div
-      className={`inline-flex min-w-[150px] flex-col gap-1 rounded-2xl border px-4 py-3 text-left shadow-sm ${
-        node.root
-          ? 'border-black bg-black text-white'
-          : node.exec
-            ? 'relative border-black/10 bg-white pl-5 before:absolute before:left-2 before:top-3 before:bottom-3 before:w-[3px] before:rounded-full before:bg-[#1f6fa8] before:content-[""]'
-            : 'border-black/10 bg-white'
+      className={`flex w-[190px] shrink-0 flex-col gap-1 rounded-2xl border px-4 py-3.5 text-left shadow-sm ${
+        d.chairman ? 'border-black bg-black text-white' : 'border-black/10 bg-white'
       }`}
     >
-      <p className={`text-sm font-bold leading-snug ${node.root ? 'text-white' : 'text-black'}`}>{node.name}</p>
-      {node.role && <p className={`text-xs leading-snug ${node.root ? 'text-white/80' : 'text-black/60'}`}>{node.role}</p>}
-    </div>
-  );
-}
-
-function OrgBranch({ node }: { node: OrgNode }) {
-  return (
-    <li>
-      <OrgCard node={node} />
-      {node.children && node.children.length > 0 && (
-        <ul>
-          {node.children.map((child) => (
-            <OrgBranch key={child.name} node={child} />
-          ))}
-        </ul>
+      <p className={`text-sm font-bold leading-snug ${d.chairman ? 'text-white' : 'text-black'}`}>{d.name}</p>
+      <p className={`text-xs leading-snug ${d.chairman ? 'text-white/80' : 'text-black/60'}`}>{d.role}</p>
+      {d.tag && (
+        <span className="mt-1 inline-flex w-fit rounded-full bg-[#1f6fa8]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#1f6fa8]">
+          {d.tag}
+        </span>
       )}
-    </li>
+    </div>
   );
 }
 
@@ -94,10 +66,49 @@ export default function OrgChart() {
       </div>
 
       <section className="px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        <div className="overflow-x-auto rounded-2xl border border-black/10 bg-white py-10">
-          <ul className="org-tree">
-            <OrgBranch node={ORG_TREE} />
-          </ul>
+        <div className="mx-auto max-w-6xl rounded-2xl border border-black/10 bg-white px-4 py-12 sm:px-8">
+          {/* Tier 1 — Board of Directors, a peer group */}
+          <p className="text-center text-xs font-semibold uppercase tracking-wide text-black/40">Board of Directors</p>
+          <div className="mt-5 overflow-x-auto">
+            <div className="flex w-fit min-w-full justify-center gap-4">
+              {BOARD.map((d) => (
+                <DirectorCard key={d.name} d={d} />
+              ))}
+            </div>
+          </div>
+
+          {/* Connector — Chairman & MD heads day-to-day management */}
+          <div className="my-8 flex flex-col items-center gap-2">
+            <div className="h-8 w-px bg-black/15" />
+            <div className="flex items-center gap-1.5 rounded-full bg-[#ECEDEC] px-3 py-1.5">
+              <ChevronDown className="h-3.5 w-3.5 text-black/50" />
+              <span className="text-[11px] font-medium text-black/60">
+                Key Managerial Personnel — reporting to the Chairman &amp; Managing Director
+              </span>
+            </div>
+            <div className="h-8 w-px bg-black/15" />
+          </div>
+
+          {/* Tier 2 — Key Managerial Personnel, each with their department */}
+          <div className="overflow-x-auto">
+            <ul className="org-tree">
+              {KMP.map((k) => (
+                <li key={k.name}>
+                  <div className="inline-flex min-w-[170px] flex-col gap-1 rounded-2xl border border-black/10 bg-white px-4 py-3 text-left shadow-sm">
+                    <p className="text-sm font-bold leading-snug text-black">{k.name}</p>
+                    <p className="text-xs leading-snug text-black/60">{k.role}</p>
+                  </div>
+                  <ul>
+                    <li>
+                      <div className="inline-flex min-w-[170px] flex-col gap-1 rounded-2xl border border-[#1f6fa8]/20 bg-[#1f6fa8]/5 px-4 py-3 text-left">
+                        <p className="text-xs font-semibold leading-snug text-[#1f6fa8]">{k.department}</p>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
