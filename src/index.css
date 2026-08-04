@@ -350,18 +350,22 @@ html, body, #root {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  perspective: 1200px;
+  perspective: 800px;
 }
 .parallax__group {
   position: relative;
+  /* Without this, the browser flattens the group to 2D and silently
+     discards translateZ() on its children — the #1 reason this kind of
+     effect ends up invisible. */
+  transform-style: preserve-3d;
 }
 .parallax__layer {
   position: relative;
   transform: translateZ(0) scale(1);
 }
 .parallax__layer--near {
-  transform: translateZ(-120px) scale(1.1);
+  transform: translateZ(-150px) scale(1.1875);
 }
 .parallax__layer--far {
-  transform: translateZ(-220px) scale(1.183);
+  transform: translateZ(-300px) scale(1.375);
 }
