@@ -41,7 +41,7 @@ export default function CategoryGrid() {
         </Link>
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-5 md:grid-cols-3 lg:grid-cols-6 lg:gap-4">
+      <div className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-5 md:grid-cols-3 lg:gap-6">
         {FEATURED.map((cat, i) => (
           <Link
             key={cat.slug}
