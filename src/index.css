@@ -225,67 +225,6 @@ html, body, #root {
   opacity: 0.55;
 }
 
-/* ===== Org chart tree — connector lines drawn with ::before/::after on each
- * <li>, matching the classic CSS org-chart pattern. Purely presentational;
- * OrgChart.tsx supplies the actual reporting-line data. */
-.org-tree,
-.org-tree ul {
-  display: flex;
-  justify-content: center;
-  padding-top: 40px;
-  position: relative;
-  width: max-content;
-  margin: 0 auto;
-}
-.org-tree li {
-  flex: 1;
-  text-align: center;
-  list-style: none;
-  position: relative;
-  padding: 40px 10px 0 10px;
-  min-width: 150px;
-}
-.org-tree li::before,
-.org-tree li::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 50%;
-  border-top: 2px solid rgba(0, 0, 0, 0.15);
-  width: 50%;
-  height: 40px;
-}
-.org-tree li::after {
-  right: auto;
-  left: 50%;
-  border-left: 2px solid rgba(0, 0, 0, 0.15);
-}
-.org-tree li:only-child::after,
-.org-tree li:only-child::before {
-  display: none;
-}
-.org-tree li:only-child {
-  padding-top: 0;
-}
-.org-tree li:first-child::before,
-.org-tree li:last-child::after {
-  border: 0 none;
-}
-.org-tree li:last-child::before {
-  border-right: 2px solid rgba(0, 0, 0, 0.15);
-  border-radius: 0 6px 0 0;
-}
-.org-tree li:first-child::after {
-  border-radius: 6px 0 0 0;
-}
-.org-tree > li {
-  padding-top: 0;
-}
-.org-tree > li::before,
-.org-tree > li::after {
-  display: none;
-}
-
 /* ===== Auth panel — classic "double slider" sign-in/sign-up (Florin Pop
  * reference). Two overlapping form panels plus a sliding colored overlay
  * panel toggled by adding/removing .right-panel-active on the container;

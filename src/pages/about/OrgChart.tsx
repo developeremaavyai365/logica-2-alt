@@ -37,7 +37,7 @@ const KMP: KmpNode[] = [
 function DirectorCard({ d }: { d: Director }) {
   return (
     <div
-      className={`flex w-[190px] shrink-0 flex-col gap-1 rounded-2xl border px-4 py-3.5 text-left shadow-sm ${
+      className={`flex w-full max-w-[220px] flex-col gap-1 rounded-2xl border px-4 py-3.5 text-left shadow-sm ${
         d.chairman ? 'border-black bg-black text-white' : 'border-black/10 bg-white'
       }`}
     >
@@ -48,6 +48,21 @@ function DirectorCard({ d }: { d: Director }) {
           {d.tag}
         </span>
       )}
+    </div>
+  );
+}
+
+function KmpColumn({ k }: { k: KmpNode }) {
+  return (
+    <div className="flex flex-col items-center text-center">
+      <div className="flex w-full flex-col gap-1 rounded-2xl border border-black/10 bg-white px-4 py-3 text-left shadow-sm">
+        <p className="text-sm font-bold leading-snug text-black">{k.name}</p>
+        <p className="text-xs leading-snug text-black/60">{k.role}</p>
+      </div>
+      <div className="h-5 w-px bg-black/15" />
+      <div className="w-full rounded-2xl border border-[#1f6fa8]/20 bg-[#1f6fa8]/5 px-4 py-3 text-left">
+        <p className="text-xs font-semibold leading-snug text-[#1f6fa8]">{k.department}</p>
+      </div>
     </div>
   );
 }
@@ -66,22 +81,20 @@ export default function OrgChart() {
       </div>
 
       <section className="px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl rounded-2xl border border-black/10 bg-white px-4 py-12 sm:px-8">
+        <div className="mx-auto max-w-5xl rounded-2xl border border-black/10 bg-white px-4 py-12 sm:px-8">
           {/* Tier 1 — Board of Directors, a peer group */}
           <p className="text-center text-xs font-semibold uppercase tracking-wide text-black/40">Board of Directors</p>
-          <div className="mt-5 overflow-x-auto">
-            <div className="flex w-fit min-w-full justify-center gap-4">
-              {BOARD.map((d) => (
-                <DirectorCard key={d.name} d={d} />
-              ))}
-            </div>
+          <div className="mt-5 flex flex-wrap justify-center gap-4">
+            {BOARD.map((d) => (
+              <DirectorCard key={d.name} d={d} />
+            ))}
           </div>
 
           {/* Connector — Chairman & MD heads day-to-day management */}
           <div className="my-8 flex flex-col items-center gap-2">
             <div className="h-8 w-px bg-black/15" />
-            <div className="flex items-center gap-1.5 rounded-full bg-[#ECEDEC] px-3 py-1.5">
-              <ChevronDown className="h-3.5 w-3.5 text-black/50" />
+            <div className="flex items-center gap-1.5 rounded-full bg-[#ECEDEC] px-3 py-1.5 text-center">
+              <ChevronDown className="h-3.5 w-3.5 shrink-0 text-black/50" />
               <span className="text-[11px] font-medium text-black/60">
                 Key Managerial Personnel — reporting to the Chairman &amp; Managing Director
               </span>
@@ -90,24 +103,10 @@ export default function OrgChart() {
           </div>
 
           {/* Tier 2 — Key Managerial Personnel, each with their department */}
-          <div className="overflow-x-auto">
-            <ul className="org-tree">
-              {KMP.map((k) => (
-                <li key={k.name}>
-                  <div className="inline-flex min-w-[170px] flex-col gap-1 rounded-2xl border border-black/10 bg-white px-4 py-3 text-left shadow-sm">
-                    <p className="text-sm font-bold leading-snug text-black">{k.name}</p>
-                    <p className="text-xs leading-snug text-black/60">{k.role}</p>
-                  </div>
-                  <ul>
-                    <li>
-                      <div className="inline-flex min-w-[170px] flex-col gap-1 rounded-2xl border border-[#1f6fa8]/20 bg-[#1f6fa8]/5 px-4 py-3 text-left">
-                        <p className="text-xs font-semibold leading-snug text-[#1f6fa8]">{k.department}</p>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              ))}
-            </ul>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {KMP.map((k) => (
+              <KmpColumn key={k.name} k={k} />
+            ))}
           </div>
         </div>
       </section>
