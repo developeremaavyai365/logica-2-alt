@@ -33,28 +33,37 @@ const KMP: KmpNode[] = [
   { name: 'Kshitij Goel', role: 'Chief Information Officer', department: 'Business Development, Exports' },
 ];
 
-function DirectorCard({ d }: { d: Director }) {
+function DirectorCard({ d, delay }: { d: Director; delay: number }) {
   return (
     <div
-      className={`flex w-full max-w-[220px] flex-col gap-1 rounded-2xl border px-4 py-3.5 text-left shadow-sm ${
-        d.chairman ? 'border-black bg-black text-white' : 'border-black/10 bg-white'
+      className={`animate-fade-up group flex w-full max-w-[220px] cursor-default flex-col gap-1 rounded-2xl border px-4 py-3.5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1.5 ${
+        d.chairman
+          ? 'border-black bg-black text-white hover:shadow-xl hover:shadow-black/20'
+          : 'border-black/10 bg-white hover:border-[#1f6fa8]/50 hover:shadow-lg hover:shadow-[#1f6fa8]/10'
       }`}
+      style={{ animationDelay: `${delay}s` }}
     >
-      <p className={`text-sm font-bold leading-snug ${d.chairman ? 'text-white' : 'text-black'}`}>{d.name}</p>
+      <p
+        className={`text-sm font-bold leading-snug transition-colors ${
+          d.chairman ? 'text-white' : 'text-black group-hover:text-[#1f6fa8]'
+        }`}
+      >
+        {d.name}
+      </p>
       <p className={`text-xs leading-snug ${d.chairman ? 'text-white/80' : 'text-black/60'}`}>{d.role}</p>
     </div>
   );
 }
 
-function KmpColumn({ k }: { k: KmpNode }) {
+function KmpColumn({ k, delay }: { k: KmpNode; delay: number }) {
   return (
-    <div className="flex flex-col items-center text-center">
-      <div className="flex w-full flex-col gap-1 rounded-2xl border border-black/10 bg-white px-4 py-3 text-left shadow-sm">
-        <p className="text-sm font-bold leading-snug text-black">{k.name}</p>
+    <div className="animate-fade-up flex flex-col items-center text-center" style={{ animationDelay: `${delay}s` }}>
+      <div className="group flex w-full cursor-default flex-col gap-1 rounded-2xl border border-black/10 bg-white px-4 py-3 text-left shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-[#1f6fa8]/50 hover:shadow-lg hover:shadow-[#1f6fa8]/10">
+        <p className="text-sm font-bold leading-snug text-black transition-colors group-hover:text-[#1f6fa8]">{k.name}</p>
         <p className="text-xs leading-snug text-black/60">{k.role}</p>
       </div>
       <div className="h-5 w-px bg-black/15" />
-      <div className="w-full rounded-2xl border border-[#1f6fa8]/20 bg-[#1f6fa8]/5 px-4 py-3 text-left">
+      <div className="w-full cursor-default rounded-2xl border border-[#1f6fa8]/20 bg-[#1f6fa8]/5 px-4 py-3 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#1f6fa8]/50 hover:bg-[#1f6fa8]/10">
         <p className="text-xs font-semibold leading-snug text-[#1f6fa8]">{k.department}</p>
       </div>
     </div>
@@ -79,8 +88,8 @@ export default function OrgChart() {
           {/* Tier 1 — Board of Directors, a peer group */}
           <p className="text-center text-xs font-semibold uppercase tracking-wide text-black/40">Board of Directors</p>
           <div className="mt-5 flex flex-wrap justify-center gap-4">
-            {BOARD.map((d) => (
-              <DirectorCard key={d.name} d={d} />
+            {BOARD.map((d, i) => (
+              <DirectorCard key={d.name} d={d} delay={i * 0.08} />
             ))}
           </div>
 
@@ -98,8 +107,8 @@ export default function OrgChart() {
 
           {/* Tier 2 — Key Managerial Personnel, each with their department */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {KMP.map((k) => (
-              <KmpColumn key={k.name} k={k} />
+            {KMP.map((k, i) => (
+              <KmpColumn key={k.name} k={k} delay={0.4 + i * 0.08} />
             ))}
           </div>
         </div>
