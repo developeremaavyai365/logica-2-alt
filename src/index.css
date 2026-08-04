@@ -334,38 +334,3 @@ html, body, #root {
 .auth-container.right-panel-active .auth-overlay-right {
   transform: translateX(20%);
 }
-
-/* ===== Home page pure-CSS parallax scroll — Keith Clark's classic technique
- * (perspective on the scroll container + translateZ'd children), adapted
- * for a content-heavy page: every home section already has its own opaque
- * full-bleed background, so a hidden "layer behind the layer" trick (the
- * original demo's approach) would never be visible and forcing every
- * section to one fixed 100vh slide would clip real content (product grids,
- * forms). Instead each section is pushed to a slightly different Z depth
- * with a compensating scale, so it visibly scrolls at its own subtly
- * different rate — real depth-of-field parallax — while keeping its
- * natural, unclamped height. */
-.parallax {
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  perspective: 800px;
-}
-.parallax__group {
-  position: relative;
-  /* Without this, the browser flattens the group to 2D and silently
-     discards translateZ() on its children — the #1 reason this kind of
-     effect ends up invisible. */
-  transform-style: preserve-3d;
-}
-.parallax__layer {
-  position: relative;
-  transform: translateZ(0) scale(1);
-}
-.parallax__layer--near {
-  transform: translateZ(-150px) scale(1.1875);
-}
-.parallax__layer--far {
-  transform: translateZ(-300px) scale(1.375);
-}
