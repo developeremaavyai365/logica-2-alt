@@ -1,11 +1,60 @@
-import { type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import Header from './Header';
 
 const PRODUCT_IMAGE = '/logica-logo-shine.png';
 
+interface HeroLine {
+  text: string;
+  dim?: string;
+  color?: string;
+}
+
+/** Rotating hero headlines — same 3-line rhythm as the original ("Big words" /
+ *  "dim word" line, "Accent words" / "dim word" line, "Accent word" line) so
+ *  every variant reads as one consistent design, not a grab-bag of copy. */
+const HEADLINES: HeroLine[][] = [
+  [
+    { text: 'The Power', dim: 'of' },
+    { text: 'Genuine Tech', dim: 'for', color: '#9FD8F0' },
+    { text: 'Everyone', color: '#A8D96B' },
+  ],
+  [
+    { text: 'Enterprise Pricing', dim: 'for' },
+    { text: 'Every Business', dim: 'across', color: '#9FD8F0' },
+    { text: 'India', color: '#A8D96B' },
+  ],
+  [
+    { text: 'Three Decades', dim: 'of' },
+    { text: 'Proven Delivery', dim: 'since', color: '#9FD8F0' },
+    { text: '1995', color: '#A8D96B' },
+  ],
+  [
+    { text: 'Genuine Hardware', dim: 'only' },
+    { text: 'Zero Compromise', dim: 'on', color: '#9FD8F0' },
+    { text: 'Quality', color: '#A8D96B' },
+  ],
+];
+
 export default function LogicaHero() {
+  const [index, setIndex] = useState(0);
+  const [rotated, setRotated] = useState(false);
+
+  useEffect(() => {
+    let intervalId: number | undefined;
+    const timeoutId = window.setTimeout(() => {
+      intervalId = window.setInterval(() => {
+        setRotated(true);
+        setIndex((i) => (i + 1) % HEADLINES.length);
+      }, 4500);
+    }, 3200);
+    return () => {
+      window.clearTimeout(timeoutId);
+      if (intervalId) window.clearInterval(intervalId);
+    };
+  }, []);
+
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-black">
       {/* ================= NAVBAR ================= */}
@@ -13,26 +62,45 @@ export default function LogicaHero() {
       {/* ================= HERO CONTENT ================= */}
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 py-16 text-center sm:px-8 sm:py-20 lg:px-10 lg:py-24">
         <h1
-          className="animate-word-reveal font-dm-sans font-normal text-white"
+          className="font-dm-sans font-normal text-white"
           style={{
             letterSpacing: '-0.04em',
             fontSize: 'clamp(22px, 3.6vw, 56px)',
             lineHeight: 1.1,
+            minHeight: 'calc(3 * 1.1 * clamp(22px, 3.6vw, 56px))',
           }}
         >
-          <span className="block overflow-hidden">
-            <span className="inline-block" style={{ animationDelay: '1.8s' }}>The</span>{' '}
-            <span className="inline-block" style={{ animationDelay: '1.9s' }}>Power</span>{' '}
-            <span className="inline-block text-white/40" style={{ animationDelay: '2s' }}>of</span>
-          </span>
-          <span className="block overflow-hidden">
-            <span className="inline-block" style={{ animationDelay: '2.1s', color: '#9FD8F0' }}>Genuine</span>{' '}
-            <span className="inline-block" style={{ animationDelay: '2.2s', color: '#9FD8F0' }}>Tech</span>{' '}
-            <span className="inline-block text-white/40" style={{ animationDelay: '2.3s' }}>for</span>
-          </span>
-          <span className="block overflow-hidden">
-            <span className="inline-block" style={{ animationDelay: '2.4s', color: '#A8D96B' }}>Everyone</span>
-          </span>
+          {!rotated && index === 0 ? (
+            <span className="animate-word-reveal block">
+              <span className="block overflow-hidden">
+                <span className="inline-block" style={{ animationDelay: '1.8s' }}>The</span>{' '}
+                <span className="inline-block" style={{ animationDelay: '1.9s' }}>Power</span>{' '}
+                <span className="inline-block text-white/40" style={{ animationDelay: '2s' }}>of</span>
+              </span>
+              <span className="block overflow-hidden">
+                <span className="inline-block" style={{ animationDelay: '2.1s', color: '#9FD8F0' }}>Genuine</span>{' '}
+                <span className="inline-block" style={{ animationDelay: '2.2s', color: '#9FD8F0' }}>Tech</span>{' '}
+                <span className="inline-block text-white/40" style={{ animationDelay: '2.3s' }}>for</span>
+              </span>
+              <span className="block overflow-hidden">
+                <span className="inline-block" style={{ animationDelay: '2.4s', color: '#A8D96B' }}>Everyone</span>
+              </span>
+            </span>
+          ) : (
+            <span key={index} className="animate-hero-headline block">
+              {HEADLINES[index].map((line, li) => (
+                <span key={li} className="block overflow-hidden">
+                  <span className="inline-block" style={{ color: line.color ?? '#fff' }}>{line.text}</span>
+                  {line.dim && (
+                    <>
+                      {' '}
+                      <span className="inline-block text-white/40">{line.dim}</span>
+                    </>
+                  )}
+                </span>
+              ))}
+            </span>
+          )}
         </h1>
 
         <div

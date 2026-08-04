@@ -57,6 +57,16 @@ html, body, #root {
   animation: wordReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Rotating hero headline — crossfade + slight rise each time the displayed
+   variant changes (LogicaHero remounts this span via a `key` change). */
+@keyframes heroHeadlineIn {
+  from { opacity: 0; transform: translateY(14px); filter: blur(3px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0px); }
+}
+.animate-hero-headline {
+  animation: heroHeadlineIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
