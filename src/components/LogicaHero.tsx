@@ -47,7 +47,7 @@ export default function LogicaHero() {
       intervalId = window.setInterval(() => {
         setRotated(true);
         setIndex((i) => (i + 1) % HEADLINES.length);
-      }, 4500);
+      }, 2200);
     }, 3200);
     return () => {
       window.clearTimeout(timeoutId);
