@@ -33,25 +33,25 @@ export default function CategoryPage() {
   const accent = CATEGORY_FILTER_ACCENT[category.slug] ?? '#85AB8B';
 
   return (
-    <div className="w-full bg-[#dbe8d6]">
-      <div className="bg-[#f4f8f3]">
+    <div className="w-full bg-[#ECEDEC]">
+      <div className="bg-[#f0f0f0]">
         <Header />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-6 pb-14">
-          <Link to="/shop" className="text-xs font-medium text-[#3d5638] hover:opacity-80 transition-opacity">
+          <Link to="/shop" className="text-xs font-medium text-[#1f6fa8] hover:opacity-80 transition-opacity">
             ← All categories
           </Link>
           <div className="mt-4 flex items-center gap-4">
             <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shrink-0">
-              <Icon className="w-6 h-6 text-[#1f2a1d]" />
+              <Icon className="w-6 h-6 text-[#000000]" />
             </div>
             <div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443]" style={{ letterSpacing: '-0.03em' }}>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
                 {subLabel ? `${category.name} · ${subLabel}` : category.name}
               </h1>
-              <p className="mt-1 text-[#3d5638] text-sm font-medium">{category.tagline}</p>
+              <p className="mt-1 text-[#1f6fa8] text-sm font-medium">{category.tagline}</p>
             </div>
           </div>
-          <p className="mt-5 text-[#4b5b47] text-sm sm:text-base leading-relaxed max-w-2xl">
+          <p className="mt-5 text-[#6b6b6b] text-sm sm:text-base leading-relaxed max-w-2xl">
             {category.description}
           </p>
         </div>

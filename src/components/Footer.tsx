@@ -3,7 +3,7 @@ import { categories, socials } from '../data';
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#151d13] py-14 px-4 sm:px-6 md:px-10 text-white/70 text-sm">
+    <footer className="w-full bg-[#000000] py-14 px-4 sm:px-6 md:px-10 text-white/70 text-sm">
       <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8">
         <div>
           <h4 className="text-white font-semibold mb-3">Useful Links</h4>

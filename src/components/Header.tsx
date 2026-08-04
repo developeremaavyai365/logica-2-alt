@@ -35,8 +35,8 @@ export default function Header() {
           <img src="/logica-logo-shine.png" alt="Logica Infoway" className="h-11 w-auto object-contain sm:h-12 md:h-14" />
         </Link>
 
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-[#1f2a1d]/10 bg-[#f4f8f3] pl-2 pr-1 py-1 shadow-sm lg:flex">
-          <Link to="/" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#4b5b47] hover:text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors">
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-[#000000]/10 bg-[#f0f0f0] pl-2 pr-1 py-1 shadow-sm lg:flex">
+          <Link to="/" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors">
             Home
           </Link>
 
@@ -44,23 +44,23 @@ export default function Header() {
           <div className="group relative">
             <Link
               to="/shop"
-              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#4b5b47] hover:text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors"
+              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors"
             >
               Shop
               <ChevronDown className="w-3.5 h-3.5" />
             </Link>
             <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-40">
-              <div className="w-[46rem] max-w-[90vw] rounded-2xl bg-white shadow-xl border border-[#1f2a1d]/10 p-6 grid grid-cols-3 gap-x-6 gap-y-5">
+              <div className="w-[46rem] max-w-[90vw] rounded-2xl bg-white shadow-xl border border-[#000000]/10 p-6 grid grid-cols-3 gap-x-6 gap-y-5">
                 {SHOP_MEGA.map((cat) => (
                   <div key={cat.href}>
-                    <Link to={cat.href} className="text-sm font-semibold text-[#1f2a1d] hover:opacity-80 transition-opacity">
+                    <Link to={cat.href} className="text-sm font-semibold text-[#000000] hover:opacity-80 transition-opacity">
                       {cat.label}
                     </Link>
                     {cat.children && (
                       <ul className="mt-2 space-y-1.5">
                         {cat.children.map((child) => (
                           <li key={child.href}>
-                            <Link to={child.href} className="text-xs text-[#4b5b47] hover:text-[#1f2a1d] transition-colors">
+                            <Link to={child.href} className="text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
                               {child.label}
                             </Link>
                           </li>
@@ -77,18 +77,18 @@ export default function Header() {
           <div className="group relative">
             <Link
               to="/about"
-              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#4b5b47] hover:text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors"
+              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors"
             >
               About
               <ChevronDown className="w-3.5 h-3.5" />
             </Link>
             <div className="absolute left-0 top-full pt-3 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-40">
-              <div className="w-64 rounded-2xl bg-white shadow-xl border border-[#1f2a1d]/10 p-3">
+              <div className="w-64 rounded-2xl bg-white shadow-xl border border-[#000000]/10 p-3">
                 {ABOUT_MENU.map((item) => (
                   <Link
                     key={item.href}
                     to={item.href}
-                    className="block px-3 py-2.5 rounded-lg text-sm text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors"
+                    className="block px-3 py-2.5 rounded-lg text-sm text-[#000000] hover:bg-[#f0f0f0] transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -101,21 +101,21 @@ export default function Header() {
           <div className="group relative">
             <Link
               to="/investor"
-              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#4b5b47] hover:text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors"
+              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors"
             >
               Investor
               <ChevronDown className="w-3.5 h-3.5" />
             </Link>
             <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-40">
-              <div className="w-[52rem] max-w-[90vw] rounded-2xl bg-white shadow-xl border border-[#1f2a1d]/10 p-6 grid grid-cols-5 gap-x-5 gap-y-4">
+              <div className="w-[52rem] max-w-[90vw] rounded-2xl bg-white shadow-xl border border-[#000000]/10 p-6 grid grid-cols-5 gap-x-5 gap-y-4">
                 {INVESTOR_MEGA.map((col) => (
                   <div key={col.label}>
                     {col.href ? (
-                      <Link to={col.href} className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d] hover:opacity-80 transition-opacity">
+                      <Link to={col.href} className="text-xs font-semibold uppercase tracking-wide text-[#000000] hover:opacity-80 transition-opacity">
                         {col.label}
                       </Link>
                     ) : (
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d]">{col.label}</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#000000]">{col.label}</p>
                     )}
                     {col.children && (
                       <ul className="mt-2 space-y-1.5">
@@ -124,11 +124,11 @@ export default function Header() {
                           return (
                             <li key={child.label}>
                               {external ? (
-                                <a href={child.href} target="_blank" rel="noreferrer" className="text-xs text-[#4b5b47] hover:text-[#1f2a1d] transition-colors">
+                                <a href={child.href} target="_blank" rel="noreferrer" className="text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
                                   {child.label}
                                 </a>
                               ) : (
-                                <Link to={child.href} className="text-xs text-[#4b5b47] hover:text-[#1f2a1d] transition-colors">
+                                <Link to={child.href} className="text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
                                   {child.label}
                                 </Link>
                               )}
@@ -143,35 +143,35 @@ export default function Header() {
             </div>
           </div>
 
-          <Link to="/media" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#4b5b47] hover:text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors">
+          <Link to="/media" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors">
             Media
           </Link>
-          <Link to="/careers" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#4b5b47] hover:text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors">
+          <Link to="/careers" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors">
             Careers
           </Link>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2 bg-[#f4f8f3] rounded-full px-1.5 sm:px-2 py-1.5 shadow-sm border border-[#1f2a1d]/10 text-[#2d3a2a]">
+        <div className="flex items-center gap-1 sm:gap-2 bg-[#f0f0f0] rounded-full px-1.5 sm:px-2 py-1.5 shadow-sm border border-[#000000]/10 text-[#000000]">
           <Link
             to="/wishlist"
-            className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#f4f8f3] hover:text-[#1f2a1d] transition-colors"
+            className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#f0f0f0] hover:text-[#000000] transition-colors"
             aria-label="Wishlist"
           >
             <Heart className="w-4 h-4" />
             {wishlist.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] flex items-center justify-center" style={{ backgroundColor: '#3d5638' }}>
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] flex items-center justify-center" style={{ backgroundColor: '#1f6fa8' }}>
                 {wishlist.length}
               </span>
             )}
           </Link>
           <Link
             to="/cart"
-            className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#f4f8f3] hover:text-[#1f2a1d] transition-colors"
+            className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#f0f0f0] hover:text-[#000000] transition-colors"
             aria-label="Cart"
           >
             <ShoppingCart className="w-4 h-4" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] flex items-center justify-center" style={{ backgroundColor: '#3d5638' }}>
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] flex items-center justify-center" style={{ backgroundColor: '#1f6fa8' }}>
                 {cartCount}
               </span>
             )}
@@ -184,7 +184,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setAccountMenuOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f4f8f3] text-sm font-semibold text-[#1f2a1d] shadow-sm border border-[#1f2a1d]/10 hover:bg-white transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f0f0] text-sm font-semibold text-[#000000] shadow-sm border border-[#000000]/10 hover:bg-white transition-colors"
               aria-label="Account menu"
               aria-expanded={accountMenuOpen}
             >
@@ -193,15 +193,15 @@ export default function Header() {
             {accountMenuOpen && (
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setAccountMenuOpen(false)} />
-                <div className="absolute right-0 top-full z-40 mt-2 w-56 rounded-2xl border border-[#1f2a1d]/10 bg-white p-2 shadow-xl">
-                  <div className="px-3 py-2 border-b border-[#1f2a1d]/10 mb-1">
-                    <p className="text-sm font-semibold text-[#1f2a1d] truncate">{user.name}</p>
-                    <p className="text-xs text-[#4b5b47] truncate">{user.email}</p>
+                <div className="absolute right-0 top-full z-40 mt-2 w-56 rounded-2xl border border-[#000000]/10 bg-white p-2 shadow-xl">
+                  <div className="px-3 py-2 border-b border-[#000000]/10 mb-1">
+                    <p className="text-sm font-semibold text-[#000000] truncate">{user.name}</p>
+                    <p className="text-xs text-[#6b6b6b] truncate">{user.email}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setAccountMenuOpen(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#000000] hover:bg-[#f0f0f0] transition-colors"
                   >
                     <User className="w-4 h-4" />
                     Profile
@@ -209,7 +209,7 @@ export default function Header() {
                   <Link
                     to="/cart"
                     onClick={() => setAccountMenuOpen(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#1f2a1d] hover:bg-[#f4f8f3] transition-colors"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#000000] hover:bg-[#f0f0f0] transition-colors"
                   >
                     <Package className="w-4 h-4" />
                     Orders
@@ -227,26 +227,26 @@ export default function Header() {
             )}
           </div>
         ) : (
-          <div className="hidden lg:flex items-center gap-1 bg-[#f4f8f3] rounded-full px-1.5 py-1.5 shadow-sm border border-[#1f2a1d]/10">
+          <div className="hidden lg:flex items-center gap-1 bg-[#f0f0f0] rounded-full px-1.5 py-1.5 shadow-sm border border-[#000000]/10">
             <Link
               to="/login"
-              className="text-sm font-medium px-4 py-2 rounded-full text-[#2d3a2a] hover:bg-white hover:text-[#1f2a1d] transition-colors"
+              className="text-sm font-medium px-4 py-2 rounded-full text-[#000000] hover:bg-white hover:text-[#000000] transition-colors"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="text-sm font-semibold px-4 py-2 rounded-full bg-[#1f2a1d] text-white hover:bg-[#2d4228] transition-colors"
+              className="text-sm font-semibold px-4 py-2 rounded-full bg-[#000000] text-white hover:bg-[#1a1a1a] transition-colors"
             >
               Sign Up
             </Link>
           </div>
         )}
 
-        <div className="flex items-center gap-3 sm:gap-5 text-[#2d3a2a]">
+        <div className="flex items-center gap-3 sm:gap-5 text-[#000000]">
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="lg:hidden relative flex items-center justify-center w-10 h-10 rounded-full bg-[#f4f8f3] border border-[#1f2a1d]/10 text-[#1f2a1d] transition-all duration-300 hover:bg-white"
+            className="lg:hidden relative flex items-center justify-center w-10 h-10 rounded-full bg-[#f0f0f0] border border-[#000000]/10 text-[#000000] transition-all duration-300 hover:bg-white"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >
@@ -261,7 +261,7 @@ export default function Header() {
         className={`lg:hidden fixed inset-0 z-20 transition-opacity duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setMenuOpen(false)}
       >
-        <div className="absolute inset-0 bg-[#1f2a1d]/40 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-[#000000]/40 backdrop-blur-sm" />
       </div>
 
       {/* Mobile menu drawer */}
@@ -269,14 +269,14 @@ export default function Header() {
         className={`lg:hidden fixed top-0 right-0 bottom-0 z-20 w-[85%] max-w-sm bg-white/95 backdrop-blur-xl shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex flex-col h-full pt-24 px-6 pb-8 overflow-y-auto">
-          <Link to="/" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#1f2a1d] py-3 border-b border-[#1f2a1d]/10">
+          <Link to="/" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10">
             Home
           </Link>
 
           {/* Shop accordion */}
           <button
             onClick={() => setMobileSection((s) => (s === 'shop' ? null : 'shop'))}
-            className="flex items-center justify-between text-lg font-semibold text-[#1f2a1d] py-3 border-b border-[#1f2a1d]/10"
+            className="flex items-center justify-between text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10"
           >
             Shop
             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'shop' ? 'rotate-180' : ''}`} />
@@ -288,7 +288,7 @@ export default function Header() {
                   key={cat.href}
                   to={cat.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block text-sm text-[#4b5b47] py-1"
+                  className="block text-sm text-[#6b6b6b] py-1"
                 >
                   {cat.label}
                 </Link>
@@ -299,7 +299,7 @@ export default function Header() {
           {/* About accordion */}
           <button
             onClick={() => setMobileSection((s) => (s === 'about' ? null : 'about'))}
-            className="flex items-center justify-between text-lg font-semibold text-[#1f2a1d] py-3 border-b border-[#1f2a1d]/10"
+            className="flex items-center justify-between text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10"
           >
             About
             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'about' ? 'rotate-180' : ''}`} />
@@ -307,7 +307,7 @@ export default function Header() {
           <div className={`overflow-hidden transition-all duration-300 ${mobileSection === 'about' ? 'max-h-64' : 'max-h-0'}`}>
             <div className="py-2 pl-3 space-y-2">
               {ABOUT_MENU.map((item) => (
-                <Link key={item.href} to={item.href} onClick={() => setMenuOpen(false)} className="block text-sm text-[#4b5b47] py-1">
+                <Link key={item.href} to={item.href} onClick={() => setMenuOpen(false)} className="block text-sm text-[#6b6b6b] py-1">
                   {item.label}
                 </Link>
               ))}
@@ -317,7 +317,7 @@ export default function Header() {
           {/* Investor accordion */}
           <button
             onClick={() => setMobileSection((s) => (s === 'investor' ? null : 'investor'))}
-            className="flex items-center justify-between text-lg font-semibold text-[#1f2a1d] py-3 border-b border-[#1f2a1d]/10"
+            className="flex items-center justify-between text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10"
           >
             Investor
             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'investor' ? 'rotate-180' : ''}`} />
@@ -326,16 +326,16 @@ export default function Header() {
             <div className="py-2 pl-3 space-y-3 max-h-[36rem] overflow-y-auto">
               {INVESTOR_MEGA.map((col) => (
                 <div key={col.label}>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[#1f2a1d]">{col.label}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#000000]">{col.label}</p>
                   {col.children && (
                     <div className="mt-1 space-y-1">
                       {col.children.map((child) =>
                         child.href.startsWith('http') ? (
-                          <a key={child.label} href={child.href} target="_blank" rel="noreferrer" className="block text-sm text-[#4b5b47] py-0.5">
+                          <a key={child.label} href={child.href} target="_blank" rel="noreferrer" className="block text-sm text-[#6b6b6b] py-0.5">
                             {child.label}
                           </a>
                         ) : (
-                          <Link key={child.label} to={child.href} onClick={() => setMenuOpen(false)} className="block text-sm text-[#4b5b47] py-0.5">
+                          <Link key={child.label} to={child.href} onClick={() => setMenuOpen(false)} className="block text-sm text-[#6b6b6b] py-0.5">
                             {child.label}
                           </Link>
                         ),
@@ -347,28 +347,28 @@ export default function Header() {
             </div>
           </div>
 
-          <Link to="/media" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#1f2a1d] py-3 border-b border-[#1f2a1d]/10">
+          <Link to="/media" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10">
             Media
           </Link>
-          <Link to="/careers" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#1f2a1d] py-3 border-b border-[#1f2a1d]/10">
+          <Link to="/careers" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10">
             Careers
           </Link>
-          <Link to="/contact" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#1f2a1d] py-3 border-b border-[#1f2a1d]/10">
+          <Link to="/contact" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10">
             Contact
           </Link>
 
           <div className="mt-6 flex flex-col gap-4">
-            <Link to="/wishlist" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-sm font-medium text-[#2d3a2a]">
+            <Link to="/wishlist" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-sm font-medium text-[#000000]">
               <Heart className="w-4 h-4" />
               Wishlist {wishlist.length > 0 && `(${wishlist.length})`}
             </Link>
           </div>
 
-          <div className="mt-6 border-t border-[#1f2a1d]/10 pt-6">
+          <div className="mt-6 border-t border-[#000000]/10 pt-6">
             {user ? (
               <div className="flex flex-col gap-4">
-                <p className="text-sm text-[#4b5b47]">
-                  Signed in as <span className="font-semibold text-[#1f2a1d]">{user.name}</span>
+                <p className="text-sm text-[#6b6b6b]">
+                  Signed in as <span className="font-semibold text-[#000000]">{user.name}</span>
                 </p>
                 <button
                   type="button"
@@ -387,14 +387,14 @@ export default function Header() {
                 <Link
                   to="/login"
                   onClick={() => setMenuOpen(false)}
-                  className="w-full rounded-full border-2 border-[#1f2a1d] py-3 text-center text-sm font-semibold text-[#1f2a1d]"
+                  className="w-full rounded-full border-2 border-[#000000] py-3 text-center text-sm font-semibold text-[#000000]"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
                   onClick={() => setMenuOpen(false)}
-                  className="w-full rounded-full bg-[#1f2a1d] py-3 text-center text-sm font-semibold text-white"
+                  className="w-full rounded-full bg-[#000000] py-3 text-center text-sm font-semibold text-white"
                 >
                   Sign Up
                 </Link>

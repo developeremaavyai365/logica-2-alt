@@ -13,15 +13,15 @@ const KIND_ICONS = {
 
 export default function InvestorHub() {
   return (
-    <div className="w-full bg-[#dbe8d6]">
-      <div className="bg-[#f4f8f3]">
+    <div className="w-full bg-[#ECEDEC]">
+      <div className="bg-[#f0f0f0]">
         <Header />
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-[#3d5638] text-xs sm:text-sm font-semibold uppercase tracking-wide">Investor Relations</span>
-          <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443]" style={{ letterSpacing: '-0.03em' }}>
+          <span className="text-[#1f6fa8] text-xs sm:text-sm font-semibold uppercase tracking-wide">Investor Relations</span>
+          <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
             Reports, filings &amp; disclosures
           </h1>
-          <p className="mt-4 text-[#4b5b47] text-sm leading-relaxed">
+          <p className="mt-4 text-[#6b6b6b] text-sm leading-relaxed">
             Logica Infoway Limited — CIN L30007WB1995PLC073218
           </p>
         </div>
@@ -36,11 +36,11 @@ export default function InvestorHub() {
             <div key={category} className="mb-12">
               <div className="mb-4 flex items-center gap-2.5">
                 {CategoryIcon && (
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
                     <CategoryIcon className="h-4 w-4" />
                   </span>
                 )}
-                <h2 className="text-lg font-semibold text-[#1f2a1d]">{category}</h2>
+                <h2 className="text-lg font-semibold text-[#000000]">{category}</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {sections.map((s) => {
@@ -49,13 +49,13 @@ export default function InvestorHub() {
                     <Link
                       key={s.slug}
                       to={`/investor/${s.slug}`}
-                      className="flex items-center gap-3 rounded-xl border border-[#1f2a1d]/10 px-5 py-4 text-sm font-medium text-[#1f2a1d] hover:border-[#1f2a1d]/40 hover:bg-[#f4f8f3] transition-colors"
+                      className="flex items-center gap-3 rounded-xl border border-[#000000]/10 px-5 py-4 text-sm font-medium text-[#000000] hover:border-[#000000]/40 hover:bg-[#f0f0f0] transition-colors"
                     >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
                         <ItemIcon className="h-3.5 w-3.5" />
                       </span>
                       <span className="flex-1">{s.label}</span>
-                      <ChevronRight className="h-4 w-4 shrink-0 text-[#4b5b47]" />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-[#6b6b6b]" />
                     </Link>
                   );
                 })}

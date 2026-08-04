@@ -68,20 +68,20 @@ export default function TypewriterSearchInput({
           focused ? 'opacity-70 animate-[searchGlow_3s_linear_infinite]' : 'group-hover:opacity-30'
         }`}
       />
-      <div className="relative flex items-center rounded-full border border-[#1f2a1d]/15 bg-[#f4f8f3] transition-colors focus-within:border-transparent">
-        <Search className="pointer-events-none absolute left-3.5 h-4 w-4 text-[#4b5b47]/50" />
+      <div className="relative flex items-center rounded-full border border-[#000000]/15 bg-[#f0f0f0] transition-colors focus-within:border-transparent">
+        <Search className="pointer-events-none absolute left-3.5 h-4 w-4 text-[#6b6b6b]/50" />
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           placeholder={showTypewriter ? '' : 'Search this category...'}
-          className="w-full rounded-full bg-transparent py-2.5 pl-10 pr-10 text-sm text-[#1f2a1d] outline-none"
+          className="w-full rounded-full bg-transparent py-2.5 pl-10 pr-10 text-sm text-[#000000] outline-none"
         />
         {showTypewriter && (
-          <span className="pointer-events-none absolute left-10 text-sm text-[#4b5b47]/50 whitespace-nowrap overflow-hidden">
+          <span className="pointer-events-none absolute left-10 text-sm text-[#6b6b6b]/50 whitespace-nowrap overflow-hidden">
             {display}
-            <span className="inline-block w-[1px] h-[1em] bg-[#4b5b47]/60 ml-0.5 align-middle animate-pulse" />
+            <span className="inline-block w-[1px] h-[1em] bg-[#6b6b6b]/60 ml-0.5 align-middle animate-pulse" />
           </span>
         )}
         {value && (
@@ -89,7 +89,7 @@ export default function TypewriterSearchInput({
             type="button"
             onClick={() => onChange('')}
             aria-label="Clear search"
-            className="absolute right-3 text-[#4b5b47]/50 hover:text-[#1f2a1d]"
+            className="absolute right-3 text-[#6b6b6b]/50 hover:text-[#000000]"
           >
             <X className="h-4 w-4" />
           </button>

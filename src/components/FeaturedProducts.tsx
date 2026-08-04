@@ -71,7 +71,7 @@ function ProductTile({ product, i }: { product: Product; i: number }) {
             setAdded(true);
             setTimeout(() => setAdded(false), 1500);
           }}
-          className="btn-liquid font-inter mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-md border-2 border-[#1f2a1d] font-medium text-[#1f2a1d] transition-colors"
+          className="btn-liquid font-inter mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-md border-2 border-[#000000] font-medium text-[#000000] transition-colors"
           style={{ letterSpacing: '-0.03em', fontSize: '15px' }}
         >
           {added ? (

@@ -194,12 +194,12 @@ export default function ShopBrowser({
             onClick={() => setSidebarOpen((v) => !v)}
             aria-expanded={sidebarOpen}
             aria-label={sidebarOpen ? 'Collapse filters' : 'Expand filters'}
-            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#1f2a1d]/20 text-[#1f2a1d] transition-colors hover:border-[#1f2a1d]/40"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#000000]/20 text-[#000000] transition-colors hover:border-[#000000]/40"
           >
             <SlidersHorizontal className="h-4 w-4" />
             {activeCount > 0 && (
               <span
-                className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-[#1f2a1d]"
+                className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-[#000000]"
                 style={{ backgroundColor: accent }}
               >
                 {activeCount}
@@ -232,22 +232,22 @@ export default function ShopBrowser({
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="inline-flex items-center gap-2 rounded-full border border-[#1f2a1d]/20 px-4 py-2.5 text-sm font-medium text-[#1f2a1d] transition-colors hover:border-[#1f2a1d]/40 lg:hidden"
+              className="inline-flex items-center gap-2 rounded-full border border-[#000000]/20 px-4 py-2.5 text-sm font-medium text-[#000000] transition-colors hover:border-[#000000]/40 lg:hidden"
             >
               <SlidersHorizontal className="h-4 w-4" />
               Filters
               {activeCount > 0 && (
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-[#1f2a1d]" style={{ backgroundColor: accent }}>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-[#000000]" style={{ backgroundColor: accent }}>
                   {activeCount}
                 </span>
               )}
             </button>
             <div className="flex items-center gap-2">
-              <SlidersHorizontal className="hidden h-4 w-4 text-[#4b5b47]/50 sm:block" />
+              <SlidersHorizontal className="hidden h-4 w-4 text-[#6b6b6b]/50 sm:block" />
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="rounded-full border border-[#1f2a1d]/15 bg-white py-2.5 pl-3 pr-8 text-sm text-[#1f2a1d] outline-none transition-colors focus:border-[#1f2a1d]/40"
+                className="rounded-full border border-[#000000]/15 bg-white py-2.5 pl-3 pr-8 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.key} value={o.key}>
@@ -260,13 +260,13 @@ export default function ShopBrowser({
         </div>
 
         <div ref={topRef} className="mt-6 scroll-mt-28">
-          <p className="text-sm text-[#4b5b47]">
+          <p className="text-sm text-[#6b6b6b]">
             {filtered.length === 0 ? (
               'No products'
             ) : (
               <>
                 Showing{' '}
-                <span className="text-[#1f2a1d] font-medium">
+                <span className="text-[#000000] font-medium">
                   {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)}
                 </span>{' '}
                 of {filtered.length} {filtered.length === 1 ? 'product' : 'products'}
@@ -292,7 +292,7 @@ export default function ShopBrowser({
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
               aria-label="Previous page"
-              className="inline-flex h-9 items-center gap-1 rounded-full border border-[#1f2a1d]/15 px-3 text-sm text-[#4b5b47] transition-colors hover:border-[#1f2a1d]/40 hover:text-[#1f2a1d] disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex h-9 items-center gap-1 rounded-full border border-[#000000]/15 px-3 text-sm text-[#6b6b6b] transition-colors hover:border-[#000000]/40 hover:text-[#000000] disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ChevronLeft className="h-4 w-4" />
               <span className="hidden sm:inline">Prev</span>
@@ -300,7 +300,7 @@ export default function ShopBrowser({
 
             {pageItems(currentPage, pageCount).map((it, i) =>
               it === '…' ? (
-                <span key={`gap-${i}`} className="px-2 text-sm text-[#4b5b47]/50">
+                <span key={`gap-${i}`} className="px-2 text-sm text-[#6b6b6b]/50">
                   …
                 </span>
               ) : (
@@ -311,8 +311,8 @@ export default function ShopBrowser({
                   aria-current={it === currentPage ? 'page' : undefined}
                   className={
                     it === currentPage
-                      ? 'inline-flex h-9 min-w-9 items-center justify-center rounded-full px-3 text-sm font-bold text-[#1f2a1d]'
-                      : 'inline-flex h-9 min-w-9 items-center justify-center rounded-full border border-[#1f2a1d]/15 px-3 text-sm text-[#4b5b47] transition-colors hover:border-[#1f2a1d]/40 hover:text-[#1f2a1d]'
+                      ? 'inline-flex h-9 min-w-9 items-center justify-center rounded-full px-3 text-sm font-bold text-[#000000]'
+                      : 'inline-flex h-9 min-w-9 items-center justify-center rounded-full border border-[#000000]/15 px-3 text-sm text-[#6b6b6b] transition-colors hover:border-[#000000]/40 hover:text-[#000000]'
                   }
                   style={it === currentPage ? { backgroundColor: accent } : undefined}
                 >
@@ -326,7 +326,7 @@ export default function ShopBrowser({
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === pageCount}
               aria-label="Next page"
-              className="inline-flex h-9 items-center gap-1 rounded-full border border-[#1f2a1d]/15 px-3 text-sm text-[#4b5b47] transition-colors hover:border-[#1f2a1d]/40 hover:text-[#1f2a1d] disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex h-9 items-center gap-1 rounded-full border border-[#000000]/15 px-3 text-sm text-[#6b6b6b] transition-colors hover:border-[#000000]/40 hover:text-[#000000] disabled:cursor-not-allowed disabled:opacity-40"
             >
               <span className="hidden sm:inline">Next</span>
               <ChevronRight className="h-4 w-4" />
@@ -340,23 +340,23 @@ export default function ShopBrowser({
         <div className="fixed inset-0 z-[60] lg:hidden">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
           <div className="absolute inset-y-0 left-0 flex w-[86%] max-w-sm flex-col bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#1f2a1d]/10 px-5 py-4">
-              <span className="text-lg font-semibold text-[#1f2a1d]">Filters</span>
+            <div className="flex items-center justify-between border-b border-[#000000]/10 px-5 py-4">
+              <span className="text-lg font-semibold text-[#000000]">Filters</span>
               <button
                 type="button"
                 aria-label="Close filters"
                 onClick={() => setDrawerOpen(false)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#4b5b47] hover:bg-[#f4f8f3]"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#6b6b6b] hover:bg-[#f0f0f0]"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-5 pb-6">{sidebar}</div>
-            <div className="border-t border-[#1f2a1d]/10 p-4">
+            <div className="border-t border-[#000000]/10 p-4">
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                className="btn-liquid w-full rounded-full border-2 border-[#1f2a1d] py-3 text-sm font-bold text-[#1f2a1d] transition-colors"
+                className="btn-liquid w-full rounded-full border-2 border-[#000000] py-3 text-sm font-bold text-[#000000] transition-colors"
               >
                 Show {filtered.length} results
               </button>

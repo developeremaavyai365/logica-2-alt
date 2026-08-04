@@ -54,7 +54,7 @@ export default function NewArrivalSpotlight() {
             <Link
               to={latest.href}
               className="btn-liquid flex h-14 w-full items-center justify-center gap-2 rounded-md border-2 border-white font-inter font-medium text-white transition-colors sm:h-16 sm:w-[220px]"
-              style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 20px)', '--liquid': '#fff', '--liquid-ink': '#1f2a1d' } as CSSProperties}
+              style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 20px)', '--liquid': '#fff', '--liquid-ink': '#000000' } as CSSProperties}
             >
               Preorder Now
               <ArrowUpRight className="h-5 w-5" />

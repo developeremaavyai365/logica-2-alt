@@ -33,14 +33,14 @@ export interface FilterSidebarProps {
 function Section({ title, defaultOpen = false, children }: { title: string; defaultOpen?: boolean; children: ReactNode }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-[#1f2a1d]/10">
+    <div className="border-b border-[#000000]/10">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between py-3.5 text-left"
       >
-        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#1f2a1d]/80">{title}</span>
-        {open ? <Minus className="h-3.5 w-3.5 text-[#4b5b47]/60" /> : <Plus className="h-3.5 w-3.5 text-[#4b5b47]/60" />}
+        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#000000]/80">{title}</span>
+        {open ? <Minus className="h-3.5 w-3.5 text-[#6b6b6b]/60" /> : <Plus className="h-3.5 w-3.5 text-[#6b6b6b]/60" />}
       </button>
       {open && <div className="pb-4 pr-1">{children}</div>}
     </div>
@@ -66,21 +66,21 @@ function CheckRow({
     <button type="button" onClick={onChange} className="group flex w-full items-center gap-2.5 rounded-md py-1.5 text-left">
       <span
         className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
-          checked ? 'border-transparent' : 'border-[#1f2a1d]/25 group-hover:border-[#1f2a1d]/50'
+          checked ? 'border-transparent' : 'border-[#000000]/25 group-hover:border-[#000000]/50'
         }`}
         style={checked ? { backgroundColor: accent } : undefined}
       >
         {checked && (
-          <svg viewBox="0 0 12 12" className="h-3 w-3 text-[#1f2a1d]" fill="none">
+          <svg viewBox="0 0 12 12" className="h-3 w-3 text-[#000000]" fill="none">
             <path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
       </span>
-      {swatch && <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-[#1f2a1d]/15" style={{ background: swatch }} />}
-      <span className={`flex-1 text-sm transition-colors ${checked ? 'text-[#1f2a1d]' : 'text-[#4b5b47] group-hover:text-[#1f2a1d]'}`}>
+      {swatch && <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-[#000000]/15" style={{ background: swatch }} />}
+      <span className={`flex-1 text-sm transition-colors ${checked ? 'text-[#000000]' : 'text-[#6b6b6b] group-hover:text-[#000000]'}`}>
         {label}
       </span>
-      {count !== undefined && <span className="text-xs text-[#4b5b47]/40">{count}</span>}
+      {count !== undefined && <span className="text-xs text-[#6b6b6b]/40">{count}</span>}
     </button>
   );
 }
@@ -123,27 +123,27 @@ function ColourSection({
   }, [colors, q]);
 
   return (
-    <div className="border-b border-[#1f2a1d]/10">
+    <div className="border-b border-[#000000]/10">
       <button type="button" onClick={() => setOpen((o) => !o)} className="flex w-full items-center justify-between py-3.5 text-left">
-        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#1f2a1d]/80">Colour</span>
-        {open ? <Minus className="h-3.5 w-3.5 text-[#4b5b47]/60" /> : <Plus className="h-3.5 w-3.5 text-[#4b5b47]/60" />}
+        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#000000]/80">Colour</span>
+        {open ? <Minus className="h-3.5 w-3.5 text-[#6b6b6b]/60" /> : <Plus className="h-3.5 w-3.5 text-[#6b6b6b]/60" />}
       </button>
       {open && (
         <div className="pb-4">
           <div className="relative mb-2">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#4b5b47]/50" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b6b6b]/50" />
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search colours..."
-              className="w-full rounded-lg border border-[#1f2a1d]/15 bg-[#f4f8f3] py-1.5 pl-8 pr-2 text-xs text-[#1f2a1d] placeholder:text-[#4b5b47]/50 outline-none focus:border-[#1f2a1d]/40"
+              className="w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] py-1.5 pl-8 pr-2 text-xs text-[#000000] placeholder:text-[#6b6b6b]/50 outline-none focus:border-[#000000]/40"
             />
           </div>
           <div className="max-h-56 overflow-y-auto pr-1">
             {filtered.map((c) => (
               <CheckRow key={c.value} label={c.value} checked={selected.includes(c.value)} accent={accent} swatch={swatchFor(c.value)} onChange={() => onToggle(c.value)} />
             ))}
-            {filtered.length === 0 && <p className="py-2 text-xs text-[#4b5b47]/50">No colours match.</p>}
+            {filtered.length === 0 && <p className="py-2 text-xs text-[#6b6b6b]/50">No colours match.</p>}
           </div>
         </div>
       )}
@@ -169,16 +169,16 @@ export function FilterSidebar({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="flex items-center gap-2 text-base font-semibold text-[#1f2a1d]">
+        <h3 className="flex items-center gap-2 text-base font-semibold text-[#000000]">
           Filters
           {activeCount > 0 && (
-            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-[#1f2a1d]" style={{ backgroundColor: accent }}>
+            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-[#000000]" style={{ backgroundColor: accent }}>
               {activeCount}
             </span>
           )}
         </h3>
         {activeCount > 0 && (
-          <button type="button" onClick={onClear} className="text-xs font-medium text-[#4b5b47] transition-colors hover:text-[#1f2a1d]">
+          <button type="button" onClick={onClear} className="text-xs font-medium text-[#6b6b6b] transition-colors hover:text-[#000000]">
             Clear all
           </button>
         )}

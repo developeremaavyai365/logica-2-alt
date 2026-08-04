@@ -91,13 +91,13 @@ export default function ProductReviews({ productId }: { productId: string }) {
   }
 
   return (
-    <div className="mt-20 border-t border-[#1f2a1d]/10 pt-12">
+    <div className="mt-20 border-t border-[#000000]/10 pt-12">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-        <h2 className="text-xl font-semibold text-[#1f2a1d]">Ratings &amp; Reviews</h2>
+        <h2 className="text-xl font-semibold text-[#000000]">Ratings &amp; Reviews</h2>
         {reviews.length > 0 && (
           <div className="flex items-center gap-2">
             <StarRow rating={Math.round(average)} size="w-5 h-5" />
-            <span className="text-sm text-[#4b5b47]">
+            <span className="text-sm text-[#6b6b6b]">
               {average.toFixed(1)} out of 5 · {reviews.length} review{reviews.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -105,16 +105,16 @@ export default function ProductReviews({ productId }: { productId: string }) {
       </div>
 
       {/* Write a review */}
-      <form onSubmit={handleSubmit} className="rounded-2xl bg-[#f4f8f3] p-5 sm:p-6 mb-10">
-        <h3 className="text-sm font-semibold text-[#1f2a1d] mb-4">Share your experience</h3>
+      <form onSubmit={handleSubmit} className="rounded-2xl bg-[#f0f0f0] p-5 sm:p-6 mb-10">
+        <h3 className="text-sm font-semibold text-[#000000] mb-4">Share your experience</h3>
 
         <div className="mb-4">
-          <label className="block text-xs font-medium text-[#4b5b47] mb-2">Your rating</label>
+          <label className="block text-xs font-medium text-[#6b6b6b] mb-2">Your rating</label>
           <StarRatingInput value={rating} onChange={setRating} />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="review-name" className="block text-xs font-medium text-[#4b5b47] mb-1.5">
+          <label htmlFor="review-name" className="block text-xs font-medium text-[#6b6b6b] mb-1.5">
             Your name (optional)
           </label>
           <input
@@ -123,12 +123,12 @@ export default function ProductReviews({ productId }: { productId: string }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="John Doe"
-            className="w-full h-11 px-3 rounded-lg border border-[#1f2a1d]/15 bg-white text-sm text-[#1f2a1d] outline-none focus:border-[#1f2a1d]/40 transition-colors"
+            className="w-full h-11 px-3 rounded-lg border border-[#000000]/15 bg-white text-sm text-[#000000] outline-none focus:border-[#000000]/40 transition-colors"
           />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="review-text" className="block text-xs font-medium text-[#4b5b47] mb-1.5">
+          <label htmlFor="review-text" className="block text-xs font-medium text-[#6b6b6b] mb-1.5">
             Your review
           </label>
           <textarea
@@ -137,15 +137,15 @@ export default function ProductReviews({ productId }: { productId: string }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="How was the product you received? Quality, packaging, delivery..."
-            className="w-full px-3 py-2.5 rounded-lg border border-[#1f2a1d]/15 bg-white text-sm text-[#1f2a1d] outline-none focus:border-[#1f2a1d]/40 transition-colors resize-none"
+            className="w-full px-3 py-2.5 rounded-lg border border-[#000000]/15 bg-white text-sm text-[#000000] outline-none focus:border-[#000000]/40 transition-colors resize-none"
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-xs font-medium text-[#4b5b47] mb-1.5">Photos of the product you received</label>
+          <label className="block text-xs font-medium text-[#6b6b6b] mb-1.5">Photos of the product you received</label>
           <div className="flex flex-wrap gap-2.5">
             {photos.map((p, i) => (
-              <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#1f2a1d]/15">
+              <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#000000]/15">
                 <img src={p} alt="" className="w-full h-full object-cover" />
                 <button
                   type="button"
@@ -161,7 +161,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-16 h-16 rounded-lg border-2 border-dashed border-[#1f2a1d]/20 flex flex-col items-center justify-center gap-0.5 text-[#4b5b47] hover:border-[#1f2a1d]/40 hover:text-[#1f2a1d] transition-colors"
+                className="w-16 h-16 rounded-lg border-2 border-dashed border-[#000000]/20 flex flex-col items-center justify-center gap-0.5 text-[#6b6b6b] hover:border-[#000000]/40 hover:text-[#000000] transition-colors"
               >
                 <ImagePlus className="w-4 h-4" />
                 <span className="text-[9px]">Add</span>
@@ -185,7 +185,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
 
         <button
           type="submit"
-          className="btn-liquid border-2 border-[#1f2a1d] text-[#1f2a1d] text-sm font-semibold px-6 py-2.5 rounded-full transition-colors"
+          className="btn-liquid border-2 border-[#000000] text-[#000000] text-sm font-semibold px-6 py-2.5 rounded-full transition-colors"
         >
           {submitted ? (
             <span className="inline-flex items-center gap-1.5">
@@ -199,30 +199,30 @@ export default function ProductReviews({ productId }: { productId: string }) {
 
       {/* Review list */}
       {reviews.length === 0 ? (
-        <p className="text-sm text-[#4b5b47]">No reviews yet — be the first to share your experience.</p>
+        <p className="text-sm text-[#6b6b6b]">No reviews yet — be the first to share your experience.</p>
       ) : (
         <div className="space-y-6">
           {reviews.map((r) => (
-            <div key={r.id} className="border-b border-[#1f2a1d]/10 pb-6 last:border-0">
+            <div key={r.id} className="border-b border-[#000000]/10 pb-6 last:border-0">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-3">
-                  <span className="w-9 h-9 rounded-full bg-[#1f2a1d] text-white text-xs font-semibold flex items-center justify-center shrink-0">
+                  <span className="w-9 h-9 rounded-full bg-[#000000] text-white text-xs font-semibold flex items-center justify-center shrink-0">
                     {r.name.slice(0, 1).toUpperCase()}
                   </span>
                   <div>
-                    <p className="text-sm font-semibold text-[#1f2a1d]">{r.name}</p>
+                    <p className="text-sm font-semibold text-[#000000]">{r.name}</p>
                     <StarRow rating={r.rating} />
                   </div>
                 </div>
-                <span className="text-xs text-[#4b5b47]/60">
+                <span className="text-xs text-[#6b6b6b]/60">
                   {new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </span>
               </div>
-              {r.text && <p className="mt-3 text-sm text-[#4b5b47] leading-relaxed">{r.text}</p>}
+              {r.text && <p className="mt-3 text-sm text-[#6b6b6b] leading-relaxed">{r.text}</p>}
               {r.photos.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2.5">
                   {r.photos.map((p, i) => (
-                    <a key={i} href={p} target="_blank" rel="noreferrer" className="block w-16 h-16 rounded-lg overflow-hidden border border-[#1f2a1d]/15">
+                    <a key={i} href={p} target="_blank" rel="noreferrer" className="block w-16 h-16 rounded-lg overflow-hidden border border-[#000000]/15">
                       <img src={p} alt="" className="w-full h-full object-cover" />
                     </a>
                   ))}

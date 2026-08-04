@@ -9,8 +9,8 @@ export default function Auth({ mode }: { mode: 'signin' | 'signup' }) {
   const redirect = searchParams.get('redirect') || '/';
 
   return (
-    <div className="w-full bg-[#dbe8d6]">
-      <div className="bg-[#f4f8f3]">
+    <div className="w-full bg-[#ECEDEC]">
+      <div className="bg-[#f0f0f0]">
         <Header />
       </div>
       <section className="flex justify-center px-4 py-14 sm:px-6 sm:py-20 md:px-10">

@@ -19,7 +19,7 @@ export default function ClosingBanner() {
         </p>
         <Link
           to="/shop"
-          className="btn-liquid font-inter mt-8 flex h-14 w-full max-w-[240px] items-center justify-center gap-2 rounded-md border-2 border-[#1f2a1d] font-medium text-[#1f2a1d] transition-colors sm:h-16 lg:h-[72px] lg:max-w-[280px]"
+          className="btn-liquid font-inter mt-8 flex h-14 w-full max-w-[240px] items-center justify-center gap-2 rounded-md border-2 border-[#000000] font-medium text-[#000000] transition-colors sm:h-16 lg:h-[72px] lg:max-w-[280px]"
           style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 22px)' }}
         >
           Shop Now

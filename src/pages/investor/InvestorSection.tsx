@@ -15,22 +15,22 @@ export default function InvestorSection() {
   const CategoryIcon = CATEGORY_ICONS[section.category];
 
   return (
-    <div className="w-full bg-[#dbe8d6]">
-      <div className="bg-[#f4f8f3]">
+    <div className="w-full bg-[#ECEDEC]">
+      <div className="bg-[#f0f0f0]">
         <Header />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <Link to="/investor" className="text-xs font-medium text-[#3d5638] hover:opacity-80 transition-opacity">
+          <Link to="/investor" className="text-xs font-medium text-[#1f6fa8] hover:opacity-80 transition-opacity">
             ← Investor Relations
           </Link>
           <div className="mt-4 flex items-center gap-2">
             {CategoryIcon && (
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[#3d5638]">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[#1f6fa8]">
                 <CategoryIcon className="h-3.5 w-3.5" />
               </span>
             )}
-            <p className="text-xs font-semibold uppercase tracking-wide text-[#3d5638]">{section.category}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#1f6fa8]">{section.category}</p>
           </div>
-          <h1 className="mt-2 text-3xl sm:text-4xl font-normal text-[#336443]" style={{ letterSpacing: '-0.03em' }}>
+          <h1 className="mt-2 text-3xl sm:text-4xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
             {section.label}
           </h1>
         </div>
@@ -40,7 +40,7 @@ export default function InvestorSection() {
         {section.kind === 'docs' && (
           <>
             {section.items.length === 0 ? (
-              <p className="text-sm text-[#4b5b47]">No documents published yet.</p>
+              <p className="text-sm text-[#6b6b6b]">No documents published yet.</p>
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {section.items.map((doc) => (
@@ -49,20 +49,20 @@ export default function InvestorSection() {
                     href={doc.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex flex-col rounded-2xl border border-[#1f2a1d]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#1f2a1d]/30 hover:shadow-md"
+                    className="group flex flex-col rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#000000]/30 hover:shadow-md"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
                         <FileText className="w-5 h-5" />
                       </span>
-                      <span className="rounded-full bg-[#dbe8d6] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#336443]">
+                      <span className="rounded-full bg-[#ECEDEC] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#000000]">
                         PDF
                       </span>
                     </div>
-                    <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#1f2a1d]">{doc.title}</p>
+                    <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#000000]">{doc.title}</p>
                     <div className="mt-4 flex items-center justify-between text-xs">
-                      {doc.year ? <span className="font-medium text-[#4b5b47]">FY {doc.year}</span> : <span />}
-                      <span className="flex items-center gap-1 font-medium text-[#3d5638] opacity-0 transition-opacity group-hover:opacity-100">
+                      {doc.year ? <span className="font-medium text-[#6b6b6b]">FY {doc.year}</span> : <span />}
+                      <span className="flex items-center gap-1 font-medium text-[#1f6fa8] opacity-0 transition-opacity group-hover:opacity-100">
                         View <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
@@ -81,13 +81,13 @@ export default function InvestorSection() {
                 href={p.url}
                 target="_blank"
                 rel="noreferrer"
-                className="group flex flex-col rounded-2xl border border-[#1f2a1d]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#1f2a1d]/30 hover:shadow-md"
+                className="group flex flex-col rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#000000]/30 hover:shadow-md"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
                   <Calendar className="w-5 h-5" />
                 </span>
-                <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#1f2a1d]">{p.label}</p>
-                <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-[#3d5638] opacity-0 transition-opacity group-hover:opacity-100">
+                <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#000000]">{p.label}</p>
+                <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-[#1f6fa8] opacity-0 transition-opacity group-hover:opacity-100">
                   View <ArrowUpRight className="w-3.5 h-3.5" />
                 </span>
               </a>
@@ -101,18 +101,18 @@ export default function InvestorSection() {
               href={section.doc.url}
               target="_blank"
               rel="noreferrer"
-              className="group flex flex-col rounded-2xl border border-[#1f2a1d]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#1f2a1d]/30 hover:shadow-md"
+              className="group flex flex-col rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#000000]/30 hover:shadow-md"
             >
               <div className="flex items-center justify-between">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
                   <FileText className="w-5 h-5" />
                 </span>
-                <span className="rounded-full bg-[#dbe8d6] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#336443]">
+                <span className="rounded-full bg-[#ECEDEC] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#000000]">
                   PDF
                 </span>
               </div>
-              <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#1f2a1d]">{section.doc.title}</p>
-              <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-[#3d5638] opacity-0 transition-opacity group-hover:opacity-100">
+              <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#000000]">{section.doc.title}</p>
+              <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-[#1f6fa8] opacity-0 transition-opacity group-hover:opacity-100">
                 View <ArrowUpRight className="w-3.5 h-3.5" />
               </span>
             </a>
@@ -121,16 +121,16 @@ export default function InvestorSection() {
 
         {section.kind === 'names' && (
           <>
-            <p className="text-sm text-[#4b5b47] mb-6 leading-relaxed">
+            <p className="text-sm text-[#6b6b6b] mb-6 leading-relaxed">
               Group companies associated with Logica Infoway Limited.
             </p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {section.items.map((name) => (
-                <div key={name} className="flex flex-col items-start rounded-2xl border border-[#1f2a1d]/10 bg-white p-5 shadow-sm">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f4f8f3] text-[#3d5638]">
+                <div key={name} className="flex flex-col items-start rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
                     <Building2 className="w-5 h-5" />
                   </span>
-                  <p className="mt-4 text-sm font-semibold leading-snug text-[#1f2a1d]">{name}</p>
+                  <p className="mt-4 text-sm font-semibold leading-snug text-[#000000]">{name}</p>
                 </div>
               ))}
             </div>

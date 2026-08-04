@@ -9,7 +9,7 @@ function MediaCard({ entry }: { entry: MediaEntry }) {
   const extra = entry.images.length - 1;
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl bg-[#151d13] shadow-sm transition-shadow duration-300 hover:shadow-xl">
+    <div className="group relative overflow-hidden rounded-2xl bg-[#000000] shadow-sm transition-shadow duration-300 hover:shadow-xl">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -26,7 +26,7 @@ function MediaCard({ entry }: { entry: MediaEntry }) {
         {/* Category badge */}
         <span
           className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${
-            entry.category === 'award' ? 'bg-[#F0C94A] text-[#1f2a1d]' : 'bg-white text-[#1f2a1d]'
+            entry.category === 'award' ? 'bg-[#F0C94A] text-[#000000]' : 'bg-white text-[#000000]'
           }`}
         >
           {entry.category === 'award' ? '★ Award' : 'Celebration'}
@@ -74,13 +74,13 @@ export default function Media() {
   return (
     <div className="w-full bg-white">
       {/* Hero */}
-      <div className="relative overflow-hidden bg-[#151d13]">
+      <div className="relative overflow-hidden bg-[#000000]">
         <img
           src={awards[0]?.images[0]}
           alt=""
           className="absolute inset-0 h-full w-full object-cover opacity-25"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#151d13]/60 via-[#151d13]/85 to-[#151d13]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/60 via-[#000000]/85 to-[#000000]" />
         <div className="relative">
           <Header />
           <div className="mx-auto max-w-4xl px-4 pb-20 pt-10 text-center sm:px-6 sm:pb-24 md:px-10">
@@ -102,10 +102,10 @@ export default function Media() {
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:px-10">
         <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10">
           <div>
-            <h2 className="text-2xl font-bold text-[#1f2a1d] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
+            <h2 className="text-2xl font-bold text-[#000000] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
               Awards &amp; Recognitions
             </h2>
-            <p className="mt-1 text-sm text-[#4b5b47]">{awards.length} accolades from our brand partners</p>
+            <p className="mt-1 text-sm text-[#6b6b6b]">{awards.length} accolades from our brand partners</p>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -116,13 +116,13 @@ export default function Media() {
       </section>
 
       {/* Celebrations */}
-      <section className="bg-[#f4f8f3] px-4 py-16 sm:px-6 sm:py-20 md:px-10">
+      <section className="bg-[#f0f0f0] px-4 py-16 sm:px-6 sm:py-20 md:px-10">
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 sm:mb-10">
-            <h2 className="text-2xl font-bold text-[#1f2a1d] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
+            <h2 className="text-2xl font-bold text-[#000000] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
               Celebrations &amp; Moments
             </h2>
-            <p className="mt-1 text-sm text-[#4b5b47]">Life at Logica — festivals, milestones, and team moments</p>
+            <p className="mt-1 text-sm text-[#6b6b6b]">Life at Logica — festivals, milestones, and team moments</p>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {celebrations.map((entry) => (
@@ -135,16 +135,16 @@ export default function Media() {
       {/* Brand recognition */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:px-10">
         <div className="mb-8 sm:mb-10">
-          <h2 className="text-2xl font-bold text-[#1f2a1d] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
+          <h2 className="text-2xl font-bold text-[#000000] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
             Brand Recognition &amp; Certifications
           </h2>
-          <p className="mt-1 text-sm text-[#4b5b47]">Authorized partner certifications from the brands we carry</p>
+          <p className="mt-1 text-sm text-[#6b6b6b]">Authorized partner certifications from the brands we carry</p>
         </div>
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6">
           {MEDIA_CERTIFICATES.map((cert) => (
             <div
               key={cert.name}
-              className="group flex flex-col items-center rounded-xl border border-[#1f2a1d]/10 p-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#1f2a1d]/25 hover:shadow-md"
+              className="group flex flex-col items-center rounded-xl border border-[#000000]/10 p-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#000000]/25 hover:shadow-md"
             >
               <div className="mb-2 aspect-square w-full overflow-hidden rounded-lg bg-white">
                 <img
@@ -154,7 +154,7 @@ export default function Media() {
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
               </div>
-              <span className="text-[10px] font-medium text-[#4b5b47]">{cert.name}</span>
+              <span className="text-[10px] font-medium text-[#6b6b6b]">{cert.name}</span>
             </div>
           ))}
         </div>

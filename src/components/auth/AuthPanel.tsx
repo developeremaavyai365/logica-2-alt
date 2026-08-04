@@ -53,8 +53,8 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
 
   const signInForm = (
     <form onSubmit={handleSignIn} className="flex h-full flex-col items-center justify-center px-8 sm:px-12">
-      <h1 className="text-2xl font-bold text-[#1f2a1d]">Sign In</h1>
-      <p className="mt-2 text-xs text-[#4b5b47]">Use your email and password</p>
+      <h1 className="text-2xl font-bold text-[#000000]">Sign In</h1>
+      <p className="mt-2 text-xs text-[#6b6b6b]">Use your email and password</p>
 
       <input
         type="email"
@@ -62,7 +62,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         value={signInEmail}
         onChange={(e) => setSignInEmail(e.target.value)}
         required
-        className="mt-5 w-full rounded-lg border border-[#1f2a1d]/15 bg-[#f4f8f3] px-4 py-3 text-sm text-[#1f2a1d] outline-none transition-colors focus:border-[#1f2a1d]/40"
+        className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
       <input
         type="password"
@@ -70,19 +70,19 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         value={signInPassword}
         onChange={(e) => setSignInPassword(e.target.value)}
         required
-        className="mt-3 w-full rounded-lg border border-[#1f2a1d]/15 bg-[#f4f8f3] px-4 py-3 text-sm text-[#1f2a1d] outline-none transition-colors focus:border-[#1f2a1d]/40"
+        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
 
       {signInError && <p className="mt-3 text-xs font-medium text-red-600">{signInError}</p>}
 
-      <Link to="/forgot-password" className="mt-4 text-xs text-[#4b5b47] hover:text-[#1f2a1d] transition-colors">
+      <Link to="/forgot-password" className="mt-4 text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
         Forgot your password?
       </Link>
 
       <button
         type="submit"
         disabled={signInLoading}
-        className="btn-liquid mt-6 w-full max-w-[220px] rounded-full border-2 border-[#1f2a1d] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#1f2a1d] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        className="btn-liquid mt-6 w-full max-w-[220px] rounded-full border-2 border-[#000000] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       >
         {signInLoading ? 'Signing In…' : 'Sign In'}
       </button>
@@ -91,8 +91,8 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
 
   const signUpForm = (
     <form onSubmit={handleSignUp} className="flex h-full flex-col items-center justify-center px-8 sm:px-12">
-      <h1 className="text-2xl font-bold text-[#1f2a1d]">Create Account</h1>
-      <p className="mt-2 text-xs text-[#4b5b47]">Use your email to register</p>
+      <h1 className="text-2xl font-bold text-[#000000]">Create Account</h1>
+      <p className="mt-2 text-xs text-[#6b6b6b]">Use your email to register</p>
 
       <input
         type="text"
@@ -100,7 +100,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         value={signUpName}
         onChange={(e) => setSignUpName(e.target.value)}
         required
-        className="mt-5 w-full rounded-lg border border-[#1f2a1d]/15 bg-[#f4f8f3] px-4 py-3 text-sm text-[#1f2a1d] outline-none transition-colors focus:border-[#1f2a1d]/40"
+        className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
       <input
         type="email"
@@ -108,7 +108,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         value={signUpEmail}
         onChange={(e) => setSignUpEmail(e.target.value)}
         required
-        className="mt-3 w-full rounded-lg border border-[#1f2a1d]/15 bg-[#f4f8f3] px-4 py-3 text-sm text-[#1f2a1d] outline-none transition-colors focus:border-[#1f2a1d]/40"
+        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
       <input
         type="password"
@@ -117,7 +117,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         onChange={(e) => setSignUpPassword(e.target.value)}
         required
         minLength={8}
-        className="mt-3 w-full rounded-lg border border-[#1f2a1d]/15 bg-[#f4f8f3] px-4 py-3 text-sm text-[#1f2a1d] outline-none transition-colors focus:border-[#1f2a1d]/40"
+        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
 
       {signUpError && <p className="mt-3 text-xs font-medium text-red-600">{signUpError}</p>}
@@ -125,7 +125,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
       <button
         type="submit"
         disabled={signUpLoading}
-        className="btn-liquid mt-6 w-full max-w-[220px] rounded-full border-2 border-[#1f2a1d] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#1f2a1d] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        className="btn-liquid mt-6 w-full max-w-[220px] rounded-full border-2 border-[#000000] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       >
         {signUpLoading ? 'Creating…' : 'Sign Up'}
       </button>
@@ -173,12 +173,12 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
 
       {/* ===== Mobile: stacked tab toggle ===== */}
       <div className="overflow-hidden rounded-2xl bg-white shadow-lg sm:hidden">
-        <div className="flex border-b border-[#1f2a1d]/10">
+        <div className="flex border-b border-[#000000]/10">
           <button
             type="button"
             onClick={() => setMode('signin')}
             className={`flex-1 py-3.5 text-sm font-semibold uppercase tracking-wide transition-colors ${
-              mode === 'signin' ? 'bg-[#1f2a1d] text-white' : 'text-[#4b5b47]'
+              mode === 'signin' ? 'bg-[#000000] text-white' : 'text-[#6b6b6b]'
             }`}
           >
             Sign In
@@ -187,7 +187,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
             type="button"
             onClick={() => setMode('signup')}
             className={`flex-1 py-3.5 text-sm font-semibold uppercase tracking-wide transition-colors ${
-              mode === 'signup' ? 'bg-[#1f2a1d] text-white' : 'text-[#4b5b47]'
+              mode === 'signup' ? 'bg-[#000000] text-white' : 'text-[#6b6b6b]'
             }`}
           >
             Sign Up
@@ -196,7 +196,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         <div className="min-h-[420px] py-8">{mode === 'signin' ? signInForm : signUpForm}</div>
       </div>
 
-      <p className="mt-4 text-center text-[11px] text-[#4b5b47]/60">
+      <p className="mt-4 text-center text-[11px] text-[#6b6b6b]/60">
         Demo mode — accounts are stored only in this browser, not on a real server yet.
       </p>
     </div>
