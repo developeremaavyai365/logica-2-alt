@@ -6,7 +6,6 @@ interface Director {
   name: string;
   role: string;
   chairman?: boolean;
-  tag?: string;
 }
 
 interface KmpNode {
@@ -22,9 +21,9 @@ const BOARD: Director[] = [
   { name: 'Gaurav Goel', role: 'Chairman Cum Managing Director', chairman: true },
   { name: 'Shweta Goel', role: 'Whole-Time Director' },
   { name: 'Rakesh Kumar Goel', role: 'Non Executive Director' },
-  { name: 'Dinesh Arya', role: 'Independent Director', tag: 'Independent' },
-  { name: 'Nil Kamal Samanta', role: 'Independent Director', tag: 'Independent' },
-  { name: 'Vinita Saraf', role: 'Independent Director', tag: 'Independent' },
+  { name: 'Dinesh Arya', role: 'Independent Director' },
+  { name: 'Nil Kamal Samanta', role: 'Independent Director' },
+  { name: 'Vinita Saraf', role: 'Independent Director' },
 ];
 
 const KMP: KmpNode[] = [
@@ -43,11 +42,6 @@ function DirectorCard({ d }: { d: Director }) {
     >
       <p className={`text-sm font-bold leading-snug ${d.chairman ? 'text-white' : 'text-black'}`}>{d.name}</p>
       <p className={`text-xs leading-snug ${d.chairman ? 'text-white/80' : 'text-black/60'}`}>{d.role}</p>
-      {d.tag && (
-        <span className="mt-1 inline-flex w-fit rounded-full bg-[#1f6fa8]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#1f6fa8]">
-          {d.tag}
-        </span>
-      )}
     </div>
   );
 }
