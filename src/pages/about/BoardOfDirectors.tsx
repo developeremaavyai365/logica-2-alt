@@ -2,7 +2,39 @@ import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { BOARD_MEMBERS } from '../../about-data';
+import { BOARD_MEMBERS, type BoardMember } from '../../about-data';
+
+const BOARD_COUNT = 6;
+const BOARD = BOARD_MEMBERS.slice(0, BOARD_COUNT);
+const KMP = BOARD_MEMBERS.slice(BOARD_COUNT);
+
+function MemberCard({ member, delay }: { member: BoardMember; delay: number }) {
+  return (
+    <div
+      className="animate-fade-up group flex flex-col items-center rounded-3xl border border-black/10 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-[#1f6fa8]/40 hover:shadow-xl hover:shadow-[#1f6fa8]/10 sm:p-8"
+      style={{ animationDelay: `${delay}s` }}
+    >
+      <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full bg-[#f0f0f0] shadow-inner sm:h-32 sm:w-32">
+        <img
+          src={member.photo}
+          alt={member.name}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+      </div>
+      <h3 className="mt-5 text-base font-semibold text-black transition-colors group-hover:text-[#1f6fa8] sm:text-lg">
+        {member.name}
+      </h3>
+      <p className="mt-1 text-sm font-medium text-[#1f6fa8]">{member.designation}</p>
+      <ul className="mt-4 space-y-1.5">
+        {member.details.map((d) => (
+          <li key={d} className="text-xs leading-relaxed text-black/60">
+            {d}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function BoardOfDirectors() {
   return (
@@ -18,20 +50,21 @@ export default function BoardOfDirectors() {
       </div>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {BOARD_MEMBERS.map((member) => (
-            <div key={member.name} className="rounded-2xl border border-[#000000]/10 p-6">
-              <div className="w-16 h-16 rounded-full bg-[#f0f0f0] overflow-hidden mb-4">
-                <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
-              </div>
-              <h3 className="text-base font-semibold text-[#000000]">{member.name}</h3>
-              <p className="text-sm font-medium text-[#1f6fa8] mt-0.5">{member.designation}</p>
-              <ul className="mt-4 space-y-1.5">
-                {member.details.map((d) => (
-                  <li key={d} className="text-xs text-[#6b6b6b] leading-relaxed">{d}</li>
-                ))}
-              </ul>
-            </div>
+        <h2 className="text-2xl sm:text-3xl font-normal text-black text-center" style={{ letterSpacing: '-0.03em' }}>
+          Board Members
+        </h2>
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {BOARD.map((member, i) => (
+            <MemberCard key={member.name} member={member} delay={i * 0.08} />
+          ))}
+        </div>
+
+        <h2 className="mt-20 text-2xl sm:text-3xl font-normal text-black text-center" style={{ letterSpacing: '-0.03em' }}>
+          Key Managerial Personnel
+        </h2>
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {KMP.map((member, i) => (
+            <MemberCard key={member.name} member={member} delay={0.4 + i * 0.08} />
           ))}
         </div>
 
