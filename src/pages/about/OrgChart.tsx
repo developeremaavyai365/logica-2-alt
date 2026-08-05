@@ -86,7 +86,9 @@ export default function OrgChart() {
       <section className="px-4 sm:px-6 md:px-10 py-16 sm:py-20">
         <div className="mx-auto max-w-5xl rounded-2xl border border-black/10 bg-white px-4 py-12 sm:px-8">
           {/* Tier 1 — Board of Directors, a peer group */}
-          <p className="text-center text-xs font-semibold uppercase tracking-wide text-black/40">Board of Directors</p>
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-black" style={{ letterSpacing: '-0.02em' }}>
+            Board of Directors
+          </h2>
           <div className="mt-5 flex flex-wrap justify-center gap-4">
             {BOARD.map((d, i) => (
               <DirectorCard key={d.name} d={d} delay={i * 0.08} />
@@ -94,12 +96,15 @@ export default function OrgChart() {
           </div>
 
           {/* Connector — Chairman & MD heads day-to-day management */}
-          <div className="my-8 flex flex-col items-center gap-2">
+          <div className="my-10 flex flex-col items-center gap-3">
             <div className="h-8 w-px bg-black/15" />
+            <h2 className="text-center text-2xl sm:text-3xl font-bold text-black" style={{ letterSpacing: '-0.02em' }}>
+              Key Managerial Personnel
+            </h2>
             <div className="flex items-center gap-1.5 rounded-full bg-[#ECEDEC] px-3 py-1.5 text-center">
               <ChevronDown className="h-3.5 w-3.5 shrink-0 text-black/50" />
               <span className="text-[11px] font-medium text-black/60">
-                Key Managerial Personnel — reporting to the Chairman &amp; Managing Director
+                Reporting to the Chairman &amp; Managing Director
               </span>
             </div>
             <div className="h-8 w-px bg-black/15" />
