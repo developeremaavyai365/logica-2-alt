@@ -188,15 +188,15 @@ export default function Header() {
               aria-label="Account menu"
               aria-expanded={accountMenuOpen}
             >
-              {user.name.slice(0, 1).toUpperCase()}
+              {(user.name || user.email || '?').slice(0, 1).toUpperCase()}
             </button>
             {accountMenuOpen && (
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setAccountMenuOpen(false)} />
                 <div className="absolute right-0 top-full z-40 mt-2 w-56 rounded-2xl border border-[#000000]/10 bg-white p-2 shadow-xl">
                   <div className="px-3 py-2 border-b border-[#000000]/10 mb-1">
-                    <p className="text-sm font-semibold text-[#000000] truncate">{user.name}</p>
-                    <p className="text-xs text-[#6b6b6b] truncate">{user.email}</p>
+                    <p className="text-sm font-semibold text-[#000000] truncate">{user.name || 'My Account'}</p>
+                    {user.email && <p className="text-xs text-[#6b6b6b] truncate">{user.email}</p>}
                   </div>
                   <button
                     type="button"
@@ -368,7 +368,7 @@ export default function Header() {
             {user ? (
               <div className="flex flex-col gap-4">
                 <p className="text-sm text-[#6b6b6b]">
-                  Signed in as <span className="font-semibold text-[#000000]">{user.name}</span>
+                  Signed in as <span className="font-semibold text-[#000000]">{user.name || user.email}</span>
                 </p>
                 <button
                   type="button"

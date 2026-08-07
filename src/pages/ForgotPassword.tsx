@@ -2,14 +2,22 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { useAuthStore } from '../auth-store';
 
 export default function ForgotPassword() {
+  const { forgotPassword } = useAuthStore();
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    // Stub — no email-sending backend exists yet in this demo.
+    setLoading(true);
+    // The backend always responds the same way whether or not the email
+    // is registered (avoids account-enumeration), so there's nothing to
+    // branch on here either — just show the same message either way.
+    await forgotPassword(email);
+    setLoading(false);
     setSubmitted(true);
   }
 
@@ -24,7 +32,7 @@ export default function ForgotPassword() {
           {submitted ? (
             <p className="mt-4 text-sm text-[#6b6b6b]">
               If an account exists for <span className="font-medium text-[#000000]">{email}</span>, a reset link
-              would be sent — this is a demo stub with no email backend connected yet.
+              has been sent. It's valid for 30 minutes.
             </p>
           ) : (
             <form onSubmit={handleSubmit}>
@@ -39,9 +47,10 @@ export default function ForgotPassword() {
               />
               <button
                 type="submit"
-                className="btn-liquid mt-5 w-full rounded-full border-2 border-[#000000] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000] transition-colors"
+                disabled={loading}
+                className="btn-liquid mt-5 w-full rounded-full border-2 border-[#000000] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Send Reset Link
+                {loading ? 'Sending…' : 'Send Reset Link'}
               </button>
             </form>
           )}

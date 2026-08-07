@@ -18,6 +18,8 @@ import InvestorSection from './pages/investor/InvestorSection';
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerifyEmail from './pages/VerifyEmail';
 import FeedbackWidget from './components/FeedbackWidget';
 import ChatWidget from './components/ChatWidget';
 
@@ -41,6 +43,8 @@ function App() {
         <Route path="/login" element={<Auth mode="signin" />} />
         <Route path="/signup" element={<Auth mode="signup" />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/investor" element={<InvestorHub />} />
         <Route path="/investor/:slug" element={<InvestorSection />} />
         <Route path="*" element={<NotFound />} />

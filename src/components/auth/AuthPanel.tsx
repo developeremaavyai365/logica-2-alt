@@ -24,6 +24,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpError, setSignUpError] = useState('');
   const [signUpLoading, setSignUpLoading] = useState(false);
+  const [signUpDone, setSignUpDone] = useState(false);
 
   async function handleSignIn(e: FormEvent) {
     e.preventDefault();
@@ -48,7 +49,10 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
       setSignUpError(result.error ?? 'Something went wrong.');
       return;
     }
-    onSuccess?.();
+    // Signup succeeding does NOT mean the account can log in yet — the
+    // backend requires email verification first. Show that instead of
+    // treating this like a successful sign-in.
+    setSignUpDone(true);
   }
 
   const signInForm = (
@@ -89,7 +93,15 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
     </form>
   );
 
-  const signUpForm = (
+  const signUpForm = signUpDone ? (
+    <div className="flex h-full flex-col items-center justify-center px-8 text-center sm:px-12">
+      <h1 className="text-2xl font-bold text-[#000000]">Check your email</h1>
+      <p className="mt-3 max-w-[260px] text-sm text-[#6b6b6b]">
+        We've sent a verification link to <span className="font-medium text-[#000000]">{signUpEmail}</span>. Verify
+        your address to finish creating your account.
+      </p>
+    </div>
+  ) : (
     <form onSubmit={handleSignUp} className="flex h-full flex-col items-center justify-center px-8 sm:px-12">
       <h1 className="text-2xl font-bold text-[#000000]">Create Account</h1>
       <p className="mt-2 text-xs text-[#6b6b6b]">Use your email to register</p>
@@ -112,13 +124,16 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
       />
       <input
         type="password"
-        placeholder="Password (min. 8 characters)"
+        placeholder="Password"
         value={signUpPassword}
         onChange={(e) => setSignUpPassword(e.target.value)}
         required
-        minLength={8}
+        minLength={10}
         className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
+      <p className="mt-1.5 w-full text-left text-[11px] text-[#6b6b6b]">
+        10+ characters, with upper &amp; lower case, a number, and a symbol.
+      </p>
 
       {signUpError && <p className="mt-3 text-xs font-medium text-red-600">{signUpError}</p>}
 
@@ -195,10 +210,6 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         </div>
         <div className="min-h-[420px] py-8">{mode === 'signin' ? signInForm : signUpForm}</div>
       </div>
-
-      <p className="mt-4 text-center text-[11px] text-[#6b6b6b]/60">
-        Demo mode — accounts are stored only in this browser, not on a real server yet.
-      </p>
     </div>
   );
 }
