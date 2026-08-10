@@ -57,6 +57,15 @@ export default function LogicaHero() {
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-black">
+      {/* ================= BACKGROUND VIDEO ================= */}
+      <video
+        className="absolute inset-0 z-0 h-full w-full object-cover"
+        src="/hero/kv-animated.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
       {/* ================= NAVBAR ================= */}
       <Header />
       {/* ================= HERO CONTENT ================= */}
