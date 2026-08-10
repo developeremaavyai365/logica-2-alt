@@ -143,13 +143,105 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
   },
 ];
 
-/** Real general meeting notice periods, mirrored from
- *  logicainfoway.com/general-meeting. */
-export const GENERAL_MEETING_PERIODS: FiscalYearFolder[] = [
-  { label: "01-04-2026 to 31-03-2027", url: "https://www.logicainfoway.com/01-04-2026-to-31-03-2027-3-5/" },
-  { label: "01-04-2025 to 31-03-2026", url: "https://www.logicainfoway.com/01-04-2025-to-31-03-2026-9-2/" },
-  { label: "01-04-2024 to 31-03-2025", url: "https://www.logicainfoway.com/01-04-2023-to-31-03-2024-4/" },
-  { label: "01-04-2023 to 31-03-2024", url: "https://www.logicainfoway.com/01-04-2023-to-31-03-2024-7/" },
+/** Real general meeting notices/outcomes, newest first — replaces the old
+ *  dead-link "period folder" list now that we have the actual filed
+ *  documents. */
+export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
+  {
+    title: "Corrigendum to the Annual Report for FY 2024-25 and Notice of the 30th AGM",
+    year: "2025-26",
+    url: "/investor/general-meeting/corrigendum-annual-report-notice-30th-agm.pdf",
+  },
+  {
+    title: "Disclosure of Voting Results and Consolidated Scrutinizer's Report of the 30th AGM",
+    year: "2025-26",
+    url: "/investor/general-meeting/voting-results-scrutinizer-report-30th-agm.pdf",
+  },
+  {
+    title: "Outcome/Proceedings of the 30th Annual General Meeting for F.Y. 2024-25",
+    year: "2025-26",
+    url: "/investor/general-meeting/outcome-proceedings-30th-agm-fy2024-25.pdf",
+  },
+  {
+    title: "Notice of the 30th Annual General Meeting",
+    year: "2025-26",
+    url: "/investor/general-meeting/notice-30th-agm.pdf",
+  },
+  {
+    title: "Intimation of Record Date of the 30th Annual General Meeting",
+    year: "2025-26",
+    url: "/investor/general-meeting/intimation-record-date-30th-agm.pdf",
+  },
+  {
+    title: "Intimation of Date of the 30th Annual General Meeting",
+    year: "2025-26",
+    url: "/investor/general-meeting/intimation-date-30th-agm.pdf",
+  },
+  {
+    title: "Board Meeting Intimation for Approval of Notice Convening the AGM and Other Incidental Matters",
+    year: "2025-26",
+    url: "/investor/general-meeting/board-meeting-intimation-notice-convening-agm.pdf",
+  },
+  {
+    title: "28th AGM Transcript",
+    year: "2023-24",
+    url: "/investor/general-meeting/28th-agm-transcript.pdf",
+  },
+  {
+    title: "Revised Proceedings of the First EGM 2024-25",
+    year: "2024-25",
+    url: "/investor/general-meeting/revised-proceedings-first-egm-2024-25.pdf",
+  },
+  {
+    title: "Postal Ballot — Outcome of EGM",
+    year: "2024-25",
+    url: "/investor/general-meeting/postal-ballot-outcome-of-egm.pdf",
+  },
+  {
+    title: "Proceedings of the 1st Extra-Ordinary General Meeting (EGM) of 2024-25",
+    year: "2024-25",
+    url: "/investor/general-meeting/proceedings-1st-egm-2024-25.pdf",
+  },
+  {
+    title: "Corrigendum to EGM Notice — February 6, 2025",
+    year: "2024-25",
+    url: "/investor/general-meeting/corrigendum-egm-notice-06-02-2025.pdf",
+  },
+  {
+    title: "EGM Notice — February 6, 2025",
+    year: "2024-25",
+    url: "/investor/general-meeting/egm-notice-06-02-2025.pdf",
+  },
+  {
+    title: "AGM Notice 2024",
+    year: "2023-24",
+    url: "/investor/general-meeting/agm-notice-2024.pdf",
+  },
+  {
+    title: "EGM Notice — July 8, 2024",
+    year: "2023-24",
+    url: "/investor/general-meeting/egm-notice-08-07-2024.pdf",
+  },
+  {
+    title: "Proceedings of EGM — February 13, 2024",
+    year: "2023-24",
+    url: "/investor/general-meeting/proceedings-egm-13-02-2024.pdf",
+  },
+  {
+    title: "Regulation 44 Voting Result",
+    year: "2023-24",
+    url: "/investor/general-meeting/reg-44-voting-result-13-02-2024.pdf",
+  },
+  {
+    title: "EGM Record Date — February 8, 2024",
+    year: "2023-24",
+    url: "/investor/general-meeting/egm-record-date-08-02-2024.pdf",
+  },
+  {
+    title: "AGM Notice 2023",
+    year: "2022-23",
+    url: "/investor/general-meeting/agm-notice-2023.pdf",
+  },
 ];
 
 /** Real financial results, mirrored from logicainfoway.com/financial-results. */
@@ -244,12 +336,45 @@ export const SHAREHOLDER_GENERAL_MEETING_PERIODS: FiscalYearFolder[] = [
   { label: "Prior to Listing", url: "https://www.logicainfoway.com/committee-meeting-01-04-2023-to-31-03-2024/" },
 ];
 
-/** Real committee meeting periods, mirrored from logicainfoway.com/committee-meeting. */
-export const COMMITTEE_MEETING_PERIODS: FiscalYearFolder[] = [
-  { label: "01-04-2026 to 31-03-2027", url: "https://www.logicainfoway.com/01-04-2026-to-31-03-2027-3-3/" },
-  { label: "01-04-2025 to 31-03-2026", url: "https://www.logicainfoway.com/01-04-2025-to-31-03-2026/" },
-  { label: "01-04-2024 to 31-03-2025", url: "https://www.logicainfoway.com/01-04-2024-to-31-03-2025-4/" },
-  { label: "01-04-2023 to 31-03-2024", url: "https://www.logicainfoway.com/committee-meeting-01-04-2023-to-31-03-2024/" },
+/** Real committee meeting notices, newest first — replaces the old
+ *  dead-link "period folder" list now that we have the actual filed
+ *  documents. */
+export const COMMITTEE_MEETING_NOTICES: AnnualReport[] = [
+  {
+    title: "Notice and Agenda — Audit Committee Meeting, November 14, 2024",
+    year: "2024-25",
+    url: "/investor/committee-meeting/audit-committee-meeting-notice-agenda-14-11-2024.pdf",
+  },
+  {
+    title: "Audit Committee Meeting Notice — 5",
+    year: "2023-24",
+    url: "/investor/committee-meeting/audit-committee-meeting-notice-5.pdf",
+  },
+  {
+    title: "Audit Committee Meeting Notice — 4",
+    year: "2023-24",
+    url: "/investor/committee-meeting/audit-committee-meeting-notice-4.pdf",
+  },
+  {
+    title: "Audit Committee Meeting Notice — 3",
+    year: "2023-24",
+    url: "/investor/committee-meeting/audit-committee-meeting-notice-3.pdf",
+  },
+  {
+    title: "Notice of 1st Meeting, Financial Year 2023-24 of Audit Committee",
+    year: "2023-24",
+    url: "/investor/committee-meeting/audit-committee-meeting-notice-1st-fy2023-24.pdf",
+  },
+  {
+    title: "Independent Director Meeting Notice — 1",
+    year: "2023-24",
+    url: "/investor/committee-meeting/independent-director-meeting-notice-1.pdf",
+  },
+  {
+    title: "Nomination & Remuneration Committee Meeting Notice",
+    year: "2023-24",
+    url: "/investor/committee-meeting/nomination-and-remuneration-committee-meeting-notice.pdf",
+  },
 ];
 
 /** Real corporate policy documents, mirrored from logicainfoway.com/policies. */
@@ -375,11 +500,55 @@ export const FAMILIARIZATION_PROGRAM_DOC: AnnualReport = {
   url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Familarisation-Programme-under-Regulation-46.pdf",
 };
 
-/** Real fund raising periods, mirrored from logicainfoway.com/fund-raising. */
-export const FUND_RAISING_PERIODS: FiscalYearFolder[] = [
-  { label: "01-04-2024 to 31-03-2025", url: "https://www.logicainfoway.com/01-04-2024-to-31-03-2025-8/" },
-  { label: "01-04-2023 to 31-03-2024", url: "https://www.logicainfoway.com/01-04-2023-to-31-03-2024-6/" },
-  { label: "01-04-2022 to 31-03-2023", url: "https://www.logicainfoway.com/01-04-2023-to-31-03-2024-8" },
+/** Real fund raising disclosures, newest first — replaces the old
+ *  dead-link "period folder" list now that we have the actual filed
+ *  documents. */
+export const FUND_RAISING_NOTICES: AnnualReport[] = [
+  {
+    title: "Statement of Deviation or Variation in Utilization of Funds — Half Year Ended September 30, 2025",
+    year: "2025-26",
+    url: "/investor/fund-raising/statement-of-deviation-half-year-ended-30-09-2025.pdf",
+  },
+  {
+    title: "Statement of Deviation/Variation — Half Year Ended March 31, 2025 (Preferential Issue, March 1, 2025)",
+    year: "2024-25",
+    url: "/investor/fund-raising/statement-of-deviation-half-year-ended-31-03-2025.pdf",
+  },
+  {
+    title: "Intimation Regarding Trading Approval Received for Equity Shares Issued on Preferential Basis",
+    year: "2024-25",
+    url: "/investor/fund-raising/intimation-trading-approval-preferential-shares.pdf",
+  },
+  {
+    title: "Outcome of Board Meeting — Allotment of Equity Shares on Preferential Basis and Other Matters",
+    year: "2024-25",
+    url: "/investor/fund-raising/outcome-board-meeting-allotment-preferential-basis-01-03-2025.pdf",
+  },
+  {
+    title: "In-Principle Approval Granted by Stock Exchange for Issuance of Preference Shares",
+    year: "2024-25",
+    url: "/investor/fund-raising/in-principle-approval-issuance-of-preference-shares.pdf",
+  },
+  {
+    title: "Announcement under Regulation 30 (LODR) — Preferential Issue",
+    year: "2024-25",
+    url: "/investor/fund-raising/announcement-regulation-30-preferential-issue.pdf",
+  },
+  {
+    title: "Increase in Authorised Capital of the Company",
+    year: "2024-25",
+    url: "/investor/fund-raising/increase-in-authorised-capital.pdf",
+  },
+  {
+    title: "Valuation Report",
+    year: "2024-25",
+    url: "/investor/fund-raising/lil-valuation-report-signed.pdf",
+  },
+  {
+    title: "ELIL Prospectus (Final)",
+    year: "2022-23",
+    url: "/investor/fund-raising/elil-prospectus-final.pdf",
+  },
 ];
 
 /** Real prospectus filing, mirrored from logicainfoway.com/prospectus. */
