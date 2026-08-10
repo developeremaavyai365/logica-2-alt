@@ -17,12 +17,12 @@ interface HeroLine {
 const HEADLINES: HeroLine[][] = [
   [
     { text: 'The Power', dim: 'of' },
-    { text: 'Genuine Tech', dim: 'for', color: '#9FD8F0' },
+    { text: 'Next-Gen Tech', dim: 'for', color: '#9FD8F0' },
     { text: 'Everyone', color: '#A8D96B' },
   ],
   [
-    { text: 'Enterprise Pricing', dim: 'for' },
-    { text: 'Every Business', dim: 'across', color: '#9FD8F0' },
+    { text: 'Flagship Devices', dim: 'at' },
+    { text: 'Enterprise Pricing', dim: 'across', color: '#9FD8F0' },
     { text: 'India', color: '#A8D96B' },
   ],
   [
@@ -66,6 +66,9 @@ export default function LogicaHero() {
         loop
         playsInline
       />
+      {/* Scrim — the video's background is light, so this keeps the white
+          hero text/CTA readable over it without altering the video itself. */}
+      <div className="absolute inset-0 z-[5] bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
       {/* ================= NAVBAR ================= */}
       <Header />
       {/* ================= HERO CONTENT ================= */}
@@ -87,7 +90,7 @@ export default function LogicaHero() {
                 <span className="inline-block text-white/40" style={{ animationDelay: '2s' }}>of</span>
               </span>
               <span className="block overflow-hidden">
-                <span className="inline-block" style={{ animationDelay: '2.1s', color: '#9FD8F0' }}>Genuine</span>{' '}
+                <span className="inline-block" style={{ animationDelay: '2.1s', color: '#9FD8F0' }}>Next-Gen</span>{' '}
                 <span className="inline-block" style={{ animationDelay: '2.2s', color: '#9FD8F0' }}>Tech</span>{' '}
                 <span className="inline-block text-white/40" style={{ animationDelay: '2.3s' }}>for</span>
               </span>
@@ -128,8 +131,8 @@ export default function LogicaHero() {
             className="font-inter max-w-[310px] text-sm text-white sm:text-base lg:text-lg"
             style={{ lineHeight: 1.45, letterSpacing: '-0.03em' }}
           >
-            Genuine hardware, enterprise pricing, and three decades of delivery for every customer,
-            from individuals to businesses.
+            The latest flagship devices, enterprise pricing, and three decades of trusted delivery
+            — for every customer, from individuals to businesses.
           </p>
         </div>
       </section>
