@@ -21,7 +21,7 @@ export const ANNUAL_REPORTS: AnnualReport[] = [
   {
     title: "Annual Report 2023-24",
     year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/07/ANNUAL-REPORT-2023-24.pdf",
+    url: "/investor/annual-reports/annual-report-2023-24.pdf",
   },
   {
     title: "Annual Report 2022-23",
@@ -60,7 +60,7 @@ export const ANNUAL_RETURNS: AnnualReport[] = [
   {
     title: "Annual Return 2022-23",
     year: "2022-23",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/03/Annual-Return-2022-23.pdf",
+    url: "/investor/annual-returns/annual-return-2022-23.pdf",
   },
   {
     title: "Annual Return 2021-22",
@@ -312,29 +312,8 @@ export const SECRETARIAL_COMPLIANCE: AnnualReport[] = [
 export const NOTICE_DOC: AnnualReport = {
   title: "Notice",
   year: "",
-  url: "https://www.logicainfoway.com/wp-content/uploads/2023/03/NOTICE.pdf",
+  url: "/investor/notice/notice.pdf",
 };
-
-/** Real board meeting periods under Shareholder Information, mirrored from
- *  logicainfoway.com/board-meeting (distinct from the Performance category's
- *  notice-of-board-meeting page — the source site lists both separately). */
-export const SHAREHOLDER_BOARD_MEETING_PERIODS: FiscalYearFolder[] = [
-  { label: "01-04-2026 to 31-03-2027", url: "https://www.logicainfoway.com/01-04-2026-to-31-03-2027-3/" },
-  { label: "01-04-2025 to 31-03-2026", url: "https://www.logicainfoway.com/01-04-2025-to-31-03-2026-12/" },
-  { label: "01-04-2024 to 31-03-2025", url: "https://www.logicainfoway.com/01-04-2024-to-31-03-2025-7/" },
-  { label: "01-04-2023 to 31-03-2024", url: "https://www.logicainfoway.com/01-04-2023-to-31-03-2024-2/" },
-  { label: "Prior to Listing", url: "https://www.logicainfoway.com/prior-to-listening/" },
-];
-
-/** Real general meeting periods under Shareholder Information, mirrored from
- *  logicainfoway.com/notice-of-general-meeting. */
-export const SHAREHOLDER_GENERAL_MEETING_PERIODS: FiscalYearFolder[] = [
-  { label: "01-04-2026 to 31-03-2027", url: "https://www.logicainfoway.com/01-04-2026-to-31-03-2027-3-2/" },
-  { label: "01-04-2025 to 31-03-2026", url: "https://www.logicainfoway.com/01-04-2025-to-31-03-2026-2/" },
-  { label: "01-04-2024 to 31-03-2025", url: "https://www.logicainfoway.com/01-04-2024-to-31-03-2025-6/" },
-  { label: "01-04-2023 to 31-03-2024", url: "https://www.logicainfoway.com/01-04-2023-to-31-03-2024/" },
-  { label: "Prior to Listing", url: "https://www.logicainfoway.com/committee-meeting-01-04-2023-to-31-03-2024/" },
-];
 
 /** Real committee meeting notices, newest first — replaces the old
  *  dead-link "period folder" list now that we have the actual filed
@@ -387,7 +366,7 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "CSR Policy",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/CSR-POLICY.pdf",
+    url: "/investor/policies/csr-policy.pdf",
   },
   {
     title: "Forex Exchange Risk Management Policy",
@@ -417,7 +396,7 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Nomination and Remuneration Policy",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Nomination-and-Remuneration-Policy-1.pdf",
+    url: "/investor/policies/nomination-and-remuneration-policy.pdf",
   },
   {
     title: "Policy for Archival of Documents",
@@ -473,12 +452,12 @@ export const SHAREHOLDING_PATTERN: AnnualReport[] = [
   {
     title: "Shareholding Pattern for HY ended 30-09-2025",
     year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Shareholding-Pattern-30.09.2025-signed-2.pdf",
+    url: "/investor/shareholding-pattern/shareholding-pattern-30-09-2025.pdf",
   },
   {
     title: "Shareholding Pattern for Year Ended 31-03-2025",
     year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/04/Shareholding-Pattern-31.03.2025-signed.pdf",
+    url: "/investor/shareholding-pattern/shareholding-pattern-31-03-2025.pdf",
   },
   {
     title: "Shareholding Pattern for HY Ended 30-09-2024",
@@ -555,7 +534,7 @@ export const FUND_RAISING_NOTICES: AnnualReport[] = [
 export const PROSPECTUS_DOC: AnnualReport = {
   title: "Prospectus",
   year: "",
-  url: "https://www.logicainfoway.com/wp-content/uploads/2022/12/ELIL-Prospectus-RA20221228-Final_compressed.pdf",
+  url: "/investor/fund-raising/elil-prospectus-final.pdf",
 };
 
 /** Real corporate announcements / SEBI compliance filings, replacing the
