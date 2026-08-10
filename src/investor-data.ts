@@ -11,7 +11,12 @@ export const ANNUAL_REPORTS: AnnualReport[] = [
   {
     title: "Realigned Annual Report 2024-25",
     year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/09/Realligned-Annual-Report-2024-25.pdf",
+    url: "/investor/annual-reports/realigned-annual-report-2024-25.pdf",
+  },
+  {
+    title: "Annual Report 2024-25",
+    year: "2024-25",
+    url: "/investor/annual-reports/annual-report-2024-25.pdf",
   },
   {
     title: "Annual Report 2023-24",
@@ -45,12 +50,12 @@ export const ANNUAL_RETURNS: AnnualReport[] = [
   {
     title: "Annual Return 2024-25",
     year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Annual-Return-2024-25.pdf",
+    url: "/investor/annual-returns/annual-return-2024-25.pdf",
   },
   {
     title: "Annual Return 2023-24",
     year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Annual-Return-2023-24-2.pdf",
+    url: "/investor/annual-returns/annual-return-2023-24.pdf",
   },
   {
     title: "Annual Return 2022-23",
@@ -82,13 +87,60 @@ export interface FiscalYearFolder {
   url: string;
 }
 
-/** Real board meeting notice periods, mirrored from
- *  logicainfoway.com/notice-of-board-meeting. */
-export const BOARD_MEETING_PERIODS: FiscalYearFolder[] = [
-  { label: "01-04-2026 to 31-03-2027", url: "https://www.logicainfoway.com/01-04-2026-to-31-03-2027-3-4/" },
-  { label: "01-04-2025 to 31-03-2026", url: "https://www.logicainfoway.com/01-04-2025-to-31-03-2026-11" },
-  { label: "01-04-2024 to 31-03-2025", url: "https://www.logicainfoway.com/board-meeting-2/" },
-  { label: "01-04-2023 to 31-03-2024", url: "https://www.logicainfoway.com/01-04-2023-to-31-03-2024-2/" },
+/** Real individual board meeting notices/outcomes for FY 2025-26, newest
+ *  first — replaces the old dead-link "period folder" list now that we
+ *  have the actual filed documents. */
+export const BOARD_MEETING_NOTICES: AnnualReport[] = [
+  {
+    title: "Outcome of the Board Meeting held on Friday, March 13, 2026",
+    year: "2025-26",
+    url: "/investor/board-meetings/outcome-board-meeting-13-03-2026.pdf",
+  },
+  {
+    title: "Board Meeting Notice — March 13, 2026",
+    year: "2025-26",
+    url: "/investor/board-meetings/board-meeting-notice-13-03-2026.pdf",
+  },
+  {
+    title: "Board Meeting Intimation — Audited Financial Results for Period Ended March 31, 2026",
+    year: "2025-26",
+    url: "/investor/board-meetings/board-meeting-intimation-audited-fy26.pdf",
+  },
+  {
+    title: "Board Meeting Notice — May 12, 2026",
+    year: "2025-26",
+    url: "/investor/board-meetings/board-meeting-notice-12-05-2026.pdf",
+  },
+  {
+    title: "BM Notice — May 12, 2026",
+    year: "2025-26",
+    url: "/investor/board-meetings/bm-notice-12-05-2026.pdf",
+  },
+  {
+    title: "BM Notice — November 14, 2025 (Signed)",
+    year: "2025-26",
+    url: "/investor/board-meetings/bm-notice-14-11-2025-signed.pdf",
+  },
+  {
+    title: "Board Meeting Notice — November 14, 2025",
+    year: "2025-26",
+    url: "/investor/board-meetings/board-meeting-notice-14-11-2025.pdf",
+  },
+  {
+    title: "Board Meeting Notice — August 29, 2025",
+    year: "2025-26",
+    url: "/investor/board-meetings/board-meeting-notice-29-08-2025.pdf",
+  },
+  {
+    title: "Board Meeting Notice — May 30, 2025",
+    year: "2025-26",
+    url: "/investor/board-meetings/board-meeting-notice-30-05-2025.pdf",
+  },
+  {
+    title: "BM Notice — April 30, 2025 (Revised)",
+    year: "2025-26",
+    url: "/investor/board-meetings/bm-notice-30-04-2025-revised.pdf",
+  },
 ];
 
 /** Real general meeting notice periods, mirrored from
@@ -103,39 +155,44 @@ export const GENERAL_MEETING_PERIODS: FiscalYearFolder[] = [
 /** Real financial results, mirrored from logicainfoway.com/financial-results. */
 export const FINANCIAL_RESULTS: AnnualReport[] = [
   {
+    title: "Board Meeting Outcome — Financial Results for Half Year and Year Ended 31-03-2026",
+    year: "2025-26",
+    url: "/investor/financial-results/board-meeting-outcome-financial-results-31-03-2026.pdf",
+  },
+  {
     title: "Financial Results for Half Year and Financial Year Ended 31-03-2026",
     year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/2.-Financial-Results-For-Half-Year-And-Financial-Year-Ended-March-31-2026.pdf",
+    url: "/investor/financial-results/financial-results-fy-2025-26.pdf",
   },
   {
     title: "Financial Result for the Half Year and Year Ended 30-09-2025",
     year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Financial-Result-for-the-half-year-and-year-ended-14-09-2025.pdf",
+    url: "/investor/financial-results/financial-result-hy-30-09-2025.pdf",
   },
   {
     title: "Revised Financial Results for Half Year and Year Ended 31-03-2025",
     year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Revised-Financial-Results-For-Half-Year-And-Year-Ended-March-31-2025._compressed-2.pdf",
+    url: "/investor/financial-results/revised-financial-results-31-03-2025.pdf",
   },
   {
     title: "Unaudited Financial Result for the Half Year and Year Ended 30-09-2024",
     year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Financial-Result-for-the-half-year-ended-30th-September-2024.pdf",
+    url: "/investor/financial-results/unaudited-financial-result-30-09-2024.pdf",
   },
   {
     title: "Financial Results for Half Year and Year Ended 31-03-2024",
     year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/31-03-2024-Outcome-of-Board-Meeting-Dated-30-05-2024.pdf",
+    url: "/investor/financial-results/financial-results-31-03-2024.pdf",
   },
   {
     title: "Unaudited Financial Results for the Half Year Ended 30-09-2023",
     year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/12/HALF-YEARLY-RESULT-SEPTEMBER-2023.pdf",
+    url: "/investor/financial-results/unaudited-financial-results-30-09-2023.pdf",
   },
   {
     title: "Financial Results for the Half Year and Year Ended 31-03-2023",
     year: "2022-23",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/06/FR.pdf",
+    url: "/investor/financial-results/financial-results-31-03-2023.pdf",
   },
 ];
 
@@ -200,7 +257,7 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Related Party Policy",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/Revised-Related-Party-Policy-signed.pdf",
+    url: "/investor/policies/related-party-policy-revised.pdf",
   },
   {
     title: "CSR Policy",
@@ -225,7 +282,7 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Internal Procedures and Conduct for Prevention of Insider Trading",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/04/Annexure-E-Revised-Policy-on-Internal-Procedures-Conduct-for-Prevention-of-Insider-Trading-signed.pdf",
+    url: "/investor/policies/insider-trading-policy-revised.pdf",
   },
   {
     title: "Materiality Policy for Identification of Group Companies",
@@ -286,7 +343,7 @@ export const SHAREHOLDING_PATTERN: AnnualReport[] = [
   {
     title: "Shareholding Pattern for FY ended 31-03-2026",
     year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/07/Shareholding-Pattern-for-FY-ended-31-03-2026-1.pdf",
+    url: "/investor/shareholding-pattern/shareholding-pattern-31-03-2026.pdf",
   },
   {
     title: "Shareholding Pattern for HY ended 30-09-2025",
@@ -332,12 +389,91 @@ export const PROSPECTUS_DOC: AnnualReport = {
   url: "https://www.logicainfoway.com/wp-content/uploads/2022/12/ELIL-Prospectus-RA20221228-Final_compressed.pdf",
 };
 
-/** Real corporate announcement periods, mirrored from logicainfoway.com/compliances. */
-export const CORPORATE_ANNOUNCEMENT_PERIODS: FiscalYearFolder[] = [
-  { label: "01-04-2026 to 31-03-2027", url: "https://www.logicainfoway.com/01-04-2026-to-31-03-2027/" },
-  { label: "01-04-2025 to 31-03-2026", url: "https://www.logicainfoway.com/01-04-2025-to-31-03-2026-9/" },
-  { label: "01-04-2024 to 31-03-2025", url: "https://www.logicainfoway.com/01-04-2024-to-31-03-2025/" },
-  { label: "01-04-2023 to 31-03-2024", url: "https://www.logicainfoway.com/compliances-01-04-2023-to-31-03-2024/" },
+/** Real corporate announcements / SEBI compliance filings, replacing the
+ *  old dead-link "period folder" list now that we have the actual filed
+ *  documents (Regulation 30/57/74 disclosures, trading-window closures,
+ *  MD&A submissions, etc.), newest first. */
+export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
+  {
+    title: "Submission of Management Discussion & Analysis — H2 FY26 & FY26",
+    year: "2025-26",
+    url: "/investor/compliance/management-discussion-analysis-h2-fy26.pdf",
+  },
+  {
+    title: "Non-Applicability of Annual Secretarial Compliance Report (Regulation 24A) — Year Ended March 31, 2026",
+    year: "2025-26",
+    url: "/investor/compliance/reg-24a-secretarial-compliance-non-applicability-fy26.pdf",
+  },
+  {
+    title: "Intimation of Non-Applicability of Large Corporate (LC) Disclosure — Year Ended March 31, 2026",
+    year: "2025-26",
+    url: "/investor/compliance/large-corporate-disclosure-non-applicability-fy26.pdf",
+  },
+  {
+    title: "Certificate under Regulation 74(5) of SEBI (DP) Regulations — Quarter Ended March 31, 2026",
+    year: "2025-26",
+    url: "/investor/compliance/reg-74-5-certificate-q-mar-2026.pdf",
+  },
+  {
+    title: "Certificate under Regulation 74(5) of SEBI (DP) Regulations — Quarter Ended December 31, 2025",
+    year: "2025-26",
+    url: "/investor/compliance/reg-74-5-certificate-q-dec-2025.pdf",
+  },
+  {
+    title: "Compliance under Regulation 57(4) SEBI (LODR) — Quarter Ended December 30, 2025",
+    year: "2025-26",
+    url: "/investor/compliance/reg-57-4-compliance-q-dec-2025.pdf",
+  },
+  {
+    title: "Compliance under Regulation 57(5) SEBI (LODR) — Quarter Ended December 31, 2025",
+    year: "2025-26",
+    url: "/investor/compliance/reg-57-5-compliance-q-dec-2025.pdf",
+  },
+  {
+    title: "Compliance under Regulation 57(5) SEBI (LODR) — Quarter Ended September 30, 2025 (Non-Applicability)",
+    year: "2025-26",
+    url: "/investor/compliance/reg-57-5-compliance-q-sep-2025.pdf",
+  },
+  {
+    title: "Statement of Deviation or Variation in Utilization of Funds — Half Year Ended March 31, 2026",
+    year: "2025-26",
+    url: "/investor/compliance/statement-deviation-utilization-of-funds-hy-mar-2026.pdf",
+  },
+  {
+    title: "Clarification on Display of \"Rights Issue of Equity Shares with Warrants\" under Board Meetings Section",
+    year: "2025-26",
+    url: "/investor/compliance/clarification-rights-issue-display.pdf",
+  },
+  {
+    title: "Announcement under Regulation 30 (LODR) — Change in Management",
+    year: "2025-26",
+    url: "/investor/compliance/reg-30-change-in-management.pdf",
+  },
+  {
+    title: "Revised Intimation of Resignation — Chief Operating Officer (North) & KMP (Regulation 30)",
+    year: "2025-26",
+    url: "/investor/compliance/reg-30-resignation-coo-north.pdf",
+  },
+  {
+    title: "Outcome of Analyst/Institutional Investor Meeting (SEBI LODR Regulations, 2015)",
+    year: "2025-26",
+    url: "/investor/compliance/outcome-analyst-institutional-investor-meeting.pdf",
+  },
+  {
+    title: "Regulation 30 (LODR) — Participation in Arihant Capital Bharat Connect Virtual Conference, March 11, 2026",
+    year: "2025-26",
+    url: "/investor/compliance/reg-30-arihant-capital-conference-participation.pdf",
+  },
+  {
+    title: "Intimation Regarding Closure of Trading Window",
+    year: "2025-26",
+    url: "/investor/compliance/closure-of-trading-window.pdf",
+  },
+  {
+    title: "Trading Window Closure Notice",
+    year: "2025-26",
+    url: "/investor/compliance/trading-window-closure-notice.pdf",
+  },
 ];
 
 /** Real group (subsidiary) companies, mirrored from logicainfoway.com/group-companies —

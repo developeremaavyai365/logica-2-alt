@@ -2,7 +2,7 @@ import { TrendingUp, Users, Landmark, BarChart3, Building2, type LucideIcon } fr
 import {
   ANNUAL_REPORTS,
   ANNUAL_RETURNS,
-  BOARD_MEETING_PERIODS,
+  BOARD_MEETING_NOTICES,
   GENERAL_MEETING_PERIODS,
   FINANCIAL_RESULTS,
   SECRETARIAL_COMPLIANCE,
@@ -16,7 +16,7 @@ import {
   FAMILIARIZATION_PROGRAM_DOC,
   FUND_RAISING_PERIODS,
   PROSPECTUS_DOC,
-  CORPORATE_ANNOUNCEMENT_PERIODS,
+  COMPLIANCE_DISCLOSURES,
   GROUP_COMPANIES,
   type AnnualReport,
   type FiscalYearFolder,
@@ -31,7 +31,7 @@ export type InvestorSection =
 export const INVESTOR_SECTIONS: InvestorSection[] = [
   { slug: 'annual-report', label: 'Annual Report', category: 'Performance', kind: 'docs', items: ANNUAL_REPORTS },
   { slug: 'annual-return', label: 'Annual Return', category: 'Performance', kind: 'docs', items: ANNUAL_RETURNS },
-  { slug: 'notice-of-board-meeting', label: 'Board Meeting', category: 'Performance', kind: 'periods', items: BOARD_MEETING_PERIODS },
+  { slug: 'notice-of-board-meeting', label: 'Board Meeting', category: 'Performance', kind: 'docs', items: BOARD_MEETING_NOTICES },
   { slug: 'general-meeting', label: 'General Meeting', category: 'Performance', kind: 'periods', items: GENERAL_MEETING_PERIODS },
   { slug: 'financial-results', label: 'Financial Results', category: 'Performance', kind: 'docs', items: FINANCIAL_RESULTS },
   { slug: 'secretarial-compliance', label: 'Secretarial Compliance', category: 'Performance', kind: 'docs', items: SECRETARIAL_COMPLIANCE },
@@ -48,7 +48,7 @@ export const INVESTOR_SECTIONS: InvestorSection[] = [
   { slug: 'fund-raising', label: 'Fund Raising', category: 'Fund Raising', kind: 'periods', items: FUND_RAISING_PERIODS },
   { slug: 'prospectus', label: 'Prospectus', category: 'Fund Raising', kind: 'single', doc: PROSPECTUS_DOC },
 
-  { slug: 'corporate-announcement', label: 'Corporate Announcement', category: 'Stock Exchange', kind: 'periods', items: CORPORATE_ANNOUNCEMENT_PERIODS },
+  { slug: 'corporate-announcement', label: 'Corporate Announcement', category: 'Stock Exchange', kind: 'docs', items: COMPLIANCE_DISCLOSURES },
 
   { slug: 'group-companies', label: 'Group Companies', category: 'Group Companies', kind: 'names', items: GROUP_COMPANIES },
 ];
