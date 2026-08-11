@@ -282,7 +282,7 @@ export default function Header() {
             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'shop' ? 'rotate-180' : ''}`} />
           </button>
           {mobileSection === 'shop' && (
-            <div className="py-2 pl-3 space-y-2 max-h-[32rem] overflow-y-auto">
+            <div className="py-2 pl-3 space-y-2">
               {SHOP_MEGA.map((cat) => (
                 <Link
                   key={cat.href}
@@ -323,11 +323,11 @@ export default function Header() {
             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'investor' ? 'rotate-180' : ''}`} />
           </button>
           {mobileSection === 'investor' && (
-            <div className="py-2 pl-3 space-y-3 max-h-[36rem] overflow-y-auto">
-              {INVESTOR_MEGA.map((col) => (
-                <div key={col.label}>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[#000000]">{col.label}</p>
-                  {col.children && (
+            <div className="py-2 pl-3 space-y-3">
+              {INVESTOR_MEGA.map((col) =>
+                col.children ? (
+                  <div key={col.label}>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#000000]">{col.label}</p>
                     <div className="mt-1 space-y-1">
                       {col.children.map((child) =>
                         child.href.startsWith('http') ? (
@@ -341,9 +341,18 @@ export default function Header() {
                         ),
                       )}
                     </div>
-                  )}
-                </div>
-              ))}
+                  </div>
+                ) : (
+                  <Link
+                    key={col.label}
+                    to={col.href ?? '/investor'}
+                    onClick={() => setMenuOpen(false)}
+                    className="block text-xs font-semibold uppercase tracking-wide text-[#000000] py-0.5"
+                  >
+                    {col.label}
+                  </Link>
+                ),
+              )}
             </div>
           )}
 
