@@ -26,22 +26,22 @@ export const ANNUAL_REPORTS: AnnualReport[] = [
   {
     title: "Annual Report 2022-23",
     year: "2022-23",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/ANNUAL-REPORT-Eastern-Logica.pdf",
+    url: "/investor/annual-reports/annual-report-2022-23.pdf",
   },
   {
     title: "Annual Report 2021-22",
     year: "2021-22",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/10/AUDIT-REPORT-ELIL_MERGED-FY-2021-22.pdf",
+    url: "/investor/annual-reports/annual-report-2021-22.pdf",
   },
   {
     title: "Annual Report 2020-21",
     year: "2020-21",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/08/Annual-Report-F-Y-2020-2021.pdf",
+    url: "/investor/annual-reports/annual-report-2020-21.pdf",
   },
   {
     title: "Annual Report 2019-20",
     year: "2019-20",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/08/Annual-Report-F-Y-2019-20.pdf",
+    url: "/investor/annual-reports/annual-report-2019-20.pdf",
   },
 ];
 
@@ -65,17 +65,17 @@ export const ANNUAL_RETURNS: AnnualReport[] = [
   {
     title: "Annual Return 2021-22",
     year: "2021-22",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/01/ANNUAL-RETURN-21-22.pdf",
+    url: "/investor/annual-returns/annual-return-2021-22.pdf",
   },
   {
     title: "Annual Return 2020-21",
     year: "2020-21",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/08/ELIL-MGT-F-Y-2020-21.pdf",
+    url: "/investor/annual-returns/annual-return-2020-21.pdf",
   },
   {
     title: "Annual Return 2019-20",
     year: "2019-20",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/08/ELIL-MGT-2019-20.pdf",
+    url: "/investor/annual-returns/annual-return-2019-20.pdf",
   },
 ];
 
