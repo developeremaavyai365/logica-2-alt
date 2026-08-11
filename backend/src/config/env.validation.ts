@@ -32,8 +32,12 @@ export const envSchema = z.object({
   COOKIE_DOMAIN: z.string().default('localhost'),
 
   MAIL_FROM: z.string().email(),
-  MAIL_PROVIDER: z.enum(['console', 'ses', 'resend']).default('console'),
+  MAIL_PROVIDER: z.enum(['console', 'ses', 'resend', 'smtp']).default('console'),
   RESEND_API_KEY: z.string().optional(),
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().int().positive().optional(),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASSWORD: z.string().optional(),
 
   ARGON2_MEMORY_COST: z.coerce.number().int().positive().default(19456),
   ARGON2_TIME_COST: z.coerce.number().int().positive().default(2),
@@ -46,6 +50,14 @@ const envSchemaWithCrossFieldChecks = envSchema.superRefine((data, ctx) => {
       code: z.ZodIssueCode.custom,
       path: ['RESEND_API_KEY'],
       message: 'RESEND_API_KEY is required when MAIL_PROVIDER=resend.',
+    });
+  }
+
+  if (data.MAIL_PROVIDER === 'smtp' && !(data.SMTP_HOST && data.SMTP_USER && data.SMTP_PASSWORD)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['SMTP_HOST'],
+      message: 'SMTP_HOST, SMTP_USER, and SMTP_PASSWORD are required when MAIL_PROVIDER=smtp.',
     });
   }
 

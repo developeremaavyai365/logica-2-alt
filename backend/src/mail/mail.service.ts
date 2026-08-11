@@ -1,20 +1,36 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
+import nodemailer, { Transporter } from 'nodemailer';
 
-/** Verification/password-reset email transport. Two providers:
+/** Verification/password-reset email transport. Three providers:
  *  - "console" (default, dev): logs the link instead of sending anything.
  *  - "resend": sends for real via the Resend API.
+ *  - "smtp": sends via a generic SMTP relay (e.g. Google Workspace with an
+ *    app password) — no domain verification needed since it rides on a
+ *    mailbox that's already trusted.
  *  Callers only depend on sendVerificationEmail/sendPasswordResetEmail —
  *  adding another provider later means touching only this file. */
 @Injectable()
 export class MailService {
   private readonly logger = new Logger(MailService.name);
   private resendClient: Resend | null = null;
+  private smtpTransport: Transporter | null = null;
 
   constructor(private readonly config: ConfigService) {
     if (this.config.get<string>('MAIL_PROVIDER') === 'resend') {
       this.resendClient = new Resend(this.config.getOrThrow<string>('RESEND_API_KEY'));
+    }
+    if (this.config.get<string>('MAIL_PROVIDER') === 'smtp') {
+      this.smtpTransport = nodemailer.createTransport({
+        host: this.config.getOrThrow<string>('SMTP_HOST'),
+        port: this.config.get<number>('SMTP_PORT') ?? 587,
+        secure: this.config.get<number>('SMTP_PORT') === 465,
+        auth: {
+          user: this.config.getOrThrow<string>('SMTP_USER'),
+          pass: this.config.getOrThrow<string>('SMTP_PASSWORD'),
+        },
+      });
     }
   }
 
@@ -76,6 +92,24 @@ export class MailService {
         throw new Error(`Failed to send email: ${result.error.message}`);
       }
       this.logger.log(`[${args.logLabel}] sent -> ${args.to} (id: ${result.data?.id})`);
+      return;
+    }
+
+    if (provider === 'smtp') {
+      if (!this.smtpTransport) throw new Error('SMTP transport not initialized.');
+      try {
+        const info = await this.smtpTransport.sendMail({
+          from: this.config.getOrThrow<string>('MAIL_FROM'),
+          to: args.to,
+          subject: args.subject,
+          html: args.html,
+        });
+        this.logger.log(`[${args.logLabel}] sent -> ${args.to} (id: ${info.messageId})`);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        this.logger.error(`SMTP send failed for ${args.logLabel} -> ${args.to}: ${message}`);
+        throw new Error(`Failed to send email: ${message}`);
+      }
       return;
     }
 
