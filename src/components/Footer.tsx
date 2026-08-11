@@ -65,7 +65,8 @@ export default function Footer() {
         <p className="text-white/80 font-medium">Logica Infoway Limited</p>
         <p>(Formerly: Eastern Logica Infoway Limited)</p>
         <p className="mt-1">Registered Office: 2 Saklat Place, 1st Floor, Kolkata, West Bengal, India – 700072</p>
-        <p>Telephone: 033 4058 0000 · Email: info@logicainfoway.com</p>
+        <p>Corporate Office: A-78, Okhla Industrial Area, Phase-II, New Delhi – 110020</p>
+        <p>Telephone: +91 33 4058 0000 (Kolkata) · +91 11 4362 8116 (New Delhi) · Email: info@logicainfoway.com</p>
         <p>CIN: L30007WB1995PLC073218 · GSTIN: 19AABCE0772B1Z1</p>
       </div>
     </footer>

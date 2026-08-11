@@ -281,7 +281,7 @@ export default function Header() {
             Shop
             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'shop' ? 'rotate-180' : ''}`} />
           </button>
-          <div className={`overflow-hidden transition-all duration-300 ${mobileSection === 'shop' ? 'max-h-[32rem]' : 'max-h-0'}`}>
+          {mobileSection === 'shop' && (
             <div className="py-2 pl-3 space-y-2 max-h-[32rem] overflow-y-auto">
               {SHOP_MEGA.map((cat) => (
                 <Link
@@ -294,7 +294,7 @@ export default function Header() {
                 </Link>
               ))}
             </div>
-          </div>
+          )}
 
           {/* About accordion */}
           <button
@@ -304,7 +304,7 @@ export default function Header() {
             About
             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'about' ? 'rotate-180' : ''}`} />
           </button>
-          <div className={`overflow-hidden transition-all duration-300 ${mobileSection === 'about' ? 'max-h-64' : 'max-h-0'}`}>
+          {mobileSection === 'about' && (
             <div className="py-2 pl-3 space-y-2">
               {ABOUT_MENU.map((item) => (
                 <Link key={item.href} to={item.href} onClick={() => setMenuOpen(false)} className="block text-sm text-[#6b6b6b] py-1">
@@ -312,7 +312,7 @@ export default function Header() {
                 </Link>
               ))}
             </div>
-          </div>
+          )}
 
           {/* Investor accordion */}
           <button
@@ -322,7 +322,7 @@ export default function Header() {
             Investor
             <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'investor' ? 'rotate-180' : ''}`} />
           </button>
-          <div className={`overflow-hidden transition-all duration-300 ${mobileSection === 'investor' ? 'max-h-[36rem]' : 'max-h-0'}`}>
+          {mobileSection === 'investor' && (
             <div className="py-2 pl-3 space-y-3 max-h-[36rem] overflow-y-auto">
               {INVESTOR_MEGA.map((col) => (
                 <div key={col.label}>
@@ -345,7 +345,7 @@ export default function Header() {
                 </div>
               ))}
             </div>
-          </div>
+          )}
 
           <Link to="/media" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10">
             Media
