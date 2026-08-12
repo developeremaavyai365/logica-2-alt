@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
+import { ResendVerificationDto } from './dto/resend-verification.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { IssuedTokens } from './tokens.service';
@@ -103,6 +104,15 @@ export class AuthController {
     if (raw) await this.auth.logout(raw);
     res.clearCookie(this.cookieName(), { path: '/auth' });
     return { message: 'Logged out.' };
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 3, ttl: 60_000 } })
+  @HttpCode(HttpStatus.OK)
+  @Post('resend-verification')
+  async resendVerification(@Body() dto: ResendVerificationDto) {
+    await this.auth.resendVerification(dto.email);
+    return { message: 'If that email is registered and unverified, a new verification link has been sent.' };
   }
 
   @Public()

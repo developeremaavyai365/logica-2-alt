@@ -163,6 +163,22 @@ export class AuthService {
     await this.tokens.revokeRefreshToken(rawRefreshToken);
   }
 
+  async resendVerification(email: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    // Same non-enumeration shape as forgotPassword — never signal whether
+    // the account exists or is already verified.
+    if (!user || user.deletedAt || user.emailVerifiedAt || !user.email) return;
+
+    // Invalidate any still-live tokens from a prior signup/resend so only
+    // the newest link works — avoids a pile of valid tokens per account.
+    await this.prisma.emailVerificationToken.updateMany({
+      where: { userId: user.id, usedAt: null, expiresAt: { gt: new Date() } },
+      data: { usedAt: new Date() },
+    });
+
+    await this.issueEmailVerification(user.id, user.email);
+  }
+
   async forgotPassword(email: string): Promise<void> {
     const user = await this.prisma.user.findUnique({ where: { email } });
     // Always respond the same way regardless of whether the account

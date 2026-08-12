@@ -24,6 +24,7 @@ const NO_REFRESH_RETRY_PATHS = new Set([
   '/auth/login',
   '/auth/refresh',
   '/auth/verify-email',
+  '/auth/resend-verification',
   '/auth/forgot-password',
   '/auth/reset-password',
   '/auth/csrf',

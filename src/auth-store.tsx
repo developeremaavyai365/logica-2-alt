@@ -34,6 +34,7 @@ interface AuthApi {
   signIn: (identifier: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   verifyEmail: (token: string) => Promise<AuthResult>;
+  resendVerification: (email: string) => Promise<AuthResult>;
   forgotPassword: (email: string) => Promise<AuthResult>;
   resetPassword: (token: string, newPassword: string) => Promise<AuthResult>;
 }
@@ -133,6 +134,15 @@ export function AuthStoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const resendVerification = useCallback(async (email: string): Promise<AuthResult> => {
+    try {
+      await apiFetch('/auth/resend-verification', { method: 'POST', body: { email } });
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: messageFrom(err, 'Something went wrong.') };
+    }
+  }, []);
+
   const forgotPassword = useCallback(async (email: string): Promise<AuthResult> => {
     try {
       await apiFetch('/auth/forgot-password', { method: 'POST', body: { email } });
@@ -152,7 +162,9 @@ export function AuthStoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, ready, signUp, signIn, signOut, verifyEmail, forgotPassword, resetPassword }}>
+    <AuthContext.Provider
+      value={{ user, ready, signUp, signIn, signOut, verifyEmail, resendVerification, forgotPassword, resetPassword }}
+    >
       {children}
     </AuthContext.Provider>
   );

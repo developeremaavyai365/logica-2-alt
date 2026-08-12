@@ -11,13 +11,15 @@ interface Props {
 }
 
 export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) {
-  const { signIn, signUp } = useAuthStore();
+  const { signIn, signUp, resendVerification } = useAuthStore();
   const [mode, setMode] = useState<Mode>(initialMode);
 
   const [signInEmail, setSignInEmail] = useState('');
   const [signInPassword, setSignInPassword] = useState('');
   const [signInError, setSignInError] = useState('');
   const [signInLoading, setSignInLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSent, setResendSent] = useState(false);
 
   const [signUpName, setSignUpName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
@@ -29,6 +31,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
   async function handleSignIn(e: FormEvent) {
     e.preventDefault();
     setSignInError('');
+    setResendSent(false);
     setSignInLoading(true);
     const result = await signIn(signInEmail, signInPassword);
     setSignInLoading(false);
@@ -37,6 +40,13 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
       return;
     }
     onSuccess?.();
+  }
+
+  async function handleResendVerification() {
+    setResendLoading(true);
+    await resendVerification(signInEmail);
+    setResendLoading(false);
+    setResendSent(true);
   }
 
   async function handleSignUp(e: FormEvent) {
@@ -78,6 +88,20 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
       />
 
       {signInError && <p className="mt-3 text-xs font-medium text-red-600">{signInError}</p>}
+
+      {signInError === 'Please verify your email before logging in.' &&
+        (resendSent ? (
+          <p className="mt-1 text-xs text-[#6b6b6b]">If that account is unverified, a new link has been sent.</p>
+        ) : (
+          <button
+            type="button"
+            onClick={handleResendVerification}
+            disabled={resendLoading}
+            className="mt-1 text-xs font-medium text-[#000000] underline underline-offset-2 hover:opacity-70 disabled:opacity-50"
+          >
+            {resendLoading ? 'Sending…' : 'Resend verification email'}
+          </button>
+        ))}
 
       <Link to="/forgot-password" className="mt-4 text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
         Forgot your password?
