@@ -7,7 +7,7 @@ import { useAuthStore } from '../auth-store';
 type Status = 'verifying' | 'success' | 'error';
 
 export default function VerifyEmail() {
-  const { verifyEmail } = useAuthStore();
+  const { ready, verifyEmail } = useAuthStore();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
 
@@ -16,6 +16,12 @@ export default function VerifyEmail() {
   const attempted = useRef(false);
 
   useEffect(() => {
+    // Wait for the auth store's own bootstrap (which sets the CSRF cookie)
+    // to finish first. A verification link opened fresh from an email
+    // client is a brand-new tab with no cookie yet — firing this POST
+    // before that bootstrap completes races the cookie and fails with
+    // "Invalid or missing CSRF token."
+    if (!ready) return;
     if (attempted.current) return; // StrictMode double-invoke guard — a
     attempted.current = true; // verification token is single-use, so a
     // duplicate call would show a false "invalid link" error.
@@ -34,7 +40,7 @@ export default function VerifyEmail() {
         setError(result.error ?? 'This link is invalid or has expired.');
       }
     });
-  }, [token, verifyEmail]);
+  }, [ready, token, verifyEmail]);
 
   return (
     <div className="w-full bg-[#ECEDEC]">
