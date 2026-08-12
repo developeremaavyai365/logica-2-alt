@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import nodemailer, { Transporter } from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 /** Verification/password-reset email transport. Three providers:
  *  - "console" (default, dev): logs the link instead of sending anything.
@@ -26,11 +27,18 @@ export class MailService {
         host: this.config.getOrThrow<string>('SMTP_HOST'),
         port: this.config.get<number>('SMTP_PORT') ?? 587,
         secure: this.config.get<number>('SMTP_PORT') === 465,
+        // Railway's network doesn't route outbound IPv6, but Node's default
+        // DNS resolution can still hand back an AAAA record first for hosts
+        // like smtp.gmail.com, causing ENETUNREACH. Force IPv4 explicitly
+        // rather than relying on DNS resolution order. (nodemailer forwards
+        // this straight to Node's net/tls connect, which supports it — the
+        // @types/nodemailer definitions just don't declare the field.)
+        family: 4,
         auth: {
           user: this.config.getOrThrow<string>('SMTP_USER'),
           pass: this.config.getOrThrow<string>('SMTP_PASSWORD'),
         },
-      });
+      } as SMTPTransport.Options);
     }
   }
 
