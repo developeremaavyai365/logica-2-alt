@@ -371,7 +371,7 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Forex Exchange Risk Management Policy",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/08/APPROVED-FOREX-EXCHANGE-RISK-MANAGEMENT-POLICY.pdf",
+    url: "/investor/policies/forex-exchange-risk-management-policy.pdf",
   },
   {
     title: "Code of Conduct for Directors and Senior Management",
@@ -421,7 +421,7 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Policy on Prevention of Sexual Harassment at Workplace",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Prevention-of-Sexual-Harrasment-at-Workplace-1.pdf",
+    url: "/investor/policies/policy-prevention-sexual-harassment-workplace.pdf",
   },
   {
     title: "Policy on Terms of Appointment of Independent Directors",
@@ -476,7 +476,7 @@ export const SHAREHOLDING_PATTERN: AnnualReport[] = [
 export const FAMILIARIZATION_PROGRAM_DOC: AnnualReport = {
   title: "Familiarization Program (under Regulation 46)",
   year: "",
-  url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Familarisation-Programme-under-Regulation-46.pdf",
+  url: "/investor/policies/familiarization-program-regulation-46.pdf",
 };
 
 /** Real fund raising disclosures, newest first — replaces the old
