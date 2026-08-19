@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/wp-content/uploads/2024/08/CSR-POLICY.pdf", "destination": "/investor/policies/csr-policy.pdf" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
