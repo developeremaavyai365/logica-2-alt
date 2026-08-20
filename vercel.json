@@ -1,21 +1,439 @@
 {
   "redirects": [
-    { "source": "/overview", "destination": "/about", "permanent": true },
-    { "source": "/composition-of-committees", "destination": "/about/composition-of-committees", "permanent": true },
-    { "source": "/board-meeting", "destination": "/investor/board-meeting", "permanent": true },
-    { "source": "/financial-results", "destination": "/investor/financial-results", "permanent": true },
-    { "source": "/annual-report", "destination": "/investor/annual-report", "permanent": true },
-    { "source": "/shareholding-pattern", "destination": "/investor/shareholding-pattern", "permanent": true },
-    { "source": "/compliances", "destination": "/investor/secretarial-compliance", "permanent": true },
-    { "source": "/grievance-redressal", "destination": "/investor", "permanent": true },
-    { "source": "/authorized-person", "destination": "/investor", "permanent": true }
+    {
+      "source": "/overview",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/composition-of-committees",
+      "destination": "/about/composition-of-committees",
+      "permanent": true
+    },
+    {
+      "source": "/board-meeting",
+      "destination": "/investor/board-meeting",
+      "permanent": true
+    },
+    {
+      "source": "/financial-results",
+      "destination": "/investor/financial-results",
+      "permanent": true
+    },
+    {
+      "source": "/annual-report",
+      "destination": "/investor/annual-report",
+      "permanent": true
+    },
+    {
+      "source": "/shareholding-pattern",
+      "destination": "/investor/shareholding-pattern",
+      "permanent": true
+    },
+    {
+      "source": "/compliances",
+      "destination": "/investor/secretarial-compliance",
+      "permanent": true
+    },
+    {
+      "source": "/grievance-redressal",
+      "destination": "/investor",
+      "permanent": true
+    },
+    {
+      "source": "/authorized-person",
+      "destination": "/investor",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/wp-content/uploads/2024/08/CSR-POLICY.pdf", "destination": "/investor/policies/csr-policy.pdf" },
-    { "source": "/wp-content/uploads/2025/11/Related-Party-Policy.pdf", "destination": "/investor/policies/related-party-policy-revised.pdf" },
-    { "source": "/wp-content/uploads/2026/03/Familarisation-Programme-under-Regulation-46.pdf", "destination": "/investor/policies/familiarization-program-regulation-46.pdf" },
-    { "source": "/wp-content/uploads/2026/03/Annual-Return-2024-25.pdf", "destination": "/investor/annual-returns/annual-return-2024-25.pdf" },
-    { "source": "/wp-content/uploads/2026/05/3.-Statement-Of-Deviation-Or-Variation-In-Utilization-Of-Funds-For-The-Half-Year-Ended-March-31-2026.pdf", "destination": "/investor/compliance/statement-deviation-utilization-of-funds-hy-mar-2026.pdf" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/wp-content/uploads/2024/08/CSR-POLICY.pdf",
+      "destination": "/investor/policies/csr-policy.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/11/Related-Party-Policy.pdf",
+      "destination": "/investor/policies/related-party-policy-revised.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Familarisation-Programme-under-Regulation-46.pdf",
+      "destination": "/investor/policies/familiarization-program-regulation-46.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Annual-Return-2024-25.pdf",
+      "destination": "/investor/annual-returns/annual-return-2024-25.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/3.-Statement-Of-Deviation-Or-Variation-In-Utilization-Of-Funds-For-The-Half-Year-Ended-March-31-2026.pdf",
+      "destination": "/investor/compliance/statement-deviation-utilization-of-funds-hy-mar-2026.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/10/SECRETARIAL-AUDIT-REPORT-MR3-signed.pdf",
+      "destination": "/investor/secretarial-compliance/secretarial-audit-report-2023-24.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/07/SEC-REPORT.pdf",
+      "destination": "/investor/secretarial-compliance/secretarial-audit-report-2022-23.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/03/Secretarial-Audit-report-2021-22.pdf",
+      "destination": "/investor/secretarial-compliance/secretarial-audit-report-2021-22.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Code-of-Conduct-for-Directors-and-Senior-Management.pdf",
+      "destination": "/investor/policies/code-of-conduct-directors-senior-management.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Familiarization-Program-for-Independent-Directors.pdf",
+      "destination": "/investor/policies/familiarization-program-for-independent-directors.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Materiality-Policy-for-Identification-of-Group-Companies.pdf",
+      "destination": "/investor/policies/materiality-policy-identification-of-group-companies.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Policy-for-Archival-of-Documents.pdf",
+      "destination": "/investor/policies/policy-for-archival-of-documents.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/07/policy-on-disclosure-of-material-event.pdf",
+      "destination": "/investor/policies/policy-on-disclosure-of-material-event.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Policy-on-Diversity-on-Board.pdf",
+      "destination": "/investor/policies/policy-on-diversity-on-board.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Policy-on-Identification-of-Material-Creditors-and-Material-Litigations.pdf",
+      "destination": "/investor/policies/policy-on-identification-of-material-creditors-and-material-litigations.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Policy-on-Terms-of-Appointment-of-Independent-Directors.pdf",
+      "destination": "/investor/policies/policy-on-terms-of-appointment-of-independent-directors.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Vigil-Mechanism_Whistle-Blower-Policy-for-Directors-and-Employees.pdf",
+      "destination": "/investor/policies/vigil-mechanism-whistle-blower-policy.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/10/Material-Creditors.pdf",
+      "destination": "/investor/material-creditors/material-creditors.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/10/Shareholding-pattern-for-HY-ended-30-September-2024-2.pdf",
+      "destination": "/investor/shareholding-pattern/shareholding-pattern-hy-30-09-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/10/Shareholding-Pattern-as-on-31-03-2024.pdf",
+      "destination": "/investor/shareholding-pattern/shareholding-pattern-31-03-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/07/ANNUAL-REPORT-2023-24.pdf",
+      "destination": "/investor/annual-reports/annual-report-2023-24.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/03/Annual-Return-2022-23.pdf",
+      "destination": "/investor/annual-returns/annual-return-2022-23.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/10/Annual-Return-2023-24.pdf",
+      "destination": "/investor/annual-returns/annual-return-2023-24.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/07/BM-Notice-12.05.2026.pdf",
+      "destination": "/investor/board-meetings/bm-notice-12-05-2026.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/07/BM-Notice-14.11.2025-signed.pdf",
+      "destination": "/investor/board-meetings/bm-notice-14-11-2025-signed.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/Board-Meeting-Notice-12-05-2026.pdf",
+      "destination": "/investor/board-meetings/board-meeting-notice-12-05-2026.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Board-Meeting-Notice-13.03.2026.pdf",
+      "destination": "/investor/board-meetings/board-meeting-notice-13-03-2026.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Board-Meeting-Notice-14.11.2025.pdf",
+      "destination": "/investor/board-meetings/board-meeting-notice-14-11-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Board-Meeting-Notice-29.08.2025.pdf",
+      "destination": "/investor/board-meetings/board-meeting-notice-29-08-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/08/Board-Meeting-Notice-30.05.2025.pdf",
+      "destination": "/investor/board-meetings/board-meeting-notice-30-05-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/08/BM-Notice-30.04.2025-revised-sd.pdf",
+      "destination": "/investor/board-meetings/bm-notice-30-04-2025-revised.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/09/Audit-Committee-Meeting-Notice-3.pdf",
+      "destination": "/investor/committee-meeting/audit-committee-meeting-notice-3.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/11/Audit-Committee-Meeting-Notice-4.pdf",
+      "destination": "/investor/committee-meeting/audit-committee-meeting-notice-4.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/03/Audit-Committee-Meeting-Notice-5.pdf",
+      "destination": "/investor/committee-meeting/audit-committee-meeting-notice-5.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/03/Independent-Director-Meeting-Notice-1.pdf",
+      "destination": "/investor/committee-meeting/independent-director-meeting-notice-1.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/01/closure-of-trading-window.pdf",
+      "destination": "/investor/compliance/closure-of-trading-window.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/01/LIL-Valuation-Report-Signed.pdf",
+      "destination": "/investor/fund-raising/lil-valuation-report-signed.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/08/28TH-AGM-Transcript.pdf",
+      "destination": "/investor/general-meeting/28th-agm-transcript.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/07/AGM-NOTICE-2023.pdf",
+      "destination": "/investor/general-meeting/agm-notice-2023.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/07/AGM-NOTICE.pdf",
+      "destination": "/investor/general-meeting/agm-notice-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/01/corrigendum-EGM-notice-06.02-2025.pdf",
+      "destination": "/investor/general-meeting/corrigendum-egm-notice-06-02-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/01/EGM-NOTICE-06-02-2025.pdf",
+      "destination": "/investor/general-meeting/egm-notice-06-02-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/03/NOTICE.pdf",
+      "destination": "/investor/notice/notice.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Nomination-and-Remuneration-Policy.pdf",
+      "destination": "/investor/policies/nomination-and-remuneration-policy.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/09/Realligned-Annual-Report-2024-25.pdf",
+      "destination": "/investor/annual-reports/realigned-annual-report-2024-25.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/08/Annual-Report-F-Y-2019-20.pdf",
+      "destination": "/investor/annual-reports/annual-report-2019-20.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/08/Annual-Report-F-Y-2020-2021.pdf",
+      "destination": "/investor/annual-reports/annual-report-2020-21.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/01/ANNUAL-RETURN-21-22.pdf",
+      "destination": "/investor/annual-returns/annual-return-2021-22.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/02/Revised-Proceding-of-First-EGM-2024-25.pdf",
+      "destination": "/investor/general-meeting/revised-proceedings-first-egm-2024-25.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/08/APPROVED-FOREX-EXCHANGE-RISK-MANAGEMENT-POLICY.pdf",
+      "destination": "/investor/policies/forex-exchange-risk-management-policy.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/01/Announcement-under-Regulation-30-LODR-Preferential-Issue.pdf",
+      "destination": "/investor/fund-raising/announcement-regulation-30-preferential-issue.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Policy-on-Prevention-of-Sexual-Harrasment-at-Workplace.pdf",
+      "destination": "/investor/policies/policy-prevention-sexual-harassment-workplace.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/2.-Financial-Results-For-Half-Year-And-Financial-Year-Ended-March-31-2026.pdf",
+      "destination": "/investor/financial-results/financial-results-fy-2025-26.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/1.-Board-Meeting-Outcome-for-Financial-Results-For-The-Half-Year-Ended-And-The-Year-Ended-March-31-2026.pdf",
+      "destination": "/investor/financial-results/board-meeting-outcome-financial-results-31-03-2026.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/03/Related-Party-Policy.pdf",
+      "destination": "/investor/policies/related-party-policy-revised.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/04/IN-PRINCIPLE-APPROVAL-GRANTED-BY-STOCK-EXCHANGE-FOR-ISSUANCE-OF-PREFERENCE-SHARES.pdf",
+      "destination": "/investor/fund-raising/in-principle-approval-issuance-of-preference-shares.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/01/Increase-In-Authorised-Capital-Of-The-Company.pdf",
+      "destination": "/investor/fund-raising/increase-in-authorised-capital.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/02/reg-44-voting-result.pdf",
+      "destination": "/investor/general-meeting/reg-44-voting-result-13-02-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/02/Shareholder-Meeting-Postal-Ballot-Outcome-of-EGM.pdf",
+      "destination": "/investor/general-meeting/postal-ballot-outcome-of-egm.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/02/proceedings-of-1st-Extra-Ordinary-General-Meeting-EGM-of-2024-25.pdf",
+      "destination": "/investor/general-meeting/proceedings-1st-egm-2024-25.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/09/OutcomeProceedings-of-30th-Annual-General-Meeting-for-F.Y.-2024-25.pdf",
+      "destination": "/investor/general-meeting/outcome-proceedings-30th-agm-fy2024-25.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/03/Outcome-of-Board-Meeting-dated-01-03-2025.pdf",
+      "destination": "/investor/fund-raising/outcome-board-meeting-allotment-preferential-basis-01-03-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/10/Disclosure-of-Voting-Results-and-Consolidated-Scrutinizers-Report-of-the-30th-Annual-General-Meeting-AGM.pdf",
+      "destination": "/investor/general-meeting/voting-results-scrutinizer-report-30th-agm.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/11/Statement-Of-Deviation-Or-Variation-In-Utilization-Of-Funds-For-The-Half-Year-Ended-September-30-2025.pdf",
+      "destination": "/investor/fund-raising/statement-of-deviation-half-year-ended-30-09-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/06/Statement-of-DeviationVariation-for-half-year-ended-March-31-2025-pertaining-to-funds-raised-under-Preferential-Issue-on-March-01-2025.-investor.pdf",
+      "destination": "/investor/fund-raising/statement-of-deviation-half-year-ended-31-03-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/Submission-Of-Management-Discussion-Analysis-H2-FY26-FY26.pdf",
+      "destination": "/investor/compliance/management-discussion-analysis-h2-fy26.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/09/Intimation-of-Record-date-of-30th-Annual-General-Meeting-of-the-Logica-Infoway-Limited.pdf",
+      "destination": "/investor/general-meeting/intimation-record-date-30th-agm.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/08/Intimation-of-date-of-30th-Annual-General-Meeting-of-the-Logica-Infoway-Limited.pdf",
+      "destination": "/investor/general-meeting/intimation-date-30th-agm.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/09/Corrigendum-Annual-Report-for-FY-2024-25-and-Notice-of-the-30th-Annual-General-Meeting-AGM.pdf",
+      "destination": "/investor/general-meeting/corrigendum-annual-report-notice-30th-agm.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/09/NOTICE-OF-30TH-ANNUAL-GENERAL-MEETING.pdf",
+      "destination": "/investor/general-meeting/notice-30th-agm.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/07/EGM-NOTICE-1.pdf",
+      "destination": "/investor/general-meeting/egm-notice-08-07-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/02/proceeding-of-EGM.pdf",
+      "destination": "/investor/general-meeting/proceedings-egm-13-02-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/02/record-date.pdf",
+      "destination": "/investor/general-meeting/egm-record-date-08-02-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/10/Notice-of-1st-Meeting-Financial-Year-2023-24-of-Audit-Committee.pdf",
+      "destination": "/investor/committee-meeting/audit-committee-meeting-notice-1st-fy2023-24.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/11/Notice-and-Agenda-Audit-Committee-Meeting-14.11.2024.pdf",
+      "destination": "/investor/committee-meeting/audit-committee-meeting-notice-agenda-14-11-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/07/NRC-1.pdf",
+      "destination": "/investor/committee-meeting/nomination-and-remuneration-committee-meeting-notice.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Outcome-of-the-Board-Meeting-held-on-Friday-March-13-2026.pdf",
+      "destination": "/investor/board-meetings/outcome-board-meeting-13-03-2026.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/Board-Meeting-Intimation-for-Approval-Of-Audited-Financial-Results-Of-The-Company-For-The-Period-Ended-March-31-2026-And-Other-Routine-Business-Matters.pdf",
+      "destination": "/investor/board-meetings/board-meeting-intimation-audited-fy26.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/04/Non-applicability-of-Annual-Secretarial-Compliance-Report-under-Regulation-24A-of-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015-for-the-year-ended-March-31-2026.pdf",
+      "destination": "/investor/compliance/reg-24a-secretarial-compliance-non-applicability-fy26.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/04/Intimation-for-Non-applicability-of-Large-Corporate-LC-disclosure-for-the-year-ended-March31-2026.pdf",
+      "destination": "/investor/compliance/large-corporate-disclosure-non-applicability-fy26.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/04/Certificate-under-Regulation-745-of-SEBI-Depositories-and-Participants-Regulations-2018-for-quarter-ended-March-31-2026.pdf",
+      "destination": "/investor/compliance/reg-74-5-certificate-q-mar-2026.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/01/Certificate-under-Regulation-745-of-SEBI-DP-Regulations-2018-for-quarter-ended-31st-December-2025.pdf",
+      "destination": "/investor/compliance/reg-74-5-certificate-q-dec-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/01/Compliance-as-per-Regulation-575-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-ended-December-31-2025.pdf",
+      "destination": "/investor/compliance/reg-57-5-compliance-q-dec-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/01/Compliance-as-per-Regulation-574-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-ended-30th-December-2028.pdf",
+      "destination": "/investor/compliance/reg-57-4-compliance-q-dec-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/10/Compliance-as-per-Regulation-575-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-ended-30th-September-2025-–-Non-Applicability.pdf",
+      "destination": "/investor/compliance/reg-57-5-compliance-q-sep-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Intimation-regarding-Closure-of-Trading-Window.pdf",
+      "destination": "/investor/compliance/trading-window-closure-notice.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/4.-Announcement-under-Regulation-30-LODR-Change-in-Management.pdf",
+      "destination": "/investor/compliance/reg-30-change-in-management.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Revised-Intimation-of-Resignation-of-Chief-Operating-Officer-North-and-Key-Managerial-Personnel-of-the-Company-pursuant-to-Regulation-30-of-SEBI-Listing-Obligations-and-Disclosure-Requir.pdf",
+      "destination": "/investor/compliance/reg-30-resignation-coo-north.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Regulation-30-of-SEBI-LODR-Regulations-2015-Intimation-of-Participation-in-Arihant-Capital-Bharat-Connect-Virtual-Conference-Rising-Star-2026-March-11-2026.pdf",
+      "destination": "/investor/compliance/reg-30-arihant-capital-conference-participation.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/03/Outcome-of-AnalystInstitutional-Investor-Meeting-under-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015.pdf",
+      "destination": "/investor/compliance/outcome-analyst-institutional-investor-meeting.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/12/Clarification-On-Display-Of-Right-Issue-Of-Equity-Shares-With-Warrants-Under-The-Board-Meetings-Section.pdf",
+      "destination": "/investor/compliance/clarification-rights-issue-display.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/05/Intimation-Regarding-Trading-Approval-Received-For-693600-Equity-Shares-Issued-On-Preferential-Basis-Disclosure-Of-Material-Updates-Under-Reg.-30.pdf",
+      "destination": "/investor/fund-raising/intimation-trading-approval-preferential-shares.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/12/ELIL-Prospectus-RA20221228-Final_compressed.pdf",
+      "destination": "/investor/fund-raising/elil-prospectus-final.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/10/Shareholding-Pattern-30.09.2025-signed.pdf",
+      "destination": "/investor/shareholding-pattern/shareholding-pattern-30-09-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/04/Shareholding-Pattern-31.03.2025-signed.pdf",
+      "destination": "/investor/shareholding-pattern/shareholding-pattern-31-03-2025.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/07/Shareholding-Pattern-for-FY-ended-31-03-2026.pdf",
+      "destination": "/investor/shareholding-pattern/shareholding-pattern-31-03-2026.pdf"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }

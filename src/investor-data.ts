@@ -294,17 +294,17 @@ export const SECRETARIAL_COMPLIANCE: AnnualReport[] = [
   {
     title: "Secretarial Audit Report 2023-24",
     year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/SECRETARIAL-AUDIT-REPORT-MR3-signed-1.pdf",
+    url: "/investor/secretarial-compliance/secretarial-audit-report-2023-24.pdf",
   },
   {
     title: "Secretarial Audit Report 2022-23",
     year: "2022-23",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/SEC-REPORT.pdf",
+    url: "/investor/secretarial-compliance/secretarial-audit-report-2022-23.pdf",
   },
   {
     title: "Secretarial Audit Report 2021-22",
     year: "2021-22",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/03/Secretarial-Audit-report-2021-22.pdf",
+    url: "/investor/secretarial-compliance/secretarial-audit-report-2021-22.pdf",
   },
 ];
 
@@ -376,12 +376,12 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Code of Conduct for Directors and Senior Management",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Code-of-Conduct-for-Directors-and-Senior-Management-1.pdf",
+    url: "/investor/policies/code-of-conduct-directors-senior-management.pdf",
   },
   {
     title: "Familiarization Program for Independent Directors",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Familiarization-Program-for-Independent-Directors-1.pdf",
+    url: "/investor/policies/familiarization-program-for-independent-directors.pdf",
   },
   {
     title: "Internal Procedures and Conduct for Prevention of Insider Trading",
@@ -391,7 +391,7 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Materiality Policy for Identification of Group Companies",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Materiality-Policy-for-Identification-of-Group-Companies-1.pdf",
+    url: "/investor/policies/materiality-policy-identification-of-group-companies.pdf",
   },
   {
     title: "Nomination and Remuneration Policy",
@@ -401,22 +401,22 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Policy for Archival of Documents",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Archival-of-Documents-1.pdf",
+    url: "/investor/policies/policy-for-archival-of-documents.pdf",
   },
   {
     title: "Policy on Disclosure of Material Events/Information",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/policy-on-disclosure-of-material-event.pdf",
+    url: "/investor/policies/policy-on-disclosure-of-material-event.pdf",
   },
   {
     title: "Policy on Diversity on Board",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Diversity-on-Board-1.pdf",
+    url: "/investor/policies/policy-on-diversity-on-board.pdf",
   },
   {
     title: "Policy on Identification of Material Creditors and Material Litigations",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Identification-of-Material-Creditors-and-Material-Litigation.pdf",
+    url: "/investor/policies/policy-on-identification-of-material-creditors-and-material-litigations.pdf",
   },
   {
     title: "Policy on Prevention of Sexual Harassment at Workplace",
@@ -426,12 +426,12 @@ export const POLICIES: AnnualReport[] = [
   {
     title: "Policy on Terms of Appointment of Independent Directors",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Terms-of-Appointment-of-Independent-Directors-1.pdf",
+    url: "/investor/policies/policy-on-terms-of-appointment-of-independent-directors.pdf",
   },
   {
     title: "Vigil Mechanism Whistle Blower Policy for Directors and Employees",
     year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Vigil-Mechanism_Whistle-Blower-Policy-for-Directors-and-Employees-1.pdf",
+    url: "/investor/policies/vigil-mechanism-whistle-blower-policy.pdf",
   },
 ];
 
@@ -439,7 +439,7 @@ export const POLICIES: AnnualReport[] = [
 export const MATERIAL_CREDITORS_DOC: AnnualReport = {
   title: "Material Creditors",
   year: "",
-  url: "https://www.logicainfoway.com/wp-content/uploads/2022/10/Material-Creditors.pdf",
+  url: "/investor/material-creditors/material-creditors.pdf",
 };
 
 /** Real shareholding pattern filings, mirrored from logicainfoway.com/shareholding-pattern. */
@@ -462,12 +462,12 @@ export const SHAREHOLDING_PATTERN: AnnualReport[] = [
   {
     title: "Shareholding Pattern for HY Ended 30-09-2024",
     year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Shareholding-pattern-for-HY-ended-30-September-2024-2.pdf",
+    url: "/investor/shareholding-pattern/shareholding-pattern-hy-30-09-2024.pdf",
   },
   {
     title: "Shareholding Pattern as on 31-03-2024",
     year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Shareholding-Pattern-as-on-31-03-2024.pdf",
+    url: "/investor/shareholding-pattern/shareholding-pattern-31-03-2024.pdf",
   },
 ];
 
