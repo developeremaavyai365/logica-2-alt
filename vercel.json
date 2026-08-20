@@ -1,47 +1,47 @@
 {
   "redirects": [
     {
-      "source": "/overview",
+      "source": "/overview/?",
       "destination": "/about",
       "permanent": true
     },
     {
-      "source": "/composition-of-committees",
+      "source": "/composition-of-committees/?",
       "destination": "/about/composition-of-committees",
       "permanent": true
     },
     {
-      "source": "/board-meeting",
+      "source": "/board-meeting/?",
       "destination": "/investor/board-meeting",
       "permanent": true
     },
     {
-      "source": "/financial-results",
+      "source": "/financial-results/?",
       "destination": "/investor/financial-results",
       "permanent": true
     },
     {
-      "source": "/annual-report",
+      "source": "/annual-report/?",
       "destination": "/investor/annual-report",
       "permanent": true
     },
     {
-      "source": "/shareholding-pattern",
+      "source": "/shareholding-pattern/?",
       "destination": "/investor/shareholding-pattern",
       "permanent": true
     },
     {
-      "source": "/compliances",
+      "source": "/compliances/?",
       "destination": "/investor/secretarial-compliance",
       "permanent": true
     },
     {
-      "source": "/grievance-redressal",
+      "source": "/grievance-redressal/?",
       "destination": "/investor",
       "permanent": true
     },
     {
-      "source": "/authorized-person",
+      "source": "/authorized-person/?",
       "destination": "/investor",
       "permanent": true
     }
@@ -384,7 +384,7 @@
       "destination": "/investor/compliance/reg-57-4-compliance-q-dec-2025.pdf"
     },
     {
-      "source": "/wp-content/uploads/2025/10/Compliance-as-per-Regulation-575-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-ended-30th-September-2025-–-Non-Applicability.pdf",
+      "source": "/wp-content/uploads/2025/10/Compliance-as-per-Regulation-575-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-ended-30th-September-2025-\u2013-Non-Applicability.pdf",
       "destination": "/investor/compliance/reg-57-5-compliance-q-sep-2025.pdf"
     },
     {
@@ -430,6 +430,18 @@
     {
       "source": "/wp-content/uploads/2026/07/Shareholding-Pattern-for-FY-ended-31-03-2026.pdf",
       "destination": "/investor/shareholding-pattern/shareholding-pattern-31-03-2026.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Policy-on-Terms-of-Appointment-of-Independent-Directors-1.pdf",
+      "destination": "/investor/policies/policy-on-terms-of-appointment-of-independent-directors.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Code-of-Conduct-for-Directors-and-Senior-Management-1.pdf",
+      "destination": "/investor/policies/code-of-conduct-directors-senior-management.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/Vigil-Mechanism_Whistle-Blower-Policy-for-Directors-and-Employees-1.pdf",
+      "destination": "/investor/policies/vigil-mechanism-whistle-blower-policy.pdf"
     },
     {
       "source": "/(.*)",
