@@ -1,47 +1,92 @@
 {
   "redirects": [
     {
-      "source": "/overview/?",
+      "source": "/overview",
       "destination": "/about",
       "permanent": true
     },
     {
-      "source": "/composition-of-committees/?",
+      "source": "/overview/",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/composition-of-committees",
       "destination": "/about/composition-of-committees",
       "permanent": true
     },
     {
-      "source": "/board-meeting/?",
+      "source": "/composition-of-committees/",
+      "destination": "/about/composition-of-committees",
+      "permanent": true
+    },
+    {
+      "source": "/board-meeting",
       "destination": "/investor/board-meeting",
       "permanent": true
     },
     {
-      "source": "/financial-results/?",
+      "source": "/board-meeting/",
+      "destination": "/investor/board-meeting",
+      "permanent": true
+    },
+    {
+      "source": "/financial-results",
       "destination": "/investor/financial-results",
       "permanent": true
     },
     {
-      "source": "/annual-report/?",
+      "source": "/financial-results/",
+      "destination": "/investor/financial-results",
+      "permanent": true
+    },
+    {
+      "source": "/annual-report",
       "destination": "/investor/annual-report",
       "permanent": true
     },
     {
-      "source": "/shareholding-pattern/?",
+      "source": "/annual-report/",
+      "destination": "/investor/annual-report",
+      "permanent": true
+    },
+    {
+      "source": "/shareholding-pattern",
       "destination": "/investor/shareholding-pattern",
       "permanent": true
     },
     {
-      "source": "/compliances/?",
+      "source": "/shareholding-pattern/",
+      "destination": "/investor/shareholding-pattern",
+      "permanent": true
+    },
+    {
+      "source": "/compliances",
       "destination": "/investor/secretarial-compliance",
       "permanent": true
     },
     {
-      "source": "/grievance-redressal/?",
+      "source": "/compliances/",
+      "destination": "/investor/secretarial-compliance",
+      "permanent": true
+    },
+    {
+      "source": "/grievance-redressal",
       "destination": "/investor",
       "permanent": true
     },
     {
-      "source": "/authorized-person/?",
+      "source": "/grievance-redressal/",
+      "destination": "/investor",
+      "permanent": true
+    },
+    {
+      "source": "/authorized-person",
+      "destination": "/investor",
+      "permanent": true
+    },
+    {
+      "source": "/authorized-person/",
       "destination": "/investor",
       "permanent": true
     }
