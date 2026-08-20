@@ -1,6 +1,21 @@
 {
+  "redirects": [
+    { "source": "/overview", "destination": "/about", "permanent": true },
+    { "source": "/composition-of-committees", "destination": "/about/composition-of-committees", "permanent": true },
+    { "source": "/board-meeting", "destination": "/investor/board-meeting", "permanent": true },
+    { "source": "/financial-results", "destination": "/investor/financial-results", "permanent": true },
+    { "source": "/annual-report", "destination": "/investor/annual-report", "permanent": true },
+    { "source": "/shareholding-pattern", "destination": "/investor/shareholding-pattern", "permanent": true },
+    { "source": "/compliances", "destination": "/investor/secretarial-compliance", "permanent": true },
+    { "source": "/grievance-redressal", "destination": "/investor", "permanent": true },
+    { "source": "/authorized-person", "destination": "/investor", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/wp-content/uploads/2024/08/CSR-POLICY.pdf", "destination": "/investor/policies/csr-policy.pdf" },
+    { "source": "/wp-content/uploads/2025/11/Related-Party-Policy.pdf", "destination": "/investor/policies/related-party-policy-revised.pdf" },
+    { "source": "/wp-content/uploads/2026/03/Familarisation-Programme-under-Regulation-46.pdf", "destination": "/investor/policies/familiarization-program-regulation-46.pdf" },
+    { "source": "/wp-content/uploads/2026/03/Annual-Return-2024-25.pdf", "destination": "/investor/annual-returns/annual-return-2024-25.pdf" },
+    { "source": "/wp-content/uploads/2026/05/3.-Statement-Of-Deviation-Or-Variation-In-Utilization-Of-Funds-For-The-Half-Year-Ended-March-31-2026.pdf", "destination": "/investor/compliance/statement-deviation-utilization-of-funds-hy-mar-2026.pdf" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
