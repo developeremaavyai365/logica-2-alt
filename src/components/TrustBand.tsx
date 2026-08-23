@@ -86,7 +86,7 @@ export default function TrustBand() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-black px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
+    <section ref={sectionRef} className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
       <div className="grid grid-cols-2 gap-8 sm:gap-10 md:grid-cols-4">
         {trustStrip.map((stat, i) => (
           <div
@@ -99,12 +99,12 @@ export default function TrustBand() {
             }}
           >
             <p
-              className="font-dm-sans font-normal text-white tabular-nums"
+              className="font-dm-sans font-extrabold text-[#15803D] tabular-nums"
               style={{ fontSize: 'clamp(28px, 4vw, 48px)', letterSpacing: '-0.05em' }}
             >
               <StatValue raw={stat.value} active={revealed[i]} />
             </p>
-            <p className="font-inter mt-2 text-sm text-white/60 sm:text-base" style={{ letterSpacing: '-0.02em' }}>
+            <p className="font-inter mt-2 text-sm text-black/60 sm:text-base" style={{ letterSpacing: '-0.02em' }}>
               {stat.label}
             </p>
           </div>

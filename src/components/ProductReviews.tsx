@@ -105,7 +105,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
       </div>
 
       {/* Write a review */}
-      <form onSubmit={handleSubmit} className="rounded-2xl bg-[#f0f0f0] p-5 sm:p-6 mb-10">
+      <form onSubmit={handleSubmit} className="rounded-2xl bg-[#ECEDEC] p-5 sm:p-6 mb-10">
         <h3 className="text-sm font-semibold text-[#000000] mb-4">Share your experience</h3>
 
         <div className="mb-4">

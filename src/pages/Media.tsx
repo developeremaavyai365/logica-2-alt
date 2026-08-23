@@ -26,7 +26,7 @@ function MediaCard({ entry }: { entry: MediaEntry }) {
         {/* Category badge */}
         <span
           className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${
-            entry.category === 'award' ? 'bg-[#F0C94A] text-[#000000]' : 'bg-white text-[#000000]'
+            entry.category === 'award' ? 'bg-black text-white' : 'bg-white text-[#000000]'
           }`}
         >
           {entry.category === 'award' ? '★ Award' : 'Celebration'}
@@ -84,7 +84,7 @@ export default function Media() {
         <div className="relative">
           <Header />
           <div className="mx-auto max-w-4xl px-4 pb-20 pt-10 text-center sm:px-6 sm:pb-24 md:px-10">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#85AB8B] sm:text-sm">Newsroom</span>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/70 sm:text-sm">Newsroom</span>
             <h1
               className="mt-4 text-4xl font-bold text-white sm:text-5xl md:text-6xl"
               style={{ letterSpacing: '-0.03em' }}
@@ -116,7 +116,7 @@ export default function Media() {
       </section>
 
       {/* Celebrations */}
-      <section className="bg-[#f0f0f0] px-4 py-16 sm:px-6 sm:py-20 md:px-10">
+      <section className="bg-[#ECEDEC] px-4 py-16 sm:px-6 sm:py-20 md:px-10">
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 sm:mb-10">
             <h2 className="text-2xl font-bold text-[#000000] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>

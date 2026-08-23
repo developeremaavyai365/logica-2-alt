@@ -67,7 +67,7 @@ export default function ProductPage() {
 
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
       </div>
 
@@ -90,7 +90,7 @@ export default function ProductPage() {
 
           {/* Info */}
           <div>
-            <span className="text-xs font-medium text-[#1f6fa8] uppercase tracking-wide">{product.brand}</span>
+            <span className="text-xs font-medium text-black uppercase tracking-wide">{product.brand}</span>
             <h1 className="mt-2 text-2xl sm:text-3xl font-normal text-[#000000] leading-snug" style={{ letterSpacing: '-0.02em' }}>
               {product.name}
             </h1>
@@ -101,11 +101,11 @@ export default function ProductPage() {
                 <span className="text-sm text-[#6b6b6b]/60 line-through">{formatINR(product.mrp)}</span>
               )}
               {discount > 0 && (
-                <span className="text-xs font-semibold text-white bg-[#1f6fa8] px-2 py-1 rounded-full">{discount}% off</span>
+                <span className="text-xs font-semibold text-white bg-red-600 px-2 py-1 rounded-full">{discount}% off</span>
               )}
             </div>
 
-            <p className={`mt-3 text-sm font-medium ${product.inStock ? 'text-[#1f6fa8]' : 'text-red-600'}`}>
+            <p className={`mt-3 text-sm font-medium ${product.inStock ? 'text-black' : 'text-red-600'}`}>
               {product.inStock ? 'In stock — ships from our warehouse' : 'Currently out of stock'}
             </p>
 
@@ -140,7 +140,7 @@ export default function ProductPage() {
                 <ul className="space-y-2">
                   {detail.highlights.map((h) => (
                     <li key={h} className="flex items-start gap-2 text-sm text-[#6b6b6b] leading-relaxed">
-                      <Check className="w-4 h-4 text-[#1f6fa8] shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 text-black shrink-0 mt-0.5" />
                       {h}
                     </li>
                   ))}
@@ -155,9 +155,9 @@ export default function ProductPage() {
                   {specRows.map(([label, value]) => {
                     const Icon = iconForSpec(label);
                     return (
-                      <div key={label} className="flex items-start gap-3 rounded-xl bg-[#f0f0f0] p-3.5">
+                      <div key={label} className="flex items-start gap-3 rounded-xl bg-[#ECEDEC] p-3.5">
                         <span className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0">
-                          <Icon className="w-4 h-4 text-[#1f6fa8]" />
+                          <Icon className="w-4 h-4 text-black" />
                         </span>
                         <div className="min-w-0">
                           <p className="text-[10px] font-semibold uppercase tracking-wide text-[#6b6b6b]/70">{label}</p>
@@ -179,7 +179,7 @@ export default function ProductPage() {
                     <ul className="space-y-2">
                       {items.map((item) => (
                         <li key={item} className="flex items-start gap-2 text-sm text-[#6b6b6b] leading-relaxed">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#85AB8B] shrink-0 mt-2" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-black/30 shrink-0 mt-2" />
                           {item}
                         </li>
                       ))}

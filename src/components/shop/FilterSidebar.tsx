@@ -71,7 +71,7 @@ function CheckRow({
         style={checked ? { backgroundColor: accent } : undefined}
       >
         {checked && (
-          <svg viewBox="0 0 12 12" className="h-3 w-3 text-[#000000]" fill="none">
+          <svg viewBox="0 0 12 12" className="h-3 w-3 text-white" fill="none">
             <path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
@@ -136,7 +136,7 @@ function ColourSection({
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search colours..."
-              className="w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] py-1.5 pl-8 pr-2 text-xs text-[#000000] placeholder:text-[#6b6b6b]/50 outline-none focus:border-[#000000]/40"
+              className="w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] py-1.5 pl-8 pr-2 text-xs text-[#000000] placeholder:text-[#6b6b6b]/50 outline-none focus:border-[#000000]/40"
             />
           </div>
           <div className="max-h-56 overflow-y-auto pr-1">
@@ -172,7 +172,7 @@ export function FilterSidebar({
         <h3 className="flex items-center gap-2 text-base font-semibold text-[#000000]">
           Filters
           {activeCount > 0 && (
-            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-[#000000]" style={{ backgroundColor: accent }}>
+            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-white" style={{ backgroundColor: accent }}>
               {activeCount}
             </span>
           )}

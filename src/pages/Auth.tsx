@@ -10,7 +10,7 @@ export default function Auth({ mode }: { mode: 'signin' | 'signup' }) {
 
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
       </div>
       <section className="flex justify-center px-4 py-14 sm:px-6 sm:py-20 md:px-10">

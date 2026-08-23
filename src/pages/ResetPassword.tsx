@@ -33,7 +33,7 @@ export default function ResetPassword() {
 
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
       </div>
       <section className="flex justify-center px-4 py-20 sm:px-6 md:px-10">
@@ -60,7 +60,7 @@ export default function ResetPassword() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="New password"
-                className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+                className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
               />
               <p className="mt-1.5 text-[11px] text-[#6b6b6b]">
                 10+ characters, with upper &amp; lower case, a number, and a symbol.

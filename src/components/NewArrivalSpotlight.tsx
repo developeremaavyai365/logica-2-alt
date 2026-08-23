@@ -10,9 +10,9 @@ export default function NewArrivalSpotlight() {
   if (!latest) return null;
 
   return (
-    <section className="bg-black px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
+    <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-        <div className="animate-scale-in overflow-hidden rounded-md bg-white/5">
+        <div className="animate-scale-in overflow-hidden rounded-md bg-black/5">
           <video
             src={latest.video}
             autoPlay
@@ -26,7 +26,7 @@ export default function NewArrivalSpotlight() {
         <div className="animate-fade-up">
           {latest.preorderOpen && (
             <span
-              className="font-inter inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs text-white sm:text-sm"
+              className="font-inter inline-flex items-center gap-1.5 rounded-full bg-black/5 px-3 py-1.5 text-xs text-black sm:text-sm"
               style={{ letterSpacing: '-0.02em' }}
             >
               <Sparkles className="h-3.5 w-3.5" />
@@ -34,17 +34,20 @@ export default function NewArrivalSpotlight() {
             </span>
           )}
 
-          <p className="font-inter mt-4 text-sm text-white/50 sm:text-base" style={{ letterSpacing: '-0.02em' }}>
+          <p
+            className="font-inter mt-4 bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-sm font-extrabold text-transparent sm:text-base"
+            style={{ letterSpacing: '-0.02em' }}
+          >
             {latest.tagline}
           </p>
           <h2
-            className="font-dm-sans mt-2 font-normal text-white"
+            className="font-dm-sans mt-2 bg-gradient-to-r from-black to-[#15803D] bg-clip-text font-extrabold text-transparent"
             style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.05em', lineHeight: 1.05 }}
           >
             {latest.name}
           </h2>
           <p
-            className="font-inter mt-4 max-w-md text-sm text-white/70 sm:text-base lg:text-lg"
+            className="font-inter mt-4 max-w-md text-sm text-black/70 sm:text-base lg:text-lg"
             style={{ lineHeight: 1.45, letterSpacing: '-0.03em' }}
           >
             {latest.description}
@@ -53,13 +56,13 @@ export default function NewArrivalSpotlight() {
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
             <Link
               to={latest.href}
-              className="btn-liquid flex h-14 w-full items-center justify-center gap-2 rounded-md border-2 border-white font-inter font-medium text-white transition-colors sm:h-16 sm:w-[220px]"
-              style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 20px)', '--liquid': '#fff', '--liquid-ink': '#000000' } as CSSProperties}
+              className="btn-liquid flex h-14 w-full items-center justify-center gap-2 rounded-md border-2 border-black font-inter font-medium text-black transition-colors sm:h-16 sm:w-[220px]"
+              style={{ letterSpacing: '-0.03em', fontSize: 'clamp(16px, 2vw, 20px)', '--liquid': '#000000', '--liquid-ink': '#fff' } as CSSProperties}
             >
               Preorder Now
               <ArrowUpRight className="h-5 w-5" />
             </Link>
-            <span className="font-inter text-sm text-white/50" style={{ letterSpacing: '-0.02em' }}>
+            <span className="font-inter text-sm text-black/50" style={{ letterSpacing: '-0.02em' }}>
               {latest.eta}
             </span>
           </div>

@@ -11,20 +11,20 @@ const KMP = BOARD_MEMBERS.slice(BOARD_COUNT);
 function MemberCard({ member, delay }: { member: BoardMember; delay: number }) {
   return (
     <div
-      className="animate-fade-up group flex flex-col items-center rounded-3xl border border-black/10 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-[#1f6fa8]/40 hover:shadow-xl hover:shadow-[#1f6fa8]/10 sm:p-8"
+      className="animate-fade-up group flex flex-col items-center rounded-3xl border border-black/10 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-black/20 hover:shadow-xl hover:shadow-black/10 sm:p-8"
       style={{ animationDelay: `${delay}s` }}
     >
-      <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full bg-[#f0f0f0] shadow-inner sm:h-32 sm:w-32">
+      <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full bg-[#ECEDEC] shadow-inner sm:h-32 sm:w-32">
         <img
           src={member.photo}
           alt={member.name}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
       </div>
-      <h3 className="mt-5 text-base font-semibold text-black transition-colors group-hover:text-[#1f6fa8] sm:text-lg">
+      <h3 className="mt-5 text-base font-semibold text-black transition-colors group-hover:text-black sm:text-lg">
         {member.name}
       </h3>
-      <p className="mt-1 text-sm font-medium text-[#1f6fa8]">{member.designation}</p>
+      <p className="mt-1 text-sm font-medium text-black">{member.designation}</p>
       <ul className="mt-4 space-y-1.5">
         {member.details.map((d) => (
           <li key={d} className="text-xs leading-relaxed text-black/60">
@@ -39,10 +39,10 @@ function MemberCard({ member, delay }: { member: BoardMember; delay: number }) {
 export default function BoardOfDirectors() {
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
         <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-[#1f6fa8] text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
+          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
           <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
             Board of Directors &amp; KMP
           </h1>

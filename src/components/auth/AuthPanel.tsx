@@ -76,7 +76,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         value={signInEmail}
         onChange={(e) => setSignInEmail(e.target.value)}
         required
-        className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+        className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
       <input
         type="password"
@@ -84,7 +84,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         value={signInPassword}
         onChange={(e) => setSignInPassword(e.target.value)}
         required
-        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
 
       {signInError && <p className="mt-3 text-xs font-medium text-red-600">{signInError}</p>}
@@ -136,7 +136,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         value={signUpName}
         onChange={(e) => setSignUpName(e.target.value)}
         required
-        className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+        className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
       <input
         type="email"
@@ -144,7 +144,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         value={signUpEmail}
         onChange={(e) => setSignUpEmail(e.target.value)}
         required
-        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
       <input
         type="password"
@@ -153,7 +153,7 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
         onChange={(e) => setSignUpPassword(e.target.value)}
         required
         minLength={10}
-        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#f0f0f0] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+        className="mt-3 w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
       />
       <p className="mt-1.5 w-full text-left text-[11px] text-[#6b6b6b]">
         10+ characters, with upper &amp; lower case, a number, and a symbol.

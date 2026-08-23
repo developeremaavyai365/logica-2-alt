@@ -16,19 +16,19 @@ export default function InvestorSection() {
 
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <Link to="/investor" className="text-xs font-medium text-[#1f6fa8] hover:opacity-80 transition-opacity">
+          <Link to="/investor" className="text-xs font-medium text-black hover:opacity-80 transition-opacity">
             ← Investor Relations
           </Link>
           <div className="mt-4 flex items-center gap-2">
             {CategoryIcon && (
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[#1f6fa8]">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-black">
                 <CategoryIcon className="h-3.5 w-3.5" />
               </span>
             )}
-            <p className="text-xs font-semibold uppercase tracking-wide text-[#1f6fa8]">{section.category}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-black">{section.category}</p>
           </div>
           <h1 className="mt-2 text-3xl sm:text-4xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
             {section.label}
@@ -52,7 +52,7 @@ export default function InvestorSection() {
                     className="group flex flex-col rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#000000]/30 hover:shadow-md"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
                         <FileText className="w-5 h-5" />
                       </span>
                       <span className="rounded-full bg-[#ECEDEC] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#000000]">
@@ -62,7 +62,7 @@ export default function InvestorSection() {
                     <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#000000]">{doc.title}</p>
                     <div className="mt-4 flex items-center justify-between text-xs">
                       {doc.year ? <span className="font-medium text-[#6b6b6b]">FY {doc.year}</span> : <span />}
-                      <span className="flex items-center gap-1 font-medium text-[#1f6fa8] opacity-0 transition-opacity group-hover:opacity-100">
+                      <span className="flex items-center gap-1 font-medium text-black opacity-0 transition-opacity group-hover:opacity-100">
                         View <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
@@ -83,11 +83,11 @@ export default function InvestorSection() {
                 rel="noreferrer"
                 className="group flex flex-col rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#000000]/30 hover:shadow-md"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
                   <Calendar className="w-5 h-5" />
                 </span>
                 <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#000000]">{p.label}</p>
-                <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-[#1f6fa8] opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-black opacity-0 transition-opacity group-hover:opacity-100">
                   View <ArrowUpRight className="w-3.5 h-3.5" />
                 </span>
               </a>
@@ -104,7 +104,7 @@ export default function InvestorSection() {
               className="group flex flex-col rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#000000]/30 hover:shadow-md"
             >
               <div className="flex items-center justify-between">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
                   <FileText className="w-5 h-5" />
                 </span>
                 <span className="rounded-full bg-[#ECEDEC] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#000000]">
@@ -112,7 +112,7 @@ export default function InvestorSection() {
                 </span>
               </div>
               <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#000000]">{section.doc.title}</p>
-              <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-[#1f6fa8] opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-black opacity-0 transition-opacity group-hover:opacity-100">
                 View <ArrowUpRight className="w-3.5 h-3.5" />
               </span>
             </a>
@@ -127,7 +127,7 @@ export default function InvestorSection() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {section.items.map((name) => (
                 <div key={name} className="flex flex-col items-start rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f0f0f0] text-[#1f6fa8]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
                     <Building2 className="w-5 h-5" />
                   </span>
                   <p className="mt-4 text-sm font-semibold leading-snug text-[#000000]">{name}</p>

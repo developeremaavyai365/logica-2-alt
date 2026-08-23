@@ -180,7 +180,7 @@ export default function ChatWidget() {
         <button
           type="button"
           onClick={handleTalkToHuman}
-          className="font-inter flex items-center justify-center gap-1.5 border-b border-black/10 bg-[#FEFDF9] py-2 text-xs font-medium text-black/70 sm:hidden"
+          className="font-inter flex items-center justify-center gap-1.5 border-b border-black/10 bg-[#ECEDEC] py-2 text-xs font-medium text-black/70 sm:hidden"
         >
           <Phone className="h-3 w-3" />
           Talk to a human
@@ -229,7 +229,7 @@ export default function ChatWidget() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about orders, returns, warranty..."
-            className="font-inter h-10 flex-1 rounded-full border border-black/10 bg-[#FEFDF9] px-4 text-sm text-black placeholder-black/30 outline-none focus:border-black/40 transition-colors"
+            className="font-inter h-10 flex-1 rounded-full border border-black/10 bg-[#ECEDEC] px-4 text-sm text-black placeholder-black/30 outline-none focus:border-black/40 transition-colors"
           />
           <button
             type="submit"

@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 export default function ClosingBanner() {
   return (
-    <section className="bg-[#ECEDEC] px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-28">
+    <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-28">
       <div className="animate-fade-up mx-auto flex max-w-3xl flex-col items-center text-center">
         <h2
           className="font-dm-sans font-normal text-black"

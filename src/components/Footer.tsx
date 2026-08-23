@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="w-full bg-[#000000] py-14 px-4 sm:px-6 md:px-10 text-white/70 text-sm">
       <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8">
         <div>
-          <h4 className="text-white font-semibold mb-3">Useful Links</h4>
+          <h4 className="font-dm-sans text-white font-medium mb-3" style={{ letterSpacing: '-0.02em' }}>Useful Links</h4>
           <ul className="space-y-2">
             <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
             <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
@@ -20,7 +20,7 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="text-white font-semibold mb-3">Product Categories</h4>
+          <h4 className="font-dm-sans text-white font-medium mb-3" style={{ letterSpacing: '-0.02em' }}>Product Categories</h4>
           <ul className="space-y-2">
             {categories.slice(0, 6).map((c) => (
               <li key={c.slug}>
@@ -32,7 +32,7 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="text-white font-semibold mb-3">Help Desk</h4>
+          <h4 className="font-dm-sans text-white font-medium mb-3" style={{ letterSpacing: '-0.02em' }}>Help Desk</h4>
           <ul className="space-y-2">
             <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
             <li><a href="#" className="hover:text-white transition-colors">Shipping Policy</a></li>
@@ -41,10 +41,10 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="text-white font-semibold mb-3">For Online Order</h4>
+          <h4 className="font-dm-sans text-white font-medium mb-3" style={{ letterSpacing: '-0.02em' }}>For Online Order</h4>
           <p>+91 7003999192</p>
           <p className="mt-1">Mon to Sat: 10:00 AM – 7:00 PM</p>
-          <h4 className="text-white font-semibold mt-5 mb-2">Follow Us</h4>
+          <h4 className="font-dm-sans text-white font-medium mt-5 mb-2" style={{ letterSpacing: '-0.02em' }}>Follow Us</h4>
           <div className="flex flex-wrap gap-2">
             {socials.map((s) => (
               <a

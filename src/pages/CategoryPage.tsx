@@ -30,14 +30,14 @@ export default function CategoryPage() {
   }
 
   const Icon = category.icon;
-  const accent = CATEGORY_FILTER_ACCENT[category.slug] ?? '#85AB8B';
+  const accent = CATEGORY_FILTER_ACCENT[category.slug] ?? '#000000';
 
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-6 pb-14">
-          <Link to="/shop" className="text-xs font-medium text-[#1f6fa8] hover:opacity-80 transition-opacity">
+          <Link to="/shop" className="text-xs font-medium text-black hover:opacity-80 transition-opacity">
             ← All categories
           </Link>
           <div className="mt-4 flex items-center gap-4">
@@ -48,7 +48,7 @@ export default function CategoryPage() {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
                 {subLabel ? `${category.name} · ${subLabel}` : category.name}
               </h1>
-              <p className="mt-1 text-[#1f6fa8] text-sm font-medium">{category.tagline}</p>
+              <p className="mt-1 text-black text-sm font-medium">{category.tagline}</p>
             </div>
           </div>
           <p className="mt-5 text-[#6b6b6b] text-sm sm:text-base leading-relaxed max-w-2xl">

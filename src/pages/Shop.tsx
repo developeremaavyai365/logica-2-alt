@@ -6,7 +6,7 @@ import { products } from '../data';
 export default function Shop() {
   return (
     <div className="w-full">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
       </div>
 
@@ -14,7 +14,7 @@ export default function Shop() {
       <div className="w-full bg-[#ECEDEC]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-16">
           <h2 className="text-xl font-semibold text-[#000000] mb-6">All products</h2>
-          <ShopBrowser products={products} accent="#85AB8B" />
+          <ShopBrowser products={products} accent="#000000" />
         </div>
       </div>
 

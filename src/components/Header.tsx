@@ -35,8 +35,8 @@ export default function Header() {
           <img src="/logica-logo-shine.png" alt="Logica Infoway" className="h-11 w-auto object-contain sm:h-12 md:h-14" />
         </Link>
 
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-[#000000]/10 bg-[#f0f0f0] pl-2 pr-1 py-1 shadow-sm lg:flex">
-          <Link to="/" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors">
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-[#000000]/10 bg-[#ECEDEC] pl-2 pr-1 py-1 shadow-sm lg:flex">
+          <Link to="/" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors">
             Home
           </Link>
 
@@ -44,7 +44,7 @@ export default function Header() {
           <div className="group relative">
             <Link
               to="/shop"
-              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors"
+              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors"
             >
               Shop
               <ChevronDown className="w-3.5 h-3.5" />
@@ -77,7 +77,7 @@ export default function Header() {
           <div className="group relative">
             <Link
               to="/about"
-              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors"
+              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors"
             >
               About
               <ChevronDown className="w-3.5 h-3.5" />
@@ -88,7 +88,7 @@ export default function Header() {
                   <Link
                     key={item.href}
                     to={item.href}
-                    className="block px-3 py-2.5 rounded-lg text-sm text-[#000000] hover:bg-[#f0f0f0] transition-colors"
+                    className="block px-3 py-2.5 rounded-lg text-sm text-[#000000] hover:bg-[#ECEDEC] transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -101,7 +101,7 @@ export default function Header() {
           <div className="group relative">
             <Link
               to="/investor"
-              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors"
+              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors"
             >
               Investor
               <ChevronDown className="w-3.5 h-3.5" />
@@ -143,35 +143,38 @@ export default function Header() {
             </div>
           </div>
 
-          <Link to="/media" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors">
+          <Link to="/media" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors">
             Media
           </Link>
-          <Link to="/careers" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#f0f0f0] transition-colors">
+          <Link to="/careers" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors">
             Careers
+          </Link>
+          <Link to="/contact" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors">
+            Contact Us
           </Link>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2 bg-[#f0f0f0] rounded-full px-1.5 sm:px-2 py-1.5 shadow-sm border border-[#000000]/10 text-[#000000]">
+        <div className="flex items-center gap-1 sm:gap-2 bg-[#ECEDEC] rounded-full px-1.5 sm:px-2 py-1.5 shadow-sm border border-[#000000]/10 text-[#000000]">
           <Link
             to="/wishlist"
-            className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#f0f0f0] hover:text-[#000000] transition-colors"
+            className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#ECEDEC] hover:text-[#000000] transition-colors"
             aria-label="Wishlist"
           >
             <Heart className="w-4 h-4" />
             {wishlist.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] flex items-center justify-center" style={{ backgroundColor: '#1f6fa8' }}>
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] flex items-center justify-center" style={{ backgroundColor: '#000000' }}>
                 {wishlist.length}
               </span>
             )}
           </Link>
           <Link
             to="/cart"
-            className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#f0f0f0] hover:text-[#000000] transition-colors"
+            className="flex relative items-center justify-center w-8 h-8 rounded-full hover:bg-[#ECEDEC] hover:text-[#000000] transition-colors"
             aria-label="Cart"
           >
             <ShoppingCart className="w-4 h-4" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] flex items-center justify-center" style={{ backgroundColor: '#1f6fa8' }}>
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-[9px] flex items-center justify-center" style={{ backgroundColor: '#000000' }}>
                 {cartCount}
               </span>
             )}
@@ -184,7 +187,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setAccountMenuOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0f0f0] text-sm font-semibold text-[#000000] shadow-sm border border-[#000000]/10 hover:bg-white transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ECEDEC] text-sm font-semibold text-[#000000] shadow-sm border border-[#000000]/10 hover:bg-white transition-colors"
               aria-label="Account menu"
               aria-expanded={accountMenuOpen}
             >
@@ -201,7 +204,7 @@ export default function Header() {
                   <button
                     type="button"
                     onClick={() => setAccountMenuOpen(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#000000] hover:bg-[#f0f0f0] transition-colors"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#000000] hover:bg-[#ECEDEC] transition-colors"
                   >
                     <User className="w-4 h-4" />
                     Profile
@@ -209,7 +212,7 @@ export default function Header() {
                   <Link
                     to="/cart"
                     onClick={() => setAccountMenuOpen(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#000000] hover:bg-[#f0f0f0] transition-colors"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#000000] hover:bg-[#ECEDEC] transition-colors"
                   >
                     <Package className="w-4 h-4" />
                     Orders
@@ -227,7 +230,7 @@ export default function Header() {
             )}
           </div>
         ) : (
-          <div className="hidden lg:flex items-center gap-1 bg-[#f0f0f0] rounded-full px-1.5 py-1.5 shadow-sm border border-[#000000]/10">
+          <div className="hidden lg:flex items-center gap-1 bg-[#ECEDEC] rounded-full px-1.5 py-1.5 shadow-sm border border-[#000000]/10">
             <Link
               to="/login"
               className="text-sm font-medium px-4 py-2 rounded-full text-[#000000] hover:bg-white hover:text-[#000000] transition-colors"
@@ -246,7 +249,7 @@ export default function Header() {
         <div className="flex items-center gap-3 sm:gap-5 text-[#000000]">
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="lg:hidden relative flex items-center justify-center w-10 h-10 rounded-full bg-[#f0f0f0] border border-[#000000]/10 text-[#000000] transition-all duration-300 hover:bg-white"
+            className="lg:hidden relative flex items-center justify-center w-10 h-10 rounded-full bg-[#ECEDEC] border border-[#000000]/10 text-[#000000] transition-all duration-300 hover:bg-white"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >

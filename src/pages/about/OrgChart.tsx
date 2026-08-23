@@ -39,13 +39,13 @@ function DirectorCard({ d, delay }: { d: Director; delay: number }) {
       className={`animate-fade-up group flex w-full max-w-[220px] cursor-default flex-col gap-1 rounded-2xl border px-4 py-3.5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1.5 ${
         d.chairman
           ? 'border-black bg-black text-white hover:shadow-xl hover:shadow-black/20'
-          : 'border-black/10 bg-white hover:border-[#1f6fa8]/50 hover:shadow-lg hover:shadow-[#1f6fa8]/10'
+          : 'border-black/10 bg-white hover:border-black/40 hover:shadow-lg hover:shadow-black/10'
       }`}
       style={{ animationDelay: `${delay}s` }}
     >
       <p
         className={`text-sm font-bold leading-snug transition-colors ${
-          d.chairman ? 'text-white' : 'text-black group-hover:text-[#1f6fa8]'
+          d.chairman ? 'text-white' : 'text-black group-hover:text-black'
         }`}
       >
         {d.name}
@@ -58,13 +58,13 @@ function DirectorCard({ d, delay }: { d: Director; delay: number }) {
 function KmpColumn({ k, delay }: { k: KmpNode; delay: number }) {
   return (
     <div className="animate-fade-up flex flex-col items-center text-center" style={{ animationDelay: `${delay}s` }}>
-      <div className="group flex w-full cursor-default flex-col gap-1 rounded-2xl border border-black/10 bg-white px-4 py-3 text-left shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-[#1f6fa8]/50 hover:shadow-lg hover:shadow-[#1f6fa8]/10">
-        <p className="text-sm font-bold leading-snug text-black transition-colors group-hover:text-[#1f6fa8]">{k.name}</p>
+      <div className="group flex w-full cursor-default flex-col gap-1 rounded-2xl border border-black/10 bg-white px-4 py-3 text-left shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-black/40 hover:shadow-lg hover:shadow-black/10">
+        <p className="text-sm font-bold leading-snug text-black transition-colors group-hover:text-black">{k.name}</p>
         <p className="text-xs leading-snug text-black/60">{k.role}</p>
       </div>
       <div className="h-5 w-px bg-black/15" />
-      <div className="w-full cursor-default rounded-2xl border border-[#1f6fa8]/20 bg-[#1f6fa8]/5 px-4 py-3 text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#1f6fa8]/50 hover:bg-[#1f6fa8]/10">
-        <p className="text-xs font-semibold leading-snug text-[#1f6fa8]">{k.department}</p>
+      <div className="w-full cursor-default rounded-2xl border border-black/15 bg-[#ECEDEC] px-4 py-3 text-left transition-all duration-300 hover:-translate-y-1 hover:border-black/40 hover:bg-[#ECEDEC]">
+        <p className="text-xs font-semibold leading-snug text-black">{k.department}</p>
       </div>
     </div>
   );
@@ -73,10 +73,10 @@ function KmpColumn({ k, delay }: { k: KmpNode; delay: number }) {
 export default function OrgChart() {
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
         <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-[#1f6fa8] text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
+          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
           <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
             Organization Chart
           </h1>

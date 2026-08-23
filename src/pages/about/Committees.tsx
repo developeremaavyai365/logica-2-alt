@@ -5,10 +5,10 @@ import { COMMITTEES } from '../../about-data';
 export default function Committees() {
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
         <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-[#1f6fa8] text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
+          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
           <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
             Composition of Committees
           </h1>
@@ -24,7 +24,7 @@ export default function Committees() {
                 {committee.members.map((m, i) => (
                   <div
                     key={m.name}
-                    className={`flex justify-between px-4 py-2.5 text-sm ${i % 2 === 0 ? 'bg-[#f0f0f0]' : 'bg-white'}`}
+                    className={`flex justify-between px-4 py-2.5 text-sm ${i % 2 === 0 ? 'bg-[#ECEDEC]' : 'bg-white'}`}
                   >
                     <span className="text-[#000000] font-medium">{m.name}</span>
                     <span className="text-[#6b6b6b]">{m.role}</span>

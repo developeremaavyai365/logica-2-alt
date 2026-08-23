@@ -64,11 +64,11 @@ export default function TypewriterSearchInput({
     <div className="relative w-full max-w-sm group">
       {/* Glowing gradient ring on focus */}
       <div
-        className={`pointer-events-none absolute -inset-[1.5px] rounded-full bg-[linear-gradient(90deg,#85AB8B,#7BD1E0,#85AB8B)] bg-[length:200%_100%] opacity-0 blur-[2px] transition-opacity duration-300 ${
+        className={`pointer-events-none absolute -inset-[1.5px] rounded-full bg-[linear-gradient(90deg,#000000,#ECEDEC,#000000)] bg-[length:200%_100%] opacity-0 blur-[2px] transition-opacity duration-300 ${
           focused ? 'opacity-70 animate-[searchGlow_3s_linear_infinite]' : 'group-hover:opacity-30'
         }`}
       />
-      <div className="relative flex items-center rounded-full border border-[#000000]/15 bg-[#f0f0f0] transition-colors focus-within:border-transparent">
+      <div className="relative flex items-center rounded-full border border-[#000000]/15 bg-[#ECEDEC] transition-colors focus-within:border-transparent">
         <Search className="pointer-events-none absolute left-3.5 h-4 w-4 text-[#6b6b6b]/50" />
         <input
           value={value}

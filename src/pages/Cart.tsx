@@ -34,7 +34,7 @@ export default function Cart() {
 
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
       </div>
 
@@ -45,8 +45,8 @@ export default function Cart() {
 
         {lines.length === 0 ? (
           <div className="mt-16 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-[#f0f0f0] flex items-center justify-center mb-5">
-              <ShoppingCart className="w-7 h-7 text-[#1f6fa8]" />
+            <div className="w-16 h-16 rounded-full bg-[#ECEDEC] flex items-center justify-center mb-5">
+              <ShoppingCart className="w-7 h-7 text-black" />
             </div>
             <p className="text-[#6b6b6b] text-sm mb-6">Your cart is empty.</p>
             <Link to="/shop" className="btn-liquid border-2 border-[#000000] text-[#000000] text-sm font-semibold px-6 py-3 rounded-full transition-colors">
@@ -59,11 +59,11 @@ export default function Cart() {
             <div className="space-y-4">
               {lines.map(({ line, product }) => (
                 <div key={product.id} className="flex items-center gap-4 rounded-2xl border border-[#000000]/10 p-4">
-                  <Link to={`/product/${product.id}`} className="w-20 h-20 rounded-xl bg-[#f0f0f0] overflow-hidden shrink-0">
+                  <Link to={`/product/${product.id}`} className="w-20 h-20 rounded-xl bg-[#ECEDEC] overflow-hidden shrink-0">
                     <img src={product.image} alt={product.name} className="w-full h-full object-contain mix-blend-multiply" />
                   </Link>
                   <div className="flex-1 min-w-0">
-                    <span className="text-[11px] font-medium text-[#1f6fa8] uppercase tracking-wide">{product.brand}</span>
+                    <span className="text-[11px] font-medium text-black uppercase tracking-wide">{product.brand}</span>
                     <Link to={`/product/${product.id}`} className="block text-sm font-semibold text-[#000000] leading-snug line-clamp-2 hover:opacity-80">
                       {product.name}
                     </Link>
@@ -71,7 +71,7 @@ export default function Cart() {
                       <div className="flex items-center border border-[#000000]/15 rounded-full">
                         <button
                           onClick={() => setQty(product.id, line.qty - 1)}
-                          className="w-7 h-7 flex items-center justify-center text-[#000000] hover:bg-[#f0f0f0] rounded-full transition-colors"
+                          className="w-7 h-7 flex items-center justify-center text-[#000000] hover:bg-[#ECEDEC] rounded-full transition-colors"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-3 h-3" />
@@ -79,7 +79,7 @@ export default function Cart() {
                         <span className="w-8 text-center text-sm">{line.qty}</span>
                         <button
                           onClick={() => setQty(product.id, line.qty + 1)}
-                          className="w-7 h-7 flex items-center justify-center text-[#000000] hover:bg-[#f0f0f0] rounded-full transition-colors"
+                          className="w-7 h-7 flex items-center justify-center text-[#000000] hover:bg-[#ECEDEC] rounded-full transition-colors"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-3 h-3" />
@@ -100,7 +100,7 @@ export default function Cart() {
             </div>
 
             {/* Summary */}
-            <div className="rounded-2xl border border-[#000000]/10 bg-[#f0f0f0] p-6 h-fit">
+            <div className="rounded-2xl border border-[#000000]/10 bg-[#ECEDEC] p-6 h-fit">
               <h2 className="text-sm font-semibold text-[#000000] mb-4">Order Summary</h2>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between text-[#6b6b6b]">
@@ -108,7 +108,7 @@ export default function Cart() {
                   <span>{formatINR(subtotal)}</span>
                 </div>
                 {savings > 0 && (
-                  <div className="flex justify-between text-[#1f6fa8] font-medium">
+                  <div className="flex justify-between text-black font-medium">
                     <span>You save</span>
                     <span>-{formatINR(savings)}</span>
                   </div>
@@ -151,8 +151,8 @@ export default function Cart() {
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="w-12 h-12 rounded-full bg-[#f0f0f0] flex items-center justify-center mb-4">
-              <ShoppingCart className="w-5 h-5 text-[#1f6fa8]" />
+            <div className="w-12 h-12 rounded-full bg-[#ECEDEC] flex items-center justify-center mb-4">
+              <ShoppingCart className="w-5 h-5 text-black" />
             </div>
             <h2 className="text-lg font-semibold text-[#000000]">Sign in to continue</h2>
             <p className="mt-2 text-sm text-[#6b6b6b] leading-relaxed">

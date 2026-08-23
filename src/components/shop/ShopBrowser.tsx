@@ -199,7 +199,7 @@ export default function ShopBrowser({
             <SlidersHorizontal className="h-4 w-4" />
             {activeCount > 0 && (
               <span
-                className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-[#000000]"
+                className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white"
                 style={{ backgroundColor: accent }}
               >
                 {activeCount}
@@ -237,7 +237,7 @@ export default function ShopBrowser({
               <SlidersHorizontal className="h-4 w-4" />
               Filters
               {activeCount > 0 && (
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-[#000000]" style={{ backgroundColor: accent }}>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-white" style={{ backgroundColor: accent }}>
                   {activeCount}
                 </span>
               )}
@@ -311,7 +311,7 @@ export default function ShopBrowser({
                   aria-current={it === currentPage ? 'page' : undefined}
                   className={
                     it === currentPage
-                      ? 'inline-flex h-9 min-w-9 items-center justify-center rounded-full px-3 text-sm font-bold text-[#000000]'
+                      ? 'inline-flex h-9 min-w-9 items-center justify-center rounded-full px-3 text-sm font-bold text-white'
                       : 'inline-flex h-9 min-w-9 items-center justify-center rounded-full border border-[#000000]/15 px-3 text-sm text-[#6b6b6b] transition-colors hover:border-[#000000]/40 hover:text-[#000000]'
                   }
                   style={it === currentPage ? { backgroundColor: accent } : undefined}
@@ -346,7 +346,7 @@ export default function ShopBrowser({
                 type="button"
                 aria-label="Close filters"
                 onClick={() => setDrawerOpen(false)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#6b6b6b] hover:bg-[#f0f0f0]"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#6b6b6b] hover:bg-[#ECEDEC]"
               >
                 <X className="h-5 w-5" />
               </button>

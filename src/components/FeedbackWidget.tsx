@@ -78,14 +78,14 @@ export default function FeedbackWidget() {
             type="email"
             name="email"
             placeholder="Your email (optional)"
-            className="font-inter h-11 w-full rounded-md border border-black/10 bg-[#FEFDF9] px-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
+            className="font-inter h-11 w-full rounded-md border border-black/10 bg-[#ECEDEC] px-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
           />
           <textarea
             name="message"
             rows={3}
             required
             placeholder="Your feedback..."
-            className="font-inter w-full rounded-md border border-black/10 bg-[#FEFDF9] px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
+            className="font-inter w-full rounded-md border border-black/10 bg-[#ECEDEC] px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
           />
           <button
             type="submit"

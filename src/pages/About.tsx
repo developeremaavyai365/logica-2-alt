@@ -14,10 +14,10 @@ const aboutLinks = [
 export default function About() {
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-10">
-          <span className="text-[#1f6fa8] text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
+          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
           <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
             From Eastern Logica to Logica Infoway
           </h1>
@@ -55,7 +55,7 @@ export default function About() {
         {/* Scale stats */}
         <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
           {scaleStats.map((stat) => (
-            <div key={stat.label} className="rounded-2xl bg-[#f0f0f0] border border-[#000000]/10 p-5 text-center">
+            <div key={stat.label} className="rounded-2xl bg-[#ECEDEC] border border-[#000000]/10 p-5 text-center">
               <div className="text-2xl font-semibold text-[#000000]">{stat.value}</div>
               <div className="text-xs text-[#6b6b6b] mt-1">{stat.label}</div>
             </div>
@@ -80,9 +80,9 @@ export default function About() {
       </section>
 
       {/* Name history timeline */}
-      <section className="w-full bg-[#f0f0f0] py-16 sm:py-20 px-4 sm:px-6 md:px-10">
+      <section className="w-full bg-[#ECEDEC] py-16 sm:py-20 px-4 sm:px-6 md:px-10">
         <div className="max-w-5xl mx-auto">
-          <span className="text-[#1f6fa8] text-xs sm:text-sm font-semibold uppercase tracking-wide">Incorporation history</span>
+          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">Incorporation history</span>
           <h2 className="mt-3 text-2xl sm:text-3xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
             Three decades of name changes, one continuous business
           </h2>
@@ -94,7 +94,7 @@ export default function About() {
                   i !== nameHistory.length - 1 ? 'border-b border-[#000000]/10' : ''
                 }`}
               >
-                <span className="text-xs font-medium text-[#1f6fa8] sm:w-32 shrink-0">{entry.date}</span>
+                <span className="text-xs font-medium text-black sm:w-32 shrink-0">{entry.date}</span>
                 <span className="text-sm font-semibold text-[#000000] sm:w-72 shrink-0">{entry.name}</span>
                 <span className="text-sm text-[#6b6b6b]">{entry.event}</span>
               </div>
@@ -105,7 +105,7 @@ export default function About() {
 
       {/* Purpose + philosophy */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        <span className="text-[#1f6fa8] text-xs sm:text-sm font-semibold uppercase tracking-wide">Our purpose</span>
+        <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">Our purpose</span>
         <h2 className="mt-3 text-2xl sm:text-3xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
           Technology that works as hard as you do
         </h2>
@@ -122,7 +122,7 @@ export default function About() {
 
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
           {pillars.map((pillar) => (
-            <div key={pillar.title} className="rounded-2xl bg-[#f0f0f0] border border-[#000000]/10 p-6">
+            <div key={pillar.title} className="rounded-2xl bg-[#ECEDEC] border border-[#000000]/10 p-6">
               <h3 className="text-base font-semibold text-[#000000] leading-snug">{pillar.title}</h3>
               <p className="mt-3 text-sm text-[#6b6b6b] leading-relaxed">{pillar.description}</p>
             </div>
@@ -133,7 +133,7 @@ export default function About() {
       {/* Offices */}
       <section className="w-full bg-[#000000] py-16 sm:py-20 px-4 sm:px-6 md:px-10">
         <div className="max-w-5xl mx-auto">
-          <span className="text-[#85AB8B] text-xs sm:text-sm font-semibold uppercase tracking-wide">Where we operate</span>
+          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">Where we operate</span>
           <h2 className="mt-3 text-2xl sm:text-3xl font-normal text-white" style={{ letterSpacing: '-0.03em' }}>
             Our offices
           </h2>

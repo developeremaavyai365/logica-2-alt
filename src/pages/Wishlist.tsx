@@ -14,7 +14,7 @@ export default function Wishlist() {
 
   return (
     <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#f0f0f0]">
+      <div className="bg-[#ECEDEC]">
         <Header />
       </div>
 
@@ -25,8 +25,8 @@ export default function Wishlist() {
 
         {items.length === 0 ? (
           <div className="mt-16 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-[#f0f0f0] flex items-center justify-center mb-5">
-              <Heart className="w-7 h-7 text-[#1f6fa8]" />
+            <div className="w-16 h-16 rounded-full bg-[#ECEDEC] flex items-center justify-center mb-5">
+              <Heart className="w-7 h-7 text-black" />
             </div>
             <p className="text-[#6b6b6b] text-sm mb-6">Nothing saved yet — tap the heart on any product to add it here.</p>
             <Link to="/shop" className="btn-liquid border-2 border-[#000000] text-[#000000] text-sm font-semibold px-6 py-3 rounded-full transition-colors">

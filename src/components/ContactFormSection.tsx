@@ -96,11 +96,11 @@ export default function ContactFormSection() {
   }
 
   return (
-    <section className="bg-[#ECEDEC] px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
+    <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
       <div className="mx-auto max-w-md">
         <div className="animate-fade-up text-center">
           <h2
-            className="font-dm-sans font-bold text-black"
+            className="font-dm-sans font-medium text-black"
             style={{ fontSize: 'clamp(32px, 4.5vw, 44px)', letterSpacing: '-0.04em' }}
           >
             Contact Us
@@ -112,7 +112,7 @@ export default function ContactFormSection() {
 
         <a
           href={`tel:${PHONE_NUMBER.replace(/\s+/g, '')}`}
-          className="animate-fade-up delay-100 group mt-6 flex items-center justify-center gap-3 rounded-xl border border-black/10 bg-white px-5 py-4 shadow-sm transition-all duration-300 hover:border-black/20 hover:shadow-md"
+          className="animate-fade-up delay-100 group mt-6 flex items-center justify-center gap-3 rounded-xl border border-black/10 bg-[#ECEDEC] px-5 py-4 shadow-sm transition-all duration-300 hover:border-black/20 hover:shadow-md"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black text-white transition-transform duration-300 group-hover:scale-110">
             <Phone className="h-4 w-4" />
@@ -137,7 +137,7 @@ export default function ContactFormSection() {
 
         <form
           onSubmit={handleSubmit}
-          className="animate-fade-up delay-200 space-y-5 rounded-2xl border border-black/10 bg-white p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)] transition-shadow duration-300 hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.3)] sm:p-8"
+          className="animate-fade-up delay-200 space-y-5 rounded-2xl border border-black/10 bg-[#ECEDEC] p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)] transition-shadow duration-300 hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.3)] sm:p-8"
         >
           <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
           <input type="hidden" name="subject" value="New enquiry from logicainfoway.com" />
@@ -153,7 +153,7 @@ export default function ContactFormSection() {
               id="name"
               placeholder="John Doe"
               required
-              className="font-inter h-12 w-full rounded-md border border-black/10 bg-[#FEFDF9] px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
+              className="font-inter h-12 w-full rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
             />
           </div>
 
@@ -167,7 +167,7 @@ export default function ContactFormSection() {
               id="email"
               placeholder="you@company.com"
               required
-              className="font-inter h-12 w-full rounded-md border border-black/10 bg-[#FEFDF9] px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
+              className="font-inter h-12 w-full rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
             />
           </div>
 
@@ -181,7 +181,7 @@ export default function ContactFormSection() {
               id="phone"
               placeholder="+91 7003999192"
               required
-              className="font-inter h-12 w-full rounded-md border border-black/10 bg-[#FEFDF9] px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
+              className="font-inter h-12 w-full rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
             />
           </div>
 
@@ -195,7 +195,7 @@ export default function ContactFormSection() {
               id="message"
               placeholder="Your Message"
               required
-              className="font-inter w-full rounded-md border border-black/10 bg-[#FEFDF9] px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
+              className="font-inter w-full rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
             />
           </div>
 
