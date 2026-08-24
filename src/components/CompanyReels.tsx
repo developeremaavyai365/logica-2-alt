@@ -9,7 +9,13 @@ declare global {
 // Real reels from the official Logica Infoway Instagram account — add more
 // permalinks here as new reels go up; each renders via Instagram's own
 // oEmbed widget so it always reflects the live post (likes, caption, etc).
-const REEL_PERMALINKS: string[] = ['https://www.instagram.com/reel/DcSxqsMTB2Z/'];
+const REEL_PERMALINKS: string[] = [
+  'https://www.instagram.com/reel/DcSxqsMTB2Z/',
+  'https://www.instagram.com/reel/DXwfzTGz3vW/',
+  'https://www.instagram.com/reel/DV3LYExk5_U/',
+  'https://www.instagram.com/reel/DMAfKEKTf3j/',
+  'https://www.instagram.com/reel/DIjOSjAzZNs/',
+];
 
 function useInstagramEmbedScript(deps: unknown[]) {
   useEffect(() => {
