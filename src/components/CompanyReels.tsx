@@ -41,13 +41,15 @@ function ReelEmbed({ permalink }: { permalink: string }) {
   const ref = useRef<HTMLQuoteElement>(null);
 
   return (
-    <blockquote
-      ref={ref}
-      className="instagram-media shrink-0 snap-start"
-      data-instgrm-permalink={permalink}
-      data-instgrm-version="14"
-      style={{ margin: 0, width: 'min(320px, 85vw)' }}
-    />
+    <div className="w-[280px] shrink-0 snap-start overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm">
+      <blockquote
+        ref={ref}
+        className="instagram-media"
+        data-instgrm-permalink={permalink}
+        data-instgrm-version="14"
+        style={{ margin: 0, width: '280px', minWidth: '280px' }}
+      />
+    </div>
   );
 }
 
@@ -69,7 +71,7 @@ export default function CompanyReels() {
         A look inside our stores, launches and everyday work — straight from @logicainfowayofficial.
       </p>
 
-      <div className="scrollbar-none mx-auto mt-8 flex max-w-6xl snap-x snap-mandatory justify-center gap-4 overflow-x-auto pb-2 sm:gap-5">
+      <div className="scrollbar-none mx-auto mt-10 flex max-w-6xl snap-x snap-mandatory justify-start gap-6 overflow-x-auto px-1 pb-2 sm:justify-center">
         {REEL_PERMALINKS.map((permalink) => (
           <ReelEmbed key={permalink} permalink={permalink} />
         ))}
