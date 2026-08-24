@@ -1,18 +1,21 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface Slide {
   image: string;
-  eyebrow: string;
-  headline: string;
-  ctaLabel: string;
+  alt: string;
   ctaHref: string;
 }
 
+// Finished banner designs (copy/branding baked into the SVG) — swap the
+// image or href here to change what's promoted, no extra text overlay
+// needed since these are complete creatives.
 const SLIDES: Slide[] = [
-  { image: '/lifestyle/laptops.jpg', eyebrow: 'New Arrival', headline: 'The Power of Next-Gen Tech for Everyone', ctaLabel: 'Shop Now', ctaHref: '/shop' },
-  { image: '/lifestyle/mobile-phones.jpg', eyebrow: 'Flagship Deals', headline: 'Enterprise Pricing Across India', ctaLabel: 'Shop Mobile Phones', ctaHref: '/shop/mobile-phones' },
-  { image: '/lifestyle/desktops.jpg', eyebrow: 'Trusted Since 1995', headline: 'Three Decades of Proven Delivery', ctaLabel: 'Shop Desktops', ctaHref: '/shop/desktops' },
+  { image: '/banners/iphone-17-pro.svg', alt: 'iPhone 17 Pro — shop now', ctaHref: '/shop?brand=Apple' },
+  { image: '/banners/fold8.svg', alt: 'Samsung Galaxy Z Fold8 — shop now', ctaHref: '/shop?brand=Samsung' },
+  { image: '/banners/pixel-11-pro.svg', alt: 'Google Pixel 11 Pro — shop now', ctaHref: '/shop/mobile-phones' },
+  { image: '/banners/vivo-s2-banner.svg', alt: 'vivo S2 — shop now', ctaHref: '/shop?brand=Vivo' },
+  { image: '/banners/rakhi-banner.svg', alt: 'Rakhi offers — shop now', ctaHref: '/shop' },
 ];
 
 export default function HeroCarousel() {
@@ -26,32 +29,15 @@ export default function HeroCarousel() {
   return (
     <section className="relative aspect-[4/5] min-w-0 flex-1 overflow-hidden bg-black sm:aspect-[16/9] lg:aspect-[2.4/1]">
       {SLIDES.map((slide, i) => (
-        <div
+        <Link
           key={slide.image}
+          to={slide.ctaHref}
           className="absolute inset-0 transition-opacity duration-700"
           style={{ opacity: i === index ? 1 : 0, pointerEvents: i === index ? 'auto' : 'none' }}
+          aria-label={slide.alt}
         >
-          <img src={slide.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-transparent" />
-          <div className="relative flex h-full flex-col justify-center px-6 sm:px-10 lg:px-20">
-            <p className="font-inter text-sm uppercase text-white/70 sm:text-base" style={{ letterSpacing: '0.12em' }}>
-              {slide.eyebrow}
-            </p>
-            <h1
-              className="font-dm-sans mt-3 max-w-xl font-normal text-white"
-              style={{ fontSize: 'clamp(28px, 5vw, 64px)', letterSpacing: '-0.04em', lineHeight: 1.05 }}
-            >
-              {slide.headline}
-            </h1>
-            <Link
-              to={slide.ctaHref}
-              className="btn-liquid font-inter mt-6 inline-flex w-fit items-center gap-1 rounded-full border-2 border-white px-6 py-3 text-sm font-medium text-white transition-colors sm:text-base"
-              style={{ '--liquid': '#fff', '--liquid-ink': '#000000' } as CSSProperties}
-            >
-              {slide.ctaLabel}
-            </Link>
-          </div>
-        </div>
+          <img src={slide.image} alt={slide.alt} className="absolute inset-0 h-full w-full object-cover" />
+        </Link>
       ))}
 
       <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2 sm:bottom-5">
