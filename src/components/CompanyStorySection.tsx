@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
-import { Calendar, Store, Globe2, Warehouse } from 'lucide-react';
+import { Store, Warehouse, Ship, ShoppingCart } from 'lucide-react';
 import { nameHistory } from '../data';
 
 const founded = nameHistory[0];
 const foundingYear = 1995;
 const yearsInBusiness = new Date().getFullYear() - foundingYear;
 
+// Logica's four core verticals — mirrors the four quadrants of the collage
+// image (retail store, warehousing, export/shipping, e-commerce).
 const stats = [
-  { value: `${yearsInBusiness}+`, label: 'Years of Excellence', icon: Calendar, chip: '#EDE4FF', ink: '#6D28D9' },
-  { value: '82+', label: 'Retail Stores Pan India', icon: Store, chip: '#FDE8D8', ink: '#D2781E' },
-  { value: '7+', label: 'Countries Global Distribution', icon: Globe2, chip: '#DCEBFF', ink: '#1D4ED8' },
-  { value: '5', label: 'Distribution Centres', icon: Warehouse, chip: '#DFF5E3', ink: '#15803D' },
+  { vertical: 'Retail', value: '82+', label: 'Stores Pan India', icon: Store, chip: '#FDE8D8', ink: '#D2781E' },
+  { vertical: 'Distribution', value: '5', label: 'Distribution Centres', icon: Warehouse, chip: '#DFF5E3', ink: '#15803D' },
+  { vertical: 'Export', value: '7+', label: 'Countries Served', icon: Ship, chip: '#DCEBFF', ink: '#1D4ED8' },
+  { vertical: 'E-commerce', value: '24/7', label: 'Nationwide Online Reach', icon: ShoppingCart, chip: '#EDE4FF', ink: '#6D28D9' },
 ];
 
 const DURATION = 1200;
@@ -121,14 +123,15 @@ export default function CompanyStorySection() {
             className="font-dm-sans mt-4 font-extrabold"
             style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.05em', lineHeight: 1.05, color: '#D2781E' }}
           >
-            Three decades of building India's technology supply chain
+            Four verticals, one technology supply chain
           </h2>
           <p
             className="font-inter mt-5 max-w-xl text-sm text-black/60 sm:text-base lg:text-lg"
             style={{ lineHeight: 1.5, letterSpacing: '-0.03em' }}
           >
-            {founded.event} as {founded.name} on {founded.date} — {yearsInBusiness} years later, still delivering
-            genuine hardware to enterprises and government offices across India.
+            {founded.event} as {founded.name} on {founded.date} — {yearsInBusiness} years later, Logica runs Export,
+            Retail, E-commerce and Distribution under one roof, delivering genuine hardware to enterprises and
+            government offices across India.
           </p>
 
           <div ref={statsRef} className="mt-10 grid w-full grid-cols-2 gap-6 border-t border-black/10 pt-10 sm:grid-cols-4">
@@ -148,9 +151,12 @@ export default function CompanyStorySection() {
                 >
                   <stat.icon className="h-[18px] w-[18px]" strokeWidth={2.25} />
                 </span>
+                <p className="font-dm-sans mt-2 text-sm font-extrabold" style={{ color: stat.ink, letterSpacing: '-0.02em' }}>
+                  {stat.vertical}
+                </p>
                 <p
-                  className="font-dm-sans mt-2 font-extrabold text-black tabular-nums"
-                  style={{ fontSize: 'clamp(22px, 3vw, 32px)', letterSpacing: '-0.05em' }}
+                  className="font-dm-sans mt-1 font-extrabold text-black tabular-nums"
+                  style={{ fontSize: 'clamp(20px, 2.6vw, 28px)', letterSpacing: '-0.05em' }}
                 >
                   <StatValue raw={stat.value} active={revealed[i]} />
                 </p>
