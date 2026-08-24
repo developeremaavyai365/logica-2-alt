@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { nameHistory, offices, scaleStats } from '../data';
+import { Calendar, Store, Globe2, Warehouse } from 'lucide-react';
+import { nameHistory } from '../data';
 
 const founded = nameHistory[0];
 const foundingYear = 1995;
 const yearsInBusiness = new Date().getFullYear() - foundingYear;
-const retailStores = scaleStats.find((s) => s.label === 'Retail stores')?.value ?? '52';
 
 const stats = [
-  { value: `${yearsInBusiness}`, label: 'Years in business' },
-  { value: `${offices.length}`, label: 'Registered offices' },
-  { value: retailStores, label: 'Retail stores' },
+  { value: `${yearsInBusiness}+`, label: 'Years of Excellence', icon: Calendar, chip: '#EDE4FF', ink: '#6D28D9' },
+  { value: '82+', label: 'Retail Stores Pan India', icon: Store, chip: '#FDE8D8', ink: '#D2781E' },
+  { value: '7+', label: 'Countries Global Distribution', icon: Globe2, chip: '#DCEBFF', ink: '#1D4ED8' },
+  { value: '5', label: 'Distribution Centres', icon: Warehouse, chip: '#DFF5E3', ink: '#15803D' },
 ];
 
 const DURATION = 1200;
@@ -98,55 +99,67 @@ export default function CompanyStorySection() {
 
   return (
     <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-28">
-      <div className="animate-fade-up mx-auto flex max-w-3xl flex-col items-center text-center">
-        <p
-          className="font-inter bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-xs font-extrabold uppercase text-transparent"
-          style={{ letterSpacing: '0.12em' }}
-        >
-          Since {foundingYear}
-        </p>
-        <h2
-          className="font-dm-sans mt-4 bg-gradient-to-r from-black to-[#15803D] bg-clip-text font-extrabold text-transparent"
-          style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.05em', lineHeight: 1.05 }}
-        >
-          Three decades of building India's technology supply chain
-        </h2>
-        <p
-          className="font-inter mt-5 max-w-xl text-sm text-black/60 sm:text-base lg:text-lg"
-          style={{ lineHeight: 1.5, letterSpacing: '-0.03em' }}
-        >
-          {founded.event} as {founded.name} on {founded.date} — {yearsInBusiness} years later, still delivering
-          genuine hardware to enterprises and government offices across India.
-        </p>
+      <div className="animate-fade-up mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="relative mx-auto aspect-square w-full max-w-lg">
+          <div className="absolute inset-0 rounded-full border-[6px] border-[#D2781E] p-2">
+            <img
+              src="/images/company-collage.png"
+              alt="Logica Infoway — retail stores, warehousing, logistics and e-commerce"
+              className="h-full w-full rounded-full object-cover"
+            />
+          </div>
+        </div>
 
-        <div
-          ref={statsRef}
-          className="mt-12 grid w-full max-w-lg grid-cols-3 gap-6 border-t border-black/10 pt-10"
-        >
-          {stats.map((stat, i) => (
-            <div
-              key={stat.label}
-              className="transition-all ease-out"
-              style={{
-                opacity: revealed[i] ? 1 : 0,
-                transform: revealed[i] ? 'translateY(0)' : 'translateY(20px)',
-                transitionDuration: '600ms',
-              }}
-            >
-              <p
-                className="font-dm-sans font-extrabold text-[#15803D] tabular-nums"
-                style={{ fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '-0.05em' }}
+        <div className="flex flex-col text-left">
+          <p
+            className="font-inter text-xs font-extrabold uppercase"
+            style={{ letterSpacing: '0.12em', color: '#D2781E' }}
+          >
+            Since {foundingYear}
+          </p>
+          <h2
+            className="font-dm-sans mt-4 font-extrabold"
+            style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.05em', lineHeight: 1.05, color: '#D2781E' }}
+          >
+            Three decades of building India's technology supply chain
+          </h2>
+          <p
+            className="font-inter mt-5 max-w-xl text-sm text-black/60 sm:text-base lg:text-lg"
+            style={{ lineHeight: 1.5, letterSpacing: '-0.03em' }}
+          >
+            {founded.event} as {founded.name} on {founded.date} — {yearsInBusiness} years later, still delivering
+            genuine hardware to enterprises and government offices across India.
+          </p>
+
+          <div ref={statsRef} className="mt-10 grid w-full grid-cols-2 gap-6 border-t border-black/10 pt-10 sm:grid-cols-4">
+            {stats.map((stat, i) => (
+              <div
+                key={stat.label}
+                className="transition-all ease-out"
+                style={{
+                  opacity: revealed[i] ? 1 : 0,
+                  transform: revealed[i] ? 'translateY(0)' : 'translateY(20px)',
+                  transitionDuration: '600ms',
+                }}
               >
-                <StatValue raw={stat.value} active={revealed[i]} />
-              </p>
-              <p
-                className="font-inter mt-2 text-xs text-black/50 sm:text-sm"
-                style={{ letterSpacing: '-0.01em' }}
-              >
-                {stat.label}
-              </p>
-            </div>
-          ))}
+                <span
+                  className="flex h-9 w-9 items-center justify-center rounded-full"
+                  style={{ backgroundColor: stat.chip, color: stat.ink }}
+                >
+                  <stat.icon className="h-[18px] w-[18px]" strokeWidth={2.25} />
+                </span>
+                <p
+                  className="font-dm-sans mt-2 font-extrabold text-black tabular-nums"
+                  style={{ fontSize: 'clamp(22px, 3vw, 32px)', letterSpacing: '-0.05em' }}
+                >
+                  <StatValue raw={stat.value} active={revealed[i]} />
+                </p>
+                <p className="font-inter mt-1 text-xs text-black/50 sm:text-sm" style={{ letterSpacing: '-0.01em' }}>
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
