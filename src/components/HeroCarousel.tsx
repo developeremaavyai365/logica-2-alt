@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Slide {
   image: string;
@@ -56,6 +57,25 @@ export default function HeroCarousel() {
           </Link>
         </div>
       ))}
+
+      <button
+        type="button"
+        onClick={() => setIndex((i) => (i - 1 + SLIDES.length) % SLIDES.length)}
+        aria-label="Previous slide"
+        className="absolute left-3 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-sm transition-colors hover:bg-black/50 sm:left-5 sm:flex"
+        style={{ height: '44px', width: '44px' }}
+      >
+        <ChevronLeft className="h-5 w-5" />
+      </button>
+      <button
+        type="button"
+        onClick={() => setIndex((i) => (i + 1) % SLIDES.length)}
+        aria-label="Next slide"
+        className="absolute right-3 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-sm transition-colors hover:bg-black/50 sm:right-5 sm:flex"
+        style={{ height: '44px', width: '44px' }}
+      >
+        <ChevronRight className="h-5 w-5" />
+      </button>
 
       <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2 sm:bottom-5">
         {SLIDES.map((slide, i) => (
