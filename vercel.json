@@ -97,6 +97,10 @@
       "destination": "/investor/policies/csr-policy.pdf"
     },
     {
+      "source": "/wp-content/uploads/2025/08/CSR-PROJECTS-_20250827_0002-1.pdf",
+      "destination": "/investor/policies/csr-projects.pdf"
+    },
+    {
       "source": "/wp-content/uploads/2025/11/Related-Party-Policy.pdf",
       "destination": "/investor/policies/related-party-policy-revised.pdf"
     },

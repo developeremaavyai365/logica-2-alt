@@ -369,6 +369,11 @@ export const POLICIES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/CSR-POLICY.pdf",
   },
   {
+    title: "CSR Projects",
+    year: "",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/CSR-PROJECTS-_20250827_0002-1.pdf",
+  },
+  {
     title: "Forex Exchange Risk Management Policy",
     year: "",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/08/APPROVED-FOREX-EXCHANGE-RISK-MANAGEMENT-POLICY.pdf",
