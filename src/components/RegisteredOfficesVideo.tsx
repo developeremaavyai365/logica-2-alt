@@ -48,7 +48,7 @@ export default function RegisteredOfficesVideo() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-white" style={{ aspectRatio: '21 / 9' }}>
+    <section className="relative w-full overflow-hidden bg-white" style={{ aspectRatio: '3 / 2' }}>
       <iframe
         src="/offices-video.html"
         title="Logica Infoway — Registered Offices"
