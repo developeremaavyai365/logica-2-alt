@@ -29,7 +29,6 @@ export default function Home() {
 
       {/* Company identity — who Logica Infoway is, before the shop starts. */}
       <CompanyStorySection />
-      <CompanyReels />
       <RegisteredOfficesVideo />
 
       {/* Shopping experience below the company introduction. */}
@@ -72,6 +71,7 @@ export default function Home() {
       />
 
       <BrandStrip />
+      <CompanyReels />
       <Testimonials />
       <TrustBand />
       <LoyaltyCard />
