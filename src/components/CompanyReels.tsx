@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 declare global {
   interface Window {
@@ -55,6 +56,11 @@ function ReelEmbed({ permalink }: { permalink: string }) {
 
 export default function CompanyReels() {
   useInstagramEmbedScript([]);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  function scrollByCards(direction: 1 | -1) {
+    scrollerRef.current?.scrollBy({ left: direction * 300, behavior: 'smooth' });
+  }
 
   return (
     <section className="w-full bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
@@ -71,10 +77,35 @@ export default function CompanyReels() {
         A look inside our stores, launches and everyday work — straight from @logicainfowayofficial.
       </p>
 
-      <div className="scrollbar-none mx-auto mt-10 flex max-w-6xl snap-x snap-mandatory justify-start gap-6 overflow-x-auto px-1 pb-2 sm:justify-center">
-        {REEL_PERMALINKS.map((permalink) => (
-          <ReelEmbed key={permalink} permalink={permalink} />
-        ))}
+      <div className="relative mx-auto mt-10 max-w-6xl">
+        <button
+          type="button"
+          onClick={() => scrollByCards(-1)}
+          aria-label="Scroll reels left"
+          className="absolute left-0 top-1/2 z-10 hidden -translate-x-4 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-md transition-transform hover:scale-105 sm:flex"
+          style={{ height: '44px', width: '44px' }}
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+
+        <div
+          ref={scrollerRef}
+          className="scrollbar-none flex snap-x snap-mandatory justify-start gap-6 overflow-x-auto px-1 pb-2 sm:justify-center"
+        >
+          {REEL_PERMALINKS.map((permalink) => (
+            <ReelEmbed key={permalink} permalink={permalink} />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => scrollByCards(1)}
+          aria-label="Scroll reels right"
+          className="absolute right-0 top-1/2 z-10 hidden translate-x-4 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-md transition-transform hover:scale-105 sm:flex"
+          style={{ height: '44px', width: '44px' }}
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
       </div>
     </section>
   );
