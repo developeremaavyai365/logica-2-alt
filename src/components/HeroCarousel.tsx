@@ -43,11 +43,13 @@ export default function HeroCarousel() {
           </Link>
           <Link
             to={slide.ctaHref}
-            className="btn-liquid font-inter absolute bottom-8 left-4 z-10 inline-flex w-fit items-center gap-1 rounded-full border-2 px-5 py-2.5 text-xs font-medium transition-colors sm:bottom-12 sm:left-8 sm:px-6 sm:py-3 sm:text-sm lg:text-base"
+            className={`btn-liquid font-inter absolute bottom-8 left-4 z-10 inline-flex w-fit items-center gap-1 rounded-full border-2 px-5 py-2.5 text-xs font-medium transition-colors sm:bottom-12 sm:left-8 sm:px-6 sm:py-3 sm:text-sm lg:text-base ${
+              slide.dark ? 'border-white text-white hover:text-black' : 'border-black text-black hover:text-white'
+            }`}
             style={
               slide.dark
-                ? ({ '--liquid': '#fff', '--liquid-ink': '#000000', borderColor: '#fff', color: '#fff' } as CSSProperties)
-                : ({ '--liquid': '#000', '--liquid-ink': '#ffffff', borderColor: '#000', color: '#000' } as CSSProperties)
+                ? ({ '--liquid': '#fff', '--liquid-ink': '#000000' } as CSSProperties)
+                : ({ '--liquid': '#000', '--liquid-ink': '#ffffff' } as CSSProperties)
             }
           >
             {slide.ctaLabel}
