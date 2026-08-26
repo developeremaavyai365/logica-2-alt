@@ -18,13 +18,12 @@ export default function Home() {
         <HeroCarousel />
       </div>
 
-      <NewArrivalSpotlight />
-
       {/* Company identity — who Logica Infoway is, before the shop starts. */}
       <CompanyStorySection />
       <RegisteredOfficesVideo />
 
       <BrandStrip />
+      <NewArrivalSpotlight />
       <CompanyReels />
       <TrustBand />
       <LoyaltyCard />
