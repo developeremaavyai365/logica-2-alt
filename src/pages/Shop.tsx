@@ -2,7 +2,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ShopBrowser from '../components/shop/ShopBrowser';
 import QuickLinksRow from '../components/QuickLinksRow';
-import NewArrivalSpotlight from '../components/NewArrivalSpotlight';
 import CategorySpotlight from '../components/CategorySpotlight';
 import VideoShowcase from '../components/VideoShowcase';
 import BestsellerDeals from '../components/BestsellerDeals';
@@ -32,8 +31,6 @@ export default function Shop() {
           ctaLabel="Shop Now"
           ctaHref="/shop/mobile-phones"
         />
-
-        <NewArrivalSpotlight />
 
         <BestsellerDeals />
 
