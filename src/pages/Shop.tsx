@@ -1,13 +1,60 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ShopBrowser from '../components/shop/ShopBrowser';
+import QuickLinksRow from '../components/QuickLinksRow';
+import NewArrivalSpotlight from '../components/NewArrivalSpotlight';
+import CategorySpotlight from '../components/CategorySpotlight';
+import VideoShowcase from '../components/VideoShowcase';
+import BestsellerDeals from '../components/BestsellerDeals';
 import { products } from '../data';
+
+const APPLE = products.filter((p) => p.brand === 'Apple').slice(0, 10);
+const SAMSUNG = products.filter((p) => p.brand === 'Samsung').slice(0, 10);
 
 export default function Shop() {
   return (
     <div className="w-full">
       <div className="bg-[#ECEDEC]">
         <Header />
+      </div>
+
+      <div className="w-full divide-y divide-black/10 bg-white">
+        <CategorySpotlight
+          title="Best Of Samsung"
+          description="Save up to ₹8,000 instantly on eligible Galaxy devices using ICICI, HDFC & SBI Bank Credit Cards. Exchange bonus available on select models."
+          emiNote="No Cost EMI Available"
+          viewAllHref="/shop?brand=Samsung"
+          products={SAMSUNG}
+        />
+
+        <VideoShowcase
+          video="/videos/samsung-galaxy-z-fold8-hero.mp4"
+          ctaLabel="Shop Now"
+          ctaHref="/shop/mobile-phones"
+        />
+
+        <NewArrivalSpotlight />
+
+        <BestsellerDeals />
+
+        <QuickLinksRow />
+
+        <CategorySpotlight
+          title="Best Of Apple"
+          description="Save up to ₹10,000 instantly on eligible products using ICICI, AXIS & SBI Bank Credit Cards. Exchange bonus upto ₹6,000 on iPhone."
+          emiNote="No Cost EMI Available"
+          viewAllHref="/shop?brand=Apple"
+          products={APPLE}
+        />
+
+        <VideoShowcase
+          video="/videos/laptops-showcase.mp4"
+          eyebrow="Logica Infoway"
+          headline="Power that keeps up with your business"
+          subtext="Genuine laptops, enterprise pricing, backed by three decades of delivery."
+          ctaLabel="Shop Now"
+          ctaHref="/shop/laptops"
+        />
       </div>
 
       {/* ================= ALL PRODUCTS ================= */}
