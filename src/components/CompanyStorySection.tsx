@@ -165,9 +165,9 @@ export default function CompanyStorySection() {
             className="font-dm-sans mt-4 font-extrabold"
             style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.05em', lineHeight: 1.05, color: '#D2781E' }}
           >
-            From <RotatingVertical /> shelves
+            From <RotatingVertical />
             <br />
-            to global markets, we deliver technology where it matters most.
+            shelves to global markets, we deliver technology where it matters most.
           </h2>
           <p
             className="font-inter mt-5 max-w-xl text-sm text-black/60 sm:text-base lg:text-lg"
