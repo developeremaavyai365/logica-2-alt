@@ -155,20 +155,20 @@ export default function CompanyStorySection() {
         </div>
 
         <div className="flex flex-col text-left">
-          <p
+          <h2
             className="font-dm-sans font-extrabold uppercase"
-            style={{ fontSize: 'clamp(20px, 2.6vw, 30px)', letterSpacing: '0.04em', color: '#D2781E' }}
+            style={{ fontSize: 'clamp(44px, 7vw, 84px)', letterSpacing: '-0.03em', lineHeight: 1, color: '#D2781E' }}
           >
             Who We Are
-          </p>
-          <h2
+          </h2>
+          <p
             className="font-dm-sans mt-4 font-extrabold"
-            style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.05em', lineHeight: 1.05, color: '#D2781E' }}
+            style={{ fontSize: 'clamp(22px, 3.2vw, 36px)', letterSpacing: '-0.04em', lineHeight: 1.1, color: '#D2781E' }}
           >
             From <RotatingVertical />
             <br />
             shelves to global markets, we deliver technology where it matters most.
-          </h2>
+          </p>
           <p
             className="font-inter mt-5 max-w-xl text-sm text-black/60 sm:text-base lg:text-lg"
             style={{ lineHeight: 1.5, letterSpacing: '-0.03em' }}
