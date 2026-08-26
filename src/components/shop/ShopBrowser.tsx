@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../ProductCard';
 import { FilterSidebar, type FilterSelection } from './FilterSidebar';
@@ -39,10 +39,14 @@ export default function ShopBrowser({
   products,
   accent,
   initialBrand,
+  interstitials,
 }: {
   products: Product[];
   accent: string;
   initialBrand?: string;
+  /** Full-width promo blocks spliced into the grid, only on page 1 —
+   *  `afterCount` is how many product cards should render before it. */
+  interstitials?: { afterCount: number; node: ReactNode }[];
 }) {
   const [priceMin, priceMax] = useMemo(() => getPriceBounds(products), [products]);
   const priceStep = useMemo(() => priceStepFor(priceMax - priceMin), [priceMin, priceMax]);
@@ -280,8 +284,18 @@ export default function ShopBrowser({
             sidebarOpen ? 'lg:grid-cols-4' : 'lg:grid-cols-4 xl:grid-cols-5'
           }`}
         >
-          {paged.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {paged.map((product, i) => (
+            <Fragment key={product.id}>
+              <ProductCard product={product} />
+              {currentPage === 1 &&
+                interstitials
+                  ?.filter((it) => it.afterCount === i + 1)
+                  .map((it, j) => (
+                    <div key={`interstitial-${i}-${j}`} className="col-span-full">
+                      {it.node}
+                    </div>
+                  ))}
+            </Fragment>
           ))}
         </div>
 
