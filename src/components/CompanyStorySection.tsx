@@ -159,7 +159,7 @@ export default function CompanyStorySection() {
             className="font-dm-sans font-extrabold uppercase"
             style={{ fontSize: 'clamp(20px, 2.6vw, 30px)', letterSpacing: '0.04em', color: '#D2781E' }}
           >
-            About Us
+            Who We Are
           </p>
           <h2
             className="font-dm-sans mt-4 font-extrabold"
