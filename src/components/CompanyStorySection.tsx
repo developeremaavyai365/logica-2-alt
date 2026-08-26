@@ -159,7 +159,7 @@ export default function CompanyStorySection() {
             className="font-inter text-xs font-extrabold uppercase"
             style={{ letterSpacing: '0.12em', color: '#D2781E' }}
           >
-            Since {foundingYear}
+            About Us
           </p>
           <h2
             className="font-dm-sans mt-4 font-extrabold"
