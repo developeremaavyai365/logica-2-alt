@@ -15,6 +15,48 @@ const stats = [
   { vertical: 'E-commerce', value: '24/7', label: 'Nationwide Online Reach', icon: ShoppingCart, chip: '#EDE4FF', ink: '#6D28D9' },
 ];
 
+// Same four verticals as the stats grid below, colored to match — cycles
+// in place inside the heading in place of a static "retail".
+const VERTICAL_WORDS = [
+  { word: 'retail', color: '#D2781E' },
+  { word: 'distribution', color: '#15803D' },
+  { word: 'export', color: '#1D4ED8' },
+  { word: 'e-commerce', color: '#6D28D9' },
+];
+const ROTATE_INTERVAL = 2200;
+const ROTATE_TRANSITION = 300;
+
+function RotatingVertical() {
+  const [i, setI] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setI((prev) => (prev + 1) % VERTICAL_WORDS.length);
+        setVisible(true);
+      }, ROTATE_TRANSITION);
+    }, ROTATE_INTERVAL);
+    return () => clearInterval(id);
+  }, []);
+
+  const current = VERTICAL_WORDS[i];
+  return (
+    <span
+      className="inline-block transition-all ease-out"
+      style={{
+        color: current.color,
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(-10px)',
+        transitionDuration: `${ROTATE_TRANSITION}ms`,
+      }}
+    >
+      {current.word}
+    </span>
+  );
+}
+
 const DURATION = 1200;
 const STAGGER = 200;
 
@@ -123,7 +165,7 @@ export default function CompanyStorySection() {
             className="font-dm-sans mt-4 font-extrabold"
             style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.05em', lineHeight: 1.05, color: '#D2781E' }}
           >
-            From retail shelves to global markets, we deliver technology where it matters most.
+            From <RotatingVertical /> shelves to global markets, we deliver technology where it matters most.
           </h2>
           <p
             className="font-inter mt-5 max-w-xl text-sm text-black/60 sm:text-base lg:text-lg"
