@@ -156,8 +156,8 @@ export default function CompanyStorySection() {
 
         <div className="flex flex-col text-left">
           <p
-            className="font-inter text-xs font-extrabold uppercase"
-            style={{ letterSpacing: '0.12em', color: '#D2781E' }}
+            className="font-dm-sans font-extrabold uppercase"
+            style={{ fontSize: 'clamp(20px, 2.6vw, 30px)', letterSpacing: '0.04em', color: '#D2781E' }}
           >
             About Us
           </p>
