@@ -8,7 +8,6 @@ import TrustBand from '../components/TrustBand';
 import CompanyStorySection from '../components/CompanyStorySection';
 import RegisteredOfficesVideo from '../components/RegisteredOfficesVideo';
 import CompanyReels from '../components/CompanyReels';
-import Testimonials from '../components/Testimonials';
 
 export default function Home() {
   return (
@@ -27,7 +26,6 @@ export default function Home() {
 
       <BrandStrip />
       <CompanyReels />
-      <Testimonials />
       <TrustBand />
       <LoyaltyCard />
       <Footer />

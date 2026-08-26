@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Testimonials from '../components/Testimonials';
 import { pillars, scaleStats, nameHistory, offices } from '../data';
 import { OVERVIEW_FINANCIALS, REGISTERED_OFFICE } from '../about-data';
 
@@ -129,6 +130,8 @@ export default function About() {
           ))}
         </div>
       </section>
+
+      <Testimonials />
 
       {/* Offices */}
       <section className="w-full bg-[#000000] py-16 sm:py-20 px-4 sm:px-6 md:px-10">
