@@ -25,6 +25,8 @@ export default function Shop() {
       />
 
       <div className="w-full divide-y divide-black/10 bg-white">
+        <QuickLinksRow />
+
         <CategorySpotlight
           title="Best Of Samsung"
           description="Save up to ₹8,000 instantly on eligible Galaxy devices using ICICI, HDFC & SBI Bank Credit Cards. Exchange bonus available on select models."
@@ -34,8 +36,6 @@ export default function Shop() {
         />
 
         <BestsellerDeals />
-
-        <QuickLinksRow />
 
         <CategorySpotlight
           title="Best Of Apple"
