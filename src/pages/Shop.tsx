@@ -17,6 +17,13 @@ export default function Shop() {
         <Header />
       </div>
 
+      <VideoShowcase
+        video="/videos/samsung-galaxy-z-fold8-hero.mp4"
+        ctaLabel="Shop Now"
+        ctaHref="/shop/mobile-phones"
+        fullScreen
+      />
+
       <div className="w-full divide-y divide-black/10 bg-white">
         <CategorySpotlight
           title="Best Of Samsung"
@@ -24,12 +31,6 @@ export default function Shop() {
           emiNote="No Cost EMI Available"
           viewAllHref="/shop?brand=Samsung"
           products={SAMSUNG}
-        />
-
-        <VideoShowcase
-          video="/videos/samsung-galaxy-z-fold8-hero.mp4"
-          ctaLabel="Shop Now"
-          ctaHref="/shop/mobile-phones"
         />
 
         <BestsellerDeals />

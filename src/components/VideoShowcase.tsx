@@ -8,16 +8,29 @@ interface VideoShowcaseProps {
   subtext?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  /** Full-viewport-height hero instead of the default 21:9 band. */
+  fullScreen?: boolean;
 }
 
-export default function VideoShowcase({ video, eyebrow, headline, subtext, ctaLabel, ctaHref = '/shop' }: VideoShowcaseProps) {
+export default function VideoShowcase({
+  video,
+  eyebrow,
+  headline,
+  subtext,
+  ctaLabel,
+  ctaHref = '/shop',
+  fullScreen = false,
+}: VideoShowcaseProps) {
   // With copy, the CTA anchors left alongside it; with no copy at all (just
   // a bare CTA), fall back to a bottom-center placement so the button
   // doesn't float alone in the middle-left of the frame.
   const hasCopy = Boolean(eyebrow || headline || subtext);
 
   return (
-    <section className="relative w-full overflow-hidden bg-black" style={{ aspectRatio: '21 / 9' }}>
+    <section
+      className="relative w-full overflow-hidden bg-black"
+      style={fullScreen ? { height: '100svh' } : { aspectRatio: '21 / 9' }}
+    >
       <video
         className="absolute inset-0 h-full w-full object-cover"
         src={video}
