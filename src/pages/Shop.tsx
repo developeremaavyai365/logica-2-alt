@@ -43,15 +43,6 @@ export default function Shop() {
           viewAllHref="/shop?brand=Apple"
           products={APPLE}
         />
-
-        <VideoShowcase
-          video="/videos/laptops-showcase.mp4"
-          eyebrow="Logica Infoway"
-          headline="Power that keeps up with your business"
-          subtext="Genuine laptops, enterprise pricing, backed by three decades of delivery."
-          ctaLabel="Shop Now"
-          ctaHref="/shop/laptops"
-        />
       </div>
 
       {/* ================= ALL PRODUCTS ================= */}
