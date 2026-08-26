@@ -143,7 +143,14 @@ export default function CompanyStorySection() {
 
   return (
     <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-28">
-      <div className="animate-fade-up mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <h2
+        className="animate-fade-up font-dm-sans mx-auto max-w-6xl text-center font-extrabold uppercase"
+        style={{ fontSize: 'clamp(44px, 7vw, 84px)', letterSpacing: '-0.03em', lineHeight: 1, color: '#D2781E' }}
+      >
+        Who We Are
+      </h2>
+
+      <div className="animate-fade-up mx-auto mt-12 grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="relative mx-auto aspect-square w-full max-w-lg">
           <div className="absolute inset-0 rounded-full border-[6px] border-[#D2781E] p-2">
             <img
@@ -155,12 +162,6 @@ export default function CompanyStorySection() {
         </div>
 
         <div className="flex flex-col text-left">
-          <h2
-            className="font-dm-sans font-extrabold uppercase"
-            style={{ fontSize: 'clamp(44px, 7vw, 84px)', letterSpacing: '-0.03em', lineHeight: 1, color: '#D2781E' }}
-          >
-            Who We Are
-          </h2>
           <p
             className="font-dm-sans mt-4 font-extrabold"
             style={{ fontSize: 'clamp(22px, 3.2vw, 36px)', letterSpacing: '-0.04em', lineHeight: 1.1, color: '#D2781E' }}
