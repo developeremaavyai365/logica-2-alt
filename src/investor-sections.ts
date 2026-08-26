@@ -16,6 +16,7 @@ import {
   PROSPECTUS_DOC,
   COMPLIANCE_DISCLOSURES,
   GROUP_COMPANIES,
+  SUBSIDIARY_AUDIT_REPORTS,
   type AnnualReport,
   type FiscalYearFolder,
 } from './investor-data';
@@ -49,6 +50,7 @@ export const INVESTOR_SECTIONS: InvestorSection[] = [
   { slug: 'corporate-announcement', label: 'Corporate Announcement', category: 'Stock Exchange', kind: 'docs', items: COMPLIANCE_DISCLOSURES },
 
   { slug: 'group-companies', label: 'Group Companies', category: 'Group Companies', kind: 'names', items: GROUP_COMPANIES },
+  { slug: 'subsidiary-audit-reports', label: 'Subsidiary Audit Reports', category: 'Group Companies', kind: 'docs', items: SUBSIDIARY_AUDIT_REPORTS },
 ];
 
 export const INVESTOR_CATEGORIES = ['Performance', 'Shareholder Information', 'Fund Raising', 'Stock Exchange', 'Group Companies'];

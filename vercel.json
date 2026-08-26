@@ -101,6 +101,106 @@
       "destination": "/investor/policies/csr-projects.pdf"
     },
     {
+      "source": "/wp-content/uploads/2025/09/30TH-AGM-NOTICE-ANNUAL-REPORT-FY-202425.pdf",
+      "destination": "/investor/annual-reports/30th-agm-notice-annual-report-fy-2024-25.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/09/Corrigendum-To-The-Annual-Report-For-FY-2024-25-And-Notice-Of-The-30Th-Annual-General-Meeting-AGM-Material-Update.pdf",
+      "destination": "/investor/annual-reports/corrigendum-annual-report-fy-2024-25-material-update.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/HDPL-AUDIT-REPORT_2018-19.pdf",
+      "destination": "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2018-19.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/HDPL-AUDIT-REPORT_2019-20.pdf",
+      "destination": "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2019-20.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/HDPL-AUDIT-REPORT_2020-21.pdf",
+      "destination": "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2020-21.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/10/AUDIT-REPORT-HDPL.pdf",
+      "destination": "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2021-22.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/04/HDPL-AUDIT-REPORT-Audited-Financial-2022-23.pdf",
+      "destination": "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2022-23.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/KTPL_AUDITED-BALANCE-SHEET-2018-19.pdf",
+      "destination": "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2018-19.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/KTPL_AUDITED-BALANCE-SHEET-2019-20.pdf",
+      "destination": "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2019-20.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/KTPL_AUDITED-BALANCE-SHEET-2020-21.pdf",
+      "destination": "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2020-21.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/04/KTPL-AUDIT-REPORT-Audited-Financial-2022-23.pdf",
+      "destination": "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2022-23.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/LSPPL-AUDIT-REPORT-FY-2018-19.pdf",
+      "destination": "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2018-19.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/LSPPL-AUDIT-REPORT-FY-2019-20.pdf",
+      "destination": "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2019-20.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/LSPPL_-AUDITED-BALANCE-SHEET-2020-21.pdf",
+      "destination": "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2020-21.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/10/AUDIT-REPORT-LSPPL.pdf",
+      "destination": "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2021-22.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/04/LSPPL-SFS-Audited-Financial-2022-23.pdf",
+      "destination": "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2022-23.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/NLPL-AUDIT-REPORT-FY-2018-19.pdf",
+      "destination": "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2018-19.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/NLPL-AUDIT-REPORT-FY-2019-20.pdf",
+      "destination": "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2019-20.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/NLPL-AUDIT-REPORT-FY-2020-21.pdf",
+      "destination": "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2020-21.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/10/AUDIT-REPORT-NLPL-FY-2021-22.pdf",
+      "destination": "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2021-22.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/04/NLPL-STANDALONE-FS-Audited-Financial-2022-23.pdf",
+      "destination": "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2022-23.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/STPL-AUDIT-REPORT-FY-2018-19.pdf",
+      "destination": "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2018-19.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/STPL-AUDIT-REPORT-FY-2019-20.pdf",
+      "destination": "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2019-20.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/09/STPL-AUDIT-REPORT-FY-2020-21.pdf",
+      "destination": "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2020-21.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/04/STPL-AUDIT-REPORT-Audited-Financial-2022-23.pdf",
+      "destination": "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2022-23.pdf"
+    },
+    {
       "source": "/wp-content/uploads/2025/11/Related-Party-Policy.pdf",
       "destination": "/investor/policies/related-party-policy-revised.pdf"
     },

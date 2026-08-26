@@ -43,6 +43,16 @@ export const ANNUAL_REPORTS: AnnualReport[] = [
     year: "2019-20",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/08/Annual-Report-F-Y-2019-20.pdf",
   },
+  {
+    title: "30th AGM Notice with Annual Report FY 2024-25",
+    year: "2024-25",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2025/09/30TH-AGM-NOTICE-ANNUAL-REPORT-FY-202425.pdf",
+  },
+  {
+    title: "Corrigendum to the Annual Report FY 2024-25 (with Material Update)",
+    year: "2024-25",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2025/09/Corrigendum-To-The-Annual-Report-For-FY-2024-25-And-Notice-Of-The-30Th-Annual-General-Meeting-AGM-Material-Update.pdf",
+  },
 ];
 
 /** Real annual returns (MGT forms), mirrored from logicainfoway.com/annual-return. */
@@ -637,4 +647,37 @@ export const GROUP_COMPANIES = [
   "Logica Systems & Peripherals Private Ltd.",
   "Kalpaturu Tradevin Private Ltd.",
   "Nirwan Logica Private Ltd.",
+];
+
+/** Real audited financials for each group (subsidiary) company, extracted
+ *  from the site's own backup — self-hosted since these were never on the
+ *  live investor pages before. */
+export const SUBSIDIARY_AUDIT_REPORTS: AnnualReport[] = [
+  { title: "Himadri Dealcom Private Ltd. — Audit Report FY 2018-19", year: "2018-19", url: "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2018-19.pdf" },
+  { title: "Himadri Dealcom Private Ltd. — Audit Report FY 2019-20", year: "2019-20", url: "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2019-20.pdf" },
+  { title: "Himadri Dealcom Private Ltd. — Audit Report FY 2020-21", year: "2020-21", url: "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2020-21.pdf" },
+  { title: "Himadri Dealcom Private Ltd. — Audit Report FY 2021-22", year: "2021-22", url: "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2021-22.pdf" },
+  { title: "Himadri Dealcom Private Ltd. — Audit Report FY 2022-23", year: "2022-23", url: "/investor/subsidiary-audit-reports/hdpl-audit-report-fy-2022-23.pdf" },
+
+  { title: "Kalpaturu Tradevin Private Ltd. — Audit Report FY 2018-19", year: "2018-19", url: "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2018-19.pdf" },
+  { title: "Kalpaturu Tradevin Private Ltd. — Audit Report FY 2019-20", year: "2019-20", url: "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2019-20.pdf" },
+  { title: "Kalpaturu Tradevin Private Ltd. — Audit Report FY 2020-21", year: "2020-21", url: "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2020-21.pdf" },
+  { title: "Kalpaturu Tradevin Private Ltd. — Audit Report FY 2022-23", year: "2022-23", url: "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2022-23.pdf" },
+
+  { title: "Logica Systems & Peripherals Private Ltd. — Audit Report FY 2018-19", year: "2018-19", url: "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2018-19.pdf" },
+  { title: "Logica Systems & Peripherals Private Ltd. — Audit Report FY 2019-20", year: "2019-20", url: "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2019-20.pdf" },
+  { title: "Logica Systems & Peripherals Private Ltd. — Audit Report FY 2020-21", year: "2020-21", url: "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2020-21.pdf" },
+  { title: "Logica Systems & Peripherals Private Ltd. — Audit Report FY 2021-22", year: "2021-22", url: "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2021-22.pdf" },
+  { title: "Logica Systems & Peripherals Private Ltd. — Audit Report FY 2022-23", year: "2022-23", url: "/investor/subsidiary-audit-reports/lsppl-audit-report-fy-2022-23.pdf" },
+
+  { title: "Nirwan Logica Private Ltd. — Audit Report FY 2018-19", year: "2018-19", url: "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2018-19.pdf" },
+  { title: "Nirwan Logica Private Ltd. — Audit Report FY 2019-20", year: "2019-20", url: "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2019-20.pdf" },
+  { title: "Nirwan Logica Private Ltd. — Audit Report FY 2020-21", year: "2020-21", url: "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2020-21.pdf" },
+  { title: "Nirwan Logica Private Ltd. — Audit Report FY 2021-22", year: "2021-22", url: "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2021-22.pdf" },
+  { title: "Nirwan Logica Private Ltd. — Audit Report FY 2022-23", year: "2022-23", url: "/investor/subsidiary-audit-reports/nlpl-audit-report-fy-2022-23.pdf" },
+
+  { title: "Sonartari Tradelink Private Ltd. — Audit Report FY 2018-19", year: "2018-19", url: "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2018-19.pdf" },
+  { title: "Sonartari Tradelink Private Ltd. — Audit Report FY 2019-20", year: "2019-20", url: "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2019-20.pdf" },
+  { title: "Sonartari Tradelink Private Ltd. — Audit Report FY 2020-21", year: "2020-21", url: "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2020-21.pdf" },
+  { title: "Sonartari Tradelink Private Ltd. — Audit Report FY 2022-23", year: "2022-23", url: "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2022-23.pdf" },
 ];
