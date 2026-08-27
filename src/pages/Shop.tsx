@@ -3,7 +3,7 @@ import Footer from '../components/Footer';
 import ShopBrowser from '../components/shop/ShopBrowser';
 import QuickLinksRow from '../components/QuickLinksRow';
 import CategorySpotlight from '../components/CategorySpotlight';
-import VideoShowcase from '../components/VideoShowcase';
+import ShopHeroCarousel from '../components/ShopHeroCarousel';
 import BestsellerDeals from '../components/BestsellerDeals';
 import { products } from '../data';
 
@@ -17,12 +17,7 @@ export default function Shop() {
         <Header />
       </div>
 
-      <VideoShowcase
-        video="/videos/samsung-galaxy-z-fold8-hero.mp4"
-        ctaLabel="Shop Now"
-        ctaHref="/shop/mobile-phones"
-        fullScreen
-      />
+      <ShopHeroCarousel />
 
       <div className="w-full divide-y divide-black/10 bg-white">
         <QuickLinksRow />
