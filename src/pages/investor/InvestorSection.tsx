@@ -6,24 +6,33 @@ import Footer from '../../components/Footer';
 import { INVESTOR_SECTIONS, CATEGORY_ICONS } from '../../investor-sections';
 import type { AnnualReport } from '../../investor-data';
 
-/** Sort key from a "year" field like "2025-26", "2024", or "" — parses the
- *  leading 4-digit year so the newest filings float to the top; docs with
- *  no year sort last instead of scattering randomly through the list. */
-function yearSortKey(year: string): number {
+/** Extracts the leading 4-digit year from a "year" field like "2025-26",
+ *  "2024", or "" — used both to sort newest-first and to group. Raw year
+ *  strings on these docs are inconsistently formatted ("2025-26" vs "2025"
+ *  vs "2026" for filings from the same fiscal year), so every doc is
+ *  folded into a single "Financial Year NN" bucket keyed off this leading
+ *  year rather than the raw string, which would otherwise fragment one
+ *  fiscal year into three or four near-duplicate headings. */
+function leadingYear(year: string): number | null {
   const m = year.match(/\d{4}/);
-  return m ? Number(m[0]) : -1;
+  return m ? Number(m[0]) : null;
 }
 
-/** Groups a flat, sorted doc list into { year, docs }[] buckets for display,
- *  falling back to "Undated" for docs with no year. */
+function financialYearLabel(year: number): string {
+  return `Financial Year ${String(year % 100).padStart(2, '0')}`;
+}
+
+/** Groups a flat, sorted doc list into { label, sortKey, docs }[] buckets,
+ *  newest first, falling back to "Undated" for docs with no year. */
 function groupByYear(docs: AnnualReport[]) {
-  const groups = new Map<string, AnnualReport[]>();
+  const groups = new Map<string, { sortKey: number; docs: AnnualReport[] }>();
   for (const doc of docs) {
-    const key = doc.year || 'Undated';
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key)!.push(doc);
+    const y = leadingYear(doc.year);
+    const label = y === null ? 'Undated' : financialYearLabel(y);
+    if (!groups.has(label)) groups.set(label, { sortKey: y ?? -1, docs: [] });
+    groups.get(label)!.docs.push(doc);
   }
-  return Array.from(groups.entries());
+  return Array.from(groups.entries()).sort((a, b) => b[1].sortKey - a[1].sortKey);
 }
 
 function DocGrid({ docs }: { docs: AnnualReport[] }) {
@@ -67,7 +76,7 @@ export default function InvestorSection() {
     if (!section || section.kind !== 'docs') return [];
     const q = query.trim().toLowerCase();
     const filtered = q ? section.items.filter((d) => d.title.toLowerCase().includes(q)) : section.items;
-    return [...filtered].sort((a, b) => yearSortKey(b.year) - yearSortKey(a.year));
+    return [...filtered].sort((a, b) => (leadingYear(b.year) ?? -1) - (leadingYear(a.year) ?? -1));
   }, [section, query]);
 
   if (!section) {
@@ -124,13 +133,13 @@ export default function InvestorSection() {
                   <p className="text-sm text-[#6b6b6b]">No documents match "{query}".</p>
                 ) : (
                   <div className="space-y-10">
-                    {grouped.map(([year, docs]) => (
-                      <div key={year}>
+                    {grouped.map(([label, group]) => (
+                      <div key={label}>
                         <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-                          {year === 'Undated' ? 'Undated' : `FY ${year}`}
-                          <span className="ml-2 font-normal normal-case text-[#6b6b6b]/60">({docs.length})</span>
+                          {label}
+                          <span className="ml-2 font-normal normal-case text-[#6b6b6b]/60">({group.docs.length})</span>
                         </h2>
-                        <DocGrid docs={docs} />
+                        <DocGrid docs={group.docs} />
                       </div>
                     ))}
                   </div>
