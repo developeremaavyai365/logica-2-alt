@@ -1,6 +1,6 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import HeroCarousel from '../components/HeroCarousel';
+import HeroVideo from '../components/HeroVideo';
 import NewArrivalSpotlight from '../components/NewArrivalSpotlight';
 import BrandStrip from '../components/BrandStrip';
 import LoyaltyCard from '../components/LoyaltyCard';
@@ -15,7 +15,7 @@ export default function Home() {
       <Header />
 
       <div className="flex w-full items-stretch">
-        <HeroCarousel />
+        <HeroVideo />
       </div>
 
       {/* Company identity — who Logica Infoway is, before the shop starts. */}
