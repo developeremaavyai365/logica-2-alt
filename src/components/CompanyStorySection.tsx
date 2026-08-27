@@ -34,10 +34,9 @@ function RotatingVertical() {
   const current = VERTICAL_WORDS[i];
   return (
     <span
-      className="inline-block bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-transparent transition-all ease-out"
+      className="inline-block bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-transparent transition-opacity ease-out"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(-10px)',
         transitionDuration: `${ROTATE_TRANSITION}ms`,
       }}
     >
@@ -149,11 +148,11 @@ export default function CompanyStorySection() {
           shelves to global markets, we deliver technology where it matters most.
         </p>
 
-        <div ref={statsRef} className="mt-10 grid w-full max-w-2xl grid-cols-2 gap-6 border-t border-black/10 pt-10 sm:grid-cols-4">
+        <div ref={statsRef} className="mt-14 grid w-full max-w-5xl grid-cols-2 gap-x-8 gap-y-14 border-t border-black/10 pt-14 sm:grid-cols-4">
             {stats.map((stat, i) => (
               <div
                 key={stat.label}
-                className="transition-all ease-out"
+                className="flex flex-col items-center transition-all ease-out"
                 style={{
                   opacity: revealed[i] ? 1 : 0,
                   transform: revealed[i] ? 'translateY(0)' : 'translateY(20px)',
@@ -161,21 +160,27 @@ export default function CompanyStorySection() {
                 }}
               >
                 <span
-                  className="flex h-9 w-9 items-center justify-center rounded-full"
-                  style={{ backgroundColor: stat.chip, color: stat.ink }}
+                  className="flex items-center justify-center rounded-full"
+                  style={{ backgroundColor: stat.chip, color: stat.ink, height: 'clamp(56px, 6vw, 84px)', width: 'clamp(56px, 6vw, 84px)' }}
                 >
-                  <stat.icon className="h-[18px] w-[18px]" strokeWidth={2.25} />
+                  <stat.icon style={{ height: 'clamp(26px, 3vw, 40px)', width: 'clamp(26px, 3vw, 40px)' }} strokeWidth={2} />
                 </span>
-                <p className="font-dm-sans mt-2 text-sm font-extrabold" style={{ color: stat.ink, letterSpacing: '-0.02em' }}>
+                <p
+                  className="font-dm-sans mt-4 font-extrabold"
+                  style={{ color: stat.ink, letterSpacing: '-0.02em', fontSize: 'clamp(18px, 2vw, 26px)' }}
+                >
                   {stat.vertical}
                 </p>
                 <p
-                  className="font-dm-sans mt-1 font-extrabold text-black tabular-nums"
-                  style={{ fontSize: 'clamp(20px, 2.6vw, 28px)', letterSpacing: '-0.05em' }}
+                  className="font-dm-sans mt-2 font-extrabold text-black tabular-nums"
+                  style={{ fontSize: 'clamp(40px, 6vw, 64px)', letterSpacing: '-0.05em', lineHeight: 1 }}
                 >
                   <StatValue raw={stat.value} active={revealed[i]} />
                 </p>
-                <p className="font-inter mt-1 text-xs text-black/50 sm:text-sm" style={{ letterSpacing: '-0.01em' }}>
+                <p
+                  className="font-inter mt-2 text-center text-black/50"
+                  style={{ letterSpacing: '-0.01em', fontSize: 'clamp(14px, 1.4vw, 18px)' }}
+                >
                   {stat.label}
                 </p>
               </div>
