@@ -1,10 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { Store, Warehouse, Ship, ShoppingCart } from 'lucide-react';
-import { nameHistory } from '../data';
-
-const founded = nameHistory[0];
-const foundingYear = 1995;
-const yearsInBusiness = new Date().getFullYear() - foundingYear;
 
 // Logica's four core verticals — mirrors the four quadrants of the collage
 // image (retail store, warehousing, export/shipping, e-commerce).
@@ -169,21 +164,6 @@ export default function CompanyStorySection() {
             From <RotatingVertical />
             <br />
             shelves to global markets, we deliver technology where it matters most.
-          </p>
-          <p
-            className="mt-5 max-w-xl"
-            style={{
-              fontFamily: '"General Sans", system-ui, sans-serif',
-              fontWeight: 500,
-              fontSize: 'clamp(16px, 2vw, 26px)',
-              lineHeight: 1.55,
-              letterSpacing: '-0.025em',
-              color: 'rgb(31, 41, 55)',
-            }}
-          >
-            {founded.event} as {founded.name} on {founded.date} — {yearsInBusiness} years later, Logica runs Export,
-            Retail, E-commerce and Distribution under one roof, delivering genuine hardware to enterprises and
-            government offices across India.
           </p>
 
           <div ref={statsRef} className="mt-10 grid w-full grid-cols-2 gap-6 border-t border-black/10 pt-10 sm:grid-cols-4">
