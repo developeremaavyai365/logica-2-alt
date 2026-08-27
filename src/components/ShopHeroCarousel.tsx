@@ -2,19 +2,24 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-type Slide =
-  | { kind: 'image'; image: string; alt: string; ctaHref: string; ctaLabel: string; dark?: boolean }
-  | { kind: 'video'; video: string; alt: string; ctaHref: string; ctaLabel: string };
+interface Slide {
+  image: string;
+  alt: string;
+  ctaHref: string;
+  ctaLabel: string;
+  dark?: boolean;
+}
 
-// Same banner set that used to run on the homepage hero, now shown here
-// alongside the Z Fold8 launch video — full-screen, auto-rotating.
+// Homepage banner set plus real store photos — full-screen, auto-rotating.
 const SLIDES: Slide[] = [
-  { kind: 'image', image: '/banners/rakhi-banner.svg', alt: 'Rakhi offers — shop now', ctaHref: '/shop', ctaLabel: 'Shop Now' },
-  { kind: 'video', video: '/videos/samsung-galaxy-z-fold8-hero.mp4', alt: 'Samsung Galaxy Z Fold8 — shop now', ctaHref: '/shop?brand=Samsung', ctaLabel: 'Shop Now' },
-  { kind: 'image', image: '/banners/iphone-17-pro.svg', alt: 'iPhone 17 Pro — shop now', ctaHref: '/shop?brand=Apple', ctaLabel: 'Shop Now' },
-  { kind: 'image', image: '/banners/fold8.svg', alt: 'Samsung Galaxy Z Fold8 — shop now', ctaHref: '/shop?brand=Samsung', ctaLabel: 'Shop Now' },
-  { kind: 'image', image: '/banners/pixel-11-pro.svg', alt: 'Google Pixel 11 Pro — shop now', ctaHref: '/shop/mobile-phones', ctaLabel: 'Shop Now', dark: true },
-  { kind: 'image', image: '/banners/vivo-s2-banner.svg', alt: 'vivo S2 — shop now', ctaHref: '/shop?brand=Vivo', ctaLabel: 'Shop Now' },
+  { image: '/banners/rakhi-banner.svg', alt: 'Rakhi offers — shop now', ctaHref: '/shop', ctaLabel: 'Shop Now' },
+  { image: '/images/store/storefront-1.jpg', alt: 'Logica Infoway Samsung store front', ctaHref: '/shop', ctaLabel: 'Shop Now', dark: true },
+  { image: '/banners/iphone-17-pro.svg', alt: 'iPhone 17 Pro — shop now', ctaHref: '/shop?brand=Apple', ctaLabel: 'Shop Now' },
+  { image: '/banners/fold8.svg', alt: 'Samsung Galaxy Z Fold8 — shop now', ctaHref: '/shop?brand=Samsung', ctaLabel: 'Shop Now' },
+  { image: '/images/store/store-interior-1.jpg', alt: 'Logica Infoway Samsung store interior', ctaHref: '/shop', ctaLabel: 'Shop Now', dark: true },
+  { image: '/banners/pixel-11-pro.svg', alt: 'Google Pixel 11 Pro — shop now', ctaHref: '/shop/mobile-phones', ctaLabel: 'Shop Now', dark: true },
+  { image: '/banners/vivo-s2-banner.svg', alt: 'vivo S2 — shop now', ctaHref: '/shop?brand=Vivo', ctaLabel: 'Shop Now' },
+  { image: '/images/store/storefront-2.jpg', alt: 'Logica Infoway Samsung store front', ctaHref: '/shop', ctaLabel: 'Shop Now', dark: true },
 ];
 
 export default function ShopHeroCarousel() {
@@ -27,45 +32,30 @@ export default function ShopHeroCarousel() {
 
   return (
     <section className="relative w-full overflow-hidden bg-black" style={{ height: '100svh' }}>
-      {SLIDES.map((slide, i) => {
-        const dark = slide.kind === 'video' ? true : slide.dark;
-        return (
-          <div
-            key={slide.kind === 'image' ? slide.image : slide.video}
-            className="absolute inset-0 transition-opacity duration-700"
-            style={{ opacity: i === index ? 1 : 0, pointerEvents: i === index ? 'auto' : 'none' }}
+      {SLIDES.map((slide, i) => (
+        <div
+          key={slide.image}
+          className="absolute inset-0 transition-opacity duration-700"
+          style={{ opacity: i === index ? 1 : 0, pointerEvents: i === index ? 'auto' : 'none' }}
+        >
+          <Link to={slide.ctaHref} className="absolute inset-0" aria-label={slide.alt}>
+            <img src={slide.image} alt={slide.alt} className="absolute inset-0 h-full w-full object-cover" />
+          </Link>
+          <Link
+            to={slide.ctaHref}
+            className={`btn-liquid font-inter absolute bottom-8 left-4 z-10 inline-flex w-fit items-center gap-1 rounded-full border-2 px-5 py-2.5 text-xs font-medium transition-colors sm:bottom-12 sm:left-8 sm:px-6 sm:py-3 sm:text-sm lg:text-base ${
+              slide.dark ? 'border-white text-white hover:text-black' : 'border-black text-black hover:text-white'
+            }`}
+            style={
+              slide.dark
+                ? ({ '--liquid': '#fff', '--liquid-ink': '#000000' } as CSSProperties)
+                : ({ '--liquid': '#000', '--liquid-ink': '#ffffff' } as CSSProperties)
+            }
           >
-            <Link to={slide.ctaHref} className="absolute inset-0" aria-label={slide.alt}>
-              {slide.kind === 'image' ? (
-                <img src={slide.image} alt={slide.alt} className="absolute inset-0 h-full w-full object-cover" />
-              ) : (
-                <video
-                  className="absolute inset-0 h-full w-full object-cover"
-                  src={slide.video}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
-              )}
-            </Link>
-            {slide.kind === 'video' && <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/20" />}
-            <Link
-              to={slide.ctaHref}
-              className={`btn-liquid font-inter absolute bottom-8 left-4 z-10 inline-flex w-fit items-center gap-1 rounded-full border-2 px-5 py-2.5 text-xs font-medium transition-colors sm:bottom-12 sm:left-8 sm:px-6 sm:py-3 sm:text-sm lg:text-base ${
-                dark ? 'border-white text-white hover:text-black' : 'border-black text-black hover:text-white'
-              }`}
-              style={
-                dark
-                  ? ({ '--liquid': '#fff', '--liquid-ink': '#000000' } as CSSProperties)
-                  : ({ '--liquid': '#000', '--liquid-ink': '#ffffff' } as CSSProperties)
-              }
-            >
-              {slide.ctaLabel}
-            </Link>
-          </div>
-        );
-      })}
+            {slide.ctaLabel}
+          </Link>
+        </div>
+      ))}
 
       <button
         type="button"
@@ -89,7 +79,7 @@ export default function ShopHeroCarousel() {
       <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2 sm:bottom-5">
         {SLIDES.map((slide, i) => (
           <button
-            key={slide.kind === 'image' ? slide.image : slide.video}
+            key={slide.image}
             type="button"
             aria-label={`Go to slide ${i + 1}`}
             onClick={() => setIndex(i)}
