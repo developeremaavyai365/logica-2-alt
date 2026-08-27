@@ -10,16 +10,16 @@ interface Slide {
 // Real photos of the physical Logica Infoway Samsung store, auto-rotating
 // on the homepage hero.
 const SLIDES: Slide[] = [
+  { image: '/images/store/storefront-2.jpg', alt: 'Logica Infoway Samsung store front' },
   { image: '/images/store/storefront-1.jpg', alt: 'Logica Infoway Samsung store front' },
   { image: '/images/store/store-interior-1.jpg', alt: 'Logica Infoway Samsung store interior' },
-  { image: '/images/store/storefront-2.jpg', alt: 'Logica Infoway Samsung store front' },
 ];
 
 export default function HeroVideo() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const id = window.setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), 4500);
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), 4000);
     return () => window.clearInterval(id);
   }, []);
 
