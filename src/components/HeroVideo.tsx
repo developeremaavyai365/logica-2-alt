@@ -2,17 +2,17 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-type Slide =
-  | { kind: 'video'; video: string }
-  | { kind: 'image'; image: string; alt: string };
+interface Slide {
+  image: string;
+  alt: string;
+}
 
-// Store walkthrough video plus real photos of the physical Logica Infoway
-// Samsung store, auto-rotating on the homepage hero.
+// Real photos of the physical Logica Infoway Samsung store, auto-rotating
+// on the homepage hero.
 const SLIDES: Slide[] = [
-  { kind: 'video', video: '/videos/logica-store-hero.mp4' },
-  { kind: 'image', image: '/images/store/storefront-1.jpg', alt: 'Logica Infoway Samsung store front' },
-  { kind: 'image', image: '/images/store/store-interior-1.jpg', alt: 'Logica Infoway Samsung store interior' },
-  { kind: 'image', image: '/images/store/storefront-2.jpg', alt: 'Logica Infoway Samsung store front' },
+  { image: '/images/store/storefront-1.jpg', alt: 'Logica Infoway Samsung store front' },
+  { image: '/images/store/store-interior-1.jpg', alt: 'Logica Infoway Samsung store interior' },
+  { image: '/images/store/storefront-2.jpg', alt: 'Logica Infoway Samsung store front' },
 ];
 
 export default function HeroVideo() {
@@ -27,22 +27,11 @@ export default function HeroVideo() {
     <section className="relative aspect-[4/5] min-w-0 flex-1 overflow-hidden bg-black sm:aspect-[16/9] lg:aspect-[2.4/1]">
       {SLIDES.map((slide, i) => (
         <div
-          key={slide.kind === 'video' ? slide.video : slide.image}
+          key={slide.image}
           className="absolute inset-0 transition-opacity duration-700"
           style={{ opacity: i === index ? 1 : 0 }}
         >
-          {slide.kind === 'video' ? (
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src={slide.video}
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
-          ) : (
-            <img src={slide.image} alt={slide.alt} className="absolute inset-0 h-full w-full object-cover" />
-          )}
+          <img src={slide.image} alt={slide.alt} className="absolute inset-0 h-full w-full object-cover" />
         </div>
       ))}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/20" />
@@ -77,7 +66,7 @@ export default function HeroVideo() {
       <div className="absolute bottom-3 right-4 z-10 flex gap-2 sm:bottom-5 sm:right-8">
         {SLIDES.map((slide, i) => (
           <button
-            key={slide.kind === 'video' ? slide.video : slide.image}
+            key={slide.image}
             type="button"
             aria-label={`Go to slide ${i + 1}`}
             onClick={() => setIndex(i)}
