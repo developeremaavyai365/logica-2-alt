@@ -171,8 +171,15 @@ export default function CompanyStorySection() {
             shelves to global markets, we deliver technology where it matters most.
           </p>
           <p
-            className="font-inter mt-5 max-w-xl text-sm text-black/60 sm:text-base lg:text-lg"
-            style={{ lineHeight: 1.5, letterSpacing: '-0.03em' }}
+            className="mt-5 max-w-xl"
+            style={{
+              fontFamily: '"General Sans", system-ui, sans-serif',
+              fontWeight: 500,
+              fontSize: 'clamp(16px, 2vw, 26px)',
+              lineHeight: 1.55,
+              letterSpacing: '-0.025em',
+              color: 'rgb(31, 41, 55)',
+            }}
           >
             {founded.event} as {founded.name} on {founded.date} — {yearsInBusiness} years later, Logica runs Export,
             Retail, E-commerce and Distribution under one roof, delivering genuine hardware to enterprises and
