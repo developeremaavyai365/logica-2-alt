@@ -12,12 +12,7 @@ const stats = [
 
 // Same four verticals as the stats grid below, colored to match — cycles
 // in place inside the heading in place of a static "retail".
-const VERTICAL_WORDS = [
-  { word: 'retail', color: '#D2781E' },
-  { word: 'distribution', color: '#15803D' },
-  { word: 'export', color: '#1D4ED8' },
-  { word: 'e-commerce', color: '#6D28D9' },
-];
+const VERTICAL_WORDS = ['retail', 'distribution', 'export', 'e-commerce'];
 const ROTATE_INTERVAL = 2200;
 const ROTATE_TRANSITION = 300;
 
@@ -39,15 +34,14 @@ function RotatingVertical() {
   const current = VERTICAL_WORDS[i];
   return (
     <span
-      className="inline-block transition-all ease-out"
+      className="inline-block bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-transparent transition-all ease-out"
       style={{
-        color: current.color,
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(-10px)',
         transitionDuration: `${ROTATE_TRANSITION}ms`,
       }}
     >
-      {current.word}
+      {current}
     </span>
   );
 }
@@ -139,34 +133,23 @@ export default function CompanyStorySection() {
   return (
     <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-28">
       <h2
-        className="animate-fade-up font-dm-sans mx-auto max-w-6xl text-center font-extrabold uppercase"
-        style={{ fontSize: 'clamp(44px, 7vw, 84px)', letterSpacing: '-0.03em', lineHeight: 1, color: '#D2781E' }}
+        className="animate-fade-up font-dm-sans mx-auto max-w-6xl bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-center font-extrabold uppercase text-transparent"
+        style={{ fontSize: 'clamp(44px, 7vw, 84px)', letterSpacing: '-0.03em', lineHeight: 1 }}
       >
         Who We Are
       </h2>
 
-      <div className="animate-fade-up mx-auto mt-12 grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        <div className="relative mx-auto aspect-square w-full max-w-lg">
-          <div className="absolute inset-0 rounded-full border-[6px] border-[#D2781E] p-2">
-            <img
-              src="/images/company-collage.png"
-              alt="Logica Infoway — retail stores, warehousing, logistics and e-commerce"
-              className="h-full w-full rounded-full object-cover"
-            />
-          </div>
-        </div>
+      <div className="animate-fade-up mx-auto mt-12 flex max-w-4xl flex-col items-center text-center">
+        <p
+          className="font-dm-sans bg-gradient-to-r from-black to-[#15803D] bg-clip-text font-extrabold text-transparent"
+          style={{ fontSize: 'clamp(22px, 3.2vw, 36px)', letterSpacing: '-0.04em', lineHeight: 1.1 }}
+        >
+          From <RotatingVertical />
+          <br />
+          shelves to global markets, we deliver technology where it matters most.
+        </p>
 
-        <div className="flex flex-col text-left">
-          <p
-            className="font-dm-sans mt-4 font-extrabold"
-            style={{ fontSize: 'clamp(22px, 3.2vw, 36px)', letterSpacing: '-0.04em', lineHeight: 1.1, color: '#D2781E' }}
-          >
-            From <RotatingVertical />
-            <br />
-            shelves to global markets, we deliver technology where it matters most.
-          </p>
-
-          <div ref={statsRef} className="mt-10 grid w-full grid-cols-2 gap-6 border-t border-black/10 pt-10 sm:grid-cols-4">
+        <div ref={statsRef} className="mt-10 grid w-full max-w-2xl grid-cols-2 gap-6 border-t border-black/10 pt-10 sm:grid-cols-4">
             {stats.map((stat, i) => (
               <div
                 key={stat.label}
@@ -197,7 +180,6 @@ export default function CompanyStorySection() {
                 </p>
               </div>
             ))}
-          </div>
         </div>
       </div>
     </section>
