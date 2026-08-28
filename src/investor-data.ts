@@ -248,7 +248,7 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/NOTICE-OF-THE-BOARD-MEETING-DATED-21-09-2024.pdf",
   },
   {
-    title: "Outcome of Board Meeting Dated 14 11 2024 1",
+    title: "Outcome of Board Meeting — November 14, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Outcome-of-Board-Meeting-dated-14-11-2024-1.pdf",
   },
@@ -768,14 +768,9 @@ export const POLICIES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Materiality-Policy-for-Identification-of-Group-Companies-1.pdf",
   },
   {
-    title: "Nomination and Remuneration Policy 1",
+    title: "Nomination and Remuneration Policy",
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Nomination-and-Remuneration-Policy-1.pdf",
-  },
-  {
-    title: "Nomination Remuneration",
-    year: "2024",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Nomination-Remuneration.pdf",
   },
   {
     title: "Policy for Archival of Documents 1",
@@ -1187,7 +1182,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Declaration-with-respect-to-Non-Applicability-of-Annual-Secretarial-Compliance-Report.pdf",
   },
   {
-    title: "Disclosure of Voting Results and Consolidated Scrutinizers Report of the 30th Annual General Meeting AGM for FY 2024 25 Held on Thursday September 25 2025 at 1230 P.m. Through Video Conferencing VC",
+    title: "Voting Results and Scrutinizer's Report — 30th AGM (Regulation 44)",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Disclosure-of-Voting-Results-and-Consolidated-Scrutinizers-Report-of-the-30th-Annual-General-Meeting-AGM-for-F.Y.-2024-25-held-on-Thursday-September-25-2025-at-1230-p.m.-through-Video-Conferencing-VC.pdf",
   },
@@ -1237,7 +1232,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/03/intimation-of-closure-of-trading-window.pdf",
   },
   {
-    title: "Intimation of Date of 30th Annual General Meeting of the Logica Infoway Limited 1",
+    title: "Intimation of Date of the 30th AGM — Regulation 30",
     year: "2025",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/Intimation-of-date-of-30th-Annual-General-Meeting-of-the-Logica-Infoway-Limited-1.pdf",
   },
@@ -1322,11 +1317,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/REG-24A-NON-APPLICABILITY.pdf",
   },
   {
-    title: "REG 27 Non Applicability of Cg 31st Dec. 2024",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Reg-27-Non-applicability-of-CG-31st-Dec.-2024.pdf",
-  },
-  {
     title: "REG 30 and 31A Intimation of Death of Promoter Yk Nathany",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/12/Reg-30-and-31A-Intimation-of-death-of-promoter-YK-Nathany.pdf",
@@ -1352,7 +1342,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/Reg-409-4010.pdf",
   },
   {
-    title: "REG 44 Voting Results Scrutinizers Report of 29th Annual General Meeting",
+    title: "Voting Results and Scrutinizer's Report — 29th AGM (Regulation 44)",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/REG-44-Voting-Results-Scrutinizers-Report-of-29TH-Annual-General-Meeting.pdf",
   },
@@ -1422,7 +1412,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Submission-Of-Certificate-From-The-Statutory-Auditors-Regarding-Consideration-Received-For-Issuance-Of-Shares-On-Preferential-Basis-Reg.-1694-1695-Of-SEBI-Issue-Of-Capital-And-Discl.pdf",
   },
   {
-    title: "Compliance as per Regulation 281 - Non Applicability (Quarter Ended April 7, 2025)",
+    title: "Intimation of In-Principle Approval for Preferential Issue — Regulation 28(1)",
     year: "2025-26",
     url: "/investor/compliance-disclosures/compliance-regulation-281-non-applicability-april-7-2025.pdf",
   },
