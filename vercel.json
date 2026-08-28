@@ -79,6 +79,16 @@
       "source": "/authorized-person/",
       "destination": "/authorized-person",
       "permanent": true
+    },
+    {
+      "source": "/advertisement/",
+      "destination": "/advertisement",
+      "permanent": true
+    },
+    {
+      "source": "/basis-of-allotment/",
+      "destination": "/basis-of-allotment",
+      "permanent": true
     }
   ],
   "rewrites": [

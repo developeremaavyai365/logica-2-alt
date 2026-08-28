@@ -80,8 +80,6 @@ export interface InvestorMegaColumn {
   children?: { label: string; href: string }[];
 }
 
-const LIW = 'https://www.logicainfoway.com';
-
 export const INVESTOR_MEGA: InvestorMegaColumn[] = [
   {
     label: 'Performance',
@@ -103,9 +101,9 @@ export const INVESTOR_MEGA: InvestorMegaColumn[] = [
       { label: 'General Meeting', href: '/investor/notice-of-general-meeting' },
       { label: 'Committee Meeting', href: '/investor/committee-meeting' },
       { label: 'Policies', href: '/investor/policies' },
-      { label: 'Advertisement', href: `${LIW}/advertisement/` },
+      { label: 'Advertisement', href: '/advertisement' },
       { label: 'Material Creditors', href: '/investor/material-creditors' },
-      { label: 'Basis Of Allotment', href: `${LIW}/basis-of-allotment/` },
+      { label: 'Basis Of Allotment', href: '/basis-of-allotment' },
       { label: 'Shareholding Pattern', href: '/investor/shareholding-pattern' },
       { label: 'Familiarization Program', href: '/investor/familiarization-program' },
     ],

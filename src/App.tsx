@@ -17,6 +17,7 @@ import InvestorHub from './pages/investor/InvestorHub';
 import InvestorSection from './pages/investor/InvestorSection';
 import AuthorizedPerson from './pages/investor/AuthorizedPerson';
 import GrievanceRedressal from './pages/investor/GrievanceRedressal';
+import InvestorEmptyPage from './pages/investor/InvestorEmptyPage';
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import ForgotPassword from './pages/ForgotPassword';
@@ -50,6 +51,14 @@ function App() {
         <Route path="/investor" element={<InvestorHub />} />
         <Route path="/authorized-person" element={<AuthorizedPerson />} />
         <Route path="/grievance-redressal" element={<GrievanceRedressal />} />
+        <Route
+          path="/advertisement"
+          element={<InvestorEmptyPage title="Advertisement" message="No advertisements have been published yet." />}
+        />
+        <Route
+          path="/basis-of-allotment"
+          element={<InvestorEmptyPage title="Basis Of Allotment" message="No basis of allotment records have been published yet." />}
+        />
         <Route path="/investor/:slug" element={<InvestorSection />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
