@@ -188,11 +188,6 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/01/BM-6.pdf",
   },
   {
-    title: "BM 7",
-    year: "2024",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/02/BM-7.pdf",
-  },
-  {
     title: "BM Notice 01.03.2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/BM-Notice-01.03.2025.pdf",
@@ -208,11 +203,6 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/BM-Notice-29.08.2025.pdf",
   },
   {
-    title: "Board Meeting Notice 12 05 2026 1",
-    year: "2026-27",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/Board-Meeting-Notice-12-05-2026-1.pdf",
-  },
-  {
     title: "Board Meeting Notice 30.04.2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Board-Meeting-Notice-30.04.2025.pdf",
@@ -221,11 +211,6 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     title: "Board Meeting Notice 4",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/11/Board-Meeting-Notice-4.pdf",
-  },
-  {
-    title: "Br 1",
-    year: "2024",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/05/BR-1.pdf",
   },
   {
     title: "Notice and Agenda Board Meeting 14.11.2024",
@@ -263,44 +248,14 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/NOTICE-OF-THE-BOARD-MEETING-DATED-21-09-2024.pdf",
   },
   {
-    title: "Outcome of BM Dated 15 07 2024",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Outcome-of-BM-dated-15-07-2024.pdf",
-  },
-  {
-    title: "Outcome of BM Dated 21 09 2024",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Outcome-of-BM-dated-21-09-2024.pdf",
-  },
-  {
     title: "Outcome of Board Meeting Dated 14 11 2024 1",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Outcome-of-Board-Meeting-dated-14-11-2024-1.pdf",
   },
   {
-    title: "Outcome of Board Meeting Dated 14 11 2024",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Outcome-of-Board-Meeting-dated-14-11-2024.pdf",
-  },
-  {
-    title: "Outcome of Board Meeting Dated 15 07 2024",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Outcome-of-Board-Meeting-dated-15-07-2024.pdf",
-  },
-  {
-    title: "Outcome of Board Meeting Dated 21 09 2024",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Outcome-of-Board-Meeting-dated-21-09-2024.pdf",
-  },
-  {
     title: "Outcome of Board Meeting Dated 27 02 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/06/Outcome-of-Board-Meeting-Dated-27-02-2024.pdf",
-  },
-  {
-    title: "Outcome of Board Meeting Dated 30 05 2024",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/06/Outcome-of-Board-Meeting-Dated-30-05-2024.pdf",
   },
   {
     title: "Outcome of Board Meeting of Logica Infoway Limited Held on April 30 2025",
@@ -316,16 +271,6 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     title: "Outcome of the Board Meeting Held on Friday August 29 2025 1",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/Outcome-of-the-Board-Meeting-held-on-Friday-August-29-2025-1.pdf",
-  },
-  {
-    title: "Outcome of the Board Meeting Held on Friday August 29 2025",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/Outcome-of-the-Board-Meeting-held-on-Friday-August-29-2025.pdf",
-  },
-  {
-    title: "Outcome of the Board Meeting Held on Friday March 13 2026 1",
-    year: "2026-27",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Outcome-of-the-Board-Meeting-held-on-Friday-March-13-2026-1.pdf",
   },
   {
     title: "Revised Outcome of Board Meeting Held on 14.01.2025",
@@ -439,16 +384,6 @@ export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/07/AGM-NOTICE-2023.pdf",
   },
   {
-    title: "28th AGM Transcript 1",
-    year: "2023",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/08/28TH-AGM-Transcript-1.pdf",
-  },
-  {
-    title: "28th AGM Transcript 2",
-    year: "2023",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/08/28TH-AGM-Transcript-2.pdf",
-  },
-  {
     title: "29th AGM Transcript",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/29th-AGM-Transcript.pdf",
@@ -457,16 +392,6 @@ export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
     title: "AGM Notice 2021 22 General Notice",
     year: "2021-22",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/03/AGM-Notice-2021-22-General-Notice.pdf",
-  },
-  {
-    title: "AGM Trans Merged Proceeding of 29th Annual General Meeting",
-    year: "2024",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/AGM-TRANS_merged-Proceeding-of-29TH-Annual-General-Meeting.pdf",
-  },
-  {
-    title: "Corrigendum EGM Notice 06.02 2025 1",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/corrigendum-EGM-notice-06.02-2025-1.pdf",
   },
   {
     title: "EGM Notice",
@@ -496,11 +421,6 @@ export const FINANCIAL_RESULTS: AnnualReport[] = [
     title: "Board Meeting Outcome — Financial Results for Half Year and Year Ended 31-03-2026",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/1.-Board-Meeting-Outcome-for-Financial-Results-For-The-Half-Year-Ended-And-The-Year-Ended-March-31-2026.pdf",
-  },
-  {
-    title: "Financial Results for Half Year and Financial Year Ended 31-03-2026",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/2.-Financial-Results-For-Half-Year-And-Financial-Year-Ended-March-31-2026.pdf",
   },
   {
     title: "Financial Result for the Half Year and Year Ended 30-09-2025",
@@ -546,11 +466,6 @@ export const FINANCIAL_RESULTS: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/03/Board-Meeting-Financial-Result-2021-22.pdf",
   },
   {
-    title: "Financial Result 2021 22",
-    year: "2021-22",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/03/Financial-Result-2021-22.pdf",
-  },
-  {
     title: "Financial Result",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/Financial-Result.pdf",
@@ -579,11 +494,6 @@ export const FINANCIAL_RESULTS: AnnualReport[] = [
     title: "Outcome of Board Meeting Held on 30.05.2025 for Approval of FS for Half Year FY Ended March 31 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Outcome-of-Board-Meeting-held-on-30.05.2025-for-approval-of-F.S.-for-half-year-F.Y.-ended-March-31-2025.pdf",
-  },
-  {
-    title: "Revised Financial Results for Half Year and Year Ended March 31 2025. Compressed 1",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Revised-Financial-Results-For-Half-Year-And-Year-Ended-March-31-2025._compressed-1.pdf",
   },
   {
     title: "Revised Financial Results for Half Year and Year Ended March 31 2025. Compressed 2",
@@ -679,21 +589,6 @@ export const COMMITTEE_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/NRC-1.pdf",
   },
   {
-    title: "AC 1",
-    year: "2023",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/AC-1.pdf",
-  },
-  {
-    title: "AC 2",
-    year: "2023",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/AC-2.pdf",
-  },
-  {
-    title: "AC 4",
-    year: "2024",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/03/AC-4.pdf",
-  },
-  {
     title: "AC Meeting Notice 03.03.2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/AC-Meeting-Notice-03.03.2025.pdf",
@@ -734,39 +629,9 @@ export const COMMITTEE_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/ID-Meeting-Notice-27.03.2025.pdf",
   },
   {
-    title: "Notice of 1st Meeting Financial Year 2023 24 of Audit Committee 1",
-    year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-1st-Meeting-Financial-Year-2023-24-of-Audit-Committee-1.pdf",
-  },
-  {
-    title: "Notice of 1st Meeting Financial Year 2023 24 of Independent Director",
-    year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-1st-Meeting-Financial-Year-2023-24-of-Independent-Director.pdf",
-  },
-  {
-    title: "Notice of 2nd Meeting Financial Year 2023 24 of Audit Committee 1",
-    year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-2nd-Meeting-Financial-Year-2023-24-of-Audit-Committee-1.pdf",
-  },
-  {
     title: "Notice of 2nd Meeting Financial Year 2023 24 of Audit Committee",
     year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-2nd-Meeting-Financial-Year-2023-24-of-Audit-Committee.pdf",
-  },
-  {
-    title: "Notice of 3rd Meeting Financial Year 2023 24 of Audit Committee",
-    year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-3rd-Meeting-Financial-Year-2023-24-of-Audit-Committee.pdf",
-  },
-  {
-    title: "Notice of 4th Meeting Financial Year 2023 24 of Audit Committee",
-    year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-4th-Meeting-Financial-Year-2023-24-of-Audit-Committee.pdf",
-  },
-  {
-    title: "Notice of 5th Meeting Financial Year 2023 24 of Audit Committee",
-    year: "2023-24",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-5th-Meeting-Financial-Year-2023-24-of-Audit-Committee.pdf",
   },
   {
     title: "Notice of Audit Committee Meeting Dated 21 09 2024",
@@ -818,11 +683,6 @@ export const COMMITTEE_MEETING_NOTICES: AnnualReport[] = [
 /** Real corporate policy documents, mirrored from logicainfoway.com/policies. */
 export const POLICIES: AnnualReport[] = [
   {
-    title: "Related Party Policy",
-    year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Related-Party-Policy.pdf",
-  },
-  {
     title: "CSR Policy",
     year: "",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/CSR-POLICY.pdf",
@@ -856,11 +716,6 @@ export const POLICIES: AnnualReport[] = [
     title: "Materiality Policy for Identification of Group Companies",
     year: "",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Materiality-Policy-for-Identification-of-Group-Companies.pdf",
-  },
-  {
-    title: "Nomination and Remuneration Policy",
-    year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Nomination-and-Remuneration-Policy.pdf",
   },
   {
     title: "Policy for Archival of Documents",
@@ -938,11 +793,6 @@ export const POLICIES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Identification-of-Material-Creditors-and-Material-Litigation.pdf",
   },
   {
-    title: "Policy on Prevention of Sexual Harrasment at Workplace 1",
-    year: "2022",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Prevention-of-Sexual-Harrasment-at-Workplace-1.pdf",
-  },
-  {
     title: "Related Party Policy (Revised)",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/Revised-Related-Party-Policy-signed.pdf",
@@ -1004,29 +854,9 @@ export const SHAREHOLDING_PATTERN: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/03/Pre-Bonus-Issue-Shareholding-Pattern.pdf",
   },
   {
-    title: "Shareholding Pattern 30.09.2025 Signed 1",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Shareholding-Pattern-30.09.2025-signed-1.pdf",
-  },
-  {
-    title: "Shareholding Pattern 30.09.2025 Signed 2",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Shareholding-Pattern-30.09.2025-signed-2.pdf",
-  },
-  {
     title: "Shareholding Pattern as on 30 09 2023",
     year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/10/Shareholding-Pattern-as-on-30-09-2023.pdf",
-  },
-  {
-    title: "Shareholding Pattern for FY Ended 31 03 2026 1",
-    year: "2026-27",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2026/07/Shareholding-Pattern-for-FY-ended-31-03-2026-1.pdf",
-  },
-  {
-    title: "Shareholding Pattern for HY Ended 30 September 2024 1",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Shareholding-pattern-for-HY-ended-30-September-2024-1.pdf",
   },
   {
     title: "Shareholding Pattern for HY Ended 30 September 2024",
@@ -1093,21 +923,6 @@ export const FUND_RAISING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/LIL-Valuation-Report-Signed.pdf",
   },
   {
-    title: "ELIL Prospectus (Final)",
-    year: "2022-23",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/12/ELIL-Prospectus-RA20221228-Final_compressed.pdf",
-  },
-  {
-    title: "ELIL Prospectus Ra20221228 Final Compressed",
-    year: "2022-23",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/12/ELIL Prospectus RA20221228 - Final_compressed.pdf",
-  },
-  {
-    title: "Final ELIL Draft Prospectus 1",
-    year: "2025",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Final-ELIL-Draft-Prospectus-1.pdf",
-  },
-  {
     title: "Final ELIL Draft Prospectus",
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/10/Final-ELIL-Draft-Prospectus.pdf",
@@ -1164,7 +979,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
   {
     title: "Compliance under Regulation 57(5) SEBI (LODR) — Quarter Ended September 30, 2025 (Non-Applicability)",
     year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Compliance-as-per-Regulation-575-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-ended-30th-September-2025-–-Non-Applicability.pdf",
+    url: "/investor/compliance/reg-57-5-compliance-q-sep-2025.pdf",
   },
   {
     title: "Statement of Deviation or Variation in Utilization of Funds — Half Year Ended March 31, 2026",
@@ -1262,11 +1077,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Annexure-V-Certificate-for-pricing.pdf",
   },
   {
-    title: "Announcement Regarding Submission of PCS Certificate under REG 1632 of SEBI ICDR Regulations 2018 to Be Ratify in the Ensuing AGM 1",
-    year: "2018-19",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Announcement-regarding-submission-of-PCS-Certificate-under-Reg.-1632-Of-SEBI-ICDR-Regulations-2018-to-be-ratify-in-the-ensuing-AGM-1.pdf",
-  },
-  {
     title: "Announcement Regarding Submission of PCS Certificate under REG 1632 of SEBI ICDR Regulations 2018 to Be Ratify in the Ensuing AGM",
     year: "2018-19",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Announcement-regarding-submission-of-PCS-Certificate-under-Reg.-1632-Of-SEBI-ICDR-Regulations-2018-to-be-ratify-in-the-ensuing-AGM.pdf",
@@ -1302,19 +1112,9 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Board-Meeting-Intimation-for-Approval-of-Half-yearly-FS-to-be-held-on-Friday-November-14-2025.pdf",
   },
   {
-    title: "Certificate 1",
-    year: "2025",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/certificate-1.pdf",
-  },
-  {
     title: "Certificate From the Statutory Auditors under REG 1694 1695 of SEBI ICDR Regulations 2018 1",
     year: "2018-19",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Certificate-from-the-statutory-auditors-under-Reg.-1694-1695-of-SEBI-ICDR-Regulations-2018-1.pdf",
-  },
-  {
-    title: "Certificate From the Statutory Auditors under REG 1694 1695 of SEBI ICDR Regulations 2018",
-    year: "2018-19",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Certificate-from-the-statutory-auditors-under-Reg.-1694-1695-of-SEBI-ICDR-Regulations-2018.pdf",
   },
   {
     title: "Certificate under Regulation 745 of SEBI Depositories and Participants Regulations 2018 for Quarter and Year Ended 31st March 2025",
@@ -1372,11 +1172,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Compliances-Certificate-under-Reg.-74-5-of-SEBI-DP-Regulations-2018.pdf",
   },
   {
-    title: "Declaration Pursuant to Regulation 574 of the SEBI Listing Obligations and Disclosure Requirements Regulations 2015",
-    year: "2015-16",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Declaration-pursuant-to-Regulation-574-of-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015.pdf",
-  },
-  {
     title: "Declaration Regarding Non Applicability of Submission of Disclosure Related Party Transaction under Regulation 239 of the SEBI Listing Obligations and Disclosure Requirements Regulat",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Declaration-regarding-Non-applicability-of-submission-of-Disclosure-Related-Party-Transaction-under-Regulation-239-of-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulat.pdf",
@@ -1390,31 +1185,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     title: "Declaration with Respect to Non Applicability of Annual Secretarial Compliance Report",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Declaration-with-respect-to-Non-Applicability-of-Annual-Secretarial-Compliance-Report.pdf",
-  },
-  {
-    title: "Disclosure of Voting Results and Consolidated Scrutinizers Report of the 30th Annual General Meeting AGM for FY 2024 25 Held on Thursday September 25 2025 at 1230 P.m. Through Video Conferencing VC 1",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Disclosure-of-Voting-Results-and-Consolidated-Scrutinizers-Report-of-the-30th-Annual-General-Meeting-AGM-for-F.Y.-2024-25-held-on-Thursday-September-25-2025-at-1230-p.m.-through-Video-Conferencing-VC-1.pdf",
-  },
-  {
-    title: "Disclosure of Voting Results and Consolidated Scrutinizers Report of the 30th Annual General Meeting AGM for FY 2024 25 Held on Thursday September 25 2025 at 1230 P.m. Through Video Conferencing VC 2",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Disclosure-of-Voting-Results-and-Consolidated-Scrutinizers-Report-of-the-30th-Annual-General-Meeting-AGM-for-F.Y.-2024-25-held-on-Thursday-September-25-2025-at-1230-p.m.-through-Video-Conferencing-VC-2.pdf",
-  },
-  {
-    title: "Disclosure of Voting Results and Consolidated Scrutinizers Report of the 30th Annual General Meeting AGM for FY 2024 25 Held on Thursday September 25 2025 at 1230 P.m. Through Video Conferencing VC 3",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Disclosure-of-Voting-Results-and-Consolidated-Scrutinizers-Report-of-the-30th-Annual-General-Meeting-AGM-for-F.Y.-2024-25-held-on-Thursday-September-25-2025-at-1230-p.m.-through-Video-Conferencing-VC-3.pdf",
-  },
-  {
-    title: "Disclosure of Voting Results and Consolidated Scrutinizers Report of the 30th Annual General Meeting AGM for FY 2024 25 Held on Thursday September 25 2025 at 1230 P.m. Through Video Conferencing VC 4",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Disclosure-of-Voting-Results-and-Consolidated-Scrutinizers-Report-of-the-30th-Annual-General-Meeting-AGM-for-F.Y.-2024-25-held-on-Thursday-September-25-2025-at-1230-p.m.-through-Video-Conferencing-VC-4.pdf",
-  },
-  {
-    title: "Disclosure of Voting Results and Consolidated Scrutinizers Report of the 30th Annual General Meeting AGM for FY 2024 25 Held on Thursday September 25 2025 at 1230 P.m. Through Video Conferencing VC 5",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Disclosure-of-Voting-Results-and-Consolidated-Scrutinizers-Report-of-the-30th-Annual-General-Meeting-AGM-for-F.Y.-2024-25-held-on-Thursday-September-25-2025-at-1230-p.m.-through-Video-Conferencing-VC-5.pdf",
   },
   {
     title: "Disclosure of Voting Results and Consolidated Scrutinizers Report of the 30th Annual General Meeting AGM for FY 2024 25 Held on Thursday September 25 2025 at 1230 P.m. Through Video Conferencing VC",
@@ -1445,11 +1215,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     title: "Intimation for Non Applicability of Large Corporate LC Disclosure for the Year Ended 31st March 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Intimation-for-Non-applicability-of-Large-Corporate-LC-disclosure-for-the-year-ended-31st-March-2025.pdf",
-  },
-  {
-    title: "Intimation for Receiving Listing Approval for Bonus Shares From BSE Ltd 1",
-    year: "2024",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2024/03/Intimation-for-receiving-Listing-approval-for-Bonus-Shares-from-BSE-Ltd-1.pdf",
   },
   {
     title: "Intimation for Receiving Listing Approval for Bonus Shares From BSE Ltd",
@@ -1502,11 +1267,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/07/Intimation-Under-Reg.-30-Regarding-Appointment-Of-Additional-Market-Maker.pdf",
   },
   {
-    title: "Non Applicability of Annual Secretarial Compliance Report under Regulation 24A of the SEBI Listing Obligations and Disclosure Requirements Regulations 2015 for the Year Ended 31st March 2025",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Non-applicability-of-Annual-Secretarial-Compliance-Report-under-Regulation-24A-of-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015-for-the-year-ended-31st-March-2025.pdf",
-  },
-  {
     title: "Non Applicability of Annual Secretarial Compliance Report",
     year: "2025",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/04/Non-Applicability-Of-Annual-Secretarial-Compliance-Report.pdf",
@@ -1540,11 +1300,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     title: "Policy on Disclosure of Material Eventsinformation",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/Policy-on-Disclosure-of-Material-EventsInformation.pdf",
-  },
-  {
-    title: "Prior Intimation to the Beginning of the Quarter",
-    year: "2025",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/04/Prior-intimation-to-the-beginning-of-the-quarter.pdf",
   },
   {
     title: "Reconciliation of Share Capital Audit Report Pursuant to Regulation 76 of SEBI Depositories and Participants Regulations 2018 for the Quarter Ended September 30th 2023",
@@ -1669,27 +1424,22 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
   {
     title: "Compliance as per Regulation 281 - Non Applicability (Quarter Ended April 7, 2025)",
     year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Compliance-as-per-regulation-281-of-the-SEBI-Listing-Obligation-and-Disclosure-as-per-Regulation-Requirements-Regulations-2015-for-the-quarter-ended-April-7th-2025-–-Non-applicability.pdf",
+    url: "/investor/compliance-disclosures/compliance-regulation-281-non-applicability-april-7-2025.pdf",
   },
   {
     title: "Compliance as per Regulation 574 - Non Applicability (Quarter Ended March 31, 2025)",
     year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Compliance-as-per-Regulation-574-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-quarter-ended-March-31st-2025-–-Non-applicability.pdf",
-  },
-  {
-    title: "Regulation 30 - Intimation Regarding Listing Approval Received from BSE",
-    year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Regulation-30-–-Intimation-regarding-Listing-approval-received-from-BSE.pdf",
+    url: "/investor/compliance-disclosures/compliance-regulation-574-non-applicability-march-31-2025.pdf",
   },
   {
     title: "Compliance as per Regulation 745 - Non Applicability (Quarter Ended June 30, 2025)",
     year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/07/Compliance-as-per-regulation-745-of-SEBI-Depositories-and-Participants-Regulations-2018-for-quarter-ended-30th-June-2025-–-Non-Applicablity.pdf",
+    url: "/investor/compliance-disclosures/compliance-regulation-745-non-applicability-june-30-2025.pdf",
   },
   {
     title: "Compliance as per Regulation 745 - Non Applicability (Quarter Ended September 30, 2025)",
     year: "2025-26",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Compliance-as-per-regulation-745-of-SEBI-Depositories-and-Participants-Regulations-2018-for-quarter-ended-30th-September-2025-–-Non-Applicablity.pdf",
+    url: "/investor/compliance-disclosures/compliance-regulation-745-non-applicability-september-30-2025.pdf",
   },
   {
     title: "Reconciliation of Share Capital Audit Report Pursuant to Regulation 76 of SEBI Depositories and Participants Regulations 2018 for the Quarter Ended September 2024",

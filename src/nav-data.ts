@@ -125,6 +125,9 @@ export const INVESTOR_MEGA: InvestorMegaColumn[] = [
   },
   {
     label: 'Group Companies',
-    href: '/investor/group-companies',
+    children: [
+      { label: 'Group Companies', href: '/investor/group-companies' },
+      { label: 'Subsidiary Audit Reports', href: '/investor/subsidiary-audit-reports' },
+    ],
   },
 ];
