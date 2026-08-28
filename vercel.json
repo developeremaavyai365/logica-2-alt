@@ -1465,6 +1465,30 @@
       "destination": "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2021-22.pdf"
     },
     {
+      "source": "/wp-content/uploads/2023/07/ANNUAL-REPORT-1_merged_compressed.pdf",
+      "destination": "/investor/annual-reports/annual-report-2022-23.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/07/ANNUAL-REPORT-Eastern-Logica.pdf",
+      "destination": "/investor/annual-reports/annual-report-2022-23.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/06/FR.pdf",
+      "destination": "/investor/financial-results/financial-results-31-03-2023.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/07/OUTCOME-1.pdf",
+      "destination": "/investor/board-meetings/outcome-of-board-meeting-18-07-2023.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2024/02/IP-APPROVAL.pdf",
+      "destination": "/investor/fund-raising/in-principle-approval-bonus-issue-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/01/b90bb8e5-b66d-4818-bcf1-2e07f036d8dd.pdf",
+      "destination": "/investor/board-meetings/prior-intimation-board-meeting-14-01-2025.pdf"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

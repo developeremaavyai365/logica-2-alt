@@ -31,7 +31,6 @@ export const ANNUAL_REPORTS: AnnualReport[] = [
     title: "Annual Report 2022-23",
     year: "2022-23",
     url: "/investor/annual-reports/annual-report-2022-23.pdf",
-    available: false,
   },
   {
     title: "Annual Report 2021-22",
@@ -107,6 +106,16 @@ export interface FiscalYearFolder {
  *  first — replaces the old dead-link "period folder" list now that we
  *  have the actual filed documents. */
 export const BOARD_MEETING_NOTICES: AnnualReport[] = [
+  {
+    title: "Prior Intimation of Board Meeting — January 14, 2025 (Regulation 29(1)(d))",
+    year: "2024-25",
+    url: "/investor/board-meetings/prior-intimation-board-meeting-14-01-2025.pdf",
+  },
+  {
+    title: "Outcome of Board Meeting — July 18, 2023",
+    year: "2023-24",
+    url: "/investor/board-meetings/outcome-of-board-meeting-18-07-2023.pdf",
+  },
   {
     title: "Outcome of the Board Meeting held on Friday, March 13, 2026",
     year: "2025-26",
@@ -453,7 +462,6 @@ export const FINANCIAL_RESULTS: AnnualReport[] = [
     title: "Financial Results for the Half Year and Year Ended 31-03-2023",
     year: "2022-23",
     url: "/investor/financial-results/financial-results-31-03-2023.pdf",
-    available: false,
   },
   {
     title: "Approval of Half Yearly Result as on 30th September 2023",
@@ -877,6 +885,11 @@ export const FAMILIARIZATION_PROGRAM_DOC: AnnualReport = {
  *  dead-link "period folder" list now that we have the actual filed
  *  documents. */
 export const FUND_RAISING_NOTICES: AnnualReport[] = [
+  {
+    title: "In-Principle Approval from BSE for Issue of Bonus Shares — Regulation 28(1)",
+    year: "2023-24",
+    url: "/investor/fund-raising/in-principle-approval-bonus-issue-2024.pdf",
+  },
   {
     title: "Statement of Deviation or Variation in Utilization of Funds — Half Year Ended September 30, 2025",
     year: "2025-26",
