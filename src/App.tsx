@@ -15,6 +15,8 @@ import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import InvestorHub from './pages/investor/InvestorHub';
 import InvestorSection from './pages/investor/InvestorSection';
+import AuthorizedPerson from './pages/investor/AuthorizedPerson';
+import GrievanceRedressal from './pages/investor/GrievanceRedressal';
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import ForgotPassword from './pages/ForgotPassword';
@@ -46,6 +48,8 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/investor" element={<InvestorHub />} />
+        <Route path="/authorized-person" element={<AuthorizedPerson />} />
+        <Route path="/grievance-redressal" element={<GrievanceRedressal />} />
         <Route path="/investor/:slug" element={<InvestorSection />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

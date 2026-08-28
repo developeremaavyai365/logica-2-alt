@@ -121,8 +121,8 @@ export const INVESTOR_MEGA: InvestorMegaColumn[] = [
     label: 'Stock Exchange',
     children: [
       { label: 'Corporate Announcement', href: '/investor/corporate-announcement' },
-      { label: 'Authorized Person', href: '/investor' },
-      { label: 'Grievance Redressal', href: '/investor' },
+      { label: 'Authorized Person', href: '/authorized-person' },
+      { label: 'Grievance Redressal', href: '/grievance-redressal' },
     ],
   },
   {
