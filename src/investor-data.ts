@@ -5,6 +5,10 @@ export interface AnnualReport {
   title: string;
   year: string;
   url: string;
+  /** false for the handful of documents confirmed absent from the source
+   *  site's full backup/database — rendered as "Document unavailable"
+   *  instead of a dead link. Omitted (defaults to available) everywhere else. */
+  available?: boolean;
 }
 
 export const ANNUAL_REPORTS: AnnualReport[] = [
@@ -27,11 +31,13 @@ export const ANNUAL_REPORTS: AnnualReport[] = [
     title: "Annual Report 2022-23",
     year: "2022-23",
     url: "/investor/annual-reports/annual-report-2022-23.pdf",
+    available: false,
   },
   {
     title: "Annual Report 2021-22",
     year: "2021-22",
     url: "/investor/annual-reports/annual-report-2021-22.pdf",
+    available: false,
   },
   {
     title: "Annual Report 2020-21",
@@ -515,16 +521,19 @@ export const FINANCIAL_RESULTS: AnnualReport[] = [
     title: "Financial Results for Half Year and Year Ended 31-03-2024",
     year: "2023-24",
     url: "/investor/financial-results/financial-results-31-03-2024.pdf",
+    available: false,
   },
   {
     title: "Unaudited Financial Results for the Half Year Ended 30-09-2023",
     year: "2023-24",
     url: "/investor/financial-results/unaudited-financial-results-30-09-2023.pdf",
+    available: false,
   },
   {
     title: "Financial Results for the Half Year and Year Ended 31-03-2023",
     year: "2022-23",
     url: "/investor/financial-results/financial-results-31-03-2023.pdf",
+    available: false,
   },
   {
     title: "Approval of Half Yearly Result as on 30th September 2023",

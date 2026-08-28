@@ -41,24 +41,39 @@ function groupByYear(docs: AnnualReport[]) {
 function DocRows({ docs }: { docs: AnnualReport[] }) {
   return (
     <div className="divide-y divide-[#000000]/10 rounded-2xl border border-[#000000]/10 bg-white">
-      {docs.map((doc) => (
-        <a
-          key={doc.url}
-          href={doc.url}
-          target="_blank"
-          rel="noreferrer"
-          className="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[#ECEDEC]/60"
-        >
-          <span className="flex items-center gap-3 text-sm font-medium text-[#000000]">
-            <FileText className="h-4 w-4 shrink-0 text-[#6b6b6b]" />
-            {doc.title}
-          </span>
-          <span className="flex shrink-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b] transition-colors group-hover:text-black">
-            PDF
-            <Download className="h-3.5 w-3.5" />
-          </span>
-        </a>
-      ))}
+      {docs.map((doc) =>
+        doc.available === false ? (
+          <div
+            key={doc.url}
+            className="flex cursor-not-allowed items-center justify-between gap-4 px-5 py-4 opacity-60"
+          >
+            <span className="flex items-center gap-3 text-sm font-medium text-[#000000]">
+              <FileText className="h-4 w-4 shrink-0 text-[#6b6b6b]" />
+              {doc.title}
+            </span>
+            <span className="flex shrink-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+              Document unavailable
+            </span>
+          </div>
+        ) : (
+          <a
+            key={doc.url}
+            href={doc.url}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[#ECEDEC]/60"
+          >
+            <span className="flex items-center gap-3 text-sm font-medium text-[#000000]">
+              <FileText className="h-4 w-4 shrink-0 text-[#6b6b6b]" />
+              {doc.title}
+            </span>
+            <span className="flex shrink-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b] transition-colors group-hover:text-black">
+              PDF
+              <Download className="h-3.5 w-3.5" />
+            </span>
+          </a>
+        ),
+      )}
     </div>
   );
 }
