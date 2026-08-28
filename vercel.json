@@ -1429,6 +1429,42 @@
       "destination": "/investor/policies/insider-trading-policy-revised.pdf"
     },
     {
+      "source": "/wp-content/uploads/2024/10/9.-Recon-of-Sh.-Cap.-Audit-Report-under-Reg.76-for-Sept.-2024.pdf",
+      "destination": "/investor/compliance-disclosures/reconciliation-of-share-capital-audit-report-september-2024.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2025/06/Appointment-of-Internal-Auditor-for-FY-2025-26-Secretarial-Auditor-for-FY-2025-26-to-2029-30.pdf",
+      "destination": "/investor/board-meetings/appointment-of-internal-auditor-fy-2025-26.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2026/05/Revised-Related-Party-Policy-signed.pdf",
+      "destination": "/investor/policies/related-party-policy-revised.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2023/01/Identification-of-Material-Creditors-and-Material-litigation.pdf",
+      "destination": "/investor/policies/identification-of-material-creditors-and-material-litigation.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/10/AUDIT-REPORT-ELIL_MERGED-FY-2021-22.pdf",
+      "destination": "/investor/financial-results/audit-report-fy-2021-22.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/08/REPORT-OF-THE-DIRECTORS-FOR-THE-FINANCIAL-YEAR-2019-20.pdf",
+      "destination": "/investor/financial-results/report-of-the-directors-fy-2019-20.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/08/REPORT-OF-THE-DIRECTORS-FOR-THE-FINANCIAL-YEAR-2020-21.pdf",
+      "destination": "/investor/financial-results/report-of-the-directors-fy-2020-21.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/10/AUDIT-REPORT-SONARTARI-TRADELINK-PVT-LTD-FY-2021-22-1.pdf",
+      "destination": "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2021-22.pdf"
+    },
+    {
+      "source": "/wp-content/uploads/2022/10/AUDIT-REPORT-KALPATURU-TRADEVIN-PRIVATE-LTD.pdf",
+      "destination": "/investor/subsidiary-audit-reports/ktpl-audit-report-fy-2021-22.pdf"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

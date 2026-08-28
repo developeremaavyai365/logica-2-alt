@@ -326,6 +326,11 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Revised-Outcome-Of-Board-Meeting-Held-On-14.01.2025.pdf",
   },
+  {
+    title: "Appointment of Internal Auditor for FY 2025-26 and Secretarial Auditor for FY 2025-26 to 2029-30",
+    year: "2025-26",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Appointment-of-Internal-Auditor-for-FY-2025-26-Secretarial-Auditor-for-FY-2025-26-to-2029-30.pdf",
+  },
 ];
 
 /** Real general meeting notices/outcomes, newest first — replaces the old
@@ -580,6 +585,21 @@ export const FINANCIAL_RESULTS: AnnualReport[] = [
     title: "Submission of Management Discussion Analysis Report on Unaudited Financial Results for Half Year Ended September 30 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Submission-Of-Management-Discussion-Analysis-Report-On-Unaudited-Financial-Results-For-Half-Year-Ended-September-30-2025.pdf",
+  },
+  {
+    title: "Audit Report FY 2021-22",
+    year: "2021-22",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/10/AUDIT-REPORT-ELIL_MERGED-FY-2021-22.pdf",
+  },
+  {
+    title: "Report of the Directors FY 2019-20",
+    year: "2019-20",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/08/REPORT-OF-THE-DIRECTORS-FOR-THE-FINANCIAL-YEAR-2019-20.pdf",
+  },
+  {
+    title: "Report of the Directors FY 2020-21",
+    year: "2020-21",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/08/REPORT-OF-THE-DIRECTORS-FOR-THE-FINANCIAL-YEAR-2020-21.pdf",
   },
 ];
 
@@ -912,6 +932,16 @@ export const POLICIES: AnnualReport[] = [
     title: "Policy on Prevention of Sexual Harrasment at Workplace 1",
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Prevention-of-Sexual-Harrasment-at-Workplace-1.pdf",
+  },
+  {
+    title: "Related Party Policy (Revised)",
+    year: "2025-26",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/Revised-Related-Party-Policy-signed.pdf",
+  },
+  {
+    title: "Identification of Material Creditors and Material Litigation",
+    year: "2022-23",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2023/01/Identification-of-Material-Creditors-and-Material-litigation.pdf",
   },
 ];
 
@@ -1652,6 +1682,11 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/Compliance-as-per-regulation-745-of-SEBI-Depositories-and-Participants-Regulations-2018-for-quarter-ended-30th-September-2025-–-Non-Applicablity.pdf",
   },
+  {
+    title: "Reconciliation of Share Capital Audit Report Pursuant to Regulation 76 of SEBI Depositories and Participants Regulations 2018 for the Quarter Ended September 2024",
+    year: "2024-25",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/9.-Recon-of-Sh.-Cap.-Audit-Report-under-Reg.76-for-Sept.-2024.pdf",
+  },
 ];
 
 /** Real group (subsidiary) companies, mirrored from logicainfoway.com/group-companies —
@@ -1695,4 +1730,14 @@ export const SUBSIDIARY_AUDIT_REPORTS: AnnualReport[] = [
   { title: "Sonartari Tradelink Private Ltd. — Audit Report FY 2019-20", year: "2019-20", url: "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2019-20.pdf" },
   { title: "Sonartari Tradelink Private Ltd. — Audit Report FY 2020-21", year: "2020-21", url: "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2020-21.pdf" },
   { title: "Sonartari Tradelink Private Ltd. — Audit Report FY 2022-23", year: "2022-23", url: "/investor/subsidiary-audit-reports/stpl-audit-report-fy-2022-23.pdf" },
+  {
+    title: "Sonartari Tradelink Private Ltd. — Audit Report FY 2021-22",
+    year: "2021-22",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/10/AUDIT-REPORT-SONARTARI-TRADELINK-PVT-LTD-FY-2021-22-1.pdf",
+  },
+  {
+    title: "Kalpaturu Tradevin Private Ltd. — Audit Report FY 2021-22",
+    year: "2021-22",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/10/AUDIT-REPORT-KALPATURU-TRADEVIN-PRIVATE-LTD.pdf",
+  },
 ];
