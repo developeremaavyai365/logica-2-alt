@@ -447,16 +447,13 @@ export const FINANCIAL_RESULTS: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Financial-Result-for-the-half-year-ended-30th-September-2024.pdf",
   },
   {
+    // The audited results for the year ended 31-03-2024 are enclosed in the
+    // 30-05-2024 board outcome, which is the document BSE holds for this
+    // filing (verified byte-identical to the BSE attachment). Same
+    // cross-listing as the 14-11-2024 outcome below.
     title: "Financial Results for Half Year and Year Ended 31-03-2024",
     year: "2023-24",
-    url: "/investor/financial-results/financial-results-31-03-2024.pdf",
-    available: false,
-  },
-  {
-    title: "Unaudited Financial Results for the Half Year Ended 30-09-2023",
-    year: "2023-24",
-    url: "/investor/financial-results/unaudited-financial-results-30-09-2023.pdf",
-    available: false,
+    url: "/investor/board-meetings/31-03-2024-outcome-of-board-meeting-dated-30-05-2024.pdf",
   },
   {
     title: "Financial Results for the Half Year and Year Ended 31-03-2023",
