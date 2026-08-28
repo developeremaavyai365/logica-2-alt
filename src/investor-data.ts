@@ -33,10 +33,14 @@ export const ANNUAL_REPORTS: AnnualReport[] = [
     url: "/investor/annual-reports/annual-report-2022-23.pdf",
   },
   {
-    title: "Annual Report 2021-22",
+    // No annual report exists for FY2021-22: the company listed in December
+    // 2022, so that year predates listing and no Reg 34(1) filing was made
+    // (BSE's earliest is FY2022-23). The restated audited financials for the
+    // year ended 31 March 2022 are in the Prospectus, so this points there
+    // rather than showing an empty slot.
+    title: "Annual Report 2021-22 — See Prospectus for Restated FY 2021-22 Financials",
     year: "2021-22",
-    url: "/investor/annual-reports/annual-report-2021-22.pdf",
-    available: false,
+    url: "/investor/fund-raising/elil-prospectus-final.pdf",
   },
   {
     title: "Annual Report 2020-21",
