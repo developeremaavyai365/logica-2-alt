@@ -173,12 +173,12 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
   },
   {
     title: "Board Meeting Notice — May 12, 2026",
-    year: "2025-26",
+    year: "2026-27",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/Board-Meeting-Notice-12-05-2026.pdf",
   },
   {
     title: "Board Meeting Notice — May 12, 2026 (Agenda)",
-    year: "2025-26",
+    year: "2026-27",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/07/BM-Notice-12.05.2026.pdf",
   },
   {
@@ -213,27 +213,27 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
   },
   {
     title: "Board Meeting Notice — 1st Meeting (FY 2023-24)",
-    year: "2023",
+    year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/BM-1.pdf",
   },
   {
     title: "Board Meeting Notice — 2nd Meeting (FY 2023-24)",
-    year: "2023",
+    year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/06/BM-2.pdf",
   },
   {
     title: "Board Meeting Notice — 3rd Meeting (FY 2023-24)",
-    year: "2023",
+    year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/BM-3.pdf",
   },
   {
     title: "Board Meeting Notice — 5th Meeting (FY 2023-24), December 13, 2023",
-    year: "2023",
+    year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/12/BM-5.pdf",
   },
   {
     title: "Board Meeting Notice — 6th Meeting (FY 2023-24), January 17, 2024",
-    year: "2024",
+    year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/01/BM-6.pdf",
   },
   {
@@ -258,7 +258,7 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
   },
   {
     title: "Board Meeting Notice — 4th Meeting (FY 2023-24), November 6, 2023",
-    year: "2023",
+    year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/11/Board-Meeting-Notice-4.pdf",
   },
   {
@@ -268,7 +268,7 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
   },
   {
     title: "Board Meeting Notice — 7th Meeting (FY 2023-24), February 20, 2024",
-    year: "2024",
+    year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/Notice-for-Board-Meeting-7.pdf",
   },
   {
@@ -577,6 +577,16 @@ export const FINANCIAL_RESULTS: AnnualReport[] = [
 /** Real secretarial audit reports, mirrored from
  *  logicainfoway.com/secretarial-compliance. */
 export const SECRETARIAL_COMPLIANCE: AnnualReport[] = [
+  {
+    title: "Non-Applicability of Annual Secretarial Compliance Report (Regulation 24A) — Year Ended March 31, 2025",
+    year: "2024-25",
+    url: "/investor/compliance-disclosures/non-applicability-of-annual-secretarial-compliance-report-under-regulation-24a-of-the-sebi-listing-obligations-and-disclosure-requirements-regulations-2015-for-the-year-ended-31st-march-2025.pdf",
+  },
+  {
+    title: "Non-Applicability of Annual Secretarial Compliance Report (Regulation 24A) — Year Ended March 31, 2026",
+    year: "2025-26",
+    url: "/investor/compliance/reg-24a-secretarial-compliance-non-applicability-fy26.pdf",
+  },
   {
     title: "Secretarial Audit Report 2023-24",
     year: "2023-24",
