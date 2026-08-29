@@ -176,27 +176,27 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/31-03-2024-Outcome-of-Board-Meeting-Dated-30-05-2024.pdf",
   },
   {
-    title: "BM 1",
+    title: "Board Meeting Notice — 1st Meeting (FY 2023-24)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/BM-1.pdf",
   },
   {
-    title: "BM 2",
+    title: "Board Meeting Notice — 2nd Meeting (FY 2023-24)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/06/BM-2.pdf",
   },
   {
-    title: "BM 3",
+    title: "Board Meeting Notice — 3rd Meeting (FY 2023-24)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/BM-3.pdf",
   },
   {
-    title: "BM 5",
+    title: "Board Meeting Notice — 5th Meeting (FY 2023-24), December 13, 2023",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/12/BM-5.pdf",
   },
   {
-    title: "BM 6",
+    title: "Board Meeting Notice — 6th Meeting (FY 2023-24), January 17, 2024",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/01/BM-6.pdf",
   },
@@ -221,7 +221,7 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Board-Meeting-Notice-30.04.2025.pdf",
   },
   {
-    title: "Board Meeting Notice 4",
+    title: "Board Meeting Notice — 4th Meeting (FY 2023-24), November 6, 2023",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/11/Board-Meeting-Notice-4.pdf",
   },
@@ -231,7 +231,7 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Notice-and-Agenda-Board-Meeting-14.11.2024.pdf",
   },
   {
-    title: "Notice for Board Meeting 7",
+    title: "Board Meeting Notice — 7th Meeting (FY 2023-24), February 20, 2024",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/Notice-for-Board-Meeting-7.pdf",
   },
@@ -407,7 +407,7 @@ export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/03/AGM-Notice-2021-22-General-Notice.pdf",
   },
   {
-    title: "EGM Notice",
+    title: "Notice of Extraordinary General Meeting (FY 2023-24)",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/01/EGM-NOTICE.pdf",
   },
@@ -1036,17 +1036,17 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/1.-Intimation-of-Closure-of-trading-window-for-HY-ended-30-September-2024.pdf",
   },
   {
-    title: "2. Compliance under REG 574 Non Applicability",
+    title: "2. Compliance under REG 57(4) Non Applicability",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/2.-Compliance-under-Reg.-574-Non-Applicability.pdf",
   },
   {
-    title: "3. REG 575 Non Applicability",
+    title: "3. REG 57(5) Non Applicability",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/3.-Reg-575-Non-Applicability.pdf",
   },
   {
-    title: "4. Disclosure under REG 745 of the DP",
+    title: "4. Disclosure under REG 74(5) of the DP",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/4.-Disclosure-under-Reg-745-of-the-DP.pdf",
   },
@@ -1056,7 +1056,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/5.-SDD-Compliance-Certificate-for-quarter-ended-30-September-2024.pdf",
   },
   {
-    title: "6. REG 239 Non Applicability of Rpt Disclosure",
+    title: "6. REG 23(9) Non Applicability of Rpt Disclosure",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/6.-Reg-239-Non-Applicability-of-RPT-Disclosure.pdf",
   },
@@ -1071,7 +1071,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/8.-Reg-27-Non-applicability-of-CG.pdf",
   },
   {
-    title: "Allotment REG 30",
+    title: "Intimation of Allotment under Regulation 30 — February 27, 2024",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/02/ALLOTMENT-REG-30.pdf",
   },
@@ -1086,7 +1086,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Annexure-V-Certificate-for-pricing.pdf",
   },
   {
-    title: "Announcement Regarding Submission of PCS Certificate under REG 1632 of SEBI ICDR Regulations 2018 to Be Ratify in the Ensuing AGM",
+    title: "Announcement Regarding Submission of PCS Certificate under REG 163(2) of SEBI ICDR Regulations 2018 to Be Ratify in the Ensuing AGM",
     year: "2018-19",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Announcement-regarding-submission-of-PCS-Certificate-under-Reg.-1632-Of-SEBI-ICDR-Regulations-2018-to-be-ratify-in-the-ensuing-AGM.pdf",
   },
@@ -1121,17 +1121,17 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Board-Meeting-Intimation-for-Approval-of-Half-yearly-FS-to-be-held-on-Friday-November-14-2025.pdf",
   },
   {
-    title: "Certificate From the Statutory Auditors under REG 1694 1695 of SEBI ICDR Regulations 2018 1",
+    title: "Certificate From the Statutory Auditors under Regulation 169(4) & 169(5) of SEBI ICDR Regulations 2018",
     year: "2018-19",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Certificate-from-the-statutory-auditors-under-Reg.-1694-1695-of-SEBI-ICDR-Regulations-2018-1.pdf",
   },
   {
-    title: "Certificate under Regulation 745 of SEBI Depositories and Participants Regulations 2018 for Quarter and Year Ended 31st March 2025",
+    title: "Certificate under Regulation 74(5) of SEBI Depositories and Participants Regulations 2018 for Quarter and Year Ended 31st March 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Certificate-under-Regulation-745-of-SEBI-Depositories-and-Participants-Regulations-2018-for-quarter-and-year-ended-31st-March-2025.pdf",
   },
   {
-    title: "Certificate",
+    title: "Compliance Certificate (January 2025)",
     year: "2025",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/certificate.pdf",
   },
@@ -1151,27 +1151,27 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/10/compliance-as-per-regulation-57-4.pdf",
   },
   {
-    title: "Compliance as per Regulation 574 of SEBI Listing Obligation and Disclosure Requirements Regulations 2015 for the Half Year Ended September 30 2023",
+    title: "Compliance as per Regulation 57(4) of SEBI Listing Obligation and Disclosure Requirements Regulations 2015 for the Half Year Ended September 30 2023",
     year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/09/Compliance-as-per-Regulation-574-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-Half-Year-ended-September-30-2023.pdf",
   },
   {
-    title: "Compliance as per Regulation 574 of SEBI Listing Obligation and",
+    title: "Compliance as per Regulation 57(4) of SEBI Listing Obligation and",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Compliance-as-per-Regulation-574-of-SEBI-Listing-Obligation-and.pdf",
   },
   {
-    title: "Compliance as per Regulation 575 of SEBI Listing Obligation and Disclosure Requirements Regulations 2015 for the Quarter and Year Ended 31st March 2025",
+    title: "Compliance as per Regulation 57(5) of SEBI Listing Obligation and Disclosure Requirements Regulations 2015 for the Quarter and Year Ended 31st March 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Compliance-as-per-Regulation-575-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-and-year-ended-31st-March-2025.pdf",
   },
   {
-    title: "Compliance as per Regulation 575 of SEBI Listing Obligation and Disclosure Requirements Regulations 2015 for the Quarter Ended March 31 2024",
+    title: "Compliance as per Regulation 57(5) of SEBI Listing Obligation and Disclosure Requirements Regulations 2015 for the Quarter Ended March 31 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Compliance-as-per-Regulation-575-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-ended-March-31-2024.pdf",
   },
   {
-    title: "Compliance as per Regulation 575 of SEBI Listing Obligation and Disclosure Requirements Regulations 2015 for the Quarter Ended September 30 2023",
+    title: "Compliance as per Regulation 57(5) of SEBI Listing Obligation and Disclosure Requirements Regulations 2015 for the Quarter Ended September 30 2023",
     year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/10/Compliance-as-per-Regulation-575-of-SEBI-Listing-Obligation-and-Disclosure-Requirements-Regulations-2015-for-the-quarter-ended-September-30-2023.pdf",
   },
@@ -1181,12 +1181,12 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Compliances-Certificate-under-Reg.-74-5-of-SEBI-DP-Regulations-2018.pdf",
   },
   {
-    title: "Declaration Regarding Non Applicability of Submission of Disclosure Related Party Transaction under Regulation 239 of the SEBI Listing Obligations and Disclosure Requirements Regulat",
+    title: "Declaration Regarding Non Applicability of Submission of Disclosure Related Party Transaction under Regulation 23(9) of the SEBI Listing Obligations and Disclosure Requirements Regulat",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Declaration-regarding-Non-applicability-of-submission-of-Disclosure-Related-Party-Transaction-under-Regulation-239-of-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulat.pdf",
   },
   {
-    title: "Declaration Regarding Non Applicability of Submission of Disclosure Related Party Transaction under Regulation 239 of the SEBI Listing Obligations and Disclosure Requirements Regulations",
+    title: "Declaration Regarding Non Applicability of Submission of Disclosure Related Party Transaction under Regulation 23(9) of the SEBI Listing Obligations and Disclosure Requirements Regulations",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/10/Declaration-regarding-Non-applicability-of-submission-of-Disclosure-Related-Party-Transaction-under-Regulation-239-of-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulations.pdf",
   },
@@ -1206,7 +1206,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/02/Disclosure-Under-Regulation-30-Read-With-Para-A-Of-Part-A-Of-Schedule-III-Of-SEBI-LODR-Regulations-2015-Regarding-BSE-Warning-Letter-No.-DCSNCTSWL1372024-2025-Issued-On-February-01-2025.pdf",
   },
   {
-    title: "Disclosure under Regulation 314 of SEBI Substantial Acquisition of Shares and Takeovers Regulation 2011",
+    title: "Disclosure under Regulation 31(4) of SEBI Substantial Acquisition of Shares and Takeovers Regulation 2011",
     year: "2011-12",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Disclosure-under-Regulation-314-of-SEBI-Substantial-Acquisition-of-Shares-and-Takeovers-Regulation-2011.pdf",
   },
@@ -1266,7 +1266,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/12/Intimation-Transmission-Completion-Lt-YK-Nathany-to-Swati-Choukhany.pdf",
   },
   {
-    title: "Intimation under REG 29",
+    title: "Intimation under Regulation 29 — Consideration of Audited Standalone Financial Results",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/INTIMATION-UNDER-REG-29.pdf",
   },
@@ -1281,12 +1281,12 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/04/Non-Applicability-Of-Annual-Secretarial-Compliance-Report.pdf",
   },
   {
-    title: "Non Applicability of Corporate Governance Report as per Regulation 272 of SEBI LODR Regulation 2015 1",
+    title: "Non Applicability of Corporate Governance Report as per Regulation 27(2) of SEBI LODR Regulation 2015 1",
     year: "2015-16",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Non-Applicability-of-Corporate-Governance-Report-as-per-Regulation-272-of-SEBI-LODR-Regulation-2015-1.pdf",
   },
   {
-    title: "Non Applicability of Corporate Governance Report as per Regulation 272 of SEBI LODR Regulation 2015",
+    title: "Non Applicability of Corporate Governance Report as per Regulation 27(2) of SEBI LODR Regulation 2015",
     year: "2015-16",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/10/Non-Applicability-of-Corporate-Governance-Report-as-per-Regulation-272-of-SEBI-LODR-Regulation-2015.pdf",
   },
@@ -1316,12 +1316,12 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/10/Reconciliation-of-Share-Capital-Audit-Report-pursuant-to-Regulation-76-of-SEBI-Depositories-and-Participants-Regulations-2018-for-the-quarter-ended-September-30th-2023.pdf",
   },
   {
-    title: "REG 133",
+    title: "Disclosure under Regulation 13(3)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/04/REG-133.pdf",
   },
   {
-    title: "REG 23",
+    title: "Declaration of Non-Applicability of Related Party Transaction Disclosure — Regulation 23(9)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/REG-23.pdf",
   },
@@ -1341,17 +1341,17 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/REG-30-NEW.pdf",
   },
   {
-    title: "REG 30",
+    title: "Disclosure under Regulation 30 — Outcome of Board Approval for Change of Name",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/12/reg-30.pdf",
   },
   {
-    title: "REG 311 312",
+    title: "Disclosure under Regulation 31(1) & 31(2) — Substantial Acquisition of Shares and Takeovers",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/04/REG-311-312.pdf",
   },
   {
-    title: "REG 409 4010",
+    title: "Sub-division, Consolidation, Transmission and Transposition of Securities — Regulation 40(9) & 40(10)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/Reg-409-4010.pdf",
   },
@@ -1361,12 +1361,12 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/REG-44-Voting-Results-Scrutinizers-Report-of-29TH-Annual-General-Meeting.pdf",
   },
   {
-    title: "REG 574",
+    title: "Compliance under Regulation 57(4)",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/01/REG-574.pdf",
   },
   {
-    title: "REG 575",
+    title: "Compliance under Regulation 57(5)",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/01/REG-575.pdf",
   },
@@ -1376,17 +1376,17 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/REG-76.pdf",
   },
   {
-    title: "Regulation 272",
+    title: "Non-Applicability of Corporate Governance Report — Regulation 27(2)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/04/Regulation-272.pdf",
   },
   {
-    title: "Regulation 314",
+    title: "Disclosure under Regulation 31(4) — Substantial Acquisition of Shares and Takeovers",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/04/Regulation-314.pdf",
   },
   {
-    title: "Regulation 575",
+    title: "Compliance under Regulation 57(5) (FY 2022-23)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/04/Regulation-575.pdf",
   },
@@ -1416,12 +1416,12 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/04/Shareholding-Pattern-as-per-Regulation-31.pdf",
   },
   {
-    title: "Statement of Investor Complaints as per Regulation 133 of the Securities and Exchange Board of India Listing Obligations and Disclosure Requirements Regulations 2015 for the Quarter Ended",
+    title: "Statement of Investor Complaints as per Regulation 13(3) of the Securities and Exchange Board of India Listing Obligations and Disclosure Requirements Regulations 2015 for the Quarter Ended",
     year: "2015-16",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/10/Statement-of-Investor-Complaints-as-per-Regulation-133-of-the-Securities-and-Exchange-Board-of-India-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015-for-the-Quarter-ended.pdf",
   },
   {
-    title: "Submission of Certificate From the Statutory Auditors Regarding Consideration Received for Issuance of Shares on Preferential Basis REG 1694 1695 of SEBI Issue of Capital and Discl",
+    title: "Submission of Certificate From the Statutory Auditors Regarding Consideration Received for Issuance of Shares on Preferential Basis REG 169(4) 1695 of SEBI Issue of Capital and Discl",
     year: "2025",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Submission-Of-Certificate-From-The-Statutory-Auditors-Regarding-Consideration-Received-For-Issuance-Of-Shares-On-Preferential-Basis-Reg.-1694-1695-Of-SEBI-Issue-Of-Capital-And-Discl.pdf",
   },
@@ -1431,17 +1431,17 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "/investor/compliance-disclosures/compliance-regulation-281-non-applicability-april-7-2025.pdf",
   },
   {
-    title: "Compliance as per Regulation 574 - Non Applicability (Quarter Ended March 31, 2025)",
+    title: "Compliance as per Regulation 57(4) - Non Applicability (Quarter Ended March 31, 2025)",
     year: "2024-25",
     url: "/investor/compliance-disclosures/compliance-regulation-574-non-applicability-march-31-2025.pdf",
   },
   {
-    title: "Compliance as per Regulation 745 - Non Applicability (Quarter Ended June 30, 2025)",
+    title: "Compliance as per Regulation 74(5) - Non Applicability (Quarter Ended June 30, 2025)",
     year: "2025-26",
     url: "/investor/compliance-disclosures/compliance-regulation-745-non-applicability-june-30-2025.pdf",
   },
   {
-    title: "Compliance as per Regulation 745 - Non Applicability (Quarter Ended September 30, 2025)",
+    title: "Compliance as per Regulation 74(5) - Non Applicability (Quarter Ended September 30, 2025)",
     year: "2025-26",
     url: "/investor/compliance-disclosures/compliance-regulation-745-non-applicability-september-30-2025.pdf",
   },

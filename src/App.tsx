@@ -1,3 +1,4 @@
+import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { LayoutGroup } from 'framer-motion';
 import Home from './pages/Home';
@@ -13,8 +14,11 @@ import Careers from './pages/Careers';
 import Media from './pages/Media';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
-import InvestorHub from './pages/investor/InvestorHub';
-import InvestorSection from './pages/investor/InvestorSection';
+// The investor pages pull in investor-data.ts (~70KB of document metadata for
+// ~300 filings). Loading them lazily keeps that out of the main bundle, so a
+// visitor to the homepage or shop no longer downloads the whole IR dataset.
+const InvestorHub = lazy(() => import('./pages/investor/InvestorHub'));
+const InvestorSection = lazy(() => import('./pages/investor/InvestorSection'));
 import AuthorizedPerson from './pages/investor/AuthorizedPerson';
 import GrievanceRedressal from './pages/investor/GrievanceRedressal';
 import InvestorEmptyPage from './pages/investor/InvestorEmptyPage';
@@ -48,7 +52,14 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/investor" element={<InvestorHub />} />
+        <Route
+          path="/investor"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#ECEDEC]" />}>
+              <InvestorHub />
+            </Suspense>
+          }
+        />
         <Route path="/authorized-person" element={<AuthorizedPerson />} />
         <Route path="/grievance-redressal" element={<GrievanceRedressal />} />
         <Route
@@ -59,7 +70,14 @@ function App() {
           path="/basis-of-allotment"
           element={<InvestorEmptyPage title="Basis Of Allotment" message="No basis of allotment records have been published yet." />}
         />
-        <Route path="/investor/:slug" element={<InvestorSection />} />
+        <Route
+          path="/investor/:slug"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#ECEDEC]" />}>
+              <InvestorSection />
+            </Suspense>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <FeedbackWidget />

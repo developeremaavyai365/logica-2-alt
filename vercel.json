@@ -89,6 +89,16 @@
       "source": "/basis-of-allotment/",
       "destination": "/basis-of-allotment",
       "permanent": true
+    },
+    {
+      "source": "/investor/notice-of-board-meeting",
+      "destination": "/investor/board-meeting",
+      "permanent": true
+    },
+    {
+      "source": "/investor/notice-of-general-meeting",
+      "destination": "/investor/general-meeting",
+      "permanent": true
     }
   ],
   "rewrites": [

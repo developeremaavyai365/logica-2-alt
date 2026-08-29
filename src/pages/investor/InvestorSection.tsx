@@ -22,6 +22,46 @@ function financialYearLabel(year: number): string {
   return `Financial Year ${String(year % 100).padStart(2, '0')}`;
 }
 
+const MONTHS: Record<string, number> = {
+  january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
+  july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
+};
+
+/** Best-effort date embedded in a document title, as a sortable number
+ *  (YYYYMMDD). Most of these filings name their date — "March 13, 2026",
+ *  "30-09-2023", "14.11.2024" — and the `year` field alone can't order
+ *  documents inside one financial year, which is where the bulk of them
+ *  sit. Returns null when no date is present so callers fall back to year. */
+function titleDate(title: string): number | null {
+  const named = title.match(
+    /\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{1,2})\b[,\s]+(\d{4})/i,
+  );
+  if (named) {
+    const mm = MONTHS[named[1].toLowerCase()];
+    return Number(named[3]) * 10000 + mm * 100 + Number(named[2]);
+  }
+  // dd-mm-yyyy / dd.mm.yyyy / dd mm yyyy (Indian filing convention)
+  const numeric = title.match(/\b(\d{1,2})[-./\s](\d{1,2})[-./\s](\d{4})\b/);
+  if (numeric) {
+    const d = Number(numeric[1]);
+    const mm = Number(numeric[2]);
+    if (d >= 1 && d <= 31 && mm >= 1 && mm <= 12) {
+      return Number(numeric[3]) * 10000 + mm * 100 + d;
+    }
+  }
+  return null;
+}
+
+/** Sort key: real date when the title carries one, otherwise the financial
+ *  year placed mid-year so undated docs interleave sensibly rather than
+ *  always sinking below dated ones from the same year. */
+function sortKey(doc: AnnualReport): number {
+  const d = titleDate(doc.title);
+  if (d !== null) return d;
+  const y = leadingYear(doc.year);
+  return y === null ? -1 : y * 10000 + 630;
+}
+
 /** Groups a flat, sorted doc list into { label, sortKey, docs }[] buckets,
  *  newest first, falling back to "Undated" for docs with no year. */
 function groupByYear(docs: AnnualReport[]) {
@@ -84,14 +124,24 @@ export default function InvestorSection() {
   const [query, setQuery] = useState('');
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
 
+  const trimmedQuery = query.trim();
+  const isSearching = trimmedQuery.length > 0;
+
   const sortedFiltered = useMemo(() => {
     if (!section || section.kind !== 'docs') return [];
-    const q = query.trim().toLowerCase();
+    const q = trimmedQuery.toLowerCase();
     const filtered = q ? section.items.filter((d) => d.title.toLowerCase().includes(q)) : section.items;
-    return [...filtered].sort((a, b) => (leadingYear(b.year) ?? -1) - (leadingYear(a.year) ?? -1));
-  }, [section, query]);
+    return [...filtered].sort((a, b) => sortKey(b) - sortKey(a));
+  }, [section, trimmedQuery]);
 
-  const grouped = section?.kind === 'docs' ? groupByYear(sortedFiltered) : [];
+  // While searching, matches are shown as one flat list. Grouping them by
+  // year would render only the selected year's matches and silently hide the
+  // rest behind year tabs — a search for "regulation" found 48 documents but
+  // displayed 7.
+  const grouped = useMemo(
+    () => (section?.kind === 'docs' && !isSearching ? groupByYear(sortedFiltered) : []),
+    [section, sortedFiltered, isSearching],
+  );
 
   // Default to the newest year once the section's documents are known, and
   // fall back to it again if a search narrows the list to a different set
@@ -177,7 +227,14 @@ export default function InvestorSection() {
                   )}
 
                   {sortedFiltered.length === 0 ? (
-                    <p className="text-sm text-[#6b6b6b]">No documents match "{query}".</p>
+                    <p className="text-sm text-[#6b6b6b]">No documents match "{trimmedQuery}".</p>
+                  ) : isSearching ? (
+                    <>
+                      <h2 className="mb-4 text-lg font-semibold text-[#000000]">
+                        {sortedFiltered.length} {sortedFiltered.length === 1 ? 'result' : 'results'} for "{trimmedQuery}"
+                      </h2>
+                      <DocRows docs={sortedFiltered} />
+                    </>
                   ) : activeGroup ? (
                     <>
                       <h2 className="mb-4 text-lg font-semibold text-[#000000]">{activeGroup[0]}</h2>

@@ -30,14 +30,18 @@ export type InvestorSection =
 export const INVESTOR_SECTIONS: InvestorSection[] = [
   { slug: 'annual-report', label: 'Annual Report', category: 'Performance', kind: 'docs', items: ANNUAL_REPORTS },
   { slug: 'annual-return', label: 'Annual Return', category: 'Performance', kind: 'docs', items: ANNUAL_RETURNS },
-  { slug: 'notice-of-board-meeting', label: 'Board Meeting', category: 'Performance', kind: 'docs', items: BOARD_MEETING_NOTICES },
-  { slug: 'general-meeting', label: 'General Meeting', category: 'Performance', kind: 'docs', items: GENERAL_MEETING_NOTICES },
+  // Board/General Meeting live under Shareholder Information alongside
+  // Committee Meeting. They previously appeared here too, as separate slugs
+  // backed by the *same* arrays, so the menu offered two "Board Meeting"
+  // entries leading to two URLs with identical content. The old slugs
+  // (notice-of-board-meeting / notice-of-general-meeting) are redirected in
+  // vercel.json so existing links keep working.
   { slug: 'financial-results', label: 'Financial Results', category: 'Performance', kind: 'docs', items: FINANCIAL_RESULTS },
   { slug: 'secretarial-compliance', label: 'Secretarial Compliance', category: 'Performance', kind: 'docs', items: SECRETARIAL_COMPLIANCE },
 
   { slug: 'notice', label: 'Notice', category: 'Shareholder Information', kind: 'single', doc: NOTICE_DOC },
   { slug: 'board-meeting', label: 'Board Meeting', category: 'Shareholder Information', kind: 'docs', items: BOARD_MEETING_NOTICES },
-  { slug: 'notice-of-general-meeting', label: 'General Meeting', category: 'Shareholder Information', kind: 'docs', items: GENERAL_MEETING_NOTICES },
+  { slug: 'general-meeting', label: 'General Meeting', category: 'Shareholder Information', kind: 'docs', items: GENERAL_MEETING_NOTICES },
   { slug: 'committee-meeting', label: 'Committee Meeting', category: 'Shareholder Information', kind: 'docs', items: COMMITTEE_MEETING_NOTICES },
   { slug: 'policies', label: 'Policies', category: 'Shareholder Information', kind: 'docs', items: POLICIES },
   { slug: 'material-creditors', label: 'Material Creditors', category: 'Shareholder Information', kind: 'single', doc: MATERIAL_CREDITORS_DOC },

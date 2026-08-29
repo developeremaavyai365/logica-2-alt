@@ -86,9 +86,7 @@ export const INVESTOR_MEGA: InvestorMegaColumn[] = [
     children: [
       { label: 'Annual Report', href: '/investor/annual-report' },
       { label: 'Annual Return', href: '/investor/annual-return' },
-      { label: 'Board Meeting', href: '/investor/notice-of-board-meeting' },
       { label: 'Financial Results', href: '/investor/financial-results' },
-      { label: 'General Meeting', href: '/investor/general-meeting' },
       { label: 'Secretarial Compliance', href: '/investor/secretarial-compliance' },
       { label: 'Projects', href: '/investor' },
     ],
@@ -98,7 +96,7 @@ export const INVESTOR_MEGA: InvestorMegaColumn[] = [
     children: [
       { label: 'Notice', href: '/investor/notice' },
       { label: 'Board Meeting', href: '/investor/board-meeting' },
-      { label: 'General Meeting', href: '/investor/notice-of-general-meeting' },
+      { label: 'General Meeting', href: '/investor/general-meeting' },
       { label: 'Committee Meeting', href: '/investor/committee-meeting' },
       { label: 'Policies', href: '/investor/policies' },
       { label: 'Advertisement', href: '/advertisement' },
