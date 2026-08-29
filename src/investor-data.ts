@@ -692,6 +692,21 @@ export const COMMITTEE_MEETING_NOTICES: AnnualReport[] = [
 
 /** Real corporate policy documents, mirrored from logicainfoway.com/policies. */
 export const POLICIES: AnnualReport[] = [
+  // Both files already lived in public/investor/policies/ but were listed
+  // under Corporate Announcement. Contents verified: "POLICY FOR
+  // DETERMINATION OF MATERIAL EVENT AND DISCLOSURE", framed under Regulation
+  // 30 — a policy, so it belongs here. The first is the clean text copy, the
+  // second the scanned copy on company letterhead.
+  {
+    title: "Policy for Determination of Material Event and Disclosure",
+    year: "2022",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Determination-of-Material-Events-and-Disclosure.pdf",
+  },
+  {
+    title: "Policy for Determination of Material Event and Disclosure (Signed Copy)",
+    year: "2022",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Determination-of-Material-Events-and-Disclosure-1.pdf",
+  },
   {
     title: "CSR Policy",
     year: "",
@@ -713,39 +728,22 @@ export const POLICIES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Code-of-Conduct-for-Directors-and-Senior-Management-1.pdf",
   },
   {
-    title: "Familiarization Program for Independent Directors",
-    year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Familiarization-Program-for-Independent-Directors.pdf",
-  },
-  {
-    title: "Internal Procedures and Conduct for Prevention of Insider Trading",
-    year: "",
+    title: "Code of Internal Procedures and Conduct for Prevention of Insider Trading (Revised 2026)",
+    year: "2026",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/04/Annexure-E-Revised-Policy-on-Internal-Procedures-Conduct-for-Prevention-of-Insider-Trading-signed.pdf",
   },
   {
-    title: "Materiality Policy for Identification of Group Companies",
-    year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Materiality-Policy-for-Identification-of-Group-Companies.pdf",
-  },
-  {
-    title: "Policy for Archival of Documents",
-    year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Archival-of-Documents.pdf",
+    // The pre-revision code, in the backup's uploads but not linked from the
+    // old site's Policies page. Dated in both titles so it is clear which one
+    // is in force.
+    title: "Code of Internal Procedures and Conduct for Prevention of Insider Trading (2022)",
+    year: "2022",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Internal-Procedures-and-Conduct-for-Prevention-of-Insider-Trading.pdf",
   },
   {
     title: "Policy on Disclosure of Material Events/Information",
     year: "",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/policy-on-disclosure-of-material-event.pdf",
-  },
-  {
-    title: "Policy on Diversity on Board",
-    year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Diversity-on-Board.pdf",
-  },
-  {
-    title: "Policy on Identification of Material Creditors and Material Litigations",
-    year: "",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Identification-of-Material-Creditors-and-Material-Litigations.pdf",
   },
   {
     title: "Policy on Prevention of Sexual Harassment at Workplace",
@@ -763,7 +761,7 @@ export const POLICIES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Vigil-Mechanism_Whistle-Blower-Policy-for-Directors-and-Employees-1.pdf",
   },
   {
-    title: "Familiarization Program for Independent Directors 1",
+    title: "Familiarization Program for Independent Directors",
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Familiarization-Program-for-Independent-Directors-1.pdf",
   },
@@ -773,7 +771,7 @@ export const POLICIES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/03/Familiarization-Program.pdf",
   },
   {
-    title: "Materiality Policy for Identification of Group Companies 1",
+    title: "Materiality Policy for Identification of Group Companies",
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Materiality-Policy-for-Identification-of-Group-Companies-1.pdf",
   },
@@ -783,12 +781,12 @@ export const POLICIES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Nomination-and-Remuneration-Policy-1.pdf",
   },
   {
-    title: "Policy for Archival of Documents 1",
+    title: "Policy for Archival of Documents",
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Archival-of-Documents-1.pdf",
   },
   {
-    title: "Policy on Diversity on Board 1",
+    title: "Policy on Diversity on Board",
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Diversity-on-Board-1.pdf",
   },
@@ -1297,16 +1295,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     title: "PCA Certificate Regarding Non Applicability of Corporate Governance Provision as per SEBI LODR Regulation 2015",
     year: "2015-16",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/PCA-Certificate-regarding-Non-Applicability-of-Corporate-Governance-Provision-as-per-SEBI-LODR-Regulation-2015.pdf",
-  },
-  {
-    title: "Policy for Determination of Material Events and Disclosure 1",
-    year: "2022",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Determination-of-Material-Events-and-Disclosure-1.pdf",
-  },
-  {
-    title: "Policy for Determination of Material Events and Disclosure",
-    year: "2022",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Determination-of-Material-Events-and-Disclosure.pdf",
   },
   {
     title: "Policy on Disclosure of Material Eventsinformation",

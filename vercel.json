@@ -1499,6 +1499,10 @@
       "destination": "/investor/board-meetings/prior-intimation-board-meeting-14-01-2025.pdf"
     },
     {
+      "source": "/wp-content/uploads/2022/09/Internal-Procedures-and-Conduct-for-Prevention-of-Insider-Trading.pdf",
+      "destination": "/investor/policies/insider-trading-code-2022.pdf"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
