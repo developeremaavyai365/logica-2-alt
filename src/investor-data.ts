@@ -112,6 +112,41 @@ export interface FiscalYearFolder {
  *  have the actual filed documents. */
 export const BOARD_MEETING_NOTICES: AnnualReport[] = [
   {
+    // Original outcome of the 14.01.2025 meeting; only the later revised
+    // filing was listed.
+    title: "Outcome of Board Meeting — January 14, 2025",
+    year: "2024-25",
+    url: "/investor/board-meetings/outcome-of-board-meeting-14-01-2025.pdf",
+  },
+  {
+    title: "Outcome of Board Meeting — November 14, 2025",
+    year: "2025-26",
+    url: "/investor/board-meetings/outcome-of-board-meeting-14-11-2025.pdf",
+  },
+  // Board meeting outcomes that were only listed in the section matching
+  // their subject. Cross-listed here so the Board Meeting page shows an
+  // outcome against every meeting, as an investor would expect.
+  {
+    title: "Outcome of Board Meeting — November 14, 2023",
+    year: "2023-24",
+    url: "/investor/financial-results/approval-of-half-yearly-result-as-on-30th-september-2023.pdf",
+  },
+  {
+    title: "Outcome of Board Meeting — March 1, 2025 (Allotment on Preferential Basis)",
+    year: "2024-25",
+    url: "/investor/fund-raising/outcome-board-meeting-allotment-preferential-basis-01-03-2025.pdf",
+  },
+  {
+    title: "Outcome of Board Meeting — May 30, 2025",
+    year: "2025-26",
+    url: "/investor/financial-results/outcome-of-board-meeting-held-on-30-05-2025-for-approval-of-f-s-for-half-year-f-y-ended-march-31-2025.pdf",
+  },
+  {
+    title: "Outcome of Board Meeting — May 12, 2026",
+    year: "2026-27",
+    url: "/investor/financial-results/board-meeting-outcome-financial-results-31-03-2026.pdf",
+  },
+  {
     title: "Prior Intimation of Board Meeting — January 14, 2025 (Regulation 29(1)(d))",
     year: "2024-25",
     url: "/investor/board-meetings/prior-intimation-board-meeting-14-01-2025.pdf",
@@ -142,12 +177,12 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/Board-Meeting-Notice-12-05-2026.pdf",
   },
   {
-    title: "BM Notice — May 12, 2026",
+    title: "Board Meeting Notice — May 12, 2026 (Agenda)",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/07/BM-Notice-12.05.2026.pdf",
   },
   {
-    title: "BM Notice — November 14, 2025 (Signed)",
+    title: "Board Meeting Notice — November 14, 2025 (Agenda)",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/07/BM-Notice-14.11.2025-signed.pdf",
   },
@@ -167,7 +202,7 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/Board-Meeting-Notice-30.05.2025.pdf",
   },
   {
-    title: "BM Notice — April 30, 2025 (Revised)",
+    title: "Board Meeting Notice — April 30, 2025 (Revised Shorter Notice)",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/BM-Notice-30.04.2025-revised-sd.pdf",
   },
@@ -202,22 +237,22 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/01/BM-6.pdf",
   },
   {
-    title: "BM Notice 01.03.2025",
+    title: "Board Meeting Notice — March 1, 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/BM-Notice-01.03.2025.pdf",
   },
   {
-    title: "BM Notice 14.01.2025",
+    title: "Board Meeting Notice — January 14, 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/BM-Notice-14.01.2025.pdf",
   },
   {
-    title: "BM Notice 29.08.2025",
+    title: "Board Meeting Notice — August 29, 2025 (Agenda)",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/BM-Notice-29.08.2025.pdf",
   },
   {
-    title: "Board Meeting Notice 30.04.2025",
+    title: "Board Meeting Notice — April 30, 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Board-Meeting-Notice-30.04.2025.pdf",
   },
@@ -227,7 +262,7 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/11/Board-Meeting-Notice-4.pdf",
   },
   {
-    title: "Notice and Agenda Board Meeting 14.11.2024",
+    title: "Board Meeting Notice — November 14, 2024 (Agenda)",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Notice-and-Agenda-Board-Meeting-14.11.2024.pdf",
   },
@@ -237,27 +272,27 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/Notice-for-Board-Meeting-7.pdf",
   },
   {
-    title: "Notice of Board Meeting Dated 15 07 2024",
+    title: "Board Meeting Notice — 2nd Meeting (FY 2024-25), July 15, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Notice-of-Board-Meeting-dated-15-07-2024.pdf",
   },
   {
-    title: "Notice of Board Meeting Dated 21 09 2024",
+    title: "Board Meeting Notice — 3rd Meeting (FY 2024-25), September 21, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Notice-of-Board-Meeting-dated-21-09-2024.pdf",
   },
   {
-    title: "Notice of Board Meeting Dated 30 05 2024",
+    title: "Board Meeting Notice — May 30, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-Board-Meeting-dated-30-05-2024.pdf",
   },
   {
-    title: "Notice of the Board Meeting Dated 15 07 2024",
+    title: "Outcome of Board Meeting — July 15, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/NOTICE-OF-THE-BOARD-MEETING-DATED-15-07-2024.pdf",
   },
   {
-    title: "Notice of the Board Meeting Dated 21 09 2024",
+    title: "Outcome of Board Meeting — September 21, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/NOTICE-OF-THE-BOARD-MEETING-DATED-21-09-2024.pdf",
   },
@@ -267,12 +302,12 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Outcome-of-Board-Meeting-dated-14-11-2024-1.pdf",
   },
   {
-    title: "Outcome of Board Meeting Dated 27 02 2024",
+    title: "Outcome of Board Meeting — February 27, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/06/Outcome-of-Board-Meeting-Dated-27-02-2024.pdf",
   },
   {
-    title: "Outcome of Board Meeting of Logica Infoway Limited Held on April 30 2025",
+    title: "Outcome of Board Meeting — April 30, 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Outcome-of-Board-Meeting-of-Logica-Infoway-Limited-held-on-April-30-2025.pdf",
   },
@@ -282,12 +317,12 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/OUTCOME-OF-MEETING.pdf",
   },
   {
-    title: "Outcome of the Board Meeting Held on Friday August 29 2025 1",
+    title: "Outcome of Board Meeting — August 29, 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/Outcome-of-the-Board-Meeting-held-on-Friday-August-29-2025-1.pdf",
   },
   {
-    title: "Revised Outcome of Board Meeting Held on 14.01.2025",
+    title: "Revised Outcome of Board Meeting — January 14, 2025",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Revised-Outcome-Of-Board-Meeting-Held-On-14.01.2025.pdf",
   },
@@ -302,6 +337,13 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
  *  dead-link "period folder" list now that we have the actual filed
  *  documents. */
 export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
+  {
+    // Regulation 34(1) submission carrying the 29th AGM notice and the
+    // FY2023-24 annual report.
+    title: "Notice of the 29th Annual General Meeting with Annual Report FY 2023-24",
+    year: "2024-25",
+    url: "/investor/general-meetings/agm-notice-29th-2024.pdf",
+  },
   {
     title: "Corrigendum to the Annual Report for FY 2024-25 and Notice of the 30th AGM",
     year: "2025-26",
