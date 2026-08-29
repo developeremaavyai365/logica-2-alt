@@ -20,10 +20,22 @@ import {
   type AnnualReport,
 } from './investor-data';
 
+export interface DocGroup {
+  label: string;
+  items: AnnualReport[];
+}
+
 export type InvestorSection =
   | { slug: string; label: string; category: string; kind: 'docs'; items: AnnualReport[] }
+  | { slug: string; label: string; category: string; kind: 'groups'; groups: DocGroup[] }
   | { slug: string; label: string; category: string; kind: 'single'; doc: AnnualReport }
   | { slug: string; label: string; category: string; kind: 'names'; items: string[] };
+
+/** A convening notice rather than what the meeting decided. Board and general
+ *  meeting records hold both, and the Notice page is meant to gather only the
+ *  notices. */
+const isNotice = (d: AnnualReport) =>
+  /\bnotice\b|\bintimation\b/i.test(d.title) && !/outcome|proceeding|voting result|scrutinizer|transcript/i.test(d.title);
 
 export const INVESTOR_SECTIONS: InvestorSection[] = [
   { slug: 'annual-report', label: 'Annual Report', category: 'Performance', kind: 'docs', items: ANNUAL_REPORTS },
@@ -37,7 +49,22 @@ export const INVESTOR_SECTIONS: InvestorSection[] = [
   { slug: 'financial-results', label: 'Financial Results', category: 'Performance', kind: 'docs', items: FINANCIAL_RESULTS },
   { slug: 'secretarial-compliance', label: 'Secretarial Compliance', category: 'Performance', kind: 'docs', items: SECRETARIAL_COMPLIANCE },
 
-  { slug: 'notice', label: 'Notice', category: 'Shareholder Information', kind: 'single', doc: NOTICE_DOC },
+  // Notice gathers the convening notices for both kinds of meeting, kept in
+  // separate groups on the one page. The documents themselves stay listed in
+  // Board Meeting and General Meeting alongside their outcomes.
+  {
+    slug: 'notice',
+    label: 'Notice',
+    category: 'Shareholder Information',
+    kind: 'groups',
+    groups: [
+      { label: 'Board Meeting Notices', items: BOARD_MEETING_NOTICES.filter(isNotice) },
+      {
+        label: 'Shareholder Meeting Notices',
+        items: [NOTICE_DOC, ...GENERAL_MEETING_NOTICES.filter(isNotice)],
+      },
+    ],
+  },
   { slug: 'board-meeting', label: 'Board Meeting', category: 'Shareholder Information', kind: 'docs', items: BOARD_MEETING_NOTICES },
   { slug: 'general-meeting', label: 'General Meeting', category: 'Shareholder Information', kind: 'docs', items: GENERAL_MEETING_NOTICES },
   { slug: 'committee-meeting', label: 'Committee Meeting', category: 'Shareholder Information', kind: 'docs', items: COMMITTEE_MEETING_NOTICES },

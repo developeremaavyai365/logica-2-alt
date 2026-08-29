@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
-import { FileText, Calendar, Building2, ChevronRight } from 'lucide-react';
+import { FileText, Building2, ChevronRight } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { INVESTOR_SECTIONS, INVESTOR_CATEGORIES, CATEGORY_ICONS } from '../../investor-sections';
 
 const KIND_ICONS = {
   docs: FileText,
+  groups: FileText,
   single: FileText,
-  periods: Calendar,
   names: Building2,
 } as const;
 

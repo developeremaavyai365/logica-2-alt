@@ -118,6 +118,26 @@ export default function InvestorSection() {
     return [...filtered].sort((a, b) => sortKey(b) - sortKey(a));
   }, [section, trimmedQuery]);
 
+  // Sections that keep their documents in named groups (Notice holds board
+  // meeting and shareholder meeting notices separately). Searching filters
+  // inside each group and empty groups drop out.
+  const filteredGroups = useMemo(() => {
+    if (!section || section.kind !== 'groups') return [];
+    const q = trimmedQuery.toLowerCase();
+    return section.groups
+      .map((g) => ({
+        label: g.label,
+        items: [...(q ? g.items.filter((d) => d.title.toLowerCase().includes(q)) : g.items)].sort(
+          (a, b) => sortKey(b) - sortKey(a),
+        ),
+      }))
+      .filter((g) => g.items.length > 0);
+  }, [section, trimmedQuery]);
+
+  const groupTotal =
+    section?.kind === 'groups' ? section.groups.reduce((n, g) => n + g.items.length, 0) : 0;
+  const groupMatches = filteredGroups.reduce((n, g) => n + g.items.length, 0);
+
   // Every /investor/:slug page is the same component instance, so React keeps
   // this state when the slug changes. Without clearing it, a query typed in
   // one section silently filters the next: searching "bonus" then opening
@@ -203,6 +223,44 @@ export default function InvestorSection() {
               </div>
             )}
           </>
+        )}
+
+        {section.kind === 'groups' && (
+          <div className="min-w-0">
+            {groupTotal > 8 && (
+              <div className="relative mb-8 max-w-md">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b6b6b]" />
+                <input
+                  type="search"
+                  aria-label={`Search ${section.label} documents`}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={`Search ${groupTotal} documents…`}
+                  className="w-full rounded-full border border-[#000000]/15 bg-white py-2.5 pl-11 pr-4 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+                />
+              </div>
+            )}
+
+            {isSearching && (
+              <h2 className="mb-4 text-lg font-semibold text-[#000000]">
+                {groupMatches} {groupMatches === 1 ? 'result' : 'results'} for "{trimmedQuery}"
+              </h2>
+            )}
+
+            {filteredGroups.length === 0 ? (
+              <p className="text-sm text-[#6b6b6b]">No documents match "{trimmedQuery}".</p>
+            ) : (
+              filteredGroups.map((g) => (
+                <section key={g.label} className="mb-12 last:mb-0">
+                  <h2 className="mb-4 text-lg font-semibold text-[#000000]">
+                    {g.label}
+                    <span className="ml-2 text-sm font-normal text-[#6b6b6b]">({g.items.length})</span>
+                  </h2>
+                  <DocRows docs={g.items} />
+                </section>
+              ))
+            )}
+          </div>
         )}
 
         {section.kind === 'single' && (
