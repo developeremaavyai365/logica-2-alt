@@ -740,6 +740,15 @@ export const POLICIES: AnnualReport[] = [
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Internal-Procedures-and-Conduct-for-Prevention-of-Insider-Trading.pdf",
   },
+  {
+    // Textually identical to the copy above across all 13 pages - same Word
+    // source and author, only the PDF export date differs (26 rather than
+    // 16 September 2022). Listed as a second copy because both uploads exist
+    // in the company's own media library.
+    title: "Code of Internal Procedures and Conduct for Prevention of Insider Trading (2022, Second Copy)",
+    year: "2022",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Internal-Procedures-and-Conduct-for-Prevention-of-Insider-Trading-1.pdf",
+  },
   // Two copies of the same policy, identical on their first and last pages.
   // The 9-page one carries a text layer throughout, so it is searchable and
   // listed first; the 12-page copy the company published on its own Policies
