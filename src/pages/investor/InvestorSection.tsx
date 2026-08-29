@@ -18,10 +18,6 @@ function leadingYear(year: string): number | null {
   return m ? Number(m[0]) : null;
 }
 
-function financialYearLabel(year: number): string {
-  return `Financial Year ${String(year % 100).padStart(2, '0')}`;
-}
-
 const MONTHS: Record<string, number> = {
   january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
   july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
@@ -60,19 +56,6 @@ function sortKey(doc: AnnualReport): number {
   if (d !== null) return d;
   const y = leadingYear(doc.year);
   return y === null ? -1 : y * 10000 + 630;
-}
-
-/** Groups a flat, sorted doc list into { label, sortKey, docs }[] buckets,
- *  newest first, falling back to "Undated" for docs with no year. */
-function groupByYear(docs: AnnualReport[]) {
-  const groups = new Map<string, { sortKey: number; docs: AnnualReport[] }>();
-  for (const doc of docs) {
-    const y = leadingYear(doc.year);
-    const label = y === null ? 'Undated' : financialYearLabel(y);
-    if (!groups.has(label)) groups.set(label, { sortKey: y ?? -1, docs: [] });
-    groups.get(label)!.docs.push(doc);
-  }
-  return Array.from(groups.entries()).sort((a, b) => b[1].sortKey - a[1].sortKey);
 }
 
 /** Clean row-list of documents for one financial year, matching a typical
@@ -122,26 +105,18 @@ export default function InvestorSection() {
   const { slug } = useParams<{ slug: string }>();
   const section = INVESTOR_SECTIONS.find((s) => s.slug === slug);
   const [query, setQuery] = useState('');
-  const [selectedYear, setSelectedYear] = useState<string | null>(null);
 
   const trimmedQuery = query.trim();
   const isSearching = trimmedQuery.length > 0;
 
+  // Every document in the section, newest first — no year grouping, so the
+  // whole list is visible on one page rather than one financial year at a time.
   const sortedFiltered = useMemo(() => {
     if (!section || section.kind !== 'docs') return [];
     const q = trimmedQuery.toLowerCase();
     const filtered = q ? section.items.filter((d) => d.title.toLowerCase().includes(q)) : section.items;
     return [...filtered].sort((a, b) => sortKey(b) - sortKey(a));
   }, [section, trimmedQuery]);
-
-  // While searching, matches are shown as one flat list. Grouping them by
-  // year would render only the selected year's matches and silently hide the
-  // rest behind year tabs — a search for "regulation" found 48 documents but
-  // displayed 7.
-  const grouped = useMemo(
-    () => (section?.kind === 'docs' && !isSearching ? groupByYear(sortedFiltered) : []),
-    [section, sortedFiltered, isSearching],
-  );
 
   // Every /investor/:slug page is the same component instance, so React keeps
   // this state when the slug changes. Without clearing it, a query typed in
@@ -150,7 +125,6 @@ export default function InvestorSection() {
   // match" with no visible input to clear, hiding the section entirely.
   useEffect(() => {
     setQuery('');
-    setSelectedYear(null);
   }, [slug]);
 
   // The app ships a single static <title>, so every investor page appeared as
@@ -168,16 +142,8 @@ export default function InvestorSection() {
     return <Navigate to="/investor" replace />;
   }
 
-  // Derived rather than stored: the newest year is the default, and any
-  // selection that no longer exists (after changing section, or after a
-  // search narrows the years) falls back to it. Keeping this out of state
-  // avoids the effect ordering bug where the reset above raced the defaulting
-  // effect and left every year tab unselected while one was clearly rendered.
   const CategoryIcon = CATEGORY_ICONS[section.category];
-  const showYearNav = section.kind === 'docs' && grouped.length > 1;
   const showSearch = section.kind === 'docs' && section.items.length > 8;
-  const activeGroup = grouped.find(([label]) => label === selectedYear) ?? grouped[0];
-  const activeYear = activeGroup?.[0] ?? null;
 
   return (
     <div className="w-full bg-[#ECEDEC]">
@@ -207,62 +173,33 @@ export default function InvestorSection() {
             {section.items.length === 0 ? (
               <p className="text-sm text-[#6b6b6b]">No documents published yet.</p>
             ) : (
-              <div className="flex flex-col gap-10 lg:flex-row">
-                {showYearNav && (
-                  <nav
-                    aria-label="Filter documents by financial year"
-                    className="flex shrink-0 gap-2 overflow-x-auto pb-2 lg:w-40 lg:flex-col lg:gap-1 lg:overflow-visible lg:border-r lg:border-[#000000]/10 lg:pb-0 lg:pr-6"
-                  >
-                    {grouped.map(([label, group]) => (
-                      <button
-                        key={label}
-                        type="button"
-                        aria-pressed={activeYear === label}
-                        onClick={() => setSelectedYear(label)}
-                        className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-left text-sm transition-colors lg:rounded-none lg:px-0 lg:py-2 ${
-                          activeYear === label
-                            ? 'bg-black text-white font-semibold lg:bg-transparent lg:text-black'
-                            : 'bg-white text-[#6b6b6b] hover:text-black lg:bg-transparent'
-                        }`}
-                      >
-                        {label.replace('Financial Year ', 'FY ')}
-                        <span className="ml-1.5 text-xs text-[#6b6b6b]/60">({group.docs.length})</span>
-                      </button>
-                    ))}
-                  </nav>
+              <div className="min-w-0">
+                {showSearch && (
+                  <div className="relative mb-6 max-w-md">
+                    <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b6b6b]" />
+                    <input
+                      type="search"
+                      aria-label={`Search ${section.label} documents`}
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder={`Search ${section.items.length} documents…`}
+                      className="w-full rounded-full border border-[#000000]/15 bg-white py-2.5 pl-11 pr-4 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+                    />
+                  </div>
                 )}
 
-                <div className="min-w-0 flex-1">
-                  {showSearch && (
-                    <div className="relative mb-6 max-w-md">
-                      <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b6b6b]" />
-                      <input
-                        type="search"
-                        aria-label={`Search ${section.label} documents`}
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder={`Search ${section.items.length} documents…`}
-                        className="w-full rounded-full border border-[#000000]/15 bg-white py-2.5 pl-11 pr-4 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
-                      />
-                    </div>
-                  )}
-
-                  {sortedFiltered.length === 0 ? (
-                    <p className="text-sm text-[#6b6b6b]">No documents match "{trimmedQuery}".</p>
-                  ) : isSearching ? (
-                    <>
+                {sortedFiltered.length === 0 ? (
+                  <p className="text-sm text-[#6b6b6b]">No documents match "{trimmedQuery}".</p>
+                ) : (
+                  <>
+                    {isSearching && (
                       <h2 className="mb-4 text-lg font-semibold text-[#000000]">
                         {sortedFiltered.length} {sortedFiltered.length === 1 ? 'result' : 'results'} for "{trimmedQuery}"
                       </h2>
-                      <DocRows docs={sortedFiltered} />
-                    </>
-                  ) : activeGroup ? (
-                    <>
-                      <h2 className="mb-4 text-lg font-semibold text-[#000000]">{activeGroup[0]}</h2>
-                      <DocRows docs={activeGroup[1].docs} />
-                    </>
-                  ) : null}
-                </div>
+                    )}
+                    <DocRows docs={sortedFiltered} />
+                  </>
+                )}
               </div>
             )}
           </>
