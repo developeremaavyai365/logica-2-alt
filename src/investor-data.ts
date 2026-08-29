@@ -172,7 +172,7 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/08/BM-Notice-30.04.2025-revised-sd.pdf",
   },
   {
-    title: "31 03 2024 Outcome of Board Meeting Dated 30 05 2024",
+    title: "Outcome of Board Meeting — May 30, 2024 (Results for Year Ended March 31, 2024)",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/31-03-2024-Outcome-of-Board-Meeting-Dated-30-05-2024.pdf",
   },
@@ -383,7 +383,7 @@ export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/02/proceeding-of-EGM.pdf",
   },
   {
-    title: "Regulation 44 Voting Result",
+    title: "Voting Result (Regulation 44)",
     year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/02/reg-44-voting-result.pdf",
   },
@@ -1017,7 +1017,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Outcome-of-AnalystInstitutional-Investor-Meeting-under-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015.pdf",
   },
   {
-    title: "Regulation 30 (LODR) — Participation in Arihant Capital Bharat Connect Virtual Conference, March 11, 2026",
+    title: "Participation in Arihant Capital Bharat Connect Virtual Conference — March 11, 2026 (Regulation 30)",
     year: "2025-26",
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Regulation-30-of-SEBI-LODR-Regulations-2015-Intimation-of-Participation-in-Arihant-Capital-Bharat-Connect-Virtual-Conference-Rising-Star-2026-March-11-2026.pdf",
   },
@@ -1032,42 +1032,42 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Intimation-regarding-Closure-of-Trading-Window.pdf",
   },
   {
-    title: "1. Intimation of Closure of Trading Window for HY Ended 30 September 2024",
+    title: "Intimation of Closure of Trading Window — Half Year Ended September 30, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/1.-Intimation-of-Closure-of-trading-window-for-HY-ended-30-September-2024.pdf",
   },
   {
-    title: "2. Compliance under REG 57(4) Non Applicability",
+    title: "Non-Applicability Declaration (Regulation 57(4))",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/2.-Compliance-under-Reg.-574-Non-Applicability.pdf",
   },
   {
-    title: "3. REG 57(5) Non Applicability",
+    title: "Non-Applicability Declaration (Regulation 57(5))",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/3.-Reg-575-Non-Applicability.pdf",
   },
   {
-    title: "4. Disclosure under REG 74(5) of the DP",
+    title: "Disclosure under the Depositories and Participants Regulations (Regulation 74(5))",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/4.-Disclosure-under-Reg-745-of-the-DP.pdf",
   },
   {
-    title: "5. SDD Compliance Certificate for Quarter Ended 30 September 2024",
+    title: "Structured Digital Database Compliance Certificate — Quarter Ended September 30, 2024",
     year: "2024-25",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/5.-SDD-Compliance-Certificate-for-quarter-ended-30-September-2024.pdf",
   },
   {
-    title: "6. REG 23(9) Non Applicability of Rpt Disclosure",
+    title: "Non-Applicability of Related Party Transaction Disclosure (Regulation 23(9))",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/6.-Reg-239-Non-Applicability-of-RPT-Disclosure.pdf",
   },
   {
-    title: "7. REG 46 Intimation Regarding Change in Website Link",
+    title: "Intimation Regarding Change in Website Link (Regulation 46)",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/7.-Reg-46-Intimation-regarding-change-in-Website-link.pdf",
   },
   {
-    title: "8. REG 27 Non Applicability of Cg",
+    title: "Non-Applicability of Corporate Governance Report (Regulation 27)",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/8.-Reg-27-Non-applicability-of-CG.pdf",
   },
@@ -1212,12 +1212,14 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Disclosure-under-Regulation-314-of-SEBI-Substantial-Acquisition-of-Shares-and-Takeovers-Regulation-2011.pdf",
   },
   {
-    title: "Disclosures under Regulation 106 of SEBI Substantial Acquisition of Shares and Takeovers Regulations 2011 Intimation to Stock Exchanges in Respect of Acquisition under Regulation 101AI",
+    // Subject line reads "Regulation 10(6) … read with Regulation 10(1)(a)(i)";
+    // the source filename had lost the brackets, giving "106" and "101AI".
+    title: "Intimation to Stock Exchanges on Acquisition of Shares — SEBI Takeover Regulations 10(6) and 10(1)(a)(i)",
     year: "2011-12",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/01/Disclosures-Under-Regulation-106-Of-SEBI-Substantial-Acquisition-Of-Shares-And-Takeovers-Regulations-2011-Intimation-To-Stock-Exchanges-In-Respect-Of-Acquisition-Under-Regulation-101AI.pdf",
   },
   {
-    title: "Filing of Certificate under Regulation 453 Consequent to Requirement under Name Change",
+    title: "Filing of Certificate Consequent to Change of Name (Regulation 45(3))",
     year: "2025",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/02/Filing-Of-Certificate-Under-Regulation-453-Consequent-To-Requirement-Under-Name-Change.pdf",
   },
@@ -1282,7 +1284,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/04/Non-Applicability-Of-Annual-Secretarial-Compliance-Report.pdf",
   },
   {
-    title: "Non Applicability of Corporate Governance Report as per Regulation 27(2) of SEBI LODR Regulation 2015 1",
+    title: "Non-Applicability of Corporate Governance Report as per Regulation 27(2) of SEBI LODR Regulations 2015 (Revised)",
     year: "2015-16",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/Non-Applicability-of-Corporate-Governance-Report-as-per-Regulation-272-of-SEBI-LODR-Regulation-2015-1.pdf",
   },
@@ -1327,17 +1329,17 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/REG-23.pdf",
   },
   {
-    title: "REG 24A Non Applicability",
+    title: "Non-Applicability of Annual Secretarial Compliance Report (Regulation 24A)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/REG-24A-NON-APPLICABILITY.pdf",
   },
   {
-    title: "REG 30 and 31A Intimation of Death of Promoter Yk Nathany",
+    title: "Intimation of Death of Promoter Y. K. Nathany (Regulations 30 and 31A)",
     year: "2024",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/12/Reg-30-and-31A-Intimation-of-death-of-promoter-YK-Nathany.pdf",
   },
   {
-    title: "REG 30 New",
+    title: "Appointment of Chief Operating Officer — August 18, 2023 (Regulation 30)",
     year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/REG-30-NEW.pdf",
   },
@@ -1372,8 +1374,12 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/01/REG-575.pdf",
   },
   {
-    title: "REG 76",
-    year: "2023",
+    // Scanned; read from the page image. Subject line: reconciliation of
+    // share capital audit report pursuant to Regulation 76 of the SEBI
+    // (Depositories and Participants) Regulations 2018 - a whole regulation
+    // number, not a stripped 7(6) - for the half year ended March 2023.
+    title: "Reconciliation of Share Capital Audit Report — Half Year Ended March 31, 2023",
+    year: "2022-23",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/REG-76.pdf",
   },
   {
@@ -1392,8 +1398,12 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/04/Regulation-575.pdf",
   },
   {
-    title: "Regulation 73",
-    year: "2023",
+    // Scanned; read from the page image. Subject line: certificate under
+    // Regulation 7(3) of SEBI LODR for the year ended 31 March 2023,
+    // certifying that share transfer activities were maintained by the RTA,
+    // KFin Technologies Limited.
+    title: "Share Transfer Facility Compliance Certificate — Year Ended March 31, 2023",
+    year: "2022-23",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/04/Regulation-73.pdf",
   },
   {
@@ -1422,7 +1432,7 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/10/Statement-of-Investor-Complaints-as-per-Regulation-133-of-the-Securities-and-Exchange-Board-of-India-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015-for-the-Quarter-ended.pdf",
   },
   {
-    title: "Submission of Certificate From the Statutory Auditors Regarding Consideration Received for Issuance of Shares on Preferential Basis REG 169(4) 1695 of SEBI Issue of Capital and Discl",
+    title: "Statutory Auditors' Certificate on Consideration Received for Preferential Issue of Shares (SEBI ICDR Regulations 169(4) & 169(5))",
     year: "2025",
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Submission-Of-Certificate-From-The-Statutory-Auditors-Regarding-Consideration-Received-For-Issuance-Of-Shares-On-Preferential-Basis-Reg.-1694-1695-Of-SEBI-Issue-Of-Capital-And-Discl.pdf",
   },
