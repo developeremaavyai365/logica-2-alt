@@ -312,8 +312,10 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Outcome-of-Board-Meeting-of-Logica-Infoway-Limited-held-on-April-30-2025.pdf",
   },
   {
-    title: "Outcome of Meeting",
-    year: "2023",
+    // Subject line: "Outcome of Board Meeting of Eastern Logica Infoway
+    // Limited - 30th May 2023". It was listed with no date at all.
+    title: "Outcome of Board Meeting — May 30, 2023",
+    year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/OUTCOME-OF-MEETING.pdf",
   },
   {
