@@ -32,9 +32,14 @@ function RotatingVertical() {
   }, []);
 
   const current = VERTICAL_WORDS[i];
+  // No gradient/background-clip here on purpose. The parent paragraph already
+  // clips one gradient across the whole line, and nesting a second
+  // background-clip:text inside it made the word paint a second time at the
+  // parent's gradient origin — a ghost copy at the left edge of the paragraph.
+  // This span just inherits the parent's clipped gradient and fades in place.
   return (
     <span
-      className="inline-block bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-transparent transition-opacity ease-out"
+      className="transition-opacity ease-out"
       style={{
         opacity: visible ? 1 : 0,
         transitionDuration: `${ROTATE_TRANSITION}ms`,
