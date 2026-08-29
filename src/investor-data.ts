@@ -740,9 +740,19 @@ export const POLICIES: AnnualReport[] = [
     year: "2022",
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Internal-Procedures-and-Conduct-for-Prevention-of-Insider-Trading.pdf",
   },
+  // Two copies of the same policy, identical on their first and last pages.
+  // The 9-page one carries a text layer throughout, so it is searchable and
+  // listed first; the 12-page copy the company published on its own Policies
+  // page is a scan whose middle pages hold no selectable text, and is kept
+  // alongside it rather than dropped.
   {
     title: "Policy on Disclosure of Material Events/Information",
-    year: "",
+    year: "2023",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/Policy-on-Disclosure-of-Material-EventsInformation.pdf",
+  },
+  {
+    title: "Policy on Disclosure of Material Events/Information (Scanned Copy)",
+    year: "2023",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/policy-on-disclosure-of-material-event.pdf",
   },
   {
@@ -1295,11 +1305,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     title: "PCA Certificate Regarding Non Applicability of Corporate Governance Provision as per SEBI LODR Regulation 2015",
     year: "2015-16",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/04/PCA-Certificate-regarding-Non-Applicability-of-Corporate-Governance-Provision-as-per-SEBI-LODR-Regulation-2015.pdf",
-  },
-  {
-    title: "Policy on Disclosure of Material Eventsinformation",
-    year: "2023",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/Policy-on-Disclosure-of-Material-EventsInformation.pdf",
   },
   {
     title: "Reconciliation of Share Capital Audit Report Pursuant to Regulation 76 of SEBI Depositories and Participants Regulations 2018 for the Quarter Ended September 30th 2023",
