@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { FileText, Calendar, Building2, ArrowUpRight, Search, Download } from 'lucide-react';
+import { FileText, Building2, ArrowUpRight, Search, Download } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { INVESTOR_SECTIONS, CATEGORY_ICONS } from '../../investor-sections';
@@ -143,25 +143,41 @@ export default function InvestorSection() {
     [section, sortedFiltered, isSearching],
   );
 
-  // Default to the newest year once the section's documents are known, and
-  // fall back to it again if a search narrows the list to a different set
-  // of years than the one currently selected.
+  // Every /investor/:slug page is the same component instance, so React keeps
+  // this state when the slug changes. Without clearing it, a query typed in
+  // one section silently filters the next: searching "bonus" then opening
+  // Annual Return (6 docs, too few for a search box) showed "No documents
+  // match" with no visible input to clear, hiding the section entirely.
   useEffect(() => {
-    if (grouped.length === 0) return;
-    if (!grouped.some(([label]) => label === selectedYear)) {
-      setSelectedYear(grouped[0][0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [grouped.map(([label]) => label).join('|')]);
+    setQuery('');
+    setSelectedYear(null);
+  }, [slug]);
+
+  // The app ships a single static <title>, so every investor page appeared as
+  // "Logica Infoway" in tabs, bookmarks and search results. Name each one.
+  useEffect(() => {
+    if (!section) return;
+    const previous = document.title;
+    document.title = `${section.label} — Investor Relations | Logica Infoway`;
+    return () => {
+      document.title = previous;
+    };
+  }, [section]);
 
   if (!section) {
     return <Navigate to="/investor" replace />;
   }
 
+  // Derived rather than stored: the newest year is the default, and any
+  // selection that no longer exists (after changing section, or after a
+  // search narrows the years) falls back to it. Keeping this out of state
+  // avoids the effect ordering bug where the reset above raced the defaulting
+  // effect and left every year tab unselected while one was clearly rendered.
   const CategoryIcon = CATEGORY_ICONS[section.category];
   const showYearNav = section.kind === 'docs' && grouped.length > 1;
   const showSearch = section.kind === 'docs' && section.items.length > 8;
   const activeGroup = grouped.find(([label]) => label === selectedYear) ?? grouped[0];
+  const activeYear = activeGroup?.[0] ?? null;
 
   return (
     <div className="w-full bg-[#ECEDEC]">
@@ -193,14 +209,18 @@ export default function InvestorSection() {
             ) : (
               <div className="flex flex-col gap-10 lg:flex-row">
                 {showYearNav && (
-                  <nav className="flex shrink-0 gap-2 overflow-x-auto pb-2 lg:w-40 lg:flex-col lg:gap-1 lg:overflow-visible lg:border-r lg:border-[#000000]/10 lg:pb-0 lg:pr-6">
+                  <nav
+                    aria-label="Filter documents by financial year"
+                    className="flex shrink-0 gap-2 overflow-x-auto pb-2 lg:w-40 lg:flex-col lg:gap-1 lg:overflow-visible lg:border-r lg:border-[#000000]/10 lg:pb-0 lg:pr-6"
+                  >
                     {grouped.map(([label, group]) => (
                       <button
                         key={label}
                         type="button"
+                        aria-pressed={activeYear === label}
                         onClick={() => setSelectedYear(label)}
                         className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-left text-sm transition-colors lg:rounded-none lg:px-0 lg:py-2 ${
-                          selectedYear === label
+                          activeYear === label
                             ? 'bg-black text-white font-semibold lg:bg-transparent lg:text-black'
                             : 'bg-white text-[#6b6b6b] hover:text-black lg:bg-transparent'
                         }`}
@@ -217,7 +237,8 @@ export default function InvestorSection() {
                     <div className="relative mb-6 max-w-md">
                       <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b6b6b]" />
                       <input
-                        type="text"
+                        type="search"
+                        aria-label={`Search ${section.label} documents`}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder={`Search ${section.items.length} documents…`}
@@ -245,28 +266,6 @@ export default function InvestorSection() {
               </div>
             )}
           </>
-        )}
-
-        {section.kind === 'periods' && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {section.items.map((p) => (
-              <a
-                key={p.url}
-                href={p.url}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex flex-col rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#000000]/30 hover:shadow-md"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
-                  <Calendar className="w-5 h-5" />
-                </span>
-                <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#000000]">{p.label}</p>
-                <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-black opacity-0 transition-opacity group-hover:opacity-100">
-                  View <ArrowUpRight className="w-3.5 h-3.5" />
-                </span>
-              </a>
-            ))}
-          </div>
         )}
 
         {section.kind === 'single' && (

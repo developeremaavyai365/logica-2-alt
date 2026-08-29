@@ -18,12 +18,10 @@ import {
   GROUP_COMPANIES,
   SUBSIDIARY_AUDIT_REPORTS,
   type AnnualReport,
-  type FiscalYearFolder,
 } from './investor-data';
 
 export type InvestorSection =
   | { slug: string; label: string; category: string; kind: 'docs'; items: AnnualReport[] }
-  | { slug: string; label: string; category: string; kind: 'periods'; items: FiscalYearFolder[] }
   | { slug: string; label: string; category: string; kind: 'single'; doc: AnnualReport }
   | { slug: string; label: string; category: string; kind: 'names'; items: string[] };
 
