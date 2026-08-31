@@ -34,35 +34,44 @@ const BANDS = [
   { color: '#7DC242', left: '58%', delay: '180ms' },
 ];
 
-/* Exterior, interior, exterior — the interior sits in the middle so the strip
-   reads front / inside / front rather than two of a kind side by side.
+/* The two Logica-branded stores lead, the single-brand Samsung counter closes.
 
-   storefront-2 is the one landscape source (1448x1086). In a 4:5 slot its
-   full height is kept and the width is cropped instead, so a centred crop
-   cuts the fascia down to "SAMS". Holding it right keeps the wordmark whole.
-   The other two are near-4:5 already and need no nudging. */
+   Every one runs at its own native ratio — nothing is cropped to a common
+   shape. These are wide storefronts whose whole point is the fascia and the
+   brand strip running across it, and forcing them into a portrait slot threw
+   away half of each. Intrinsic width and height are declared so the browser
+   reserves the right box before the file arrives and the page doesn't jump.
+
+   Which is also why the Samsung photo here is storefront-2: it is the only
+   landscape one of the three, at 1.333. The other two are portrait and would
+   break the run. */
 const PHOTOS = [
   {
+    src: '/images/store/storefront-logica-1.jpg',
+    w: 1600,
+    h: 994,
+    alt: 'Logica Infoway Limited Mobile & IT Store, lit storefront at night',
+    title: 'The multi-brand store',
+    caption:
+      'The whole range under one fascia — ten phone brands across the top, six computing brands down the side, and laptops, desktops, accessories and service named at the door.',
+  },
+  {
+    src: '/images/store/storefront-logica-2.jpg',
+    w: 1600,
+    h: 1123,
+    alt: 'Logica Infoway Limited storefront, formerly Eastern Logica Infoway Limited',
+    title: 'The name over the door',
+    caption:
+      'The company name at full width, with the Eastern Logica Infoway name it traded under kept beneath it — and the finance desks, Bajaj Finserv, Pine Labs and HDB, that turn a counter price into instalments.',
+  },
+  {
     src: '/images/store/storefront-2.jpg',
+    w: 1448,
+    h: 1086,
     alt: 'Logica Infoway Samsung SmartCafé storefront',
-    position: '85% 50%',
-    title: 'The storefront',
+    title: 'The single-brand counter',
     caption:
-      'Samsung’s own shopfront format, carrying the Logica Infoway name above the door — glass at street level, lit so the whole floor reads before anyone steps inside.',
-  },
-  {
-    src: '/images/store/store-interior-1.jpg',
-    alt: 'Inside the Logica Infoway Samsung SmartCafé',
-    title: 'The floor',
-    caption:
-      'Galaxy counters set out for handling rather than display — devices powered up and within reach, so the decision gets made with the phone in hand, not off a spec sheet.',
-  },
-  {
-    src: '/images/store/storefront-1.jpg',
-    alt: 'Logica Infoway Samsung SmartCafé storefront',
-    title: 'The entrance',
-    caption:
-      'The doors that turn passing footfall into retail — one counter of the four businesses that also run distribution centres, export desks and a storefront that never closes.',
+      'And the other format alongside them: a Samsung shopfront carrying the Logica Infoway name above the door, glass at street level and lit so the whole floor reads before anyone steps inside.',
   },
 ];
 
@@ -228,31 +237,28 @@ export default function BrandMarkSection() {
         </div>
       </div>
 
-      {/* The stills, edge to edge at full width — no frame around them. */}
-      <div
-        ref={photosRef}
-        className="mt-16 grid w-full grid-cols-1 gap-2 sm:mt-24 sm:grid-cols-3 sm:gap-3"
-      >
+      {/* One per row, edge to edge, each at its own ratio and uncropped. */}
+      <div ref={photosRef} className="mt-16 w-full sm:mt-24">
         {PHOTOS.map((photo, i) => (
-          <figure key={photo.src} className="m-0">
+          <figure key={photo.src} className={i === 0 ? 'm-0' : 'm-0 mt-16 sm:mt-24'}>
             <img
               src={photo.src}
               alt={photo.alt}
+              width={photo.w}
+              height={photo.h}
               loading="lazy"
-              className="block w-full object-cover transition-all ease-out"
+              className="block h-auto w-full transition-all ease-out"
               style={{
-                aspectRatio: '4 / 5',
-                objectPosition: photo.position ?? '50% 50%',
                 opacity: photosIn[i] ? 1 : 0,
                 transform: photosIn[i] ? 'translateY(0)' : 'translateY(26px)',
                 transitionDuration: '760ms',
               }}
             />
-            {/* Trails its own image, so each still arrives then names itself.
-                Inset slightly rather than aligned flush to the image edge,
-                which on the outer two would sit hard against the screen. */}
+            {/* Trails its own image, so each arrives then names itself. Held
+                to the page's own gutter rather than the image edge, which
+                runs to the screen. */}
             <figcaption
-              className="px-3 pt-4 transition-all ease-out sm:px-4 sm:pt-5"
+              className="px-5 pt-6 transition-all ease-out sm:px-8 sm:pt-7 lg:px-10"
               style={{
                 opacity: photosIn[i] ? 1 : 0,
                 transform: photosIn[i] ? 'translateY(0)' : 'translateY(12px)',
@@ -267,8 +273,8 @@ export default function BrandMarkSection() {
                 {String(i + 1).padStart(2, '0')}
               </span>
               <span
-                className="font-dm-sans mt-1.5 block font-bold text-[#0A0A0A]"
-                style={{ fontSize: 'clamp(16px, 1.6vw, 22px)', letterSpacing: '-0.02em' }}
+                className="font-dm-sans mt-2 block font-bold text-[#0A0A0A]"
+                style={{ fontSize: 'clamp(20px, 2.4vw, 34px)', letterSpacing: '-0.025em' }}
               >
                 {photo.title}
               </span>
@@ -276,9 +282,9 @@ export default function BrandMarkSection() {
                   and the measure capped, so a long line stays readable
                   instead of stretching the full width of the image. */}
               <span
-                className="font-inter mt-2 block max-w-[42ch] text-black/55"
+                className="font-inter mt-3 block max-w-[58ch] text-black/55"
                 style={{
-                  fontSize: 'clamp(13px, 1.05vw, 15px)',
+                  fontSize: 'clamp(14px, 1.2vw, 18px)',
                   letterSpacing: '-0.005em',
                   lineHeight: 1.62,
                   textWrap: 'pretty',
