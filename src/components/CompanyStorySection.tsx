@@ -10,46 +10,6 @@ const stats = [
   { vertical: 'E-commerce', value: '24/7', label: 'Nationwide Online Reach', icon: ShoppingCart, chip: '#EDE4FF', ink: '#6D28D9' },
 ];
 
-// Same four verticals as the stats grid below, colored to match — cycles
-// in place inside the heading in place of a static "retail".
-const VERTICAL_WORDS = ['retail', 'distribution', 'export', 'e-commerce'];
-const ROTATE_INTERVAL = 2200;
-const ROTATE_TRANSITION = 300;
-
-function RotatingVertical() {
-  const [i, setI] = useState(0);
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setVisible(false);
-      setTimeout(() => {
-        setI((prev) => (prev + 1) % VERTICAL_WORDS.length);
-        setVisible(true);
-      }, ROTATE_TRANSITION);
-    }, ROTATE_INTERVAL);
-    return () => clearInterval(id);
-  }, []);
-
-  const current = VERTICAL_WORDS[i];
-  // No gradient/background-clip here on purpose. The parent paragraph already
-  // clips one gradient across the whole line, and nesting a second
-  // background-clip:text inside it made the word paint a second time at the
-  // parent's gradient origin — a ghost copy at the left edge of the paragraph.
-  // This span just inherits the parent's clipped gradient and fades in place.
-  return (
-    <span
-      className="transition-opacity ease-out"
-      style={{
-        opacity: visible ? 1 : 0,
-        transitionDuration: `${ROTATE_TRANSITION}ms`,
-      }}
-    >
-      {current}
-    </span>
-  );
-}
-
 const DURATION = 1200;
 const STAGGER = 200;
 
@@ -135,22 +95,27 @@ export default function CompanyStorySection() {
   }, []);
 
   return (
-    <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-28">
-      <h2
-        className="animate-fade-up font-dm-sans mx-auto max-w-6xl bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-center font-extrabold uppercase text-transparent"
-        style={{ fontSize: 'clamp(44px, 7vw, 84px)', letterSpacing: '-0.03em', lineHeight: 1 }}
+    <section className="bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 lg:py-36">
+      <p
+        className="animate-fade-up font-inter text-center text-black/45"
+        style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
       >
-        Who We Are
-      </h2>
+        WHO WE ARE
+      </p>
 
-      <div className="animate-fade-up mx-auto mt-12 flex max-w-4xl flex-col items-center text-center">
+      <div className="animate-fade-up mx-auto mt-10 flex max-w-5xl flex-col items-center text-center sm:mt-14">
+        {/* One statement, set large with room to breathe — the emphasis is
+            carried by a single phrase rather than by size alone. Solid ink
+            rather than a clipped gradient, so nothing can ghost behind it. */}
         <p
-          className="font-dm-sans bg-gradient-to-r from-black to-[#15803D] bg-clip-text font-extrabold text-transparent"
-          style={{ fontSize: 'clamp(22px, 3.2vw, 36px)', letterSpacing: '-0.04em', lineHeight: 1.1 }}
+          className="font-dm-sans text-[#111111]"
+          style={{ fontSize: 'clamp(24px, 3.4vw, 46px)', letterSpacing: '-0.025em', lineHeight: 1.32 }}
         >
-          From <RotatingVertical />
-          <br />
-          shelves to global markets, we deliver technology where it matters most.
+          Four businesses, one discipline: put the right technology in the right hands. Through
+          retail counters, distribution centres, export desks and a storefront that never closes,
+          we move computing, mobility and network infrastructure to{' '}
+          <span className="font-bold text-[#15803D]">the people and institutions that run on them</span>
+          {' '}— from Kolkata, since 1995.
         </p>
 
         <div ref={statsRef} className="mt-14 grid w-full max-w-5xl grid-cols-2 gap-x-8 gap-y-14 border-t border-black/10 pt-14 sm:grid-cols-4">
