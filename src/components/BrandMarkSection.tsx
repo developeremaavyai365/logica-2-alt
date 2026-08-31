@@ -53,7 +53,7 @@ const PHOTOS = [
     alt: 'Logica Infoway Limited Mobile & IT Store, lit storefront at night',
     title: 'The multi-brand store',
     caption:
-      'The whole range under one fascia — ten phone brands across the top, six computing brands down the side, and laptops, desktops, accessories and service named at the door.',
+      'Every brand worth carrying, under one roof. Phones, laptops, desktops and everything that goes with them — out on display to compare in person, with service handled at the same counter that sold it.',
   },
   {
     src: '/images/store/storefront-logica-2.jpg',
@@ -62,7 +62,7 @@ const PHOTOS = [
     alt: 'Logica Infoway Limited storefront, formerly Eastern Logica Infoway Limited',
     title: 'The name over the door',
     caption:
-      'The company name at full width, with the Eastern Logica Infoway name it traded under kept beneath it — and the finance desks, Bajaj Finserv, Pine Labs and HDB, that turn a counter price into instalments.',
+      'One name, one counter, and the same company behind it since the Eastern Logica Infoway years. Pick what you want and pay how it suits you — finance and easy EMI arranged in store.',
   },
   {
     src: '/images/store/storefront-2.jpg',
@@ -71,7 +71,7 @@ const PHOTOS = [
     alt: 'Logica Infoway Samsung SmartCafé storefront',
     title: 'The single-brand counter',
     caption:
-      'And the other format alongside them: a Samsung shopfront carrying the Logica Infoway name above the door, glass at street level and lit so the whole floor reads before anyone steps inside.',
+      'A dedicated Samsung shopfront under the Logica name. The Galaxy range in person, hands on it before you decide, and somewhere close by to come back to long after you have.',
   },
 ];
 
