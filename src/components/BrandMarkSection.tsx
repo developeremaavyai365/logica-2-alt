@@ -7,14 +7,14 @@ import { useEffect, useRef, useState } from 'react';
    Behind them the three diagonal bands from the registered logo rake upward,
    held light so the type stays fully legible over them.
 
-   Beneath the name: the store film full bleed, then the SmartCafé stills at
-   full width. Both run edge to edge rather than sitting in cards, so the
-   footage and the photographs carry the block at their own scale.
+   Beneath the name the SmartCafé stills run edge to edge at full width,
+   rather than sitting in cards, so the photographs carry the block at their
+   own scale. Each arrives on its own and is then named by its caption.
 
-   The name and the stills each watch themselves. They have to: the film
-   between them is a full viewport tall, so the name is long gone by the time
-   the stills arrive, and a single shared trigger would reset the stills to
-   invisible exactly when they came into view.
+   The name and the stills watch themselves separately. They are close enough
+   now to share a trigger, but keeping them apart means the stills reveal when
+   the stills are actually reached — no reset can wipe them on the way past,
+   however tall this block grows.
 
    Both replay on every entry and reset on leaving, matching the counting
    stats above. A safety timer covers the case where the observer callback
@@ -225,23 +225,10 @@ export default function BrandMarkSection() {
         </div>
       </div>
 
-      {/* The store itself, full bleed and full height. */}
-      <div className="mt-16 w-full bg-black sm:mt-24" style={{ height: '100dvh' }}>
-        <video
-          className="h-full w-full object-cover"
-          src="/videos/logica-store-hero.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-label="Inside the Logica Infoway store"
-        />
-      </div>
-
       {/* The stills, edge to edge at full width — no frame around them. */}
       <div
         ref={photosRef}
-        className="mt-2 grid w-full grid-cols-1 gap-2 sm:mt-3 sm:grid-cols-3 sm:gap-3"
+        className="mt-16 grid w-full grid-cols-1 gap-2 sm:mt-24 sm:grid-cols-3 sm:gap-3"
       >
         {PHOTOS.map((photo, i) => (
           <figure key={photo.src} className="m-0">
