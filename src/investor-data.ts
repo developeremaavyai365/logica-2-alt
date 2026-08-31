@@ -132,6 +132,25 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "/investor/financial-results/approval-of-half-yearly-result-as-on-30th-september-2023.pdf",
   },
   {
+    // 5th meeting of FY2023-24. The outcome was already on the server, but
+    // only under Corporate Announcements as "reg-30.pdf" — the same file byte
+    // for byte. It states the Board "in its meeting held on 13th December
+    // 2023" approved the change of name. Cross-listed, not re-uploaded.
+    title: "Outcome of Board Meeting — 5th Meeting (FY 2023-24), December 13, 2023",
+    year: "2023-24",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2023/12/reg-30.pdf",
+  },
+  {
+    // 6th meeting of FY2023-24. Recovered from the company's own BSE filing
+    // of 17.01.2024, category "Board Meeting / Outcome of Board Meeting".
+    // Header: "Outcome of Board Meeting ... -17th January 2024"; the body
+    // records the name change, the increase in authorised capital and the
+    // 5:1 bonus issue. Was not published on the site at all.
+    title: "Outcome of Board Meeting — 6th Meeting (FY 2023-24), January 17, 2024",
+    year: "2023-24",
+    url: "/investor/board-meetings/outcome-of-board-meeting-17-01-2024.pdf",
+  },
+  {
     title: "Outcome of Board Meeting — March 1, 2025 (Allotment on Preferential Basis)",
     year: "2024-25",
     url: "/investor/fund-raising/outcome-board-meeting-allotment-preferential-basis-01-03-2025.pdf",
@@ -217,7 +236,9 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/BM-1.pdf",
   },
   {
-    title: "Board Meeting Notice — 2nd Meeting (FY 2023-24)",
+    // Date read off the notice itself, which sets the meeting for "Friday
+    // 16th June, 2023" — matching the 4th to 7th, which already carry dates.
+    title: "Board Meeting Notice — 2nd Meeting (FY 2023-24), June 16, 2023",
     year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/06/BM-2.pdf",
   },
