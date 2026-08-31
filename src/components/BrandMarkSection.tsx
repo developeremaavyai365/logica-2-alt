@@ -237,28 +237,34 @@ export default function BrandMarkSection() {
         </div>
       </div>
 
-      {/* One per row, edge to edge, each at its own ratio and uncropped. */}
+      {/* One per row: the photograph across two thirds, running off the left
+          edge, and its caption set beside it in the last third. Each still
+          keeps its own ratio and is never cropped. Stacks below lg, where a
+          third of the width is too narrow to set text in. */}
       <div ref={photosRef} className="mt-16 w-full sm:mt-24">
         {PHOTOS.map((photo, i) => (
-          <figure key={photo.src} className={i === 0 ? 'm-0' : 'm-0 mt-16 sm:mt-24'}>
+          <figure
+            key={photo.src}
+            className={`m-0 flex flex-col lg:flex-row lg:items-center ${i === 0 ? '' : 'mt-14 sm:mt-20'}`}
+          >
             <img
               src={photo.src}
               alt={photo.alt}
               width={photo.w}
               height={photo.h}
               loading="lazy"
-              className="block h-auto w-full transition-all ease-out"
+              className="block h-auto w-full shrink-0 transition-all ease-out lg:w-2/3"
               style={{
                 opacity: photosIn[i] ? 1 : 0,
                 transform: photosIn[i] ? 'translateY(0)' : 'translateY(26px)',
                 transitionDuration: '760ms',
               }}
             />
-            {/* Trails its own image, so each arrives then names itself. Held
-                to the page's own gutter rather than the image edge, which
-                runs to the screen. */}
+            {/* Trails its own image, so each arrives then names itself. Sits
+                in the remaining third on desktop, centred against the photo;
+                drops beneath it on narrower screens. */}
             <figcaption
-              className="px-5 pt-6 transition-all ease-out sm:px-8 sm:pt-7 lg:px-10"
+              className="px-5 pt-6 transition-all ease-out sm:px-8 sm:pt-7 lg:w-1/3 lg:px-10 lg:pt-0"
               style={{
                 opacity: photosIn[i] ? 1 : 0,
                 transform: photosIn[i] ? 'translateY(0)' : 'translateY(12px)',
