@@ -164,8 +164,11 @@ export default function CompanyStorySection() {
 
   return (
     <section className="bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 lg:py-36">
+      {/* Brand green rather than a grey tint: it carries the same accent as the
+          emphasised phrase below, and clears AA on white at 5:1 where the old
+          45% black did not. */}
       <p
-        className="animate-fade-up font-inter text-center text-black/45"
+        className="animate-fade-up font-inter text-center font-semibold text-[#15803D]"
         style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
       >
         WHO WE ARE
