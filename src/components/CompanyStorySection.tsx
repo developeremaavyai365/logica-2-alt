@@ -110,10 +110,16 @@ function StatValue({ raw, active }: { raw: string; active: boolean }) {
   const count = useCountUp(match ? Number(match[1]) : 0, active && !!match);
 
   if (!match) return <>{raw}</>;
+  // The digits carry the weight; the "+" or "/7" rides smaller and raised so
+  // it never competes with the number for size.
   return (
     <>
       {count}
-      {match[2]}
+      {match[2] && (
+        <span style={{ fontSize: '0.44em', verticalAlign: '0.55em', letterSpacing: '-0.01em' }}>
+          {match[2]}
+        </span>
+      )}
     </>
   );
 }
@@ -200,27 +206,30 @@ export default function CompanyStorySection() {
                   transitionDuration: '600ms',
                 }}
               >
+                {/* The number leads. The mark shrinks to a small coloured
+                    marker above it and the vertical name drops beneath, so
+                    nothing in the column competes with the figure. */}
                 <span
                   className="flex items-center justify-center rounded-full"
-                  style={{ backgroundColor: stat.chip, color: stat.ink, height: 'clamp(56px, 6vw, 84px)', width: 'clamp(56px, 6vw, 84px)' }}
+                  style={{ backgroundColor: stat.chip, color: stat.ink, height: 'clamp(38px, 3.6vw, 50px)', width: 'clamp(38px, 3.6vw, 50px)' }}
                 >
-                  <stat.icon style={{ height: 'clamp(28px, 3.2vw, 44px)', width: 'clamp(28px, 3.2vw, 44px)' }} />
+                  <stat.icon style={{ height: 'clamp(20px, 2vw, 27px)', width: 'clamp(20px, 2vw, 27px)' }} />
                 </span>
                 <p
-                  className="font-dm-sans mt-4 font-extrabold"
-                  style={{ color: stat.ink, letterSpacing: '-0.02em', fontSize: 'clamp(18px, 2vw, 26px)' }}
-                >
-                  {stat.vertical}
-                </p>
-                <p
-                  className="font-dm-sans mt-2 font-extrabold text-black tabular-nums"
-                  style={{ fontSize: 'clamp(40px, 6vw, 64px)', letterSpacing: '-0.05em', lineHeight: 1 }}
+                  className="font-dm-sans mt-5 font-extrabold text-[#0A0A0A] tabular-nums"
+                  style={{ fontSize: 'clamp(58px, 8.4vw, 116px)', letterSpacing: '-0.055em', lineHeight: 0.86 }}
                 >
                   <StatValue raw={stat.value} active={revealed[i]} />
                 </p>
                 <p
-                  className="font-inter mt-2 text-center text-black/50"
-                  style={{ letterSpacing: '-0.01em', fontSize: 'clamp(14px, 1.4vw, 18px)' }}
+                  className="font-dm-sans mt-4 font-bold uppercase"
+                  style={{ color: stat.ink, letterSpacing: '0.11em', fontSize: 'clamp(12px, 1.15vw, 15px)' }}
+                >
+                  {stat.vertical}
+                </p>
+                <p
+                  className="font-inter mt-1.5 text-center text-black/45"
+                  style={{ letterSpacing: '-0.01em', fontSize: 'clamp(13px, 1.2vw, 16px)' }}
                 >
                   {stat.label}
                 </p>
