@@ -1,28 +1,38 @@
 import { useEffect, useRef, useState } from 'react';
 
-/* The full name is set as one unit — "LOGICA INFOWAY" at a single weight and
-   size, not a large word with a smaller qualifier under it — and the
-   registered logo is revealed once the name has landed.
+/* The heading borrows the one thing that is unmistakably Logica's: the three
+   diagonal bands that rise behind the wordmark in the registered logo. They
+   sweep up from behind the name and lead the eye rightward into the mark
+   itself, so the type and the logo read as one lockup rather than a heading
+   with a picture beside it.
 
-   The entrance runs off an IntersectionObserver, since the section sits well
-   down the page and a load-time animation would finish before anyone reached
-   it. A safety timer reveals everything regardless after REVEAL_FALLBACK, so
-   an observer that never fires cannot leave the section blank. */
+   Order of reveal: the name lands, the bands sweep up through it, then the
+   logo resolves. An IntersectionObserver drives it, with a safety timer so a
+   callback that never fires cannot leave the section blank. */
 const REVEAL_FALLBACK = 2500;
-const LOGO_DELAY = 820;
+const BANDS_DELAY = 420;
+const LOGO_DELAY = 980;
+
+const BANDS = [
+  { color: '#5BC5F2', left: '4%', delay: '0ms' },
+  { color: '#F5E31F', left: '26%', delay: '90ms' },
+  { color: '#7DC242', left: '48%', delay: '180ms' },
+];
 
 export default function BrandMarkSection() {
   const ref = useRef<HTMLDivElement>(null);
   const [nameIn, setNameIn] = useState(false);
+  const [bandsIn, setBandsIn] = useState(false);
   const [logoIn, setLogoIn] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    let logoTimer: ReturnType<typeof setTimeout>;
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
     const reveal = () => {
       setNameIn(true);
-      logoTimer = setTimeout(() => setLogoIn(true), LOGO_DELAY);
+      timers.push(setTimeout(() => setBandsIn(true), BANDS_DELAY));
+      timers.push(setTimeout(() => setLogoIn(true), LOGO_DELAY));
     };
 
     const fallback = setTimeout(reveal, REVEAL_FALLBACK);
@@ -45,21 +55,47 @@ export default function BrandMarkSection() {
 
     return () => {
       clearTimeout(fallback);
-      clearTimeout(logoTimer);
+      timers.forEach(clearTimeout);
       observer?.disconnect();
     };
   }, []);
 
   return (
-    <section className="bg-white px-5 py-24 sm:px-8 sm:py-32 lg:px-10 lg:py-40">
-      <div ref={ref} className="mx-auto flex max-w-6xl flex-col items-center">
-        {/* The whole name, one size and one weight, sized to the container so
-            it holds together as a single line rather than two registers. */}
+    <section className="overflow-hidden bg-white px-5 py-24 sm:px-8 sm:py-32 lg:px-10 lg:py-36">
+      <div
+        ref={ref}
+        className="relative mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 sm:flex-row sm:gap-[clamp(24px,4vw,64px)]"
+      >
+        {/* The bands rise behind the name at the angle they take in the logo */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          {BANDS.map((b) => (
+            <span
+              key={b.color}
+              className="absolute block transition-all ease-out"
+              style={{
+                left: b.left,
+                bottom: '-40%',
+                width: 'clamp(26px, 4.4vw, 62px)',
+                height: '210%',
+                backgroundColor: b.color,
+                transform: bandsIn
+                  ? 'rotate(38deg) translateY(0)'
+                  : 'rotate(38deg) translateY(62%)',
+                opacity: bandsIn ? 0.24 : 0,
+                transformOrigin: 'bottom center',
+                transitionDuration: '900ms',
+                transitionDelay: b.delay,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* The whole name, one size and one weight */}
         <h2
-          className="font-dm-sans text-center font-extrabold uppercase leading-none text-[#0A0A0A] transition-all ease-out"
+          className="relative font-dm-sans text-center font-extrabold uppercase leading-[0.92] text-[#0A0A0A] transition-all ease-out sm:text-left"
           style={{
-            fontSize: 'clamp(34px, 8.4vw, 122px)',
-            letterSpacing: '-0.035em',
+            fontSize: 'clamp(32px, 6.6vw, 96px)',
+            letterSpacing: '-0.038em',
             opacity: nameIn ? 1 : 0,
             transform: nameIn ? 'translateY(0)' : 'translateY(22px)',
             transitionDuration: '820ms',
@@ -68,15 +104,15 @@ export default function BrandMarkSection() {
           Logica Infoway
         </h2>
 
-        {/* The registered mark, held back until the name has settled */}
+        {/* The registered mark, smaller, sitting to the right of the name */}
         <img
           src="/logica-trademark.png"
           alt="Logica registered trademark"
-          className="mt-12 h-auto w-full transition-all ease-out sm:mt-16"
+          className="relative h-auto w-full shrink-0 transition-all ease-out"
           style={{
-            maxWidth: 'clamp(200px, 30vw, 400px)',
+            maxWidth: 'clamp(132px, 17vw, 224px)',
             opacity: logoIn ? 1 : 0,
-            transform: logoIn ? 'translateY(0) scale(1)' : 'translateY(14px) scale(0.94)',
+            transform: logoIn ? 'translateX(0) scale(1)' : 'translateX(-14px) scale(0.92)',
             transitionDuration: '760ms',
           }}
         />
