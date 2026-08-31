@@ -6,6 +6,7 @@ import BrandStrip from '../components/BrandStrip';
 import LoyaltyCard from '../components/LoyaltyCard';
 import TrustBand from '../components/TrustBand';
 import CompanyStorySection from '../components/CompanyStorySection';
+import BrandMarkSection from '../components/BrandMarkSection';
 import RegisteredOfficesVideo from '../components/RegisteredOfficesVideo';
 import CompanyReels from '../components/CompanyReels';
 
@@ -20,6 +21,8 @@ export default function Home() {
 
       {/* Company identity — who Logica Infoway is, before the shop starts. */}
       <CompanyStorySection />
+      {/* The name signs off the identity block, as on the Trent reference. */}
+      <BrandMarkSection />
       <RegisteredOfficesVideo />
 
       <BrandStrip />
