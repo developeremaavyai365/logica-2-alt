@@ -115,7 +115,7 @@ export default function CompanyStorySection() {
           retail counters, distribution centres, export desks and a storefront that never closes,
           we move computing, mobility and network infrastructure to{' '}
           <span className="font-bold text-[#15803D]">the people and institutions that run on them</span>
-          {' '}— from Kolkata, since 1995.
+          {' '}— from the warehouse floor to the last mile.
         </p>
 
         <div ref={statsRef} className="mt-14 grid w-full max-w-5xl grid-cols-2 gap-x-8 gap-y-14 border-t border-black/10 pt-14 sm:grid-cols-4">
