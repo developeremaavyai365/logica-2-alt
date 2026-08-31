@@ -23,9 +23,9 @@ const REVEAL_FALLBACK = 2500;
 const SECOND_LINE_DELAY = 200;
 const BANDS_DELAY = 460;
 const LOGO_DELAY = 1020;
-/* Wide enough that each still clearly lands on its own rather than the three
-   arriving as one block, and the caption trails its own image. */
-const PHOTO_STAGGER = 420;
+/* Rows no longer need staggering against each other — scrolling does that now,
+   each one firing as it is reached. This is only the caption trailing its own
+   photograph in. */
 const CAPTION_DELAY = 260;
 
 const BANDS = [
@@ -114,15 +114,98 @@ function useInView<T extends HTMLElement>(threshold: number) {
   return [ref, inView] as const;
 }
 
+/* Each row watches itself and slides in when it is the one being scrolled to.
+   A single trigger on the whole strip cannot work here: the strip is far
+   taller than the viewport, so rows two and three would fire while still off
+   screen and be over before anyone saw them.
+
+   The photograph comes in from the left and the caption from the right, the
+   two closing on each other — the same horizontal move the name above uses,
+   so the block reads in one motion vocabulary. */
+function PhotoRow({ photo, index }: { photo: (typeof PHOTOS)[number]; index: number }) {
+  const [ref, inView] = useInView<HTMLElement>(0.18);
+  const [shown, setShown] = useState(false);
+
+  // Scheduled rather than set inline so a reset paints first and the row
+  // slides, instead of the two batching into a straight appearance.
+  useEffect(() => {
+    if (!inView) {
+      setShown(false);
+      return;
+    }
+    const t = setTimeout(() => setShown(true), 0);
+    return () => clearTimeout(t);
+  }, [inView]);
+
+  return (
+    <figure
+      ref={ref}
+      className={`m-0 flex flex-col overflow-hidden lg:flex-row lg:items-center ${
+        index === 0 ? '' : 'mt-14 sm:mt-20'
+      }`}
+    >
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        width={photo.w}
+        height={photo.h}
+        loading="lazy"
+        className="block h-auto w-full shrink-0 transition-all ease-out lg:w-2/3"
+        style={{
+          opacity: shown ? 1 : 0,
+          transform: shown ? 'translateX(0)' : 'translateX(-64px)',
+          transitionDuration: '900ms',
+        }}
+      />
+      {/* Trails its own image, so each arrives then names itself. Sits in the
+          remaining third on desktop, centred against the photo; drops beneath
+          it on narrower screens. */}
+      <figcaption
+        className="px-5 pt-6 transition-all ease-out sm:px-8 sm:pt-7 lg:w-1/3 lg:px-10 lg:pt-0"
+        style={{
+          opacity: shown ? 1 : 0,
+          transform: shown ? 'translateX(0)' : 'translateX(48px)',
+          transitionDuration: '820ms',
+          transitionDelay: shown ? `${CAPTION_DELAY}ms` : '0ms',
+        }}
+      >
+        <span
+          className="font-inter block font-semibold text-[#15803D]"
+          style={{ fontSize: 'clamp(10px, 0.85vw, 12px)', letterSpacing: '0.22em' }}
+        >
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <span
+          className="font-dm-sans mt-2 block font-bold text-[#0A0A0A]"
+          style={{ fontSize: 'clamp(20px, 2.4vw, 34px)', letterSpacing: '-0.025em' }}
+        >
+          {photo.title}
+        </span>
+        {/* Set as running text rather than a label: leading opened up and the
+            measure capped, so a long line stays readable. */}
+        <span
+          className="font-inter mt-3 block max-w-[58ch] text-black/55"
+          style={{
+            fontSize: 'clamp(14px, 1.2vw, 18px)',
+            letterSpacing: '-0.005em',
+            lineHeight: 1.62,
+            textWrap: 'pretty',
+          }}
+        >
+          {photo.caption}
+        </span>
+      </figcaption>
+    </figure>
+  );
+}
+
 export default function BrandMarkSection() {
   const [nameRef, nameInView] = useInView<HTMLDivElement>(0.3);
-  const [photosRef, photosInView] = useInView<HTMLDivElement>(0.12);
 
   const [lineOne, setLineOne] = useState(false);
   const [lineTwo, setLineTwo] = useState(false);
   const [bandsIn, setBandsIn] = useState(false);
   const [logoIn, setLogoIn] = useState(false);
-  const [photosIn, setPhotosIn] = useState<boolean[]>(() => PHOTOS.map(() => false));
 
   /* Every step is scheduled, including the first, so the reset paints before
      anything flips back on — otherwise React batches the two and the type
@@ -143,23 +226,6 @@ export default function BrandMarkSection() {
     ];
     return () => timers.forEach(clearTimeout);
   }, [nameInView]);
-
-  useEffect(() => {
-    if (!photosInView) {
-      setPhotosIn(PHOTOS.map(() => false));
-      return;
-    }
-    const timers = PHOTOS.map((_, i) =>
-      setTimeout(() => {
-        setPhotosIn((prev) => {
-          const next = [...prev];
-          next[i] = true;
-          return next;
-        });
-      }, i * PHOTO_STAGGER),
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [photosInView]);
 
   return (
     <section className="overflow-hidden bg-white py-24 sm:py-32 lg:py-40">
@@ -241,65 +307,9 @@ export default function BrandMarkSection() {
           edge, and its caption set beside it in the last third. Each still
           keeps its own ratio and is never cropped. Stacks below lg, where a
           third of the width is too narrow to set text in. */}
-      <div ref={photosRef} className="mt-16 w-full sm:mt-24">
+      <div className="mt-16 w-full sm:mt-24">
         {PHOTOS.map((photo, i) => (
-          <figure
-            key={photo.src}
-            className={`m-0 flex flex-col lg:flex-row lg:items-center ${i === 0 ? '' : 'mt-14 sm:mt-20'}`}
-          >
-            <img
-              src={photo.src}
-              alt={photo.alt}
-              width={photo.w}
-              height={photo.h}
-              loading="lazy"
-              className="block h-auto w-full shrink-0 transition-all ease-out lg:w-2/3"
-              style={{
-                opacity: photosIn[i] ? 1 : 0,
-                transform: photosIn[i] ? 'translateY(0)' : 'translateY(26px)',
-                transitionDuration: '760ms',
-              }}
-            />
-            {/* Trails its own image, so each arrives then names itself. Sits
-                in the remaining third on desktop, centred against the photo;
-                drops beneath it on narrower screens. */}
-            <figcaption
-              className="px-5 pt-6 transition-all ease-out sm:px-8 sm:pt-7 lg:w-1/3 lg:px-10 lg:pt-0"
-              style={{
-                opacity: photosIn[i] ? 1 : 0,
-                transform: photosIn[i] ? 'translateY(0)' : 'translateY(12px)',
-                transitionDuration: '620ms',
-                transitionDelay: photosIn[i] ? `${CAPTION_DELAY}ms` : '0ms',
-              }}
-            >
-              <span
-                className="font-inter block font-semibold text-[#15803D]"
-                style={{ fontSize: 'clamp(10px, 0.85vw, 12px)', letterSpacing: '0.22em' }}
-              >
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span
-                className="font-dm-sans mt-2 block font-bold text-[#0A0A0A]"
-                style={{ fontSize: 'clamp(20px, 2.4vw, 34px)', letterSpacing: '-0.025em' }}
-              >
-                {photo.title}
-              </span>
-              {/* Set as running text rather than a label: leading opened up
-                  and the measure capped, so a long line stays readable
-                  instead of stretching the full width of the image. */}
-              <span
-                className="font-inter mt-3 block max-w-[58ch] text-black/55"
-                style={{
-                  fontSize: 'clamp(14px, 1.2vw, 18px)',
-                  letterSpacing: '-0.005em',
-                  lineHeight: 1.62,
-                  textWrap: 'pretty',
-                }}
-              >
-                {photo.caption}
-              </span>
-            </figcaption>
-          </figure>
+          <PhotoRow key={photo.src} photo={photo} index={i} />
         ))}
       </div>
     </section>
