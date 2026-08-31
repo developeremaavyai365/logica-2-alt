@@ -47,19 +47,22 @@ const PHOTOS = [
     alt: 'Logica Infoway Samsung SmartCafé storefront',
     position: '85% 50%',
     title: 'The storefront',
-    caption: 'Samsung SmartCafé, under the Logica Infoway name',
+    caption:
+      'Samsung’s own shopfront format, carrying the Logica Infoway name above the door — glass at street level, lit so the whole floor reads before anyone steps inside.',
   },
   {
     src: '/images/store/store-interior-1.jpg',
     alt: 'Inside the Logica Infoway Samsung SmartCafé',
     title: 'The floor',
-    caption: 'Galaxy counters, set out for hands-on',
+    caption:
+      'Galaxy counters set out for handling rather than display — devices powered up and within reach, so the decision gets made with the phone in hand, not off a spec sheet.',
   },
   {
     src: '/images/store/storefront-1.jpg',
     alt: 'Logica Infoway Samsung SmartCafé storefront',
     title: 'The entrance',
-    caption: 'Where the walk-in trade starts',
+    caption:
+      'The doors that turn passing footfall into retail — one counter of the four businesses that also run distribution centres, export desks and a storefront that never closes.',
   },
 ];
 
@@ -269,9 +272,17 @@ export default function BrandMarkSection() {
               >
                 {photo.title}
               </span>
+              {/* Set as running text rather than a label: leading opened up
+                  and the measure capped, so a long line stays readable
+                  instead of stretching the full width of the image. */}
               <span
-                className="font-inter mt-1 block text-black/55"
-                style={{ fontSize: 'clamp(12px, 1.05vw, 15px)', letterSpacing: '-0.01em' }}
+                className="font-inter mt-2 block max-w-[42ch] text-black/55"
+                style={{
+                  fontSize: 'clamp(13px, 1.05vw, 15px)',
+                  letterSpacing: '-0.005em',
+                  lineHeight: 1.62,
+                  textWrap: 'pretty',
+                }}
               >
                 {photo.caption}
               </span>
