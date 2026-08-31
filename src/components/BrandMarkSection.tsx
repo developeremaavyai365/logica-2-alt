@@ -7,12 +7,14 @@ import { useEffect, useRef, useState } from 'react';
    Behind them the three diagonal bands from the registered logo rake upward,
    held light so the type stays fully legible over them.
 
-   The Samsung SmartCafé photographs land after the name, so the block reads
-   as the identity first and the evidence of it second — same three shots the
-   homepage hero rotates through.
+   Beneath the name: the store film full bleed, then the SmartCafé stills at
+   full width. Both run edge to edge rather than sitting in cards, so the
+   footage and the photographs carry the block at their own scale.
 
-   An IntersectionObserver drives the sequence, with a safety timer so a
-   callback that never fires cannot leave the section blank. */
+   The sequence replays every time the block comes back into view and resets
+   when it leaves, matching the counting stats above it. A safety timer covers
+   the case where the observer callback never fires, so the section cannot be
+   left blank. */
 const REVEAL_FALLBACK = 2500;
 const SECOND_LINE_DELAY = 200;
 const BANDS_DELAY = 460;
@@ -49,10 +51,27 @@ export default function BrandMarkSection() {
 
   useEffect(() => {
     const el = ref.current;
-    const timers: ReturnType<typeof setTimeout>[] = [];
+    if (!el) return;
+    let timers: ReturnType<typeof setTimeout>[] = [];
 
+    const clearTimers = () => {
+      timers.forEach(clearTimeout);
+      timers = [];
+    };
+
+    const reset = () => {
+      setLineOne(false);
+      setLineTwo(false);
+      setBandsIn(false);
+      setLogoIn(false);
+      setPhotosIn(PHOTOS.map(() => false));
+    };
+
+    /* Every step is scheduled, including the first, so a reset renders before
+       anything flips back on — otherwise the two batch together and the type
+       appears instead of sliding. */
     const reveal = () => {
-      setLineOne(true);
+      timers.push(setTimeout(() => setLineOne(true), 0));
       timers.push(setTimeout(() => setLineTwo(true), SECOND_LINE_DELAY));
       timers.push(setTimeout(() => setBandsIn(true), BANDS_DELAY));
       timers.push(setTimeout(() => setLogoIn(true), LOGO_DELAY));
@@ -72,14 +91,14 @@ export default function BrandMarkSection() {
     const fallback = setTimeout(reveal, REVEAL_FALLBACK);
 
     let observer: IntersectionObserver | undefined;
-    if (el && typeof IntersectionObserver !== 'undefined') {
+    if (typeof IntersectionObserver !== 'undefined') {
       observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              clearTimeout(fallback);
-              reveal();
-            }
+            clearTimeout(fallback);
+            clearTimers();
+            reset();
+            if (entry.isIntersecting) reveal();
           });
         },
         { threshold: 0.3 },
@@ -89,15 +108,15 @@ export default function BrandMarkSection() {
 
     return () => {
       clearTimeout(fallback);
-      timers.forEach(clearTimeout);
+      clearTimers();
       observer?.disconnect();
     };
   }, []);
 
   return (
-    <section className="overflow-hidden bg-white px-5 py-24 sm:px-8 sm:py-32 lg:px-10 lg:py-40">
-      <div className="mx-auto max-w-6xl">
-        <div className="flex justify-center">
+    <section className="overflow-hidden bg-white py-24 sm:py-32 lg:py-40">
+      <div className="px-5 sm:px-8 lg:px-10">
+        <div className="mx-auto flex max-w-6xl justify-center">
           {/* Shrink-wrapped to the type so the mark can sit on its true corner */}
           <div ref={ref} className="relative inline-block">
             {/* Bands rake upward behind the pair, at the logo's own angle */}
@@ -168,29 +187,38 @@ export default function BrandMarkSection() {
             />
           </div>
         </div>
+      </div>
 
-        {/* The stores themselves, arriving once the name has settled. */}
-        <div className="mt-14 grid grid-cols-1 gap-4 sm:mt-20 sm:grid-cols-3 sm:gap-5 lg:gap-6">
-          {PHOTOS.map((photo, i) => (
-            <div
-              key={photo.src}
-              className="overflow-hidden bg-[#EFEFEF] transition-all ease-out"
-              style={{
-                aspectRatio: '4 / 3',
-                opacity: photosIn[i] ? 1 : 0,
-                transform: photosIn[i] ? 'translateY(0)' : 'translateY(26px)',
-                transitionDuration: '760ms',
-              }}
-            >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          ))}
-        </div>
+      {/* The store itself, full bleed and full height. */}
+      <div className="mt-16 w-full bg-black sm:mt-24" style={{ height: '100dvh' }}>
+        <video
+          className="h-full w-full object-cover"
+          src="/videos/logica-store-hero.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-label="Inside the Logica Infoway store"
+        />
+      </div>
+
+      {/* The stills, edge to edge at full width — no frame around them. */}
+      <div className="mt-2 grid w-full grid-cols-1 gap-2 sm:mt-3 sm:grid-cols-3 sm:gap-3">
+        {PHOTOS.map((photo, i) => (
+          <img
+            key={photo.src}
+            src={photo.src}
+            alt={photo.alt}
+            loading="lazy"
+            className="h-full w-full object-cover transition-all ease-out"
+            style={{
+              aspectRatio: '4 / 5',
+              opacity: photosIn[i] ? 1 : 0,
+              transform: photosIn[i] ? 'translateY(0)' : 'translateY(26px)',
+              transitionDuration: '760ms',
+            }}
+          />
+        ))}
       </div>
     </section>
   );
