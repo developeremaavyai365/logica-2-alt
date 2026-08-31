@@ -23,7 +23,10 @@ const REVEAL_FALLBACK = 2500;
 const SECOND_LINE_DELAY = 200;
 const BANDS_DELAY = 460;
 const LOGO_DELAY = 1020;
-const PHOTO_STAGGER = 150;
+/* Wide enough that each still clearly lands on its own rather than the three
+   arriving as one block, and the caption trails its own image. */
+const PHOTO_STAGGER = 420;
+const CAPTION_DELAY = 260;
 
 const BANDS = [
   { color: '#5BC5F2', left: '2%', delay: '0ms' },
@@ -39,9 +42,25 @@ const BANDS = [
    cuts the fascia down to "SAMS". Holding it right keeps the wordmark whole.
    The other two are near-4:5 already and need no nudging. */
 const PHOTOS = [
-  { src: '/images/store/storefront-2.jpg', alt: 'Logica Infoway Samsung SmartCafé storefront', position: '85% 50%' },
-  { src: '/images/store/store-interior-1.jpg', alt: 'Inside the Logica Infoway Samsung SmartCafé' },
-  { src: '/images/store/storefront-1.jpg', alt: 'Logica Infoway Samsung SmartCafé storefront' },
+  {
+    src: '/images/store/storefront-2.jpg',
+    alt: 'Logica Infoway Samsung SmartCafé storefront',
+    position: '85% 50%',
+    title: 'The storefront',
+    caption: 'Samsung SmartCafé, under the Logica Infoway name',
+  },
+  {
+    src: '/images/store/store-interior-1.jpg',
+    alt: 'Inside the Logica Infoway Samsung SmartCafé',
+    title: 'The floor',
+    caption: 'Galaxy counters, set out for hands-on',
+  },
+  {
+    src: '/images/store/storefront-1.jpg',
+    alt: 'Logica Infoway Samsung SmartCafé storefront',
+    title: 'The entrance',
+    caption: 'Where the walk-in trade starts',
+  },
 ];
 
 const LINE = {
@@ -225,20 +244,52 @@ export default function BrandMarkSection() {
         className="mt-2 grid w-full grid-cols-1 gap-2 sm:mt-3 sm:grid-cols-3 sm:gap-3"
       >
         {PHOTOS.map((photo, i) => (
-          <img
-            key={photo.src}
-            src={photo.src}
-            alt={photo.alt}
-            loading="lazy"
-            className="h-full w-full object-cover transition-all ease-out"
-            style={{
-              aspectRatio: '4 / 5',
-              objectPosition: photo.position ?? '50% 50%',
-              opacity: photosIn[i] ? 1 : 0,
-              transform: photosIn[i] ? 'translateY(0)' : 'translateY(26px)',
-              transitionDuration: '760ms',
-            }}
-          />
+          <figure key={photo.src} className="m-0">
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              loading="lazy"
+              className="block w-full object-cover transition-all ease-out"
+              style={{
+                aspectRatio: '4 / 5',
+                objectPosition: photo.position ?? '50% 50%',
+                opacity: photosIn[i] ? 1 : 0,
+                transform: photosIn[i] ? 'translateY(0)' : 'translateY(26px)',
+                transitionDuration: '760ms',
+              }}
+            />
+            {/* Trails its own image, so each still arrives then names itself.
+                Inset slightly rather than aligned flush to the image edge,
+                which on the outer two would sit hard against the screen. */}
+            <figcaption
+              className="px-3 pt-4 transition-all ease-out sm:px-4 sm:pt-5"
+              style={{
+                opacity: photosIn[i] ? 1 : 0,
+                transform: photosIn[i] ? 'translateY(0)' : 'translateY(12px)',
+                transitionDuration: '620ms',
+                transitionDelay: photosIn[i] ? `${CAPTION_DELAY}ms` : '0ms',
+              }}
+            >
+              <span
+                className="font-inter block font-semibold text-[#15803D]"
+                style={{ fontSize: 'clamp(10px, 0.85vw, 12px)', letterSpacing: '0.22em' }}
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span
+                className="font-dm-sans mt-1.5 block font-bold text-[#0A0A0A]"
+                style={{ fontSize: 'clamp(16px, 1.6vw, 22px)', letterSpacing: '-0.02em' }}
+              >
+                {photo.title}
+              </span>
+              <span
+                className="font-inter mt-1 block text-black/55"
+                style={{ fontSize: 'clamp(12px, 1.05vw, 15px)', letterSpacing: '-0.01em' }}
+              >
+                {photo.caption}
+              </span>
+            </figcaption>
+          </figure>
         ))}
       </div>
     </section>
