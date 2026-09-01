@@ -7,6 +7,7 @@ import LoyaltyCard from '../components/LoyaltyCard';
 import TrustBand from '../components/TrustBand';
 import CompanyStorySection from '../components/CompanyStorySection';
 import BrandMarkSection from '../components/BrandMarkSection';
+import BuyingJourney from '../components/BuyingJourney';
 import RegisteredOfficesVideo from '../components/RegisteredOfficesVideo';
 import CompanyReels from '../components/CompanyReels';
 
@@ -27,6 +28,8 @@ export default function Home() {
 
       <BrandStrip />
       <NewArrivalSpotlight />
+      {/* Having shown the stock, show how it reaches you. */}
+      <BuyingJourney />
       <CompanyReels />
       <TrustBand />
       <LoyaltyCard />

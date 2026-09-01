@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useInView } from '../use-in-view';
 
 /* LOGICA slides in, INFOWAY follows beneath it at the same size and weight,
    and the registered mark resolves last at the top right of the pair — sized
@@ -19,7 +20,6 @@ import { useEffect, useRef, useState } from 'react';
    Both replay on every entry and reset on leaving, matching the counting
    stats above. A safety timer covers the case where the observer callback
    never fires, so nothing can be left blank. */
-const REVEAL_FALLBACK = 2500;
 const SECOND_LINE_DELAY = 200;
 const BANDS_DELAY = 460;
 const LOGO_DELAY = 1020;
@@ -79,40 +79,6 @@ const LINE = {
   fontSize: 'clamp(40px, 9.6vw, 138px)',
   letterSpacing: '-0.042em',
 } as const;
-
-/* Reports whether the element is on screen, re-firing on every entry and
-   exit. The threshold stays low so a block taller than the viewport — which
-   can never reach a high visible ratio — still counts as seen. */
-function useInView<T extends HTMLElement>(threshold: number) {
-  const ref = useRef<T>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const fallback = setTimeout(() => setInView(true), REVEAL_FALLBACK);
-    if (typeof IntersectionObserver === 'undefined') return () => clearTimeout(fallback);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          clearTimeout(fallback);
-          setInView(entry.isIntersecting);
-        });
-      },
-      { threshold },
-    );
-    observer.observe(el);
-
-    return () => {
-      clearTimeout(fallback);
-      observer.disconnect();
-    };
-  }, [threshold]);
-
-  return [ref, inView] as const;
-}
 
 /* Each row watches itself and slides in when it is the one being scrolled to.
    A single trigger on the whole strip cannot work here: the strip is far
