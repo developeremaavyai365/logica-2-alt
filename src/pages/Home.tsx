@@ -1,10 +1,7 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import HeroVideo from '../components/HeroVideo';
-import NewArrivalSpotlight from '../components/NewArrivalSpotlight';
 import BrandStrip from '../components/BrandStrip';
-import LoyaltyCard from '../components/LoyaltyCard';
-import TrustBand from '../components/TrustBand';
 import CompanyStorySection from '../components/CompanyStorySection';
 import BrandMarkSection from '../components/BrandMarkSection';
 import BuyingJourney from '../components/BuyingJourney';
@@ -27,12 +24,9 @@ export default function Home() {
       <RegisteredOfficesVideo />
 
       <BrandStrip />
-      <NewArrivalSpotlight />
-      {/* Having shown the stock, show how it reaches you. */}
+      {/* Having shown the brands, show how their stock reaches you. */}
       <BuyingJourney />
       <CompanyReels />
-      <TrustBand />
-      <LoyaltyCard />
       <Footer />
     </div>
   );
