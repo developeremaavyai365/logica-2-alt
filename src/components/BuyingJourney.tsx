@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useInView } from '../use-in-view';
 
-/* The order journey, end to end, as a track the eye can follow: five stops
-   with a line that fills between them and a marker that travels along it.
+/* The order journey played out rather than listed: a mock screen on the left
+   that runs the actual stage — a grid being browsed, an item dropping into
+   the cart, an order being paid, a van on the road — against a stepper on the
+   right that can be driven by hand or left to run itself.
 
-   The steps reveal one after another as the section is reached, then the
-   track keeps cycling on its own so the segment is never sitting still.
-   Everything resets on the way out so it replays on the next visit. */
+   The screen is keyed on the active step, so every element inside it remounts
+   and its entry animation replays with no JS resetting anything. */
 type MarkProps = { className?: string; style?: React.CSSProperties };
 
 const svg = {
@@ -18,7 +19,6 @@ const svg = {
   viewBox: '0 0 48 48',
 };
 
-/** Browse — a catalogue grid with a lens over it. */
 function BrowseMark(p: MarkProps) {
   return (
     <svg {...svg} {...p}>
@@ -31,7 +31,6 @@ function BrowseMark(p: MarkProps) {
   );
 }
 
-/** Choose — the product page: a device, checked over. */
 function ChooseMark(p: MarkProps) {
   return (
     <svg {...svg} {...p}>
@@ -42,7 +41,6 @@ function ChooseMark(p: MarkProps) {
   );
 }
 
-/** Cart — the basket it drops into. */
 function CartMark(p: MarkProps) {
   return (
     <svg {...svg} {...p}>
@@ -53,7 +51,6 @@ function CartMark(p: MarkProps) {
   );
 }
 
-/** Checkout — a shield, because this is the step that takes your details. */
 function CheckoutMark(p: MarkProps) {
   return (
     <svg {...svg} {...p}>
@@ -63,7 +60,6 @@ function CheckoutMark(p: MarkProps) {
   );
 }
 
-/** Shipped — out of the warehouse and onto the road. */
 function ShipMark(p: MarkProps) {
   return (
     <svg {...svg} {...p}>
@@ -76,9 +72,6 @@ function ShipMark(p: MarkProps) {
   );
 }
 
-/* Written against what the site actually does — the catalogue, the product
-   page's own stock line, the cart, the sign-in the cart requires, and
-   despatch from the distribution network. */
 const STEPS = [
   {
     mark: BrowseMark,
@@ -117,64 +110,221 @@ const STEPS = [
   },
 ];
 
-const STEP_STAGGER = 170;
-const CYCLE = 2400;
+const CYCLE = 3600;
 
-/* The rail is drawn between the first and last marker rather than edge to
-   edge, so it never runs on past either end of the journey.
+/* Neutral furniture for the mock: grey bars stand in for copy so the screen
+   reads as a product surface without inventing prices or model names. */
+function Bar({ w, h = 8, tone = '#E6E6E3', delay = 0 }: { w: string; h?: number; tone?: string; delay?: number }) {
+  return (
+    <span
+      className="animate-journey-rise block rounded-full"
+      style={{ width: w, height: h, backgroundColor: tone, animationDelay: `${delay}ms` }}
+    />
+  );
+}
 
-   That has to account for the grid's column gap: with gaps, a column centre
-   is not simply (i + 0.5) / n of the width, and assuming it is leaves the
-   rail short of both markers. One column is (100% - the gaps) / n, so the
-   first centre sits half a column in and the span is the width less one
-   whole column. GAP_PX tracks lg:gap-x-6. */
-const GAP_PX = 24;
-const COL = `((100% - ${(STEPS.length - 1) * GAP_PX}px) / ${STEPS.length})`;
-const RAIL_LEFT = `calc(${COL} / 2)`;
-const RAIL_SPAN = `calc(100% - ${COL})`;
+function BrowseScreen() {
+  const tones = ['#DCEBFF', '#EDE4FF', '#FDE8D8', '#DFF5E3', '#FCE7F3', '#E6F1FB'];
+  return (
+    <div className="flex h-full flex-col gap-3">
+      <div
+        className="animate-journey-rise flex items-center gap-2 rounded-full bg-[#F4F4F2] px-3 py-2"
+        style={{ animationDelay: '40ms' }}
+      >
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0" fill="none" stroke="#9A9A93" strokeWidth="2.4">
+          <circle cx="11" cy="11" r="6.5" />
+          <path d="M16 16l4.5 4.5" strokeLinecap="round" />
+        </svg>
+        <Bar w="46%" h={5} tone="#DCDCD6" delay={90} />
+      </div>
+      <div className="grid flex-1 grid-cols-3 grid-rows-2 gap-2.5">
+        {tones.map((t, i) => (
+          <div
+            key={t + i}
+            className="animate-journey-pop flex flex-col gap-1.5 rounded-xl border border-black/[0.06] p-2"
+            style={{ animationDelay: `${140 + i * 80}ms` }}
+          >
+            <span className="block flex-1 rounded-lg" style={{ backgroundColor: t }} />
+            <span className="block h-1.5 w-3/4 rounded-full bg-[#E6E6E3]" />
+            <span className="block h-1.5 w-1/2 rounded-full bg-[#EFEFEC]" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ChooseScreen() {
+  return (
+    <div className="flex h-full gap-4">
+      <div
+        className="animate-journey-pop w-[44%] rounded-2xl"
+        style={{ backgroundColor: '#EDE4FF', animationDelay: '60ms' }}
+      />
+      <div className="flex flex-1 flex-col justify-center gap-2.5">
+        <Bar w="85%" h={10} tone="#DCDCD6" delay={140} />
+        <Bar w="60%" h={7} delay={210} />
+        <div className="mt-1 flex items-baseline gap-2">
+          <span className="animate-journey-pop font-dm-sans text-[19px] font-extrabold text-[#0A0A0A]" style={{ animationDelay: '300ms' }}>
+            ₹••,•••
+          </span>
+          <span className="animate-journey-rise text-[12px] text-black/35 line-through" style={{ animationDelay: '380ms' }}>
+            MRP
+          </span>
+        </div>
+        <span
+          className="animate-journey-rise mt-1 inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold"
+          style={{ backgroundColor: '#DFF5E3', color: '#15803D', animationDelay: '460ms' }}
+        >
+          <span className="block h-1.5 w-1.5 rounded-full bg-[#15803D]" />
+          In stock
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function CartScreen() {
+  return (
+    <div className="relative flex h-full flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <Bar w="34%" h={8} tone="#DCDCD6" delay={40} />
+        <span className="relative">
+          <CartMark className="h-5 w-5 text-[#0A0A0A]" />
+          <span
+            className="animate-journey-pop absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold text-white"
+            style={{ backgroundColor: '#D2781E', animationDelay: '620ms' }}
+          >
+            1
+          </span>
+        </span>
+      </div>
+      <div
+        className="animate-journey-rise flex items-center gap-3 rounded-xl border border-black/[0.06] p-2.5"
+        style={{ animationDelay: '160ms' }}
+      >
+        <span className="block h-11 w-11 shrink-0 rounded-lg" style={{ backgroundColor: '#EDE4FF' }} />
+        <span className="flex flex-1 flex-col gap-1.5">
+          <span className="block h-2 w-4/5 rounded-full bg-[#E6E6E3]" />
+          <span className="block h-2 w-2/5 rounded-full bg-[#EFEFEC]" />
+        </span>
+        <span className="flex items-center gap-2 rounded-full border border-black/10 px-2 py-1 text-[11px] font-semibold text-[#0A0A0A]">
+          <span className="text-black/30">−</span>1<span className="text-black/30">+</span>
+        </span>
+      </div>
+      <div className="mt-auto flex items-center justify-between border-t border-black/[0.07] pt-3">
+        <Bar w="26%" h={7} delay={300} />
+        <span className="animate-journey-pop font-dm-sans text-[15px] font-extrabold text-[#0A0A0A]" style={{ animationDelay: '380ms' }}>
+          ₹••,•••
+        </span>
+      </div>
+      <span
+        className="animate-journey-toast absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[12px] font-semibold text-white"
+        style={{ backgroundColor: '#15803D', animationDelay: '700ms' }}
+      >
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 12.5l4.5 4.5L19 7" />
+        </svg>
+        Added to cart
+      </span>
+    </div>
+  );
+}
+
+function CheckoutScreen() {
+  return (
+    <div className="flex h-full flex-col gap-2.5">
+      {[0, 1].map((i) => (
+        <div
+          key={i}
+          className="animate-journey-rise rounded-lg border border-black/[0.08] px-3 py-2.5"
+          style={{ animationDelay: `${60 + i * 90}ms` }}
+        >
+          <span className="block h-1.5 w-1/3 rounded-full bg-[#E6E6E3]" />
+        </div>
+      ))}
+      <div className="mt-1 flex flex-col gap-2 rounded-xl bg-[#F7F7F5] p-3">
+        {['52%', '38%'].map((w, i) => (
+          <span key={w} className="flex items-center justify-between">
+            <Bar w={w} h={6} tone="#DFDFDA" delay={260 + i * 80} />
+            <Bar w="18%" h={6} tone="#DFDFDA" delay={300 + i * 80} />
+          </span>
+        ))}
+        <span className="mt-1 flex items-center justify-between border-t border-black/[0.07] pt-2">
+          <span className="animate-journey-rise text-[11px] font-semibold text-black/50" style={{ animationDelay: '440ms' }}>
+            Total
+          </span>
+          <span className="animate-journey-pop font-dm-sans text-[15px] font-extrabold text-[#0A0A0A]" style={{ animationDelay: '520ms' }}>
+            ₹••,•••
+          </span>
+        </span>
+      </div>
+      <span
+        className="animate-journey-pop mt-auto flex items-center justify-center gap-2 rounded-xl py-2.5 text-[12px] font-semibold text-white"
+        style={{ backgroundColor: '#BE185D', animationDelay: '640ms' }}
+      >
+        <CheckoutMark className="h-3.5 w-3.5" />
+        Place order securely
+      </span>
+    </div>
+  );
+}
+
+function ShippedScreen() {
+  const legs = ['Packed', 'In transit', 'Delivered'];
+  return (
+    <div className="flex h-full flex-col justify-center gap-6">
+      <div className="relative mx-1 h-[2px] rounded-full bg-[#E6E6E3]">
+        <span
+          className="animate-journey-progress absolute inset-y-0 left-0 w-full rounded-full"
+          style={{ backgroundColor: '#15803D', animationDuration: '2.6s' }}
+        />
+        <span className="animate-journey-van absolute -top-[13px]" style={{ marginLeft: '-14px' }}>
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#15803D] text-white shadow-sm">
+            <ShipMark className="h-4 w-4" />
+          </span>
+        </span>
+      </div>
+      <div className="flex items-start justify-between">
+        {legs.map((l, i) => (
+          <span key={l} className="flex flex-col items-center gap-2" style={{ width: '33%' }}>
+            <span
+              className="animate-journey-pop flex h-5 w-5 items-center justify-center rounded-full"
+              style={{ backgroundColor: '#DFF5E3', color: '#15803D', animationDelay: `${300 + i * 620}ms` }}
+            >
+              <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12.5l4.5 4.5L19 7" />
+              </svg>
+            </span>
+            <span
+              className="animate-journey-rise text-[11px] font-semibold text-black/55"
+              style={{ animationDelay: `${380 + i * 620}ms` }}
+            >
+              {l}
+            </span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const SCREENS = [BrowseScreen, ChooseScreen, CartScreen, CheckoutScreen, ShippedScreen];
 
 export default function BuyingJourney() {
   const [ref, inView] = useInView<HTMLDivElement>(0.2);
-  const [shown, setShown] = useState<boolean[]>(() => STEPS.map(() => false));
   const [active, setActive] = useState(0);
+  // Set once the viewer picks a step, so the reel stops fighting them.
+  const [held, setHeld] = useState(false);
 
-  // Reveal the stops in order once the section is reached.
   useEffect(() => {
-    if (!inView) {
-      setShown(STEPS.map(() => false));
-      setActive(0);
-      return;
-    }
-    const timers = STEPS.map((_, i) =>
-      setTimeout(() => {
-        setShown((prev) => {
-          const next = [...prev];
-          next[i] = true;
-          return next;
-        });
-      }, i * STEP_STAGGER),
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [inView]);
+    if (!inView || held) return;
+    const id = setInterval(() => setActive((a) => (a + 1) % STEPS.length), CYCLE);
+    return () => clearInterval(id);
+  }, [inView, held]);
 
-  // Then keep the marker moving, so the track reads as a journey rather than
-  // a row of icons. Starts after the last stop has landed.
-  useEffect(() => {
-    if (!inView) return;
-    const start = setTimeout(() => {
-      setActive(1);
-    }, STEPS.length * STEP_STAGGER + 400);
-    const id = setInterval(
-      () => setActive((a) => (a + 1) % STEPS.length),
-      CYCLE,
-    );
-    return () => {
-      clearTimeout(start);
-      clearInterval(id);
-    };
-  }, [inView]);
-
-  const progress = active / (STEPS.length - 1);
+  const Screen = SCREENS[active];
+  const step = STEPS[active];
 
   return (
     <section className="overflow-hidden bg-white px-5 py-24 sm:px-8 sm:py-32 lg:px-10 lg:py-40">
@@ -201,99 +351,104 @@ export default function BuyingJourney() {
           would get across the counter, routed to you instead.
         </p>
 
-        <div ref={ref} className="relative mt-16 sm:mt-24">
-          {/* The rail, behind the markers. Horizontal from lg, where five
-              stops actually fit; a left-hand spine below that. */}
-          {/* Mobile: a spine down the left, behind the markers. */}
-          <div
-            className="pointer-events-none absolute left-[27px] top-0 h-full w-[2px] bg-black/10 lg:hidden"
-            aria-hidden="true"
-          />
-          {/* Desktop: drawn only between the first and last marker, so the
-              rail never runs on past either end of the journey. */}
-          <div
-            className="pointer-events-none absolute top-[38px] hidden h-[2px] bg-black/10 lg:block"
-            aria-hidden="true"
-            style={{ left: RAIL_LEFT, width: RAIL_SPAN }}
-          />
-
-          {/* The travelled part of the rail, and the marker riding its end. */}
-          <div
-            className="pointer-events-none absolute top-[38px] hidden h-[2px] lg:block"
-            aria-hidden="true"
-            style={{ left: RAIL_LEFT, width: RAIL_SPAN }}
-          >
-            {/* Snaps back rather than animating on the wrap: a progress bar
-                sliding backwards reads as the order being undone. Forward
-                moves still ease. */}
+        <div ref={ref} className="mt-14 grid items-center gap-10 sm:mt-20 lg:grid-cols-2 lg:gap-16">
+          {/* The screen, playing whichever step is live. */}
+          <div className="order-1 lg:order-none">
             <div
-              className="relative h-full bg-[#15803D] transition-all ease-out"
-              style={{
-                width: `${progress * 100}%`,
-                transitionDuration: active === 0 ? '0ms' : '700ms',
-              }}
+              className="relative rounded-[22px] border border-black/10 bg-white p-3 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.35)] transition-colors duration-500"
+              style={{ backgroundColor: step.chip }}
             >
-              <span
-                className="absolute -top-[5px] right-0 block h-3 w-3 translate-x-1/2 rounded-full bg-[#15803D]"
-                style={{ boxShadow: '0 0 0 5px rgba(21,128,61,0.16)' }}
-              />
+              <div className="rounded-[16px] bg-white p-3">
+                <div className="mb-3 flex items-center gap-1.5">
+                  <span className="block h-2 w-2 rounded-full bg-black/10" />
+                  <span className="block h-2 w-2 rounded-full bg-black/10" />
+                  <span className="block h-2 w-2 rounded-full bg-black/10" />
+                  <span className="ml-2 block h-3 flex-1 rounded-full bg-black/[0.05]" />
+                </div>
+                {/* Keyed on the step so every entry animation inside replays. */}
+                <div key={active} style={{ aspectRatio: '4 / 3' }}>
+                  <Screen />
+                </div>
+              </div>
             </div>
           </div>
 
-          <ol className="relative m-0 grid list-none grid-cols-1 gap-y-10 p-0 lg:grid-cols-5 lg:gap-x-6">
-            {STEPS.map((step, i) => {
-              const on = i <= active;
+          {/* The stepper, drivable by hand. */}
+          <ol className="order-2 m-0 flex list-none flex-col gap-2 p-0 lg:order-none">
+            {STEPS.map((s, i) => {
+              const on = i === active;
               return (
-                <li
-                  key={step.title}
-                  className="flex items-start gap-5 transition-all ease-out lg:block lg:text-center"
-                  style={{
-                    opacity: shown[i] ? 1 : 0,
-                    transform: shown[i] ? 'translateY(0)' : 'translateY(24px)',
-                    transitionDuration: '700ms',
-                  }}
-                >
-                  <span
-                    className="relative z-10 flex shrink-0 items-center justify-center rounded-full transition-all duration-500 ease-out lg:mx-auto"
-                    style={{
-                      height: 'clamp(56px, 5.6vw, 76px)',
-                      width: 'clamp(56px, 5.6vw, 76px)',
-                      backgroundColor: on ? step.chip : '#F4F4F4',
-                      color: on ? step.ink : '#B4B2A9',
-                      transform: i === active ? 'scale(1.09)' : 'scale(1)',
-                      boxShadow: i === active ? `0 0 0 6px ${step.chip}` : 'none',
-                      outline: '4px solid #fff',
+                <li key={s.title}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActive(i);
+                      setHeld(true);
                     }}
+                    aria-current={on ? 'step' : undefined}
+                    className="relative w-full overflow-hidden rounded-2xl px-4 py-4 text-left transition-all duration-500 sm:px-5"
+                    style={{ backgroundColor: on ? s.chip : 'transparent' }}
                   >
-                    <step.mark
-                      style={{ height: 'clamp(26px, 2.6vw, 34px)', width: 'clamp(26px, 2.6vw, 34px)' }}
-                    />
-                  </span>
-
-                  <div className="lg:mt-7">
-                    <span
-                      className="font-inter block font-semibold transition-colors duration-500"
-                      style={{
-                        fontSize: 'clamp(10px, 0.85vw, 12px)',
-                        letterSpacing: '0.22em',
-                        color: on ? step.ink : '#B4B2A9',
-                      }}
-                    >
-                      {String(i + 1).padStart(2, '0')}
+                    <span className="flex items-start gap-4">
+                      <span
+                        className="flex shrink-0 items-center justify-center rounded-full transition-all duration-500"
+                        style={{
+                          height: 'clamp(42px, 3.6vw, 50px)',
+                          width: 'clamp(42px, 3.6vw, 50px)',
+                          backgroundColor: on ? '#fff' : '#F4F4F2',
+                          color: on ? s.ink : '#B4B2A9',
+                          transform: on ? 'scale(1.06)' : 'scale(1)',
+                        }}
+                      >
+                        <s.mark
+                          key={on ? `on-${i}` : `off-${i}`}
+                          className={on ? 'animate-journey-draw' : undefined}
+                          style={{ height: '55%', width: '55%' }}
+                        />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span
+                          className="font-inter block font-semibold transition-colors duration-500"
+                          style={{ fontSize: '11px', letterSpacing: '0.2em', color: on ? s.ink : '#B4B2A9' }}
+                        >
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span
+                          className="font-dm-sans mt-1 block font-bold text-[#0A0A0A]"
+                          style={{ fontSize: 'clamp(17px, 1.5vw, 21px)', letterSpacing: '-0.02em' }}
+                        >
+                          {s.title}
+                        </span>
+                        {/* Only the live step carries its copy, so the column
+                            stays a list rather than a wall of text. */}
+                        <span
+                          className="font-inter grid transition-all duration-500"
+                          style={{
+                            gridTemplateRows: on ? '1fr' : '0fr',
+                            opacity: on ? 1 : 0,
+                          }}
+                        >
+                          <span className="overflow-hidden">
+                            <span
+                              className="mt-2 block max-w-[46ch] text-black/60"
+                              style={{ fontSize: 'clamp(13px, 1.05vw, 15px)', lineHeight: 1.6, textWrap: 'pretty' }}
+                            >
+                              {s.body}
+                            </span>
+                          </span>
+                        </span>
+                      </span>
                     </span>
-                    <h3
-                      className="font-dm-sans mt-2 font-bold text-[#0A0A0A]"
-                      style={{ fontSize: 'clamp(18px, 1.7vw, 23px)', letterSpacing: '-0.02em' }}
-                    >
-                      {step.title}
-                    </h3>
-                    <p
-                      className="font-inter mx-auto mt-2.5 max-w-[34ch] text-black/55"
-                      style={{ fontSize: 'clamp(13px, 1.05vw, 15px)', lineHeight: 1.6, textWrap: 'pretty' }}
-                    >
-                      {step.body}
-                    </p>
-                  </div>
+
+                    {/* Runs the length of the dwell, so the reel shows its hand. */}
+                    {on && !held && (
+                      <span
+                        key={`bar-${active}`}
+                        className="animate-journey-progress absolute inset-x-0 bottom-0 block h-[3px] w-full"
+                        style={{ backgroundColor: s.ink, animationDuration: `${CYCLE}ms`, opacity: 0.5 }}
+                      />
+                    )}
+                  </button>
                 </li>
               );
             })}

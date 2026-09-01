@@ -352,3 +352,63 @@ html, body, #root {
 .auth-container.right-panel-active .auth-overlay-right {
   transform: translateX(20%);
 }
+
+/* --- Buying journey ------------------------------------------------------
+   The mock screen remounts on every step change, so these replay on their
+   own without any JS resetting them. */
+@keyframes journeyProgress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.animate-journey-progress {
+  transform-origin: left center;
+  animation: journeyProgress linear both;
+}
+
+@keyframes journeyRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-journey-rise {
+  animation: journeyRise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes journeyPop {
+  0%   { opacity: 0; transform: scale(0.4); }
+  60%  { opacity: 1; transform: scale(1.18); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-journey-pop {
+  animation: journeyPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes journeyToast {
+  0%   { opacity: 0; transform: translateY(120%); }
+  18%  { opacity: 1; transform: translateY(0); }
+  82%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-journey-toast {
+  animation: journeyToast 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* The van running the delivery leg. */
+@keyframes journeyVan {
+  from { left: 0%; }
+  to   { left: 100%; }
+}
+.animate-journey-van {
+  animation: journeyVan 2.6s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+/* Draws a mark on rather than fading it in. */
+@keyframes journeyDraw {
+  to { stroke-dashoffset: 0; }
+}
+.animate-journey-draw path,
+.animate-journey-draw rect,
+.animate-journey-draw circle {
+  stroke-dasharray: 130;
+  stroke-dashoffset: 130;
+  animation: journeyDraw 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
