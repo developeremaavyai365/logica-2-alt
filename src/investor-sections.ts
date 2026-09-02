@@ -91,7 +91,6 @@ export const INVESTOR_CATEGORIES = ['Performance', 'Shareholder Information', 'F
 const STANDALONE_PAGES: { label: string; href: string; category: string }[] = [
   { label: 'Advertisement', href: '/advertisement', category: 'Shareholder Information' },
   { label: 'Basis of Allotment', href: '/basis-of-allotment', category: 'Shareholder Information' },
-  { label: 'Reg 46', href: '/investor/reg-46', category: 'Stock Exchange' },
   { label: 'Authorized Person', href: '/authorized-person', category: 'Stock Exchange' },
   { label: 'Grievance Redressal', href: '/grievance-redressal', category: 'Stock Exchange' },
 ];
