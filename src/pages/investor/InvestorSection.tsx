@@ -58,6 +58,34 @@ function sortKey(doc: AnnualReport): number {
   return y === null ? -1 : y * 10000 + 630;
 }
 
+/** Financial-year bucket for the year filter, e.g. "2025-26".
+ *
+ *  Deliberately keyed off the curated `year` field and never off the date in
+ *  the title. Those two disagree on 17 documents, and in most of them the
+ *  year field is the correct one: "Financial Results for Half Year FY Ended
+ *  March 31 2025" carries year 2025-26 because that is when it was filed —
+ *  the March 2025 in its title is the period it reports on. Re-deriving the
+ *  year from title dates would quietly move those filings into the wrong
+ *  folder, which is exactly what this filter must not do.
+ *
+ *  Folded by leading year so the same fiscal year written three different
+ *  ways ("2024", "2024-25", "2025") does not split into near-duplicate
+ *  buckets. Returns null for the handful of documents carrying no year at
+ *  all; those stay reachable under "All". */
+function fyBucket(doc: AnnualReport): string | null {
+  const y = leadingYear(doc.year);
+  if (y === null) return null;
+  return `${y}-${String((y + 1) % 100).padStart(2, '0')}`;
+}
+
+const ALL_YEARS = 'all';
+
+/** Only worth showing on sections long enough to be worth narrowing. Policies
+ *  is excluded outright: the company asked for those to sit on one page
+ *  rather than be split by financial year. */
+const YEAR_FILTER_MIN_DOCS = 12;
+const NO_YEAR_FILTER = new Set(['policies']);
+
 /** Clean row-list of documents for one financial year, matching a typical
  *  IR "Financial Information" layout — title left, PDF/download right,
  *  hairline dividers between rows instead of a card grid. */
@@ -101,22 +129,114 @@ function DocRows({ docs }: { docs: AnnualReport[] }) {
   );
 }
 
+/** Financial-year selector, in the style of a typical listed-company filings
+ *  page: pick a year and the list narrows to it.
+ *
+ *  Carries an "All" option and a count against every year, which the usual
+ *  version of this control does not. Both are on purpose. A year selector
+ *  that defaults to the newest year leaves everything older sitting behind a
+ *  control the reader has to notice, and this company's filings run back to
+ *  2011 — so "All" stays the default and the counts make it plain that
+ *  nothing has gone missing. */
+function YearFilter({
+  years,
+  counts,
+  total,
+  active,
+  onChange,
+}: {
+  years: string[];
+  counts: Record<string, number>;
+  total: number;
+  active: string;
+  onChange: (y: string) => void;
+}) {
+  const options = [ALL_YEARS, ...years];
+  const labelFor = (y: string) => (y === ALL_YEARS ? 'All years' : y);
+  const countFor = (y: string) => (y === ALL_YEARS ? total : counts[y]);
+
+  return (
+    <div className="mb-6">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+          Financial year
+        </span>
+        {options.map((y) => {
+          const on = y === active;
+          return (
+            <button
+              key={y}
+              type="button"
+              onClick={() => onChange(y)}
+              aria-pressed={on}
+              className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+                on
+                  ? 'border-black bg-black text-white'
+                  : 'border-[#000000]/15 bg-white text-[#000000] hover:border-[#000000]/40'
+              }`}
+            >
+              {labelFor(y)}
+              <span className={on ? 'ml-1.5 text-white/60' : 'ml-1.5 text-[#6b6b6b]'}>
+                {countFor(y)}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function InvestorSection() {
   const { slug } = useParams<{ slug: string }>();
   const section = INVESTOR_SECTIONS.find((s) => s.slug === slug);
   const [query, setQuery] = useState('');
+  const [year, setYear] = useState<string>(ALL_YEARS);
 
   const trimmedQuery = query.trim();
   const isSearching = trimmedQuery.length > 0;
+
+  // Every document the section holds, whichever shape it stores them in.
+  const allDocs = useMemo<AnnualReport[]>(() => {
+    if (!section) return [];
+    if (section.kind === 'docs') return section.items;
+    if (section.kind === 'groups') return section.groups.flatMap((g) => g.items);
+    return [];
+  }, [section]);
+
+  // Years present in this section, newest first, with a count each.
+  const { years, yearCounts } = useMemo(() => {
+    const counts: Record<string, number> = {};
+    allDocs.forEach((d) => {
+      const b = fyBucket(d);
+      if (b) counts[b] = (counts[b] ?? 0) + 1;
+    });
+    return {
+      years: Object.keys(counts).sort((a, b) => Number(b.slice(0, 4)) - Number(a.slice(0, 4))),
+      yearCounts: counts,
+    };
+  }, [allDocs]);
+
+  const showYearFilter =
+    !!section &&
+    (section.kind === 'docs' || section.kind === 'groups') &&
+    !NO_YEAR_FILTER.has(section.slug) &&
+    allDocs.length >= YEAR_FILTER_MIN_DOCS &&
+    years.length > 1;
+
+  const matchesYear = (d: AnnualReport) => year === ALL_YEARS || fyBucket(d) === year;
 
   // Every document in the section, newest first — no year grouping, so the
   // whole list is visible on one page rather than one financial year at a time.
   const sortedFiltered = useMemo(() => {
     if (!section || section.kind !== 'docs') return [];
     const q = trimmedQuery.toLowerCase();
-    const filtered = q ? section.items.filter((d) => d.title.toLowerCase().includes(q)) : section.items;
+    const filtered = section.items.filter(
+      (d) => matchesYear(d) && (!q || d.title.toLowerCase().includes(q)),
+    );
     return [...filtered].sort((a, b) => sortKey(b) - sortKey(a));
-  }, [section, trimmedQuery]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section, trimmedQuery, year]);
 
   // Sections that keep their documents in named groups (Notice holds board
   // meeting and shareholder meeting notices separately). Searching filters
@@ -127,12 +247,13 @@ export default function InvestorSection() {
     return section.groups
       .map((g) => ({
         label: g.label,
-        items: [...(q ? g.items.filter((d) => d.title.toLowerCase().includes(q)) : g.items)].sort(
-          (a, b) => sortKey(b) - sortKey(a),
-        ),
+        items: [
+          ...g.items.filter((d) => matchesYear(d) && (!q || d.title.toLowerCase().includes(q))),
+        ].sort((a, b) => sortKey(b) - sortKey(a)),
       }))
       .filter((g) => g.items.length > 0);
-  }, [section, trimmedQuery]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section, trimmedQuery, year]);
 
   const groupTotal =
     section?.kind === 'groups' ? section.groups.reduce((n, g) => n + g.items.length, 0) : 0;
@@ -145,6 +266,7 @@ export default function InvestorSection() {
   // match" with no visible input to clear, hiding the section entirely.
   useEffect(() => {
     setQuery('');
+    setYear(ALL_YEARS);
   }, [slug]);
 
   // The app ships a single static <title>, so every investor page appeared as
@@ -208,8 +330,22 @@ export default function InvestorSection() {
                   </div>
                 )}
 
+                {showYearFilter && (
+                  <YearFilter
+                    years={years}
+                    counts={yearCounts}
+                    total={allDocs.length}
+                    active={year}
+                    onChange={setYear}
+                  />
+                )}
+
                 {sortedFiltered.length === 0 ? (
-                  <p className="text-sm text-[#6b6b6b]">No documents match "{trimmedQuery}".</p>
+                  <p className="text-sm text-[#6b6b6b]">
+                    {isSearching
+                      ? `No documents match "${trimmedQuery}"${year === ALL_YEARS ? '' : ` in ${year}`}.`
+                      : `No documents filed in ${year}.`}
+                  </p>
                 ) : (
                   <>
                     {isSearching && (
@@ -241,6 +377,16 @@ export default function InvestorSection() {
               </div>
             )}
 
+            {showYearFilter && (
+              <YearFilter
+                years={years}
+                counts={yearCounts}
+                total={allDocs.length}
+                active={year}
+                onChange={setYear}
+              />
+            )}
+
             {isSearching && (
               <h2 className="mb-4 text-lg font-semibold text-[#000000]">
                 {groupMatches} {groupMatches === 1 ? 'result' : 'results'} for "{trimmedQuery}"
@@ -248,7 +394,11 @@ export default function InvestorSection() {
             )}
 
             {filteredGroups.length === 0 ? (
-              <p className="text-sm text-[#6b6b6b]">No documents match "{trimmedQuery}".</p>
+              <p className="text-sm text-[#6b6b6b]">
+                {isSearching
+                  ? `No documents match "${trimmedQuery}"${year === ALL_YEARS ? '' : ` in ${year}`}.`
+                  : `No documents filed in ${year}.`}
+              </p>
             ) : (
               filteredGroups.map((g) => (
                 <section key={g.label} className="mb-12 last:mb-0">
