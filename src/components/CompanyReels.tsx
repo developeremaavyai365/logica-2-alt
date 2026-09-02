@@ -16,11 +16,13 @@
    opposite of what is wanted here. */
 
 import { Instagram } from 'lucide-react';
+import { socials } from '../data';
 
-/** The account these reels are posted from, per the embeds themselves.
- *  Note this is not the handle in data.ts, which still points at the old
- *  easternlogicaofficial account from before the rename. */
-const INSTAGRAM_URL = 'https://www.instagram.com/logicainfowayofficial/';
+/** Taken from the shared socials list rather than written out again here, so
+ *  this and the contact page and the footer cannot drift apart. */
+const INSTAGRAM_URL =
+  socials.find((s) => s.label === 'Instagram')?.href ??
+  'https://www.instagram.com/logicainfowayofficial/';
 /** Same fill the contact page uses for its Instagram icon. */
 const INSTAGRAM_FILL = '#d6249f';
 
@@ -82,7 +84,7 @@ export default function CompanyReels() {
         >
           Inside the stores, the launches and the everyday work — straight from{' '}
           <a
-            href="https://www.instagram.com/logicainfowayofficial/"
+            href={INSTAGRAM_URL}
             target="_blank"
             rel="noreferrer noopener"
             className="font-semibold text-[#15803D] underline-offset-4 hover:underline"

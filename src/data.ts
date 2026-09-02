@@ -81,7 +81,7 @@ export const offices: Office[] = [
 export const socials = [
   { label: 'Facebook', href: 'https://facebook.com/easternlogicaofficial' },
   { label: 'Twitter', href: 'https://twitter.com/eastern_logica' },
-  { label: 'Instagram', href: 'https://instagram.com/easternlogicaofficial' },
+  { label: 'Instagram', href: 'https://www.instagram.com/logicainfowayofficial/' },
   { label: 'LinkedIn', href: 'https://linkedin.com/company/easternlogicainfowayltd' },
   { label: 'Pinterest', href: 'https://pinterest.com/eastern_logica' },
 ];
