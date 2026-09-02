@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from 'react-router-dom';
 import { FileText, Building2, ArrowUpRight, Search, Download } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import InvestorTabs from '../../components/InvestorTabs';
 import { INVESTOR_SECTIONS, CATEGORY_ICONS } from '../../investor-sections';
 import type { AnnualReport } from '../../investor-data';
 
@@ -307,6 +308,7 @@ export default function InvestorSection() {
             {section.label}
           </h1>
         </div>
+        <InvestorTabs pathname={`/investor/${section.slug}`} />
       </div>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-14">

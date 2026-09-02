@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { FileText, Building2, ChevronRight } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import InvestorTabs from '../../components/InvestorTabs';
 import { INVESTOR_SECTIONS, INVESTOR_CATEGORIES, CATEGORY_ICONS } from '../../investor-sections';
 
 const KIND_ICONS = {
@@ -25,6 +26,7 @@ export default function InvestorHub() {
             Logica Infoway Limited — CIN L30007WB1995PLC073218
           </p>
         </div>
+        <InvestorTabs pathname="/investor" />
       </div>
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20">

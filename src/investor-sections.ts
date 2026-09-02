@@ -84,6 +84,52 @@ export const INVESTOR_SECTIONS: InvestorSection[] = [
 
 export const INVESTOR_CATEGORIES = ['Performance', 'Shareholder Information', 'Fund Raising', 'Stock Exchange', 'Group Companies'];
 
+/** Investor pages that live outside INVESTOR_SECTIONS because they are not
+ *  document lists. They used to be reachable only from the header dropdown,
+ *  so they are carried into the tab bar explicitly — without this they would
+ *  have no route into them at all once the dropdown went. */
+const STANDALONE_PAGES: { label: string; href: string; category: string }[] = [
+  { label: 'Advertisement', href: '/advertisement', category: 'Shareholder Information' },
+  { label: 'Basis of Allotment', href: '/basis-of-allotment', category: 'Shareholder Information' },
+  { label: 'Authorized Person', href: '/authorized-person', category: 'Stock Exchange' },
+  { label: 'Grievance Redressal', href: '/grievance-redressal', category: 'Stock Exchange' },
+];
+
+export interface InvestorTab {
+  label: string;
+  href: string;
+  /** Section slug when this tab is a document list, absent for the
+   *  standalone pages, which are matched on href instead. */
+  slug?: string;
+}
+
+/** The two-level tab model the investor pages navigate by: a category row,
+ *  and the pages inside whichever category is active. Replaces the header
+ *  dropdown, so it has to cover everything that dropdown reached. */
+export const INVESTOR_TABS: { category: string; items: InvestorTab[] }[] =
+  INVESTOR_CATEGORIES.map((category) => ({
+    category,
+    items: [
+      ...INVESTOR_SECTIONS.filter((s) => s.category === category).map((s) => ({
+        label: s.label,
+        href: `/investor/${s.slug}`,
+        slug: s.slug,
+      })),
+      ...STANDALONE_PAGES.filter((p) => p.category === category).map((p) => ({
+        label: p.label,
+        href: p.href,
+      })),
+    ],
+  }));
+
+/** Which category a given pathname sits in, for highlighting the tab bar. */
+export function categoryForPath(pathname: string): string | null {
+  for (const group of INVESTOR_TABS) {
+    if (group.items.some((i) => i.href === pathname)) return group.category;
+  }
+  return null;
+}
+
 export const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Performance: TrendingUp,
   'Shareholder Information': Users,

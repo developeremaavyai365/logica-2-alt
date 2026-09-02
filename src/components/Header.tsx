@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, Heart, LogOut, Menu, Package, ShoppingCart, User, X } from 'lucide-react';
 import { useShopStore } from '../store';
 import { useAuthStore } from '../auth-store';
-import { SHOP_MEGA, ABOUT_MENU, INVESTOR_MEGA } from '../nav-data';
+import { SHOP_MEGA, ABOUT_MENU } from '../nav-data';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -97,51 +97,14 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Investor mega menu */}
-          <div className="group relative">
-            <Link
-              to="/investor"
-              className="flex items-center gap-1 text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors"
-            >
-              Investor
-              <ChevronDown className="w-3.5 h-3.5" />
-            </Link>
-            <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-40">
-              <div className="w-[52rem] max-w-[90vw] rounded-2xl bg-white shadow-xl border border-[#000000]/10 p-6 grid grid-cols-5 gap-x-5 gap-y-4">
-                {INVESTOR_MEGA.map((col) => (
-                  <div key={col.label}>
-                    {col.href ? (
-                      <Link to={col.href} className="text-xs font-semibold uppercase tracking-wide text-[#000000] hover:opacity-80 transition-opacity">
-                        {col.label}
-                      </Link>
-                    ) : (
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[#000000]">{col.label}</p>
-                    )}
-                    {col.children && (
-                      <ul className="mt-2 space-y-1.5">
-                        {col.children.map((child) => {
-                          const external = child.href.startsWith('http');
-                          return (
-                            <li key={child.label}>
-                              {external ? (
-                                <a href={child.href} target="_blank" rel="noreferrer" className="text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
-                                  {child.label}
-                                </a>
-                              ) : (
-                                <Link to={child.href} className="text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
-                                  {child.label}
-                                </Link>
-                              )}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          {/* Investor Relations — a plain link, no dropdown. The categories
+              live on the hub page itself, as on a standard IR site. */}
+          <Link
+            to="/investor"
+            className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors"
+          >
+            Investor Relations
+          </Link>
 
           <Link to="/media" className="text-sm font-medium px-4 py-2.5 rounded-full text-[#6b6b6b] hover:text-[#000000] hover:bg-[#ECEDEC] transition-colors">
             Media
@@ -317,47 +280,15 @@ export default function Header() {
             </div>
           )}
 
-          {/* Investor accordion */}
-          <button
-            onClick={() => setMobileSection((s) => (s === 'investor' ? null : 'investor'))}
-            className="flex items-center justify-between text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10"
+          {/* Investor Relations — a plain link on mobile too, matching the
+              desktop bar. The categories are on the hub page. */}
+          <Link
+            to="/investor"
+            onClick={() => setMenuOpen(false)}
+            className="block text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10"
           >
-            Investor
-            <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'investor' ? 'rotate-180' : ''}`} />
-          </button>
-          {mobileSection === 'investor' && (
-            <div className="py-2 pl-3 space-y-3">
-              {INVESTOR_MEGA.map((col) =>
-                col.children ? (
-                  <div key={col.label}>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#000000]">{col.label}</p>
-                    <div className="mt-1 space-y-1">
-                      {col.children.map((child) =>
-                        child.href.startsWith('http') ? (
-                          <a key={child.label} href={child.href} target="_blank" rel="noreferrer" className="block text-sm text-[#6b6b6b] py-0.5">
-                            {child.label}
-                          </a>
-                        ) : (
-                          <Link key={child.label} to={child.href} onClick={() => setMenuOpen(false)} className="block text-sm text-[#6b6b6b] py-0.5">
-                            {child.label}
-                          </Link>
-                        ),
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <Link
-                    key={col.label}
-                    to={col.href ?? '/investor'}
-                    onClick={() => setMenuOpen(false)}
-                    className="block text-xs font-semibold uppercase tracking-wide text-[#000000] py-0.5"
-                  >
-                    {col.label}
-                  </Link>
-                ),
-              )}
-            </div>
-          )}
+            Investor Relations
+          </Link>
 
           <Link to="/media" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10">
             Media
