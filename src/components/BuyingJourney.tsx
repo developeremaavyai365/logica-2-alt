@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInView } from '../use-in-view';
 import { products } from '../products-data';
 
@@ -148,12 +148,13 @@ const FINANCE = ['Bajaj Finserv', 'Pine Labs', 'HDB'];
 
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN');
 
-function BrowseScreen() {
+function BrowseScreen({ s }: { s: StageState }) {
   return (
     <div className="flex h-full flex-col gap-2.5">
       <div
+        data-target="search"
         className="animate-journey-rise flex items-center gap-2 rounded-full bg-[#F4F4F2] px-3 py-2"
-        style={{ animationDelay: '40ms' }}
+        style={{ animationDelay: '40ms', ...targetStyle('search', s) }}
       >
         <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0" fill="none" stroke="#9A9A93" strokeWidth="2.4">
           <circle cx="11" cy="11" r="6.5" />
@@ -178,8 +179,9 @@ function BrowseScreen() {
         {GRID.map((p, i) => (
           <div
             key={p.id}
-            className="animate-journey-pop flex flex-col gap-1 rounded-lg border border-black/[0.07] p-1.5"
-            style={{ animationDelay: `${240 + i * 75}ms` }}
+            data-target={`tile-${i}`}
+            className="animate-journey-pop flex cursor-pointer flex-col gap-1 rounded-lg border border-black/[0.07] p-1.5"
+            style={{ animationDelay: `${240 + i * 75}ms`, ...targetStyle(`tile-${i}`, s) }}
           >
             <span className="flex flex-1 items-center justify-center overflow-hidden rounded-md bg-[#FAFAF8]">
               <img src={p.image} alt="" className="h-full w-full object-contain p-1" loading="lazy" />
@@ -193,13 +195,14 @@ function BrowseScreen() {
   );
 }
 
-function ChooseScreen() {
+function ChooseScreen({ s }: { s: StageState }) {
   const off = HERO.mrp ? Math.round(((HERO.mrp - HERO.price) / HERO.mrp) * 100) : 0;
   return (
     <div className="flex h-full gap-4">
       <span
+        data-target="product"
         className="animate-journey-pop flex w-[42%] items-center justify-center overflow-hidden rounded-xl bg-[#FAFAF8]"
-        style={{ animationDelay: '60ms' }}
+        style={{ animationDelay: '60ms', ...targetStyle('product', s) }}
       >
         <img src={HERO.image} alt={HERO.name} className="h-full w-full object-contain p-2" />
       </span>
@@ -210,7 +213,11 @@ function ChooseScreen() {
         <span className="animate-journey-rise font-dm-sans text-[14px] font-bold leading-snug text-[#0A0A0A]" style={{ animationDelay: '180ms' }}>
           {HERO.name}
         </span>
-        <div className="mt-1 flex items-baseline gap-2">
+        <div
+          data-target="price"
+          className="mt-1 flex w-fit items-baseline gap-2 rounded-md px-1"
+          style={targetStyle('price', s)}
+        >
           <span className="animate-journey-pop font-dm-sans text-[20px] font-extrabold text-[#0A0A0A]" style={{ animationDelay: '280ms' }}>
             {inr(HERO.price)}
           </span>
@@ -226,8 +233,9 @@ function ChooseScreen() {
           )}
         </div>
         <span
+          data-target="stock"
           className="animate-journey-rise mt-1 inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold"
-          style={{ backgroundColor: '#DFF5E3', color: '#15803D', animationDelay: '470ms' }}
+          style={{ backgroundColor: '#DFF5E3', color: '#15803D', animationDelay: '470ms', ...targetStyle('stock', s) }}
         >
           <span className="block h-1.5 w-1.5 rounded-full bg-[#15803D]" />
           In stock — ships from our warehouse
@@ -237,19 +245,23 @@ function ChooseScreen() {
   );
 }
 
-function CartScreen() {
+function CartScreen({ s }: { s: StageState }) {
+  // The cart only fills once the pointer has actually pressed Add.
+  const added = s.clicked.includes('add');
   return (
     <div className="relative flex h-full flex-col gap-2.5">
       <div className="flex items-center justify-between">
         <span className="font-dm-sans text-[12px] font-bold text-[#0A0A0A]">Your cart</span>
-        <span className="relative">
+        <span data-target="badge" className="relative rounded-md p-0.5" style={targetStyle('badge', s)}>
           <CartMark className="h-5 w-5 text-[#0A0A0A]" />
-          <span
-            className="animate-journey-pop absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold text-white"
-            style={{ backgroundColor: '#D2781E', animationDelay: '620ms' }}
-          >
-            1
-          </span>
+          {added && (
+            <span
+              className="animate-journey-pop absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold text-white"
+              style={{ backgroundColor: '#D2781E' }}
+            >
+              1
+            </span>
+          )}
         </span>
       </div>
 
@@ -264,34 +276,40 @@ function CartScreen() {
           <span className="truncate text-[11px] font-semibold text-[#0A0A0A]">{HERO.name}</span>
           <span className="text-[10px] text-black/45">{HERO.brand}</span>
         </span>
-        <span className="flex items-center gap-1.5 rounded-full border border-black/10 px-2 py-0.5 text-[10px] font-semibold text-[#0A0A0A]">
-          <span className="text-black/30">−</span>1<span className="text-black/30">+</span>
+        <span
+          data-target="add"
+          className="flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold text-white"
+          style={{ backgroundColor: added ? '#15803D' : '#D2781E', ...targetStyle('add', s) }}
+        >
+          {added ? 'Added' : 'Add to cart'}
         </span>
       </div>
 
       <div className="mt-auto flex items-center justify-between border-t border-black/[0.07] pt-2.5">
-        <span className="animate-journey-rise text-[11px] text-black/50" style={{ animationDelay: '300ms' }}>
-          Subtotal
-        </span>
-        <span className="animate-journey-pop font-dm-sans text-[15px] font-extrabold text-[#0A0A0A]" style={{ animationDelay: '380ms' }}>
-          {inr(HERO.price)}
+        <span className="text-[11px] text-black/50">Subtotal</span>
+        <span className="font-dm-sans text-[15px] font-extrabold text-[#0A0A0A]">
+          {added ? inr(HERO.price) : inr(0)}
         </span>
       </div>
 
-      <span
-        className="animate-journey-toast absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[12px] font-semibold text-white"
-        style={{ backgroundColor: '#15803D', animationDelay: '700ms' }}
-      >
-        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 12.5l4.5 4.5L19 7" />
-        </svg>
-        Added to cart
-      </span>
+      {added && (
+        <span
+          className="animate-journey-toast absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 rounded-xl py-2.5 text-[12px] font-semibold text-white"
+          style={{ backgroundColor: '#15803D' }}
+        >
+          <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12.5l4.5 4.5L19 7" />
+          </svg>
+          Added to cart
+        </span>
+      )}
     </div>
   );
 }
 
-function CheckoutScreen() {
+function CheckoutScreen({ s }: { s: StageState }) {
+  const paid = s.clicked.includes('place');
+  const method = s.clicked.includes('pay-upi') ? 'UPI' : null;
   return (
     <div className="flex h-full flex-col gap-2">
       <div
@@ -303,20 +321,25 @@ function CheckoutScreen() {
       </div>
 
       <div className="flex flex-wrap gap-1.5">
-        {PAY_METHODS.map((m, i) => (
-          <span
-            key={m}
-            className="animate-journey-pop rounded-full border px-2 py-1 text-[9px] font-semibold"
-            style={{
-              animationDelay: `${180 + i * 70}ms`,
-              borderColor: i === 0 ? '#BE185D' : 'rgba(0,0,0,0.1)',
-              backgroundColor: i === 0 ? '#FCE7F3' : '#fff',
-              color: i === 0 ? '#BE185D' : 'rgba(0,0,0,0.55)',
-            }}
-          >
-            {m}
-          </span>
-        ))}
+        {PAY_METHODS.map((m, i) => {
+          const on = method === m;
+          return (
+            <span
+              key={m}
+              data-target={m === 'UPI' ? 'pay-upi' : undefined}
+              className="animate-journey-pop cursor-pointer rounded-full border px-2 py-1 text-[9px] font-semibold"
+              style={{
+                animationDelay: `${180 + i * 70}ms`,
+                borderColor: on ? '#BE185D' : 'rgba(0,0,0,0.1)',
+                backgroundColor: on ? '#FCE7F3' : '#fff',
+                color: on ? '#BE185D' : 'rgba(0,0,0,0.55)',
+                ...(m === 'UPI' ? targetStyle('pay-upi', s) : null),
+              }}
+            >
+              {m}
+            </span>
+          );
+        })}
       </div>
 
       <span className="animate-journey-rise text-[8px] text-black/35" style={{ animationDelay: '480ms' }}>
@@ -328,34 +351,37 @@ function CheckoutScreen() {
           <span>Item total</span>
           <span>{inr(HERO.price)}</span>
         </span>
-        {/* Matches what the real cart says. It does not promise free
-            delivery, so neither does this. */}
         <span className="flex items-center justify-between text-[10px] text-black/55">
           <span>Shipping</span>
           <span>Calculated at checkout</span>
         </span>
         <span className="mt-1 flex items-center justify-between border-t border-black/[0.07] pt-1.5">
           <span className="text-[11px] font-semibold text-black/60">Total</span>
-          <span className="animate-journey-pop font-dm-sans text-[15px] font-extrabold text-[#0A0A0A]" style={{ animationDelay: '560ms' }}>
-            {inr(HERO.price)}
-          </span>
+          <span className="font-dm-sans text-[15px] font-extrabold text-[#0A0A0A]">{inr(HERO.price)}</span>
         </span>
       </div>
 
       <span
-        className="animate-journey-pop flex items-center justify-center gap-2 rounded-xl py-2 text-[11px] font-semibold text-white"
-        style={{ backgroundColor: '#BE185D', animationDelay: '660ms' }}
+        data-target="place"
+        className="flex cursor-pointer items-center justify-center gap-2 rounded-xl py-2 text-[11px] font-semibold text-white"
+        style={{ backgroundColor: paid ? '#15803D' : '#BE185D', ...targetStyle('place', s) }}
       >
-        <CheckoutMark className="h-3.5 w-3.5" />
-        Place order securely
+        {paid ? (
+          <>
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12.5l4.5 4.5L19 7" />
+            </svg>
+            Order placed
+          </>
+        ) : (
+          <>
+            <CheckoutMark className="h-3.5 w-3.5" />
+            Place order securely
+          </>
+        )}
       </span>
 
-      {/* The gateway, in its own mark. Sits under the pay button where a
-          checkout normally carries it. */}
-      <span
-        className="animate-journey-rise flex items-center justify-center gap-1.5 pt-0.5"
-        style={{ animationDelay: '760ms' }}
-      >
+      <span className="animate-journey-rise flex items-center justify-center gap-1.5 pt-0.5" style={{ animationDelay: '760ms' }}>
         <span className="text-[8px] text-black/35">Payments secured by</span>
         <img src="/logos/razorpay.svg" alt="Razorpay" className="h-[11px] w-auto" />
       </span>
@@ -363,13 +389,11 @@ function CheckoutScreen() {
   );
 }
 
-function ShippedScreen() {
+function ShippedScreen({ s }: { s: StageState }) {
   const legs = ['Packed', 'In transit', 'Delivered'];
   return (
     <div className="flex h-full flex-col justify-center gap-5">
       <div className="flex items-center justify-between px-0.5 text-[10px] font-semibold">
-        {/* The product page's own wording, rather than naming a specific
-            distribution centre I cannot confirm handles online orders. */}
         <span className="animate-journey-rise text-black/55" style={{ animationDelay: '80ms' }}>
           Our warehouse
         </span>
@@ -392,7 +416,12 @@ function ShippedScreen() {
 
       <div className="flex items-start justify-between">
         {legs.map((l, i) => (
-          <span key={l} className="flex flex-col items-center gap-1.5" style={{ width: '33%' }}>
+          <span
+            key={l}
+            data-target={`leg-${i}`}
+            className="flex flex-col items-center gap-1.5 rounded-md px-2 py-1"
+            style={{ width: '33%', ...targetStyle(`leg-${i}`, s) }}
+          >
             <span
               className="animate-journey-pop flex h-5 w-5 items-center justify-center rounded-full"
               style={{ backgroundColor: '#DFF5E3', color: '#15803D', animationDelay: `${300 + i * 620}ms` }}
@@ -423,87 +452,164 @@ function ShippedScreen() {
 
 const SCREENS = [BrowseScreen, ChooseScreen, CartScreen, CheckoutScreen, ShippedScreen];
 
-/* Where the pointer goes on each screen, as a percentage of the display, and
-   when. The waypoints are timed against the entry animations inside each
-   screen, so the click lands on the thing that has just appeared rather than
-   on empty space. `click` fires the press ring at that stop. */
-type Waypoint = { x: number; y: number; at: number; click?: boolean };
+/** One stage of the journey: the screen, plus the pointer working it. The
+ *  pointer's clicks are what advance the screen — the cart only fills once
+ *  Add has actually been pressed, the order is only placed once the button
+ *  has been — so the two cannot fall out of step with each other. */
+function Stage({ index }: { index: number }) {
+  const box = useRef<HTMLDivElement>(null);
+  const { state, pos, pulse } = useCursorDriver(box, SCRIPTS[index]);
+  const Screen = SCREENS[index];
 
-const CURSOR_PATHS: Waypoint[][] = [
-  // Browse — over the search field, then picking through the grid.
+  return (
+    <div ref={box} className="absolute inset-0 p-3">
+      <div className="h-full w-full rounded-[4px] bg-white p-3">
+        <Screen s={state} />
+      </div>
+      <Cursor pos={pos} pulse={pulse} />
+    </div>
+  );
+}
+
+/* What the pointer does on each screen, named against the elements it acts
+   on rather than as coordinates. The driver finds each element by its
+   data-target and moves to wherever it actually is, so the pointer lands on
+   the real control at any size and the control itself reacts. */
+type Action = { target: string; at: number; click?: boolean };
+
+const SCRIPTS: Action[][] = [
+  // Browse — into the search field, then pick a product out of the grid.
   [
-    { x: 20, y: 12, at: 0 },
-    { x: 34, y: 14, at: 500 },
-    { x: 22, y: 44, at: 1300 },
-    { x: 52, y: 46, at: 2100 },
-    { x: 52, y: 46, at: 2600, click: true },
+    { target: 'search', at: 200 },
+    { target: 'tile-1', at: 1100 },
+    { target: 'tile-4', at: 1900 },
+    { target: 'tile-4', at: 2500, click: true },
   ],
-  // Choose — over the product, then down to the price and stock line.
+  // Choose — over the product, then the price, then the stock line.
   [
-    { x: 62, y: 60, at: 0 },
-    { x: 22, y: 45, at: 500 },
-    { x: 60, y: 52, at: 1500 },
-    { x: 58, y: 72, at: 2400 },
+    { target: 'product', at: 300 },
+    { target: 'price', at: 1400 },
+    { target: 'stock', at: 2400 },
   ],
-  // Add to cart — onto the quantity control, click, then up to the badge.
+  // Add to cart — press the add button, then up to the badge it fills.
   [
-    { x: 40, y: 70, at: 0 },
-    { x: 86, y: 40, at: 700 },
-    { x: 86, y: 40, at: 1300, click: true },
-    { x: 90, y: 12, at: 2200 },
+    { target: 'add', at: 600 },
+    { target: 'add', at: 1300, click: true },
+    { target: 'badge', at: 2300 },
   ],
-  // Checkout — pick a payment method, then press the pay button.
+  // Checkout — choose a payment method, then place the order.
   [
-    { x: 30, y: 20, at: 0 },
-    { x: 14, y: 38, at: 700 },
-    { x: 14, y: 38, at: 1200, click: true },
-    { x: 50, y: 92, at: 2200 },
-    { x: 50, y: 92, at: 2800, click: true },
+    { target: 'pay-upi', at: 500 },
+    { target: 'pay-upi', at: 1100, click: true },
+    { target: 'place', at: 2100 },
+    { target: 'place', at: 2800, click: true },
   ],
-  // Shipped — follows the van down the route.
+  // Shipped — follow the consignment down the route.
   [
-    { x: 10, y: 42, at: 0 },
-    { x: 50, y: 42, at: 1200 },
-    { x: 92, y: 42, at: 2400 },
+    { target: 'leg-0', at: 400 },
+    { target: 'leg-1', at: 1500 },
+    { target: 'leg-2', at: 2600 },
   ],
 ];
 
-/** The pointer, walking its path across the display. Purely decorative, so it
- *  is hidden from assistive tech and never takes pointer events itself. */
-function Cursor({ path }: { path: Waypoint[] }) {
-  const [step, setStep] = useState(0);
+export interface StageState {
+  /** data-target of the control the pointer is currently over. */
+  hover: string | null;
+  /** data-targets the pointer has clicked so far on this screen. */
+  clicked: string[];
+}
+
+/** Walks a screen's script: moves the pointer onto the real element, holds a
+ *  hover on it, and on a click marks it so the screen can respond.
+ *
+ *  Positions come from measuring the element rather than from fixed
+ *  percentages, so the pointer stays on its control at every breakpoint. */
+function useCursorDriver(
+  containerRef: React.RefObject<HTMLElement | null>,
+  script: Action[],
+) {
+  const [state, setState] = useState<StageState>({ hover: null, clicked: [] });
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const [pulse, setPulse] = useState(0);
 
   useEffect(() => {
-    setStep(0);
-    const timers = path.map((w, i) => setTimeout(() => setStep(i), w.at));
+    setState({ hover: null, clicked: [] });
+    setPos(null);
+
+    const timers = script.map((a) =>
+      setTimeout(() => {
+        const box = containerRef.current;
+        const el = box?.querySelector<HTMLElement>(`[data-target="${a.target}"]`);
+        if (box && el) {
+          const b = el.getBoundingClientRect();
+          const c = box.getBoundingClientRect();
+          // Sit just inside the control rather than dead centre, which is
+          // where a hand would actually land.
+          setPos({
+            x: b.left - c.left + b.width * 0.42,
+            y: b.top - c.top + b.height * 0.55,
+          });
+        }
+        setState((s) =>
+          a.click
+            ? { hover: a.target, clicked: [...s.clicked, a.target] }
+            : { ...s, hover: a.target },
+        );
+        if (a.click) setPulse((n) => n + 1);
+      }, a.at),
+    );
+
     return () => timers.forEach(clearTimeout);
-  }, [path]);
+  }, [script, containerRef]);
 
-  const at = path[Math.min(step, path.length - 1)];
+  return { state, pos, pulse };
+}
 
+/** The pointer itself. Decorative, so hidden from assistive tech and never
+ *  taking pointer events — it cannot come between a reader and the page. */
+function Cursor({ pos, pulse }: { pos: { x: number; y: number } | null; pulse: number }) {
+  if (!pos) return null;
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute z-20"
+      className="pointer-events-none absolute z-30"
       style={{
-        left: `${at.x}%`,
-        top: `${at.y}%`,
-        transition: 'left 620ms cubic-bezier(0.4, 0, 0.2, 1), top 620ms cubic-bezier(0.4, 0, 0.2, 1)',
+        left: `${pos.x}px`,
+        top: `${pos.y}px`,
+        transition: 'left 560ms cubic-bezier(0.33, 0, 0.2, 1), top 560ms cubic-bezier(0.33, 0, 0.2, 1)',
       }}
     >
-      {/* Ring pulses outward on the stops marked as a click. */}
-      {at.click && (
+      {pulse > 0 && (
         <span
-          key={`ring-${step}`}
+          key={pulse}
           className="animate-journey-click absolute -left-3 -top-3 block h-6 w-6 rounded-full"
           style={{ border: '2px solid rgba(21,128,61,0.9)' }}
         />
       )}
-      <svg viewBox="0 0 24 24" className="relative block h-5 w-5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
-        <path d="M5 2.5l13.5 8.2-5.9 1.2 3.1 6.4-2.6 1.3-3.1-6.4-4.2 3.9z" fill="#fff" stroke="#111" strokeWidth="1.3" strokeLinejoin="round" />
+      <svg viewBox="0 0 24 24" className="relative block h-5 w-5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)]">
+        <path
+          d="M5 2.5l13.5 8.2-5.9 1.2 3.1 6.4-2.6 1.3-3.1-6.4-4.2 3.9z"
+          fill="#fff"
+          stroke="#111"
+          strokeWidth="1.3"
+          strokeLinejoin="round"
+        />
       </svg>
     </span>
   );
+}
+
+/** Ring drawn around whichever control the pointer is over, and the pressed
+ *  look once it has been clicked. Applied by the screens to their targets. */
+function targetStyle(name: string, s: StageState): React.CSSProperties {
+  const hovered = s.hover === name;
+  const clicked = s.clicked.includes(name);
+  if (!hovered && !clicked) return {};
+  return {
+    boxShadow: clicked ? '0 0 0 2px rgba(21,128,61,0.85)' : '0 0 0 2px rgba(21,128,61,0.35)',
+    transform: clicked ? 'scale(0.97)' : 'scale(1.02)',
+    transition: 'box-shadow 200ms ease, transform 160ms ease',
+  };
 }
 
 export default function BuyingJourney() {
@@ -518,7 +624,6 @@ export default function BuyingJourney() {
     return () => clearInterval(id);
   }, [inView, held]);
 
-  const Screen = SCREENS[active];
   const step = STEPS[active];
 
   return (
@@ -563,12 +668,9 @@ export default function BuyingJourney() {
                 >
                   {/* Keyed on the step so every entry animation replays, and
                       so the pointer restarts its path with the new screen. */}
-                  <div key={active} className="absolute inset-0 p-3">
-                    <div className="h-full w-full rounded-[4px] bg-white p-3">
-                      <Screen />
-                    </div>
-                    <Cursor path={CURSOR_PATHS[active]} />
-                  </div>
+                  {/* Keyed on the step so the screen remounts and the pointer
+                      starts its script over. */}
+                  <Stage key={active} index={active} />
                 </div>
               </div>
               {/* Base and hinge */}
