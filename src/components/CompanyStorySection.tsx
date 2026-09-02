@@ -98,10 +98,17 @@ const WORDS = STATEMENT.flatMap((seg) =>
   seg.text.split(/\s+/).filter(Boolean).map((word) => ({ word, emphasis: !!seg.emphasis })),
 );
 
-/* How much of the whole scroll a single word takes to darken. Wider than one
-   word's share, so several are always mid-fill and the line washes in rather
-   than ticking over one word at a time. */
-const WORD_RAMP = 0.22;
+/* How much of the whole scroll a single word takes to fill. Wider than one
+   word's share, so several are always part-filled and the colour sweeps
+   through the line rather than ticking over a word at a time. */
+const WORD_RAMP = 0.18;
+
+/* Unfilled text is a legible grey, not a whisper — the statement can be read
+   before the fill reaches it. The fill then runs to solid ink. */
+const BASE_INK = 'rgba(17, 17, 17, 0.45)';
+const FILL_INK = '#111111';
+const BASE_GREEN = 'rgba(21, 128, 61, 0.5)';
+const FILL_GREEN = '#15803D';
 
 /** Reports how far the block has travelled through its reveal window, 0 to 1.
  *
@@ -267,19 +274,43 @@ export default function CompanyStorySection() {
           {WORDS.map(({ word, emphasis }, i) => {
             const startAt = (i / WORDS.length) * (1 - WORD_RAMP);
             const t = Math.min(1, Math.max(0, (progress - startAt) / WORD_RAMP));
-            // Never fully transparent: the sentence stays legible before the
-            // reveal reaches it, rather than being invisible until scrolled.
-            const alpha = 0.22 + 0.78 * t;
+            const text = word + (i < WORDS.length - 1 ? ' ' : '');
             return (
+              /* Two copies of the word: the grey one underneath, and a solid
+                 one over it clipped to however much has filled. The colour
+                 therefore runs across each word rather than the word simply
+                 changing shade, and part-filled words are what make the sweep
+                 read as filling.
+
+                 Done with a clipped overlay rather than background-clip:text
+                 because a clipped gradient is what ghosted in this block
+                 before, and because a failed background-clip leaves
+                 transparent text — an invisible statement. */
               <span
                 key={`${word}-${i}`}
                 style={{
-                  color: emphasis ? `rgba(21, 128, 61, ${alpha})` : `rgba(17, 17, 17, ${alpha})`,
+                  position: 'relative',
+                  display: 'inline-block',
+                  whiteSpace: 'pre',
+                  color: emphasis ? BASE_GREEN : BASE_INK,
                   fontWeight: emphasis ? 700 : undefined,
-                  transition: 'color 120ms linear',
                 }}
               >
-                {word}{i < WORDS.length - 1 ? ' ' : ''}
+                {text}
+                <span
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: `${t * 100}%`,
+                    overflow: 'hidden',
+                    whiteSpace: 'pre',
+                    color: emphasis ? FILL_GREEN : FILL_INK,
+                    transition: 'width 90ms linear',
+                  }}
+                >
+                  {text}
+                </span>
               </span>
             );
           })}
