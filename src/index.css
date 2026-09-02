@@ -412,3 +412,12 @@ html, body, #root {
   stroke-dashoffset: 130;
   animation: journeyDraw 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+/* The pointer's click ring on the buying-journey display. */
+@keyframes journeyClick {
+  0%   { transform: scale(0.35); opacity: 0.95; }
+  100% { transform: scale(1.6);  opacity: 0; }
+}
+.animate-journey-click {
+  animation: journeyClick 0.6s ease-out both;
+}

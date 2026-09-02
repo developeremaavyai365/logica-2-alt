@@ -423,6 +423,89 @@ function ShippedScreen() {
 
 const SCREENS = [BrowseScreen, ChooseScreen, CartScreen, CheckoutScreen, ShippedScreen];
 
+/* Where the pointer goes on each screen, as a percentage of the display, and
+   when. The waypoints are timed against the entry animations inside each
+   screen, so the click lands on the thing that has just appeared rather than
+   on empty space. `click` fires the press ring at that stop. */
+type Waypoint = { x: number; y: number; at: number; click?: boolean };
+
+const CURSOR_PATHS: Waypoint[][] = [
+  // Browse — over the search field, then picking through the grid.
+  [
+    { x: 20, y: 12, at: 0 },
+    { x: 34, y: 14, at: 500 },
+    { x: 22, y: 44, at: 1300 },
+    { x: 52, y: 46, at: 2100 },
+    { x: 52, y: 46, at: 2600, click: true },
+  ],
+  // Choose — over the product, then down to the price and stock line.
+  [
+    { x: 62, y: 60, at: 0 },
+    { x: 22, y: 45, at: 500 },
+    { x: 60, y: 52, at: 1500 },
+    { x: 58, y: 72, at: 2400 },
+  ],
+  // Add to cart — onto the quantity control, click, then up to the badge.
+  [
+    { x: 40, y: 70, at: 0 },
+    { x: 86, y: 40, at: 700 },
+    { x: 86, y: 40, at: 1300, click: true },
+    { x: 90, y: 12, at: 2200 },
+  ],
+  // Checkout — pick a payment method, then press the pay button.
+  [
+    { x: 30, y: 20, at: 0 },
+    { x: 14, y: 38, at: 700 },
+    { x: 14, y: 38, at: 1200, click: true },
+    { x: 50, y: 92, at: 2200 },
+    { x: 50, y: 92, at: 2800, click: true },
+  ],
+  // Shipped — follows the van down the route.
+  [
+    { x: 10, y: 42, at: 0 },
+    { x: 50, y: 42, at: 1200 },
+    { x: 92, y: 42, at: 2400 },
+  ],
+];
+
+/** The pointer, walking its path across the display. Purely decorative, so it
+ *  is hidden from assistive tech and never takes pointer events itself. */
+function Cursor({ path }: { path: Waypoint[] }) {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    setStep(0);
+    const timers = path.map((w, i) => setTimeout(() => setStep(i), w.at));
+    return () => timers.forEach(clearTimeout);
+  }, [path]);
+
+  const at = path[Math.min(step, path.length - 1)];
+
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute z-20"
+      style={{
+        left: `${at.x}%`,
+        top: `${at.y}%`,
+        transition: 'left 620ms cubic-bezier(0.4, 0, 0.2, 1), top 620ms cubic-bezier(0.4, 0, 0.2, 1)',
+      }}
+    >
+      {/* Ring pulses outward on the stops marked as a click. */}
+      {at.click && (
+        <span
+          key={`ring-${step}`}
+          className="animate-journey-click absolute -left-3 -top-3 block h-6 w-6 rounded-full"
+          style={{ border: '2px solid rgba(21,128,61,0.9)' }}
+        />
+      )}
+      <svg viewBox="0 0 24 24" className="relative block h-5 w-5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+        <path d="M5 2.5l13.5 8.2-5.9 1.2 3.1 6.4-2.6 1.3-3.1-6.4-4.2 3.9z" fill="#fff" stroke="#111" strokeWidth="1.3" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
+}
+
 export default function BuyingJourney() {
   const [ref, inView] = useInView<HTMLDivElement>(0.2);
   const [active, setActive] = useState(0);
@@ -464,23 +547,33 @@ export default function BuyingJourney() {
         </p>
 
         <div ref={ref} className="mt-14 grid items-center gap-10 sm:mt-20 lg:grid-cols-2 lg:gap-16">
-          {/* The screen, playing whichever step is live. */}
+          {/* A laptop with the order being worked through on it: each stage
+              plays on the display while the pointer moves and clicks its way
+              across, so the sequence reads as somebody doing it rather than
+              as screens being swapped. */}
           <div className="order-1 lg:order-none">
-            <div
-              className="relative rounded-[22px] border border-black/10 bg-white p-3 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.35)] transition-colors duration-500"
-              style={{ backgroundColor: step.chip }}
-            >
-              <div className="rounded-[16px] bg-white p-3">
-                <div className="mb-3 flex items-center gap-1.5">
-                  <span className="block h-2 w-2 rounded-full bg-black/10" />
-                  <span className="block h-2 w-2 rounded-full bg-black/10" />
-                  <span className="block h-2 w-2 rounded-full bg-black/10" />
-                  <span className="ml-2 block h-3 flex-1 rounded-full bg-black/[0.05]" />
+            <div className="mx-auto w-full max-w-[560px]">
+              {/* Lid */}
+              <div className="relative rounded-[16px] bg-[#242426] p-[10px] shadow-2xl">
+                {/* Camera notch on the bezel */}
+                <span className="absolute left-1/2 top-[3px] block h-1 w-1 -translate-x-1/2 rounded-full bg-[#4a4a4d]" />
+                <div
+                  className="relative overflow-hidden rounded-[7px] transition-colors duration-500"
+                  style={{ aspectRatio: '16 / 10', backgroundColor: step.chip }}
+                >
+                  {/* Keyed on the step so every entry animation replays, and
+                      so the pointer restarts its path with the new screen. */}
+                  <div key={active} className="absolute inset-0 p-3">
+                    <div className="h-full w-full rounded-[4px] bg-white p-3">
+                      <Screen />
+                    </div>
+                    <Cursor path={CURSOR_PATHS[active]} />
+                  </div>
                 </div>
-                {/* Keyed on the step so every entry animation inside replays. */}
-                <div key={active} style={{ aspectRatio: '4 / 3' }}>
-                  <Screen />
-                </div>
+              </div>
+              {/* Base and hinge */}
+              <div className="relative mx-auto h-[10px] w-[108%] -translate-x-[3.7%] rounded-b-[10px] bg-gradient-to-b from-[#cfd1d5] to-[#a7aaaf]">
+                <span className="absolute left-1/2 top-0 block h-[5px] w-16 -translate-x-1/2 rounded-b-[5px] bg-[#93969b]" />
               </div>
             </div>
           </div>
