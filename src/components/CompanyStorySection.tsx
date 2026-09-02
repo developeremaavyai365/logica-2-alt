@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import RevealText, { type RevealSegment } from './RevealText';
 
 /* Marks drawn for these four verticals rather than pulled from an icon set,
    so each one says what the business actually does: a shopfront with its
@@ -83,7 +84,7 @@ const STAGGER = 200;
 
 /* The statement, in segments so the emphasised phrase keeps its own colour
    once the words are split apart for the scroll reveal. */
-const STATEMENT: { text: string; emphasis?: boolean }[] = [
+const STATEMENT: RevealSegment[] = [
   {
     text:
       'Four businesses, one discipline: put the right technology in the right hands. ' +
@@ -91,72 +92,8 @@ const STATEMENT: { text: string; emphasis?: boolean }[] = [
       'that never closes, we move computing, mobility and network infrastructure to',
   },
   { text: 'the people and institutions that run on them', emphasis: true },
-  { text: '— from the warehouse floor to the last mile.' },
+  { text: '\u2014 from the warehouse floor to the last mile.' },
 ];
-
-const WORDS = STATEMENT.flatMap((seg) =>
-  seg.text.split(/\s+/).filter(Boolean).map((word) => ({ word, emphasis: !!seg.emphasis })),
-);
-
-/* How much of the whole scroll a single word takes to fill. Wider than one
-   word's share, so several are always part-filled and the colour sweeps
-   through the line rather than ticking over a word at a time. */
-const WORD_RAMP = 0.18;
-
-/* Unfilled text is a legible grey, not a whisper — the statement can be read
-   before the fill reaches it. The fill then runs to solid ink. */
-const BASE_INK = 'rgba(17, 17, 17, 0.45)';
-const FILL_INK = '#111111';
-const BASE_GREEN = 'rgba(21, 128, 61, 0.5)';
-const FILL_GREEN = '#15803D';
-
-/** Reports how far the block has travelled through its reveal window, 0 to 1.
- *
- *  Driven by scroll position rather than IntersectionObserver: the effect
- *  needs a continuous value, not an entered/left flag. Reads are batched into
- *  an animation frame so a fast scroll cannot queue a layout read per event. */
-function useScrollProgress(ref: React.RefObject<HTMLElement | null>) {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    // Anyone who has asked for less motion gets the finished text outright.
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) {
-      setProgress(1);
-      return;
-    }
-
-    let frame = 0;
-    const measure = () => {
-      frame = 0;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      // Begins as the block rises past four-fifths of the screen and is
-      // finished by the time its top reaches a quarter of the way up.
-      const start = vh * 0.8;
-      const end = vh * 0.25;
-      const p = (start - r.top) / (start - end);
-      setProgress(Math.min(1, Math.max(0, p)));
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(measure);
-    };
-
-    measure();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [ref]);
-
-  return progress;
-}
 
 function useCountUp(target: number, active: boolean) {
   const [value, setValue] = useState(0);
@@ -203,8 +140,6 @@ function StatValue({ raw, active }: { raw: string; active: boolean }) {
 
 export default function CompanyStorySection() {
   const statsRef = useRef<HTMLDivElement>(null);
-  const statementRef = useRef<HTMLParagraphElement>(null);
-  const progress = useScrollProgress(statementRef);
   const [revealed, setRevealed] = useState<boolean[]>(() => stats.map(() => false));
 
   useEffect(() => {
@@ -261,60 +196,14 @@ export default function CompanyStorySection() {
 
       <div className="animate-fade-up mx-auto mt-10 flex max-w-5xl flex-col items-center text-center sm:mt-14">
         {/* One statement, set large with room to breathe — the emphasis is
-            carried by a single phrase rather than by size alone. Solid ink
-            rather than a clipped gradient, so nothing can ghost behind it. */}
-        {/* Darkens word by word as the block is scrolled through. Each word
-            starts faint and fills to full ink, with the ramps overlapping so
-            the line washes in rather than switching on a word at a time. */}
-        <p
-          ref={statementRef}
+            carried by a single phrase rather than by size alone. It darkens
+            word by word as the block is scrolled through, the same treatment
+            the Logica Infoway captions use. */}
+        <RevealText
+          segments={STATEMENT}
           className="font-dm-sans"
           style={{ fontSize: 'clamp(24px, 3.4vw, 46px)', letterSpacing: '-0.025em', lineHeight: 1.32 }}
-        >
-          {WORDS.map(({ word, emphasis }, i) => {
-            const startAt = (i / WORDS.length) * (1 - WORD_RAMP);
-            const t = Math.min(1, Math.max(0, (progress - startAt) / WORD_RAMP));
-            const text = word + (i < WORDS.length - 1 ? ' ' : '');
-            return (
-              /* Two copies of the word: the grey one underneath, and a solid
-                 one over it clipped to however much has filled. The colour
-                 therefore runs across each word rather than the word simply
-                 changing shade, and part-filled words are what make the sweep
-                 read as filling.
-
-                 Done with a clipped overlay rather than background-clip:text
-                 because a clipped gradient is what ghosted in this block
-                 before, and because a failed background-clip leaves
-                 transparent text — an invisible statement. */
-              <span
-                key={`${word}-${i}`}
-                style={{
-                  position: 'relative',
-                  display: 'inline-block',
-                  whiteSpace: 'pre',
-                  color: emphasis ? BASE_GREEN : BASE_INK,
-                  fontWeight: emphasis ? 700 : undefined,
-                }}
-              >
-                {text}
-                <span
-                  aria-hidden="true"
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    width: `${t * 100}%`,
-                    overflow: 'hidden',
-                    whiteSpace: 'pre',
-                    color: emphasis ? FILL_GREEN : FILL_INK,
-                    transition: 'width 90ms linear',
-                  }}
-                >
-                  {text}
-                </span>
-              </span>
-            );
-          })}
-        </p>
+        />
 
         <div ref={statsRef} className="mt-14 grid w-full max-w-5xl grid-cols-2 gap-x-8 gap-y-14 border-t border-black/10 pt-14 sm:grid-cols-4">
             {stats.map((stat, i) => (

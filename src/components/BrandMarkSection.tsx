@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useInView } from '../use-in-view';
+import RevealText from './RevealText';
 
 /* LOGICA slides in, INFOWAY follows beneath it at the same size and weight,
    and the registered mark resolves last at the top right of the pair — sized
@@ -135,18 +136,18 @@ function PhotoRow({ photo, index }: { photo: (typeof PHOTOS)[number]; index: num
           {photo.title}
         </span>
         {/* Set as running text rather than a label: leading opened up and the
-            measure capped, so a long line stays readable. */}
-        <span
-          className="font-inter mt-3 block max-w-[58ch] text-black/55"
+            measure capped, so a long line stays readable. Darkens word by word
+            on scroll, the same treatment the Who We Are statement uses. */}
+        <RevealText
+          segments={[{ text: photo.caption }]}
+          className="font-inter mt-3 block max-w-[58ch]"
           style={{
             fontSize: 'clamp(14px, 1.2vw, 18px)',
             letterSpacing: '-0.005em',
             lineHeight: 1.62,
             textWrap: 'pretty',
           }}
-        >
-          {photo.caption}
-        </span>
+        />
       </figcaption>
     </figure>
   );
