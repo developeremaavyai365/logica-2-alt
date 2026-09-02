@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { FileText, Building2, ArrowUpRight, Search, Download } from 'lucide-react';
+import { FileText, Building2, ArrowUpRight, Search, Download, ChevronDown, Check } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import InvestorTabs from '../../components/InvestorTabs';
@@ -152,37 +152,91 @@ function YearFilter({
   active: string;
   onChange: (y: string) => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const wrap = useRef<HTMLDivElement>(null);
+
   const options = [ALL_YEARS, ...years];
   const labelFor = (y: string) => (y === ALL_YEARS ? 'All years' : y);
   const countFor = (y: string) => (y === ALL_YEARS ? total : counts[y]);
 
+  // A dropdown that only closed on selection would trap the reader whenever
+  // they opened it to look and changed their mind.
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (wrap.current && !wrap.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
   return (
-    <div className="mb-6">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-          Financial year
-        </span>
-        {options.map((y) => {
-          const on = y === active;
-          return (
-            <button
-              key={y}
-              type="button"
-              onClick={() => onChange(y)}
-              aria-pressed={on}
-              className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-colors ${
-                on
-                  ? 'border-black bg-black text-white'
-                  : 'border-[#000000]/15 bg-white text-[#000000] hover:border-[#000000]/40'
-              }`}
-            >
-              {labelFor(y)}
-              <span className={on ? 'ml-1.5 text-white/60' : 'ml-1.5 text-[#6b6b6b]'}>
-                {countFor(y)}
-              </span>
-            </button>
-          );
-        })}
+    <div className="mb-6 flex flex-wrap items-center gap-3">
+      <span className="text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+        Financial year
+      </span>
+
+      <div ref={wrap} className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          className="flex items-center gap-2 rounded-lg border border-black bg-black py-2 pl-4 pr-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          {labelFor(active)}
+          <span className="text-white/60">{countFor(active)}</span>
+          <ChevronDown
+            className={`h-4 w-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          />
+        </button>
+
+        {open && (
+          <ul
+            role="listbox"
+            aria-label="Financial year"
+            className="absolute left-0 top-full z-30 mt-1.5 max-h-72 min-w-[13rem] overflow-y-auto rounded-lg border border-[#000000]/10 bg-white py-1 shadow-xl"
+          >
+            {options.map((y) => {
+              const on = y === active;
+              return (
+                <li key={y}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={on}
+                    onClick={() => {
+                      onChange(y);
+                      setOpen(false);
+                    }}
+                    className={`flex w-full items-center justify-between gap-4 px-4 py-2 text-left text-sm transition-colors hover:bg-[#ECEDEC] ${
+                      on ? 'font-semibold text-[#000000]' : 'text-[#6b6b6b]'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      {on ? (
+                        <Check className="h-3.5 w-3.5 shrink-0" />
+                      ) : (
+                        <span className="w-3.5 shrink-0" />
+                      )}
+                      {labelFor(y)}
+                    </span>
+                    {/* Counts stay on the options: with one year on screen at
+                        a time, this is what shows nothing has gone missing. */}
+                    <span className="text-xs text-[#6b6b6b]">{countFor(y)}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </div>
   );
