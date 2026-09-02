@@ -116,7 +116,7 @@
       "id": "payments-safety",
       "category": "Payments",
       "question": "Is it safe to pay on your website?",
-      "answer": "Yes — all payments are processed through secure, encrypted payment gateways. We never see or store your full card details. [NEEDS CONFIRMATION: which gateway — Razorpay/PayU/other — worth naming for trust if you want.]",
+      "answer": "Yes — all payments are processed through Razorpay over an encrypted connection. We never see or store your full card details. You can pay by UPI, card, net banking or no-cost EMI.",
       "tags": ["payment security", "safe checkout", "gateway"],
       "last_updated": "2026-07-29",
       "confidence": "needs_confirmation"

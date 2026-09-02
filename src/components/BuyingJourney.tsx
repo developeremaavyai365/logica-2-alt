@@ -141,8 +141,8 @@ const BRAND_LOGOS = [
 ];
 
 /* How people actually pay at an Indian counter, and the finance desks named
-   on the company's own storefront signage. No gateway is claimed: the site
-   is not wired to one, so none is shown. */
+   on the company's own storefront signage. Razorpay is the gateway, shown
+   with its own official mark from cdn.razorpay.com. */
 const PAY_METHODS = ['UPI', 'Cards', 'Net banking', 'No-cost EMI'];
 const FINANCE = ['Bajaj Finserv', 'Pine Labs', 'HDB'];
 
@@ -348,6 +348,16 @@ function CheckoutScreen() {
       >
         <CheckoutMark className="h-3.5 w-3.5" />
         Place order securely
+      </span>
+
+      {/* The gateway, in its own mark. Sits under the pay button where a
+          checkout normally carries it. */}
+      <span
+        className="animate-journey-rise flex items-center justify-center gap-1.5 pt-0.5"
+        style={{ animationDelay: '760ms' }}
+      >
+        <span className="text-[8px] text-black/35">Payments secured by</span>
+        <img src="/logos/razorpay.svg" alt="Razorpay" className="h-[11px] w-auto" />
       </span>
     </div>
   );
