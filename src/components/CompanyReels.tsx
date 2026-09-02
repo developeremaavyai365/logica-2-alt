@@ -39,10 +39,21 @@ const REELS: string[] = [
   'DIjOSjAzZNs',
 ];
 
+/* The whole card is the link, not the embed inside it.
+
+   Left alone, the iframe swallows every pointer event, so the card can carry
+   no cursor, no hover and no press state — and the embed's own button only
+   opens the reel on Instagram anyway. Taking pointer events off the iframe
+   and laying a link over it keeps that same destination while letting the
+   card behave like something you can click, and puts it in the tab order. */
 function Reel({ code, index }: { code: string; index: number }) {
   return (
-    <div
-      className="relative overflow-hidden rounded-2xl border border-black/[0.08] bg-[#F4F4F2]"
+    <a
+      href={`https://www.instagram.com/reel/${code}/`}
+      target="_blank"
+      rel="noreferrer noopener"
+      aria-label={`Watch Logica Infoway reel ${index + 1} on Instagram`}
+      className="group relative block overflow-hidden rounded-2xl border border-black/[0.08] bg-[#F4F4F2] outline-none transition-all duration-300 ease-out hover:-translate-y-1 hover:border-black/15 hover:shadow-2xl focus-visible:ring-2 focus-visible:ring-[#d6249f] focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.985] active:duration-100"
       style={{ aspectRatio: `1 / ${MEDIA_RATIO}` }}
     >
       <iframe
@@ -50,15 +61,18 @@ function Reel({ code, index }: { code: string; index: number }) {
         title={`Logica Infoway reel ${index + 1}`}
         loading="lazy"
         scrolling="no"
-        allowFullScreen
-        className="absolute left-0 block w-full border-0"
+        tabIndex={-1}
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 block w-full border-0"
         style={{
           top: `-${HEADER_CROP}px`,
           // Generous: the box clips it, and a short iframe would letterbox.
           height: `calc(100% + ${HEADER_CROP + 340}px)`,
         }}
       />
-    </div>
+      {/* Lifts the video slightly out of the page on hover. */}
+      <span className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+    </a>
   );
 }
 
