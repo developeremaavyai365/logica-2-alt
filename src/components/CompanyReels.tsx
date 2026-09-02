@@ -42,7 +42,7 @@ const REELS: string[] = [
 function Reel({ code, index }: { code: string; index: number }) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border border-black/[0.08] bg-[#F4F4F2]"
+      className="relative w-[calc(50%-6px)] shrink-0 overflow-hidden rounded-2xl border border-black/[0.08] bg-[#F4F4F2] sm:w-[calc(33.333%-11px)]"
       style={{ aspectRatio: `1 / ${MEDIA_RATIO}` }}
     >
       <iframe
@@ -65,7 +65,10 @@ function Reel({ code, index }: { code: string; index: number }) {
 export default function CompanyReels() {
   return (
     <section className="w-full bg-white px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
-      <div className="mx-auto max-w-6xl">
+      {/* Wider than the 6xl the rest of the page uses, so three across still
+          reads big, but capped so they do not become billboards on a very
+          wide monitor. */}
+      <div className="mx-auto max-w-7xl">
         <p
           className="font-inter font-semibold text-[#15803D]"
           style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
@@ -78,9 +81,10 @@ export default function CompanyReels() {
         >
           From the Logica floor
         </h2>
-        {/* An even grid rather than a scroller: two up on a phone, three on a
-            tablet, all five in a row on a desktop. */}
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+        {/* Two up on a phone, three from tablet on. Flex-wrap rather than a
+            grid so the last row — five reels leave a row of two — sits
+            centred instead of hanging off the left. */}
+        <div className="mt-10 flex flex-wrap justify-center gap-3 sm:mt-12 sm:gap-4">
           {REELS.map((code, i) => (
             <Reel key={code} code={code} index={i} />
           ))}
