@@ -2,7 +2,7 @@
 <html>
 <head>
   <script>
-  /* __logica_playback_rate__ — plays the film at 1.5x.
+  /* __logica_playback_rate__ — plays the film at 2x.
 
      The bundle animates itself from requestAnimationFrame and the wall clock
      rather than from a <video> or CSS animation, so there is no playbackRate
@@ -13,7 +13,7 @@
      captures a start time, so patching afterwards would leave that baseline
      unscaled. Hence a plain inline script at the top of <head>. */
   (function () {
-    var RATE = 1.5;
+    var RATE = 2;
     try {
       var perf = window.performance;
       var rawNow = perf.now.bind(perf);
