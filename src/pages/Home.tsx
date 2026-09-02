@@ -22,11 +22,13 @@ export default function Home() {
       {/* The name signs off the identity block, as on the Trent reference. */}
       <BrandMarkSection />
       <RegisteredOfficesVideo />
+      {/* The reels sit straight under the offices film — both are the
+          company on camera, so they belong together. */}
+      <CompanyReels />
 
       <BrandStrip />
       {/* Having shown the brands, show how their stock reaches you. */}
       <BuyingJourney />
-      <CompanyReels />
       <Footer />
     </div>
   );

@@ -1,111 +1,95 @@
-import { useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+/* Reels from the official Logica Infoway account.
 
-declare global {
-  interface Window {
-    instgrm?: { Embeds: { process: () => void } };
-  }
-}
+   Instagram's embed wraps every reel in its own chrome: an avatar, the
+   handle, a "View profile" button and the audio credit above the video, then
+   likes, comment box and "View more on Instagram" below it. That chrome is
+   inside a cross-origin iframe, so it cannot be styled or hidden from here —
+   the only way to show the video alone is to clip it.
 
-// Real reels from the official Logica Infoway Instagram account — add more
-// permalinks here as new reels go up; each renders via Instagram's own
-// oEmbed widget so it always reflects the live post (likes, caption, etc).
-const REEL_PERMALINKS: string[] = [
-  'https://www.instagram.com/reel/DcSxqsMTB2Z/',
-  'https://www.instagram.com/reel/DXwfzTGz3vW/',
-  'https://www.instagram.com/reel/DV3LYExk5_U/',
-  'https://www.instagram.com/reel/DMAfKEKTf3j/',
-  'https://www.instagram.com/reel/DIjOSjAzZNs/',
+   So each reel sits in a box the size of the video itself, with the iframe
+   pulled up by the height of the header and given far more height than the
+   box, letting overflow hide everything underneath. Instagram's own play
+   overlay stays, since that is what starts the video.
+
+   Embedding the reel URLs directly rather than going through embed.js: the
+   script exists to resize the blockquote to fit the whole post, which is the
+   opposite of what is wanted here. */
+
+/** Height of Instagram's header block — avatar, handle, audio credit. */
+const HEADER_CROP = 54;
+/** Video height as a multiple of its width, as the embed renders it. */
+const MEDIA_RATIO = 1.25;
+
+const REELS: string[] = [
+  'DcSxqsMTB2Z',
+  'DXwfzTGz3vW',
+  'DV3LYExk5_U',
+  'DMAfKEKTf3j',
+  'DIjOSjAzZNs',
 ];
 
-function useInstagramEmbedScript(deps: unknown[]) {
-  useEffect(() => {
-    if (window.instgrm) {
-      window.instgrm.Embeds.process();
-      return;
-    }
-    const existing = document.querySelector<HTMLScriptElement>('script[src="https://www.instagram.com/embed.js"]');
-    if (existing) {
-      existing.addEventListener('load', () => window.instgrm?.Embeds.process());
-      return;
-    }
-    const script = document.createElement('script');
-    script.src = 'https://www.instagram.com/embed.js';
-    script.async = true;
-    script.onload = () => window.instgrm?.Embeds.process();
-    document.body.appendChild(script);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
-}
-
-function ReelEmbed({ permalink }: { permalink: string }) {
-  const ref = useRef<HTMLQuoteElement>(null);
-
+function Reel({ code, index }: { code: string; index: number }) {
   return (
-    <div className="w-[280px] shrink-0 snap-start overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm">
-      <blockquote
-        ref={ref}
-        className="instagram-media"
-        data-instgrm-permalink={permalink}
-        data-instgrm-version="14"
-        style={{ margin: 0, width: '280px', minWidth: '280px' }}
+    <div
+      className="relative overflow-hidden rounded-2xl border border-black/[0.08] bg-[#F4F4F2]"
+      style={{ aspectRatio: `1 / ${MEDIA_RATIO}` }}
+    >
+      <iframe
+        src={`https://www.instagram.com/reel/${code}/embed/`}
+        title={`Logica Infoway reel ${index + 1}`}
+        loading="lazy"
+        scrolling="no"
+        allowFullScreen
+        className="absolute left-0 block w-full border-0"
+        style={{
+          top: `-${HEADER_CROP}px`,
+          // Generous: the box clips it, and a short iframe would letterbox.
+          height: `calc(100% + ${HEADER_CROP + 340}px)`,
+        }}
       />
     </div>
   );
 }
 
 export default function CompanyReels() {
-  useInstagramEmbedScript([]);
-  const scrollerRef = useRef<HTMLDivElement>(null);
-
-  function scrollByCards(direction: 1 | -1) {
-    scrollerRef.current?.scrollBy({ left: direction * 300, behavior: 'smooth' });
-  }
-
   return (
-    <section className="w-full bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
-      <h2
-        className="font-dm-sans mx-auto max-w-6xl bg-gradient-to-r from-black to-[#15803D] bg-clip-text font-extrabold text-transparent"
-        style={{ fontSize: 'clamp(24px, 3.5vw, 36px)', letterSpacing: '-0.04em' }}
-      >
-        From the Logica Floor
-      </h2>
-      <p
-        className="font-inter mx-auto mt-2 max-w-6xl bg-gradient-to-r from-black to-[#15803D] bg-clip-text text-sm font-extrabold text-transparent sm:text-base"
-        style={{ letterSpacing: '-0.01em' }}
-      >
-        A look inside our stores, launches and everyday work — straight from @logicainfowayofficial.
-      </p>
-
-      <div className="relative mx-auto mt-10 max-w-6xl">
-        <button
-          type="button"
-          onClick={() => scrollByCards(-1)}
-          aria-label="Scroll reels left"
-          className="absolute left-0 top-1/2 z-10 hidden -translate-x-4 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-md transition-transform hover:scale-105 sm:flex"
-          style={{ height: '44px', width: '44px' }}
+    <section className="w-full bg-white px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
+      <div className="mx-auto max-w-6xl">
+        <p
+          className="font-inter font-semibold text-[#15803D]"
+          style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
         >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-
-        <div
-          ref={scrollerRef}
-          className="scrollbar-none flex snap-x snap-mandatory justify-start gap-6 overflow-x-auto px-1 pb-2 sm:justify-center"
+          ON THE FLOOR
+        </p>
+        <h2
+          className="font-dm-sans mt-4 font-bold text-[#111111]"
+          style={{ fontSize: 'clamp(26px, 3.4vw, 44px)', letterSpacing: '-0.03em', lineHeight: 1.15 }}
         >
-          {REEL_PERMALINKS.map((permalink) => (
-            <ReelEmbed key={permalink} permalink={permalink} />
+          From the Logica floor
+        </h2>
+        <p
+          className="font-inter mt-4 max-w-2xl text-black/55"
+          style={{ fontSize: 'clamp(14px, 1.2vw, 17px)', lineHeight: 1.6 }}
+        >
+          Inside the stores, the launches and the everyday work — straight from{' '}
+          <a
+            href="https://www.instagram.com/logicainfowayofficial/"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="font-semibold text-[#15803D] underline-offset-4 hover:underline"
+          >
+            @logicainfowayofficial
+          </a>
+          .
+        </p>
+
+        {/* An even grid rather than a scroller: two up on a phone, three on a
+            tablet, all five in a row on a desktop. */}
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+          {REELS.map((code, i) => (
+            <Reel key={code} code={code} index={i} />
           ))}
         </div>
-
-        <button
-          type="button"
-          onClick={() => scrollByCards(1)}
-          aria-label="Scroll reels right"
-          className="absolute right-0 top-1/2 z-10 hidden translate-x-4 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-md transition-transform hover:scale-105 sm:flex"
-          style={{ height: '44px', width: '44px' }}
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
       </div>
     </section>
   );
