@@ -35,7 +35,7 @@
       "id": "orders-free-shipping",
       "category": "Orders & Shipping",
       "question": "Do you offer free shipping?",
-      "answer": "[NEEDS CONFIRMATION: is shipping free on all orders, or only above a minimum order value? Existing site says \"Free Shipping on all products\" — confirm if still accurate and whether it applies pan-India or only serviceable cities.]",
+      "answer": "Delivery is calculated at checkout, once we have your address — you will see the exact amount before you pay. For a quote before ordering, call us on +91 7003999192 or use the contact form.",
       "tags": ["free shipping", "shipping cost", "minimum order"],
       "last_updated": "2026-07-29",
       "confidence": "needs_confirmation"

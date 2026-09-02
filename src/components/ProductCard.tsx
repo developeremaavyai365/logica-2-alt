@@ -85,9 +85,11 @@ export default function ProductCard({ product }: Props) {
           </div>
         )}
 
+        {/* Shipping is worked out at checkout, so the card says that rather
+            than promising free delivery. */}
         <div className="font-inter mt-2 flex items-center gap-1.5 text-xs text-black/50">
           <Truck className="h-3.5 w-3.5" />
-          Free delivery available
+          Delivery calculated at checkout
         </div>
 
         <div className="mt-3 flex items-center justify-between border-t border-black/10 pt-3">
