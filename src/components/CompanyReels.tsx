@@ -78,22 +78,6 @@ export default function CompanyReels() {
         >
           From the Logica floor
         </h2>
-        <p
-          className="font-inter mt-4 max-w-2xl text-black/55"
-          style={{ fontSize: 'clamp(14px, 1.2vw, 17px)', lineHeight: 1.6 }}
-        >
-          Inside the stores, the launches and the everyday work — straight from{' '}
-          <a
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="font-semibold text-[#15803D] underline-offset-4 hover:underline"
-          >
-            @logicainfowayofficial
-          </a>
-          .
-        </p>
-
         {/* An even grid rather than a scroller: two up on a phone, three on a
             tablet, all five in a row on a desktop. */}
         <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
