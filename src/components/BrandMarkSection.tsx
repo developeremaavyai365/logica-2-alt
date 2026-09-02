@@ -34,17 +34,13 @@ const BANDS = [
   { color: '#7DC242', left: '58%', delay: '180ms' },
 ];
 
-/* The two Logica-branded stores lead, the single-brand Samsung counter closes.
+/* The two Logica-branded stores.
 
-   Every one runs at its own native ratio — nothing is cropped to a common
-   shape. These are wide storefronts whose whole point is the fascia and the
-   brand strip running across it, and forcing them into a portrait slot threw
-   away half of each. Intrinsic width and height are declared so the browser
-   reserves the right box before the file arrives and the page doesn't jump.
-
-   Which is also why the Samsung photo here is storefront-2: it is the only
-   landscape one of the three, at 1.333. The other two are portrait and would
-   break the run. */
+   Both run at their own native ratio — nothing is cropped to a common shape.
+   These are wide storefronts whose whole point is the fascia and the brand
+   strip running across it, and forcing them into a portrait slot threw away
+   half of each. Intrinsic width and height are declared so the browser
+   reserves the right box before the file arrives and the page doesn't jump. */
 const PHOTOS = [
   {
     src: '/images/store/storefront-logica-1.jpg',
@@ -63,15 +59,6 @@ const PHOTOS = [
     title: 'The name over the door',
     caption:
       'One name, one counter, and the same company behind it since the Eastern Logica Infoway years. Pick what you want and pay how it suits you — finance and easy EMI arranged in store.',
-  },
-  {
-    src: '/images/store/storefront-2.jpg',
-    w: 1448,
-    h: 1086,
-    alt: 'Logica Infoway Samsung SmartCafé storefront',
-    title: 'The single-brand counter',
-    caption:
-      'A dedicated Samsung shopfront under the Logica name. The Galaxy range in person, hands on it before you decide, and somewhere close by to come back to long after you have.',
   },
 ];
 

@@ -1,6 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script>
+  /* __logica_playback_rate__ — plays the film at 1.5x.
+
+     The bundle animates itself from requestAnimationFrame and the wall clock
+     rather than from a <video> or CSS animation, so there is no playbackRate
+     to set. Scaling the clocks it reads speeds up the whole timeline without
+     touching the bundle's own code.
+
+     This has to run before the bundle does: it starts on DOMContentLoaded and
+     captures a start time, so patching afterwards would leave that baseline
+     unscaled. Hence a plain inline script at the top of <head>. */
+  (function () {
+    var RATE = 1.5;
+    try {
+      var perf = window.performance;
+      var rawNow = perf.now.bind(perf);
+      var t0 = rawNow();
+      perf.now = function () { return t0 + (rawNow() - t0) * RATE; };
+
+      var rawDate = Date.now;
+      var d0 = rawDate();
+      Date.now = function () { return d0 + (rawDate() - d0) * RATE; };
+
+      // Hand callbacks the scaled clock too, for anything that trusts the
+      // timestamp argument over performance.now().
+      var rawRaf = window.requestAnimationFrame.bind(window);
+      window.requestAnimationFrame = function (cb) {
+        return rawRaf(function () { cb(perf.now()); });
+      };
+    } catch (e) {
+      /* If any of these are locked down, the film simply plays at 1x. */
+    }
+  })();
+  </script>
   <meta charset="utf-8">
   <title>Logica Infoway — Offices (embed)</title>
   <style>
