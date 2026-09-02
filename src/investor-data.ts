@@ -112,6 +112,18 @@ export interface FiscalYearFolder {
  *  have the actual filed documents. */
 export const BOARD_MEETING_NOTICES: AnnualReport[] = [
   {
+    // Regulation 30 outcome of the 01.09.2026 meeting: took note of the
+    // Secretarial Audit Report for FY26, reappointment of Mrs. Shweta Goel as
+    // Whole-time Director, revised remuneration for the MD and WTD, CSR
+    // implementing agency, renewal of material RPT limits, the MDA report and
+    // Directors' Report for FY26, and convening the 31st AGM for 30.09.2026.
+    // The AGM notice itself is a separate filing "in due course" per this
+    // document, so it is not listed as a General Meeting notice yet.
+    title: "Outcome of Board Meeting — September 1, 2026",
+    year: "2026-27",
+    url: "/investor/board-meetings/outcome-of-board-meeting-01-09-2026.pdf",
+  },
+  {
     // Original outcome of the 14.01.2025 meeting; only the later revised
     // filing was listed.
     title: "Outcome of Board Meeting — January 14, 2025",
@@ -1034,6 +1046,14 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  documents (Regulation 30/57/74 disclosures, trading-window closures,
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
+  {
+    // Same Regulation 30 filing cross-listed from Board Meeting — see the
+    // note there for what it covers. Cross-listed rather than re-uploaded,
+    // same file.
+    title: "Outcome of Board Meeting — September 1, 2026",
+    year: "2026-27",
+    url: "/investor/board-meetings/outcome-of-board-meeting-01-09-2026.pdf",
+  },
   {
     title: "Submission of Management Discussion & Analysis — H2 FY26 & FY26",
     year: "2025-26",
