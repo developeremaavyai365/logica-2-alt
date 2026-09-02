@@ -19,6 +19,7 @@ import Wishlist from './pages/Wishlist';
 // visitor to the homepage or shop no longer downloads the whole IR dataset.
 const InvestorHub = lazy(() => import('./pages/investor/InvestorHub'));
 const InvestorSection = lazy(() => import('./pages/investor/InvestorSection'));
+const Reg46 = lazy(() => import('./pages/investor/Reg46'));
 import AuthorizedPerson from './pages/investor/AuthorizedPerson';
 import GrievanceRedressal from './pages/investor/GrievanceRedressal';
 import InvestorEmptyPage from './pages/investor/InvestorEmptyPage';
@@ -69,6 +70,16 @@ function App() {
         <Route
           path="/basis-of-allotment"
           element={<InvestorEmptyPage title="Basis Of Allotment" message="No basis of allotment records have been published yet." />}
+        />
+        {/* Ahead of /investor/:slug — that route matches anything, and would
+            otherwise catch this and bounce it back to the hub. */}
+        <Route
+          path="/investor/reg-46"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#ECEDEC]" />}>
+              <Reg46 />
+            </Suspense>
+          }
         />
         <Route
           path="/investor/:slug"
