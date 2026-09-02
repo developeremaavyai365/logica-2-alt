@@ -15,6 +15,15 @@
    script exists to resize the blockquote to fit the whole post, which is the
    opposite of what is wanted here. */
 
+import { Instagram } from 'lucide-react';
+
+/** The account these reels are posted from, per the embeds themselves.
+ *  Note this is not the handle in data.ts, which still points at the old
+ *  easternlogicaofficial account from before the rename. */
+const INSTAGRAM_URL = 'https://www.instagram.com/logicainfowayofficial/';
+/** Same fill the contact page uses for its Instagram icon. */
+const INSTAGRAM_FILL = '#d6249f';
+
 /** Height of Instagram's header block — avatar, handle, audio credit. */
 const HEADER_CROP = 54;
 /** Video height as a multiple of its width, as the embed renders it. */
@@ -90,6 +99,37 @@ export default function CompanyReels() {
             <Reel key={code} code={code} index={i} />
           ))}
         </div>
+
+        {/* The contact page's treatment: white circle, the brand fill rising
+            from the bottom on hover, the icon turning over and going white. */}
+        <a
+          href={INSTAGRAM_URL}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="group mt-10 inline-flex items-center gap-4 sm:mt-12"
+        >
+          <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-black/10 bg-white sm:h-14 sm:w-14">
+            <span
+              className="absolute inset-0 top-full transition-all duration-500 group-hover:top-0"
+              style={{ background: INSTAGRAM_FILL }}
+            />
+            <Instagram
+              className="relative z-10 h-5 w-5 text-black transition-all duration-500 group-hover:text-white group-hover:[transform:rotateY(360deg)]"
+              strokeWidth={1.75}
+            />
+          </span>
+          <span
+            className="font-dm-sans font-bold text-[#0A0A0A] transition-colors duration-500"
+            style={{ fontSize: 'clamp(15px, 1.4vw, 19px)', letterSpacing: '-0.02em' }}
+          >
+            <span className="transition-colors duration-500 group-hover:text-[#d6249f]">
+              Follow us on Instagram
+            </span>
+            <span className="font-inter mt-0.5 block text-[13px] font-normal text-black/45">
+              @logicainfowayofficial
+            </span>
+          </span>
+        </a>
       </div>
     </section>
   );
