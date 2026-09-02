@@ -133,22 +133,16 @@ function DocRows({ docs }: { docs: AnnualReport[] }) {
 /** Financial-year selector, in the style of a typical listed-company filings
  *  page: pick a year and the list narrows to it.
  *
- *  Carries an "All" option and a count against every year, which the usual
- *  version of this control does not. Both are on purpose. A year selector
- *  that defaults to the newest year leaves everything older sitting behind a
- *  control the reader has to notice, and this company's filings run back to
- *  2011 — so "All" stays the default and the counts make it plain that
- *  nothing has gone missing. */
+ *  Carries an "All years" option, which that control usually does not, and
+ *  keeps it as the default. Filings here run back to 2011-12, so opening on
+ *  the newest year would leave everything older sitting behind a control the
+ *  reader has to notice first. */
 function YearFilter({
   years,
-  counts,
-  total,
   active,
   onChange,
 }: {
   years: string[];
-  counts: Record<string, number>;
-  total: number;
   active: string;
   onChange: (y: string) => void;
 }) {
@@ -157,7 +151,6 @@ function YearFilter({
 
   const options = [ALL_YEARS, ...years];
   const labelFor = (y: string) => (y === ALL_YEARS ? 'All years' : y);
-  const countFor = (y: string) => (y === ALL_YEARS ? total : counts[y]);
 
   // A dropdown that only closed on selection would trap the reader whenever
   // they opened it to look and changed their mind.
@@ -192,7 +185,6 @@ function YearFilter({
           className="flex items-center gap-2 rounded-lg border border-black bg-black py-2 pl-4 pr-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
         >
           {labelFor(active)}
-          <span className="text-white/60">{countFor(active)}</span>
           <ChevronDown
             className={`h-4 w-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
           />
@@ -216,21 +208,16 @@ function YearFilter({
                       onChange(y);
                       setOpen(false);
                     }}
-                    className={`flex w-full items-center justify-between gap-4 px-4 py-2 text-left text-sm transition-colors hover:bg-[#ECEDEC] ${
+                    className={`flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition-colors hover:bg-[#ECEDEC] ${
                       on ? 'font-semibold text-[#000000]' : 'text-[#6b6b6b]'
                     }`}
                   >
-                    <span className="flex items-center gap-2">
-                      {on ? (
-                        <Check className="h-3.5 w-3.5 shrink-0" />
-                      ) : (
-                        <span className="w-3.5 shrink-0" />
-                      )}
-                      {labelFor(y)}
-                    </span>
-                    {/* Counts stay on the options: with one year on screen at
-                        a time, this is what shows nothing has gone missing. */}
-                    <span className="text-xs text-[#6b6b6b]">{countFor(y)}</span>
+                    {on ? (
+                      <Check className="h-3.5 w-3.5 shrink-0" />
+                    ) : (
+                      <span className="w-3.5 shrink-0" />
+                    )}
+                    {labelFor(y)}
                   </button>
                 </li>
               );
@@ -259,17 +246,14 @@ export default function InvestorSection() {
     return [];
   }, [section]);
 
-  // Years present in this section, newest first, with a count each.
-  const { years, yearCounts } = useMemo(() => {
-    const counts: Record<string, number> = {};
+  // Financial years present in this section, newest first.
+  const years = useMemo(() => {
+    const seen = new Set<string>();
     allDocs.forEach((d) => {
       const b = fyBucket(d);
-      if (b) counts[b] = (counts[b] ?? 0) + 1;
+      if (b) seen.add(b);
     });
-    return {
-      years: Object.keys(counts).sort((a, b) => Number(b.slice(0, 4)) - Number(a.slice(0, 4))),
-      yearCounts: counts,
-    };
+    return [...seen].sort((a, b) => Number(b.slice(0, 4)) - Number(a.slice(0, 4)));
   }, [allDocs]);
 
   const showYearFilter =
@@ -387,13 +371,7 @@ export default function InvestorSection() {
                 )}
 
                 {showYearFilter && (
-                  <YearFilter
-                    years={years}
-                    counts={yearCounts}
-                    total={allDocs.length}
-                    active={year}
-                    onChange={setYear}
-                  />
+                  <YearFilter years={years} active={year} onChange={setYear} />
                 )}
 
                 {sortedFiltered.length === 0 ? (
@@ -434,13 +412,7 @@ export default function InvestorSection() {
             )}
 
             {showYearFilter && (
-              <YearFilter
-                years={years}
-                counts={yearCounts}
-                total={allDocs.length}
-                active={year}
-                onChange={setYear}
-              />
+              <YearFilter years={years} active={year} onChange={setYear} />
             )}
 
             {isSearching && (
