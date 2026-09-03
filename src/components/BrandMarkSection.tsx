@@ -31,7 +31,7 @@ const BANDS = [
   { color: '#7DC242', left: '58%', delay: '180ms' },
 ];
 
-/* The four businesses, one card each.
+/* The four businesses, one photograph each.
 
    Figures and accent colours are the same ones the stats above the fold
    already publish, so the two blocks cannot end up quoting different numbers
@@ -45,33 +45,36 @@ const VERTICALS = [
   {
     src: '/images/verticals/retail.jpg',
     name: 'Retail',
-    stat: '82+ stores pan India',
     alt: 'A customer paying by contactless phone at a retail counter',
-    caption: 'Counters people can walk into, compare at, and come back to.',
+    headline: 'See it. Hold it. Take it home.',
+    caption:
+      '82+ counters across India — and the same counter that sold it handles the service afterwards.',
     ink: '#D2781E',
   },
   {
     src: '/images/verticals/ecommerce.jpg',
     name: 'E-commerce',
-    stat: '24/7 nationwide',
     alt: 'Shopping online on a laptop with a payment card in hand',
-    caption: 'The same catalogue and the same warranty, open at any hour.',
+    headline: 'The counter that never closes.',
+    caption:
+      'The same catalogue, the same warranty, the same price — open whenever you are.',
     ink: '#6D28D9',
   },
   {
     src: '/images/verticals/distribution.jpg',
     name: 'Distribution',
-    stat: '5 distribution centres',
     alt: 'Racking and palletised stock inside a distribution warehouse',
-    caption: 'Stock held close to demand, so orders leave sooner.',
+    headline: 'Stocked closer to you.',
+    caption:
+      'Five distribution centres holding inventory near demand, so an order moves sooner.',
     ink: '#15803D',
   },
   {
     src: '/images/verticals/export.jpg',
     name: 'Export',
-    stat: '7+ countries served',
     alt: 'A reach stacker moving containers in a shipping yard',
-    caption: 'Consignments cleared and shipped beyond the domestic market.',
+    headline: 'We do not stop at the border.',
+    caption: 'Cleared, packed and shipped to 7+ countries beyond the domestic market.',
     ink: '#1D4ED8',
   },
 ];
@@ -81,86 +84,87 @@ const LINE = {
   letterSpacing: '-0.042em',
 } as const;
 
-/* One card per business, in the style of a group holding page: the photograph,
-   the name laid over it, and a line underneath saying what the vertical does.
+/* One business per frame: the photograph bare — no card, no badge, nothing
+   laid over it — with the line Logica would put beside it underneath.
 
-   Each card watches itself rather than the row sharing one trigger, so a card
-   reveals when it is actually reached — on a phone the four are stacked well
-   over a screen apart. */
-function VerticalCard({ item, index }: { item: (typeof VERTICALS)[number]; index: number }) {
-  const [ref, inView] = useInView<HTMLElement>(0.2);
-  const [shown, setShown] = useState(false);
+   The four share a single trigger and come in one after another rather than
+   each watching itself. They sit two by two, close enough that independent
+   triggers would fire together and lose the sequence. */
+const CASCADE = 320;
 
-  // Scheduled rather than set inline so the reset paints first and the card
-  // rises, instead of the two batching into a straight appearance.
-  useEffect(() => {
-    if (!inView) {
-      setShown(false);
-      return;
-    }
-    const t = setTimeout(() => setShown(true), index * 90);
-    return () => clearTimeout(t);
-  }, [inView, index]);
-
+function VerticalFrame({
+  item,
+  index,
+  shown,
+}: {
+  item: (typeof VERTICALS)[number];
+  index: number;
+  shown: boolean;
+}) {
   return (
     <figure
-      ref={ref}
       className="group m-0 transition-all ease-out"
       style={{
         opacity: shown ? 1 : 0,
-        transform: shown ? 'translateY(0)' : 'translateY(26px)',
-        transitionDuration: '760ms',
+        transform: shown ? 'translateY(0)' : 'translateY(34px)',
+        transitionDuration: '820ms',
+        transitionDelay: shown ? `${index * CASCADE}ms` : '0ms',
       }}
     >
-      <div className="relative overflow-hidden rounded-2xl bg-[#F4F4F2]">
+      <div className="overflow-hidden bg-[#F4F4F2]">
         <img
           src={item.src}
           alt={item.alt}
           width={1200}
           height={900}
           loading="lazy"
-          className="block h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className="block h-auto w-full transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
           style={{ aspectRatio: '4 / 3', objectFit: 'cover' }}
         />
-        {/* Enough of a wash for the name to hold at the foot of any of the
-            four photographs, which range from a bright warehouse to an
-            overcast container yard. */}
-        <span
-          className="pointer-events-none absolute inset-0"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.12) 42%, rgba(0,0,0,0) 68%)' }}
-        />
-        {/* Stacked rather than set side by side: at a quarter of the row the
-            card is ~270px, and a name like "E-commerce" beside a pill wraps
-            and collides with it. */}
-        <figcaption className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-1.5 p-4">
-          <span
-            className="font-inter w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold text-white"
-            style={{ backgroundColor: item.ink }}
-          >
-            {item.stat}
-          </span>
-          <span
-            className="font-dm-sans font-bold leading-tight text-white"
-            style={{ fontSize: 'clamp(19px, 1.7vw, 24px)', letterSpacing: '-0.02em' }}
-          >
-            {item.name}
-          </span>
-        </figcaption>
       </div>
 
-      {/* Darkens word by word on scroll, the same treatment the Who We Are
-          statement uses. */}
-      <RevealText
-        segments={[{ text: item.caption }]}
-        className="font-inter mt-3"
-        style={{ fontSize: 'clamp(13px, 1.05vw, 15px)', lineHeight: 1.6, textWrap: 'pretty' }}
-      />
+      <figcaption className="mt-5">
+        <span
+          className="font-inter block font-semibold uppercase"
+          style={{ color: item.ink, fontSize: 'clamp(10px, 0.85vw, 12px)', letterSpacing: '0.22em' }}
+        >
+          {item.name}
+        </span>
+        <span
+          className="font-dm-sans mt-2.5 block font-bold text-[#0A0A0A]"
+          style={{ fontSize: 'clamp(21px, 2.1vw, 30px)', letterSpacing: '-0.025em', lineHeight: 1.2 }}
+        >
+          {item.headline}
+        </span>
+        {/* Darkens word by word on scroll, the same treatment the Who We Are
+            statement uses. */}
+        <RevealText
+          segments={[{ text: item.caption }]}
+          className="font-inter mt-3 max-w-[46ch]"
+          style={{ fontSize: 'clamp(14px, 1.15vw, 17px)', lineHeight: 1.6, textWrap: 'pretty' }}
+        />
+      </figcaption>
     </figure>
   );
 }
 
 export default function BrandMarkSection() {
   const [nameRef, nameInView] = useInView<HTMLDivElement>(0.3);
+  // One trigger for all four frames, so they arrive in order instead of each
+  // firing on its own and losing the sequence.
+  const [framesRef, framesInView] = useInView<HTMLDivElement>(0.15);
+  const [framesIn, setFramesIn] = useState(false);
+
+  // Scheduled rather than set inline so the reset paints before the cascade
+  // restarts, otherwise React batches the two and they simply appear.
+  useEffect(() => {
+    if (!framesInView) {
+      setFramesIn(false);
+      return;
+    }
+    const t = setTimeout(() => setFramesIn(true), 0);
+    return () => clearTimeout(t);
+  }, [framesInView]);
 
   const [lineOne, setLineOne] = useState(false);
   const [lineTwo, setLineTwo] = useState(false);
@@ -263,13 +267,12 @@ export default function BrandMarkSection() {
         </div>
       </div>
 
-      {/* The four businesses across one row, two up on a tablet and stacked on
-          a phone. Held to the page's own gutter rather than running to the
-          screen edge, so the row reads as a set of cards. */}
-      <div className="mt-16 px-5 sm:mt-24 sm:px-8 lg:px-10">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-4 lg:gap-6">
+      {/* Two by two rather than four across, so each photograph is roughly
+          twice the width it had in a single row. */}
+      <div ref={framesRef} className="mt-16 px-5 sm:mt-24 sm:px-8 lg:px-10">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 sm:gap-y-16 lg:gap-x-10">
           {VERTICALS.map((item, i) => (
-            <VerticalCard key={item.src} item={item} index={i} />
+            <VerticalFrame key={item.src} item={item} index={i} shown={framesIn} />
           ))}
         </div>
       </div>
