@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useInView } from '../use-in-view';
 
 /* Marks drawn for these four verticals rather than pulled from an icon set,
    so each one says what the business actually does: a shopfront with its
@@ -125,51 +126,36 @@ function StatValue({ raw, active }: { raw: string; active: boolean }) {
 }
 
 /* The four counting stats, previously the foot of the Who We Are statement.
-   Moved to its own section below the Logica Infoway verticals, with its own
-   observer and its own replay-on-entry/reset-on-exit stagger. */
+   Moved to its own section below the Logica Infoway verticals.
+
+   Runs on the shared useInView rather than an observer of its own: that hook
+   only drops out of view once the block is completely gone, where a bare
+   `isIntersecting` against a ratio would reset the figures back to zero while
+   they were still on screen. */
 export default function StatsSection() {
-  const statsRef = useRef<HTMLDivElement>(null);
+  const [statsRef, inView] = useInView<HTMLDivElement>(0.4);
   const [revealed, setRevealed] = useState<boolean[]>(() => stats.map(() => false));
 
   useEffect(() => {
-    const el = statsRef.current;
-    if (!el) return;
-    let timers: ReturnType<typeof setTimeout>[] = [];
+    if (!inView) {
+      // Reset so it's ready to animate in again on the next entry.
+      setRevealed(stats.map(() => false));
+      return;
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          timers.forEach(clearTimeout);
-          timers = [];
-
-          if (entry.isIntersecting) {
-            // Replay the stagger fresh every time the section comes into view.
-            setRevealed(stats.map(() => false));
-            stats.forEach((_, i) => {
-              timers.push(
-                setTimeout(() => {
-                  setRevealed((prev) => {
-                    const next = [...prev];
-                    next[i] = true;
-                    return next;
-                  });
-                }, i * STAGGER),
-              );
-            });
-          } else {
-            // Reset so it's ready to animate in again on the next entry.
-            setRevealed(stats.map(() => false));
-          }
+    // Replay the stagger fresh every time the section comes into view.
+    setRevealed(stats.map(() => false));
+    const timers = stats.map((_, i) =>
+      setTimeout(() => {
+        setRevealed((prev) => {
+          const next = [...prev];
+          next[i] = true;
+          return next;
         });
-      },
-      { threshold: 0.4 },
+      }, i * STAGGER),
     );
-    observer.observe(el);
-    return () => {
-      timers.forEach(clearTimeout);
-      observer.disconnect();
-    };
-  }, []);
+    return () => timers.forEach(clearTimeout);
+  }, [inView]);
 
   return (
     <section className="bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 lg:py-32">

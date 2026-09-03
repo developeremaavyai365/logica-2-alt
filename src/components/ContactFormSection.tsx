@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Facebook, Twitter, Instagram, Linkedin, Share2, Phone, type LucideIcon } from 'lucide-react';
 import { socials } from '../data';
+import { useInView } from '../use-in-view';
 
 const PHONE_NUMBER = '+91 7003999192';
 
@@ -24,46 +25,30 @@ const SOCIAL_ICONS: Record<string, { icon: LucideIcon; fill: string }> = {
 export default function ContactFormSection() {
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
-  const socialRef = useRef<HTMLDivElement>(null);
+  // Shared useInView rather than an observer of its own: that hook only drops
+  // out of view once the row is completely gone, where a bare `isIntersecting`
+  // against a ratio would blank the icons while they were still on screen.
+  const [socialRef, socialsInView] = useInView<HTMLDivElement>(0.4);
   const [revealed, setRevealed] = useState<boolean[]>(() => socials.map(() => false));
 
   useEffect(() => {
-    const el = socialRef.current;
-    if (!el) return;
-    let timers: ReturnType<typeof setTimeout>[] = [];
+    if (!socialsInView) {
+      setRevealed(socials.map(() => false));
+      return;
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          timers.forEach(clearTimeout);
-          timers = [];
-
-          if (entry.isIntersecting) {
-            setRevealed(socials.map(() => false));
-            socials.forEach((_, i) => {
-              timers.push(
-                setTimeout(() => {
-                  setRevealed((prev) => {
-                    const next = [...prev];
-                    next[i] = true;
-                    return next;
-                  });
-                }, i * 120),
-              );
-            });
-          } else {
-            setRevealed(socials.map(() => false));
-          }
+    setRevealed(socials.map(() => false));
+    const timers = socials.map((_, i) =>
+      setTimeout(() => {
+        setRevealed((prev) => {
+          const next = [...prev];
+          next[i] = true;
+          return next;
         });
-      },
-      { threshold: 0.4 },
+      }, i * 120),
     );
-    observer.observe(el);
-    return () => {
-      timers.forEach(clearTimeout);
-      observer.disconnect();
-    };
-  }, []);
+    return () => timers.forEach(clearTimeout);
+  }, [socialsInView]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
