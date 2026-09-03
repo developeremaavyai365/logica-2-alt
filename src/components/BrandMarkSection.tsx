@@ -24,10 +24,6 @@ import RevealText from './RevealText';
 const SECOND_LINE_DELAY = 200;
 const BANDS_DELAY = 460;
 const LOGO_DELAY = 1020;
-/* Rows no longer need staggering against each other — scrolling does that now,
-   each one firing as it is reached. This is only the caption trailing its own
-   photograph in. */
-const CAPTION_DELAY = 260;
 
 const BANDS = [
   { color: '#5BC5F2', left: '2%', delay: '0ms' },
@@ -35,31 +31,48 @@ const BANDS = [
   { color: '#7DC242', left: '58%', delay: '180ms' },
 ];
 
-/* The two Logica-branded stores.
+/* The four businesses, one card each.
 
-   Both run at their own native ratio — nothing is cropped to a common shape.
-   These are wide storefronts whose whole point is the fascia and the brand
-   strip running across it, and forcing them into a portrait slot threw away
-   half of each. Intrinsic width and height are declared so the browser
-   reserves the right box before the file arrives and the page doesn't jump. */
-const PHOTOS = [
+   Figures and accent colours are the same ones the stats above the fold
+   already publish, so the two blocks cannot end up quoting different numbers
+   for the same vertical.
+
+   All four images are pre-cropped to 4:3 at 1200px rather than being squeezed
+   into shape by the browser: they arrived as a mix of landscape and portrait,
+   and choosing the crop at build time keeps the subject rather than whatever
+   a centre crop happened to leave. */
+const VERTICALS = [
   {
-    src: '/images/store/storefront-logica-1.jpg',
-    w: 1600,
-    h: 994,
-    alt: 'Logica Infoway Limited Mobile & IT Store, lit storefront at night',
-    title: 'The multi-brand store',
-    caption:
-      'Every brand worth carrying, under one roof. Phones, laptops, desktops and everything that goes with them — out on display to compare in person, with service handled at the same counter that sold it.',
+    src: '/images/verticals/retail.jpg',
+    name: 'Retail',
+    stat: '82+ stores pan India',
+    alt: 'A customer paying by contactless phone at a retail counter',
+    caption: 'Counters people can walk into, compare at, and come back to.',
+    ink: '#D2781E',
   },
   {
-    src: '/images/store/storefront-logica-2.jpg',
-    w: 1600,
-    h: 1123,
-    alt: 'Logica Infoway Limited storefront, formerly Eastern Logica Infoway Limited',
-    title: 'The name over the door',
-    caption:
-      'One name, one counter, and the same company behind it since the Eastern Logica Infoway years. Pick what you want and pay how it suits you — finance and easy EMI arranged in store.',
+    src: '/images/verticals/ecommerce.jpg',
+    name: 'E-commerce',
+    stat: '24/7 nationwide',
+    alt: 'Shopping online on a laptop with a payment card in hand',
+    caption: 'The same catalogue and the same warranty, open at any hour.',
+    ink: '#6D28D9',
+  },
+  {
+    src: '/images/verticals/distribution.jpg',
+    name: 'Distribution',
+    stat: '5 distribution centres',
+    alt: 'Racking and palletised stock inside a distribution warehouse',
+    caption: 'Stock held close to demand, so orders leave sooner.',
+    ink: '#15803D',
+  },
+  {
+    src: '/images/verticals/export.jpg',
+    name: 'Export',
+    stat: '7+ countries served',
+    alt: 'A reach stacker moving containers in a shipping yard',
+    caption: 'Consignments cleared and shipped beyond the domestic market.',
+    ink: '#1D4ED8',
   },
 ];
 
@@ -68,87 +81,80 @@ const LINE = {
   letterSpacing: '-0.042em',
 } as const;
 
-/* Each row watches itself and slides in when it is the one being scrolled to.
-   A single trigger on the whole strip cannot work here: the strip is far
-   taller than the viewport, so rows two and three would fire while still off
-   screen and be over before anyone saw them.
+/* One card per business, in the style of a group holding page: the photograph,
+   the name laid over it, and a line underneath saying what the vertical does.
 
-   The photograph comes in from the left and the caption from the right, the
-   two closing on each other — the same horizontal move the name above uses,
-   so the block reads in one motion vocabulary. */
-function PhotoRow({ photo, index }: { photo: (typeof PHOTOS)[number]; index: number }) {
-  const [ref, inView] = useInView<HTMLElement>(0.18);
+   Each card watches itself rather than the row sharing one trigger, so a card
+   reveals when it is actually reached — on a phone the four are stacked well
+   over a screen apart. */
+function VerticalCard({ item, index }: { item: (typeof VERTICALS)[number]; index: number }) {
+  const [ref, inView] = useInView<HTMLElement>(0.2);
   const [shown, setShown] = useState(false);
 
-  // Scheduled rather than set inline so a reset paints first and the row
-  // slides, instead of the two batching into a straight appearance.
+  // Scheduled rather than set inline so the reset paints first and the card
+  // rises, instead of the two batching into a straight appearance.
   useEffect(() => {
     if (!inView) {
       setShown(false);
       return;
     }
-    const t = setTimeout(() => setShown(true), 0);
+    const t = setTimeout(() => setShown(true), index * 90);
     return () => clearTimeout(t);
-  }, [inView]);
+  }, [inView, index]);
 
   return (
     <figure
       ref={ref}
-      className={`m-0 flex flex-col overflow-hidden lg:flex-row lg:items-center ${
-        index === 0 ? '' : 'mt-14 sm:mt-20'
-      }`}
+      className="group m-0 transition-all ease-out"
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'translateY(0)' : 'translateY(26px)',
+        transitionDuration: '760ms',
+      }}
     >
-      <img
-        src={photo.src}
-        alt={photo.alt}
-        width={photo.w}
-        height={photo.h}
-        loading="lazy"
-        className="block h-auto w-full shrink-0 transition-all ease-out lg:w-2/3"
-        style={{
-          opacity: shown ? 1 : 0,
-          transform: shown ? 'translateX(0)' : 'translateX(-64px)',
-          transitionDuration: '900ms',
-        }}
-      />
-      {/* Trails its own image, so each arrives then names itself. Sits in the
-          remaining third on desktop, centred against the photo; drops beneath
-          it on narrower screens. */}
-      <figcaption
-        className="px-5 pt-6 transition-all ease-out sm:px-8 sm:pt-7 lg:w-1/3 lg:px-10 lg:pt-0"
-        style={{
-          opacity: shown ? 1 : 0,
-          transform: shown ? 'translateX(0)' : 'translateX(48px)',
-          transitionDuration: '820ms',
-          transitionDelay: shown ? `${CAPTION_DELAY}ms` : '0ms',
-        }}
-      >
-        <span
-          className="font-inter block font-semibold text-[#15803D]"
-          style={{ fontSize: 'clamp(10px, 0.85vw, 12px)', letterSpacing: '0.22em' }}
-        >
-          {String(index + 1).padStart(2, '0')}
-        </span>
-        <span
-          className="font-dm-sans mt-2 block font-bold text-[#0A0A0A]"
-          style={{ fontSize: 'clamp(20px, 2.4vw, 34px)', letterSpacing: '-0.025em' }}
-        >
-          {photo.title}
-        </span>
-        {/* Set as running text rather than a label: leading opened up and the
-            measure capped, so a long line stays readable. Darkens word by word
-            on scroll, the same treatment the Who We Are statement uses. */}
-        <RevealText
-          segments={[{ text: photo.caption }]}
-          className="font-inter mt-3 block max-w-[58ch]"
-          style={{
-            fontSize: 'clamp(14px, 1.2vw, 18px)',
-            letterSpacing: '-0.005em',
-            lineHeight: 1.62,
-            textWrap: 'pretty',
-          }}
+      <div className="relative overflow-hidden rounded-2xl bg-[#F4F4F2]">
+        <img
+          src={item.src}
+          alt={item.alt}
+          width={1200}
+          height={900}
+          loading="lazy"
+          className="block h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          style={{ aspectRatio: '4 / 3', objectFit: 'cover' }}
         />
-      </figcaption>
+        {/* Enough of a wash for the name to hold at the foot of any of the
+            four photographs, which range from a bright warehouse to an
+            overcast container yard. */}
+        <span
+          className="pointer-events-none absolute inset-0"
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.12) 42%, rgba(0,0,0,0) 68%)' }}
+        />
+        {/* Stacked rather than set side by side: at a quarter of the row the
+            card is ~270px, and a name like "E-commerce" beside a pill wraps
+            and collides with it. */}
+        <figcaption className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-1.5 p-4">
+          <span
+            className="font-inter w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold text-white"
+            style={{ backgroundColor: item.ink }}
+          >
+            {item.stat}
+          </span>
+          <span
+            className="font-dm-sans font-bold leading-tight text-white"
+            style={{ fontSize: 'clamp(19px, 1.7vw, 24px)', letterSpacing: '-0.02em' }}
+          >
+            {item.name}
+          </span>
+        </figcaption>
+      </div>
+
+      {/* Darkens word by word on scroll, the same treatment the Who We Are
+          statement uses. */}
+      <RevealText
+        segments={[{ text: item.caption }]}
+        className="font-inter mt-3"
+        style={{ fontSize: 'clamp(13px, 1.05vw, 15px)', lineHeight: 1.6, textWrap: 'pretty' }}
+      />
     </figure>
   );
 }
@@ -257,14 +263,15 @@ export default function BrandMarkSection() {
         </div>
       </div>
 
-      {/* One per row: the photograph across two thirds, running off the left
-          edge, and its caption set beside it in the last third. Each still
-          keeps its own ratio and is never cropped. Stacks below lg, where a
-          third of the width is too narrow to set text in. */}
-      <div className="mt-16 w-full sm:mt-24">
-        {PHOTOS.map((photo, i) => (
-          <PhotoRow key={photo.src} photo={photo} index={i} />
-        ))}
+      {/* The four businesses across one row, two up on a tablet and stacked on
+          a phone. Held to the page's own gutter rather than running to the
+          screen edge, so the row reads as a set of cards. */}
+      <div className="mt-16 px-5 sm:mt-24 sm:px-8 lg:px-10">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-4 lg:gap-6">
+          {VERTICALS.map((item, i) => (
+            <VerticalCard key={item.src} item={item} index={i} />
+          ))}
+        </div>
       </div>
     </section>
   );
