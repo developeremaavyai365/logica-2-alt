@@ -3,7 +3,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useInView } from '../use-in-view';
 import { products } from '../products-data';
-import MacBookScreen3D from './MacBookScreen3D';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -617,13 +616,57 @@ function targetStyle(name: string, s: StageState): React.CSSProperties {
   };
 }
 
+/* The screens are laid out at one fixed size and scaled to whatever width
+   the section gets, rather than being built responsively. Everything inside
+   them — the pointer's measured positions, the type, the product tiles — was
+   drawn against these proportions, so scaling the whole thing keeps it
+   looking like the screen it was designed as instead of a stretched one. */
+const SCREEN_DESIGN = { width: 760, height: 475 };
+
+function ScaledScreen({ children }: { children: React.ReactNode }) {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const el = boxRef.current;
+    if (!el) return;
+    const measure = () => setScale(el.clientWidth / SCREEN_DESIGN.width);
+    measure();
+
+    // Falls back to window resize where ResizeObserver is missing, so the
+    // screen can never be left rendering at the wrong scale.
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', measure);
+      return () => window.removeEventListener('resize', measure);
+    }
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={boxRef}
+      className="relative w-full overflow-hidden rounded-[18px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] ring-1 ring-black/10"
+      style={{ aspectRatio: `${SCREEN_DESIGN.width} / ${SCREEN_DESIGN.height}` }}
+    >
+      <div
+        className="absolute left-0 top-0 origin-top-left"
+        style={{ width: SCREEN_DESIGN.width, height: SCREEN_DESIGN.height, transform: `scale(${scale})` }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export default function BuyingJourney() {
   const [ref, inView] = useInView<HTMLDivElement>(0.2);
   const [active, setActive] = useState(0);
   // Set once the viewer picks a step, so the reel stops fighting them.
   const [held, setHeld] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const modelRef = useRef<HTMLDivElement>(null);
+  const screenRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!inView || held) return;
@@ -631,13 +674,13 @@ export default function BuyingJourney() {
     return () => clearInterval(id);
   }, [inView, held]);
 
-  // The model rises and settles into place as the section is scrolled to,
+  // The screen rises and settles into place as the section is scrolled to,
   // rather than simply being there. Scoped to this section only, and torn
   // down on unmount so it can't leak a ScrollTrigger onto a route change.
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        modelRef.current,
+        screenRef.current,
         { yPercent: 14, scale: 0.86, opacity: 0 },
         {
           yPercent: 0,
@@ -674,17 +717,21 @@ export default function BuyingJourney() {
           From the first click to the doorstep
         </h2>
 
-        {/* A real 3D MacBook, rotatable by hand, with the order being worked
-            through live on its actual screen. */}
+        {/* The run-through itself, full width — the order being worked
+            through on screen, with nothing framing it. */}
         <div ref={ref} className="mt-14 sm:mt-20">
-          <div ref={modelRef}>
-            <MacBookScreen3D>
-              <div className="h-full w-full overflow-hidden transition-colors duration-500" style={{ backgroundColor: step.chip }}>
-                <div className="h-full w-full p-8">
-                  <Stage key={active} index={active} />
-                </div>
+          <div ref={screenRef}>
+            <ScaledScreen>
+              {/* Positioned, because Stage lays itself out with inset-0 — and
+                  it carries its own padding and white card, so this only
+                  supplies the desktop behind it. */}
+              <div
+                className="relative h-full w-full transition-colors duration-500"
+                style={{ backgroundColor: step.chip }}
+              >
+                <Stage key={active} index={active} />
               </div>
-            </MacBookScreen3D>
+            </ScaledScreen>
           </div>
         </div>
 
