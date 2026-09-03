@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInView } from '../use-in-view';
-import RevealText from './RevealText';
+import RevealText, { useScrollProgress } from './RevealText';
 
 /* LOGICA slides in, INFOWAY follows beneath it at the same size and weight,
    and the registered mark resolves last at the top right of the pair — sized
@@ -101,9 +101,26 @@ function VerticalFrame({
   index: number;
   shown: boolean;
 }) {
+  const figureRef = useRef<HTMLElement>(null);
+  const [hovered, setHovered] = useState(false);
+
+  /* Colour is scrubbed in as the frame is scrolled through, the same window
+     and the same hook the captions below use, so the photograph and its line
+     fill together rather than on two different clocks. Hovering takes it to
+     full colour outright, wherever the scroll happens to have reached.
+
+     Unfilled means grey, not hidden — if the scroll listener never runs, the
+     worst case is a black-and-white photograph rather than a missing one, so
+     this needs no safety timer the way the reveals do. */
+  const scrolled = useScrollProgress(figureRef);
+  const fill = hovered ? 1 : scrolled;
+
   return (
     <figure
+      ref={figureRef}
       className="group m-0 transition-all ease-out"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         opacity: shown ? 1 : 0,
         transform: shown ? 'translateY(0)' : 'translateY(34px)',
@@ -119,7 +136,12 @@ function VerticalFrame({
           height={900}
           loading="lazy"
           className="block h-auto w-full transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
-          style={{ aspectRatio: '4 / 3', objectFit: 'cover' }}
+          style={{
+            aspectRatio: '4 / 3',
+            objectFit: 'cover',
+            filter: `grayscale(${(1 - fill).toFixed(3)})`,
+            transition: 'transform 900ms ease-out, filter 320ms linear',
+          }}
         />
       </div>
 
