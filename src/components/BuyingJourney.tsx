@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useInView } from '../use-in-view';
 import { products } from '../products-data';
+import MacBookScreen3D from './MacBookScreen3D';
 
 /* The order journey played out rather than listed: a mock screen on the left
    that runs the actual stage — a grid being browsed, an item dropping into
@@ -628,139 +629,63 @@ export default function BuyingJourney() {
 
   return (
     <section className="overflow-hidden bg-white px-5 py-24 sm:px-8 sm:py-32 lg:px-10 lg:py-40">
-      <div className="mx-auto max-w-6xl">
-        <p
-          className="animate-fade-up font-inter text-center font-semibold text-[#15803D]"
-          style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
-        >
-          HOW IT WORKS
-        </p>
-
-        <h2
-          className="animate-fade-up font-dm-sans mx-auto mt-8 max-w-4xl text-center font-bold text-[#111111]"
-          style={{ fontSize: 'clamp(28px, 4vw, 54px)', letterSpacing: '-0.03em', lineHeight: 1.14 }}
-        >
-          From the first click to the doorstep
-        </h2>
-
-        <p
-          className="animate-fade-up font-inter mx-auto mt-6 max-w-2xl text-center text-black/55"
-          style={{ fontSize: 'clamp(15px, 1.3vw, 19px)', lineHeight: 1.6 }}
-        >
-          Five steps, no surprises in between — the same stock and the same warranty you
-          would get across the counter, routed to you instead.
-        </p>
-
-        <div ref={ref} className="mt-14 grid items-center gap-10 sm:mt-20 lg:grid-cols-2 lg:gap-16">
-          {/* A laptop with the order being worked through on it: each stage
-              plays on the display while the pointer moves and clicks its way
-              across, so the sequence reads as somebody doing it rather than
-              as screens being swapped. */}
-          <div className="order-1 lg:order-none">
-            <div className="mx-auto w-full max-w-[560px]">
-              {/* Lid */}
-              <div className="relative rounded-[16px] bg-[#242426] p-[10px] shadow-2xl">
-                {/* Camera notch on the bezel */}
-                <span className="absolute left-1/2 top-[3px] block h-1 w-1 -translate-x-1/2 rounded-full bg-[#4a4a4d]" />
-                <div
-                  className="relative overflow-hidden rounded-[7px] transition-colors duration-500"
-                  style={{ aspectRatio: '16 / 10', backgroundColor: step.chip }}
-                >
-                  {/* Keyed on the step so every entry animation replays, and
-                      so the pointer restarts its path with the new screen. */}
-                  {/* Keyed on the step so the screen remounts and the pointer
-                      starts its script over. */}
-                  <Stage key={active} index={active} />
-                </div>
-              </div>
-              {/* Base and hinge */}
-              <div className="relative mx-auto h-[10px] w-[108%] -translate-x-[3.7%] rounded-b-[10px] bg-gradient-to-b from-[#cfd1d5] to-[#a7aaaf]">
-                <span className="absolute left-1/2 top-0 block h-[5px] w-16 -translate-x-1/2 rounded-b-[5px] bg-[#93969b]" />
+      <div className="mx-auto max-w-4xl">
+        {/* A real 3D MacBook, rotatable by hand, with the order being worked
+            through live on its actual screen — no headline, no copy, the
+            model and the run-through carry the section on their own. */}
+        <div ref={ref}>
+          <MacBookScreen3D>
+            <div className="h-full w-full overflow-hidden transition-colors duration-500" style={{ backgroundColor: step.chip }}>
+              <div className="h-full w-full p-8">
+                <Stage key={active} index={active} />
               </div>
             </div>
-          </div>
-
-          {/* The stepper, drivable by hand. */}
-          <ol className="order-2 m-0 flex list-none flex-col gap-2 p-0 lg:order-none">
-            {STEPS.map((s, i) => {
-              const on = i === active;
-              return (
-                <li key={s.title}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActive(i);
-                      setHeld(true);
-                    }}
-                    aria-current={on ? 'step' : undefined}
-                    className="relative w-full overflow-hidden rounded-2xl px-4 py-4 text-left transition-all duration-500 sm:px-5"
-                    style={{ backgroundColor: on ? s.chip : 'transparent' }}
-                  >
-                    <span className="flex items-start gap-4">
-                      <span
-                        className="flex shrink-0 items-center justify-center rounded-full transition-all duration-500"
-                        style={{
-                          height: 'clamp(42px, 3.6vw, 50px)',
-                          width: 'clamp(42px, 3.6vw, 50px)',
-                          backgroundColor: on ? '#fff' : '#F4F4F2',
-                          color: on ? s.ink : '#B4B2A9',
-                          transform: on ? 'scale(1.06)' : 'scale(1)',
-                        }}
-                      >
-                        <s.mark
-                          key={on ? `on-${i}` : `off-${i}`}
-                          className={on ? 'animate-journey-draw' : undefined}
-                          style={{ height: '55%', width: '55%' }}
-                        />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span
-                          className="font-inter block font-semibold transition-colors duration-500"
-                          style={{ fontSize: '11px', letterSpacing: '0.2em', color: on ? s.ink : '#B4B2A9' }}
-                        >
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                        <span
-                          className="font-dm-sans mt-1 block font-bold text-[#0A0A0A]"
-                          style={{ fontSize: 'clamp(17px, 1.5vw, 21px)', letterSpacing: '-0.02em' }}
-                        >
-                          {s.title}
-                        </span>
-                        {/* Only the live step carries its copy, so the column
-                            stays a list rather than a wall of text. */}
-                        <span
-                          className="font-inter grid transition-all duration-500"
-                          style={{
-                            gridTemplateRows: on ? '1fr' : '0fr',
-                            opacity: on ? 1 : 0,
-                          }}
-                        >
-                          <span className="overflow-hidden">
-                            <span
-                              className="mt-2 block max-w-[46ch] text-black/60"
-                              style={{ fontSize: 'clamp(13px, 1.05vw, 15px)', lineHeight: 1.6, textWrap: 'pretty' }}
-                            >
-                              {s.body}
-                            </span>
-                          </span>
-                        </span>
-                      </span>
-                    </span>
-
-                    {/* Runs the length of the dwell, so the reel shows its hand. */}
-                    {on && !held && (
-                      <span
-                        key={`bar-${active}`}
-                        className="animate-journey-progress absolute inset-x-0 bottom-0 block h-[3px] w-full"
-                        style={{ backgroundColor: s.ink, animationDuration: `${CYCLE}ms`, opacity: 0.5 }}
-                      />
-                    )}
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
+          </MacBookScreen3D>
         </div>
+
+        {/* The stepper, icon only — drivable by hand, no label needed since
+            the screen it drives is right there. */}
+        <ol className="mx-auto mt-10 flex w-fit list-none items-center gap-2.5 rounded-full bg-[#F4F4F2] p-2 sm:mt-14 sm:gap-3">
+          {STEPS.map((s, i) => {
+            const on = i === active;
+            return (
+              <li key={s.title}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActive(i);
+                    setHeld(true);
+                  }}
+                  aria-label={s.title}
+                  aria-current={on ? 'step' : undefined}
+                  className="relative flex items-center justify-center rounded-full transition-all duration-500"
+                  style={{
+                    height: 'clamp(42px, 3.6vw, 50px)',
+                    width: 'clamp(42px, 3.6vw, 50px)',
+                    backgroundColor: on ? '#fff' : 'transparent',
+                    color: on ? s.ink : '#B4B2A9',
+                    boxShadow: on ? '0 6px 18px -8px rgba(0,0,0,0.25)' : 'none',
+                    transform: on ? 'scale(1.06)' : 'scale(1)',
+                  }}
+                >
+                  <s.mark
+                    key={on ? `on-${i}` : `off-${i}`}
+                    className={on ? 'animate-journey-draw' : undefined}
+                    style={{ height: '48%', width: '48%' }}
+                  />
+                  {/* Runs the length of the dwell, so the reel shows its hand. */}
+                  {on && !held && (
+                    <span
+                      key={`ring-${active}`}
+                      className="animate-journey-progress-ring pointer-events-none absolute inset-0 rounded-full"
+                      style={{ '--ring-color': s.ink, animationDuration: `${CYCLE}ms` } as React.CSSProperties}
+                    />
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );
