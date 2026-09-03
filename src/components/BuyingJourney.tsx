@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useInView } from '../use-in-view';
 import { products } from '../products-data';
 import MacBookScreen3D from './MacBookScreen3D';
+
+gsap.registerPlugin(ScrollTrigger);
 
 /* The order journey played out rather than listed: a mock screen on the left
    that runs the actual stage — a grid being browsed, an item dropping into
@@ -618,6 +622,8 @@ export default function BuyingJourney() {
   const [active, setActive] = useState(0);
   // Set once the viewer picks a step, so the reel stops fighting them.
   const [held, setHeld] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const modelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!inView || held) return;
@@ -625,22 +631,61 @@ export default function BuyingJourney() {
     return () => clearInterval(id);
   }, [inView, held]);
 
+  // The model rises and settles into place as the section is scrolled to,
+  // rather than simply being there. Scoped to this section only, and torn
+  // down on unmount so it can't leak a ScrollTrigger onto a route change.
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        modelRef.current,
+        { yPercent: 14, scale: 0.86, opacity: 0 },
+        {
+          yPercent: 0,
+          scale: 1,
+          opacity: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 85%',
+            end: 'top 35%',
+            scrub: 0.6,
+          },
+        },
+      );
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
   const step = STEPS[active];
 
   return (
-    <section className="overflow-hidden bg-white px-5 py-24 sm:px-8 sm:py-32 lg:px-10 lg:py-40">
-      <div className="mx-auto max-w-4xl">
+    <section ref={sectionRef} className="overflow-hidden bg-white px-5 py-24 sm:px-8 sm:py-32 lg:px-10 lg:py-40">
+      <div className="mx-auto max-w-6xl">
+        <p
+          className="animate-fade-up font-inter text-center font-semibold text-[#15803D]"
+          style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
+        >
+          HOW IT WORKS
+        </p>
+        <h2
+          className="animate-fade-up font-dm-sans mx-auto mt-6 max-w-4xl text-center font-bold text-[#111111]"
+          style={{ fontSize: 'clamp(36px, 6vw, 84px)', letterSpacing: '-0.03em', lineHeight: 1.04 }}
+        >
+          From the first click to the doorstep
+        </h2>
+
         {/* A real 3D MacBook, rotatable by hand, with the order being worked
-            through live on its actual screen — no headline, no copy, the
-            model and the run-through carry the section on their own. */}
-        <div ref={ref}>
-          <MacBookScreen3D>
-            <div className="h-full w-full overflow-hidden transition-colors duration-500" style={{ backgroundColor: step.chip }}>
-              <div className="h-full w-full p-8">
-                <Stage key={active} index={active} />
+            through live on its actual screen. */}
+        <div ref={ref} className="mt-14 sm:mt-20">
+          <div ref={modelRef}>
+            <MacBookScreen3D>
+              <div className="h-full w-full overflow-hidden transition-colors duration-500" style={{ backgroundColor: step.chip }}>
+                <div className="h-full w-full p-8">
+                  <Stage key={active} index={active} />
+                </div>
               </div>
-            </div>
-          </MacBookScreen3D>
+            </MacBookScreen3D>
+          </div>
         </div>
 
         {/* The stepper, icon only — drivable by hand, no label needed since
