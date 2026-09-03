@@ -4,6 +4,7 @@ import HeroVideo from '../components/HeroVideo';
 import BrandStrip from '../components/BrandStrip';
 import CompanyStorySection from '../components/CompanyStorySection';
 import BrandMarkSection from '../components/BrandMarkSection';
+import StatsSection from '../components/StatsSection';
 import BuyingJourney from '../components/BuyingJourney';
 import RegisteredOfficesVideo from '../components/RegisteredOfficesVideo';
 import CompanyReels from '../components/CompanyReels';
@@ -21,6 +22,8 @@ export default function Home() {
       <CompanyStorySection />
       {/* The name signs off the identity block, as on the Trent reference. */}
       <BrandMarkSection />
+      {/* The counting stats, now anchored to the four verticals just shown. */}
+      <StatsSection />
       <RegisteredOfficesVideo />
       {/* Straight off the offices film into how an order actually works. */}
       <BuyingJourney />
