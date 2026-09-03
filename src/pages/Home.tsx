@@ -7,7 +7,7 @@ import BrandMarkSection from '../components/BrandMarkSection';
 import StatsSection from '../components/StatsSection';
 import BuyingJourney from '../components/BuyingJourney';
 import RegisteredOfficesVideo from '../components/RegisteredOfficesVideo';
-import CompanyReels from '../components/CompanyReels';
+import OrderTypes from '../components/OrderTypes';
 
 export default function Home() {
   return (
@@ -29,8 +29,8 @@ export default function Home() {
       <BuyingJourney />
 
       <BrandStrip />
-      {/* The reels close the page. */}
-      <CompanyReels />
+      {/* Corporate, educational and the foundation close the page. */}
+      <OrderTypes />
       <Footer />
     </div>
   );
