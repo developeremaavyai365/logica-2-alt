@@ -69,7 +69,6 @@ export const SHOP_MEGA: ShopMegaCategory[] = categories.map((c) => ({
 
 export const ABOUT_MENU = [
   { label: 'Overview', href: '/about' },
-  { label: 'Organization Chart', href: '/about/organization-chart' },
   { label: 'Board of Directors & KMP', href: '/about/board-of-directors-and-kmp' },
   { label: 'Composition Of Committees', href: '/about/composition-of-committees' },
 ];

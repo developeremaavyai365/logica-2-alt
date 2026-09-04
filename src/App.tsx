@@ -8,7 +8,6 @@ import ProductPage from './pages/ProductPage';
 import About from './pages/About';
 import BoardOfDirectors from './pages/about/BoardOfDirectors';
 import Committees from './pages/about/Committees';
-import OrgChart from './pages/about/OrgChart';
 import Contact from './pages/Contact';
 import Careers from './pages/Careers';
 import Media from './pages/Media';
@@ -41,7 +40,6 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/about/board-of-directors-and-kmp" element={<BoardOfDirectors />} />
         <Route path="/about/composition-of-committees" element={<Committees />} />
-        <Route path="/about/organization-chart" element={<OrgChart />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/media" element={<Media />} />

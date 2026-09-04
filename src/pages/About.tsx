@@ -7,7 +7,6 @@ import { OVERVIEW_FINANCIALS, REGISTERED_OFFICE } from '../about-data';
 
 const aboutLinks = [
   { to: '/about', label: 'Overview' },
-  { to: '/about/organization-chart', label: 'Organization Chart' },
   { to: '/about/board-of-directors-and-kmp', label: 'Board of Directors & KMP' },
   { to: '/about/composition-of-committees', label: 'Composition of Committees' },
 ];
