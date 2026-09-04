@@ -10,7 +10,6 @@ interface StatePath {
 // for each office city, matching the 300x340 viewBox of /data/india-states.json.
 const MARKER_POS: Record<string, { x: number; y: number }> = {
   Delhi: { x: 93.1, y: 99.9 },
-  Gurugram: { x: 91.2, y: 101.7 },
   Mumbai: { x: 48.6, y: 207.2 },
   Kolkata: { x: 207.6, y: 168.8 },
   Hyderabad: { x: 106.2, y: 225.5 },
@@ -19,7 +18,6 @@ const MARKER_POS: Record<string, { x: number; y: number }> = {
 
 const MARKER_COLOR: Record<string, string> = {
   Delhi: '#E23744',
-  Gurugram: '#F5A623',
   Mumbai: '#1E88E5',
   Kolkata: '#43A047',
   Hyderabad: '#8E24AA',
@@ -60,7 +58,7 @@ export default function StoreLocatorMap() {
           Our Registered Offices
         </h2>
         <p className="font-inter mt-3 text-sm text-black/60 sm:text-base" style={{ letterSpacing: '-0.01em' }}>
-          Six offices across India, backing a nationwide retail and distribution network.
+          Five offices across India, backing a nationwide retail and distribution network.
         </p>
       </div>
 
@@ -69,7 +67,7 @@ export default function StoreLocatorMap() {
           viewBox="0 0 300 340"
           className="w-full"
           role="img"
-          aria-label="State-wise map of India showing Logica Infoway office locations in Delhi, Gurugram, Mumbai, Kolkata, Hyderabad and Bangalore"
+          aria-label="State-wise map of India showing Logica Infoway office locations in Delhi, Mumbai, Kolkata, Hyderabad and Bangalore"
         >
           {states?.map((s) => (
             <path

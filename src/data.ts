@@ -73,7 +73,6 @@ export const offices: Office[] = [
   { city: 'Kolkata', label: 'Head Office', address: '2 Saklat Place, 1st Floor, Kolkata, West Bengal – 700072', phone: '+91 7003999192 / 033 4058-0000' },
   { city: 'Delhi', label: 'Delhi', address: 'A-78, 3rd Floor, Okhla Phase II, New Delhi – 110020', phone: '+91 7003999192 / 011 4362-8116' },
   { city: 'Bangalore', label: 'Bangalore', address: '14, Sunkalpet Main Road, 1st Floor, Bangalore – 560002', phone: '+91 7003999192' },
-  { city: 'Gurugram', label: 'Haryana', address: 'Shop No. 82, Sec-12A Opp. Telephone Exchange, Gurugram – 122001', phone: '+91 7003999192' },
   { city: 'Hyderabad', label: 'Hyderabad', address: 'Shop No. 12B, G. Floor, Emarald House, S.D. Road, Telengana – 500003', phone: '+91 7003999192' },
   { city: 'Mumbai', label: 'Mumbai', address: 'Build no. A-7, Gala no. S-102, Anmol Textile Market, Bhiwandi, Mumbai – 421302', phone: '+91 7003999192' },
 ];
