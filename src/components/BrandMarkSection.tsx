@@ -186,7 +186,7 @@ export default function BrandMarkSection() {
             className="animate-fade-up font-dm-sans mt-6 font-bold text-[#111111]"
             style={{ fontSize: 'clamp(24px, 2.8vw, 38px)', letterSpacing: '-0.03em', lineHeight: 1.12 }}
           >
-            Four businesses under one name
+            Four Verticals. One Powerful Ecosystem.
           </h2>
         </div>
       </div>
