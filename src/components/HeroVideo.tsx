@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 
 /* The hero: the film full-bleed, the pitch set left over it, with the last
    word of the heading changing in place.
@@ -98,28 +97,6 @@ export default function HeroVideo() {
                 {WORDS[index]}
               </span>
             </h1>
-
-            <p
-              className="font-inter mt-6 max-w-lg text-white/80 sm:mt-7"
-              style={{ fontSize: 'clamp(15px, 1.4vw, 19px)', lineHeight: 1.6, textWrap: 'pretty' }}
-            >
-              Retail, e-commerce, distribution and export — one company behind all four.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10">
-              <Link
-                to="/shop"
-                className="font-inter rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#0A0A0A] transition-colors duration-300 hover:bg-white/85"
-              >
-                Shop Now
-              </Link>
-              <Link
-                to="/about"
-                className="font-inter rounded-full border-2 border-white/70 px-7 py-3.5 text-sm font-semibold text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-[#0A0A0A]"
-              >
-                About Logica
-              </Link>
-            </div>
           </div>
         </div>
       </div>
