@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-/* The hero: one film full-bleed, with the pitch over it on the left and a
-   single line that changes in place beneath it.
+/* The hero: the film full-bleed, the pitch set left over it, with the last
+   word of the heading changing in place.
 
-   The rotating lines are the four the businesses section already runs under
-   its photographs — one per vertical, in the same order — so the hero
-   promises exactly what the page goes on to show, rather than inventing a
-   second set of claims for the top of the site. */
-const LINES = [
-  'See it. Hold it. Take it home.',
-  'The counter that never closes.',
-  'Stocked closer to you.',
-  'We do not stop at the border.',
-];
+   Left is where the type goes because that is where the frame is empty — the
+   laptop sits centre-right through the whole clip and the left third stays
+   dark, so the words never fight the subject.
 
-const HOLD = 3200;
-const FADE = 500;
+   The rotating words are the places this company actually sells into, each
+   one already named elsewhere on the site: hands is its own phrase for what
+   it does, homes and counters are the retail business, offices and
+   classrooms are the corporate and educational order desks. */
+const LEAD = 'in the right';
+const WORDS = ['hands', 'homes', 'offices', 'classrooms', 'counters'];
+
+// Reserved from the longest word, so the line never reflows as they swap.
+const WORD_WIDTH = `${Math.max(...WORDS.map((w) => w.length))}ch`;
+
+const HOLD = 2200;
+const FADE = 420;
 
 export default function HeroVideo() {
   const [heroHeight, setHeroHeight] = useState('100dvh');
@@ -31,7 +34,7 @@ export default function HeroVideo() {
     const id = window.setInterval(() => {
       setShown(false);
       window.setTimeout(() => {
-        setIndex((i) => (i + 1) % LINES.length);
+        setIndex((i) => (i + 1) % WORDS.length);
         setShown(true);
       }, FADE);
     }, HOLD);
@@ -77,27 +80,30 @@ export default function HeroVideo() {
           <div className="max-w-2xl text-left">
             <h1
               className="font-dm-sans font-bold text-white"
-              style={{ fontSize: 'clamp(30px, 4.4vw, 62px)', letterSpacing: '-0.035em', lineHeight: 1.06 }}
+              style={{ fontSize: 'clamp(32px, 4.8vw, 68px)', letterSpacing: '-0.035em', lineHeight: 1.04 }}
             >
-              Four verticals.
+              The right technology,
               <br />
-              One powerful ecosystem.
+              {LEAD}{' '}
+              <span
+                className="inline-block align-baseline"
+                style={{
+                  color: '#F0872B',
+                  minWidth: WORD_WIDTH,
+                  opacity: shown ? 1 : 0,
+                  transform: shown ? 'translateY(0)' : 'translateY(8px)',
+                  transition: `opacity ${FADE}ms ease, transform ${FADE}ms ease`,
+                }}
+              >
+                {WORDS[index]}
+              </span>
             </h1>
 
-            {/* Reserves its own height so the block beneath never shifts as
-                the lines swap — the tallest line at the narrowest column is
-                two lines deep. */}
             <p
-              className="font-inter mt-6 flex items-start text-white/85 sm:mt-8"
-              style={{
-                fontSize: 'clamp(16px, 1.6vw, 24px)',
-                lineHeight: 1.4,
-                minHeight: '2.8em',
-                opacity: shown ? 1 : 0,
-                transition: `opacity ${FADE}ms ease`,
-              }}
+              className="font-inter mt-6 max-w-lg text-white/80 sm:mt-7"
+              style={{ fontSize: 'clamp(15px, 1.4vw, 19px)', lineHeight: 1.6, textWrap: 'pretty' }}
             >
-              {LINES[index]}
+              Retail, e-commerce, distribution and export — one company behind all four.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10">
