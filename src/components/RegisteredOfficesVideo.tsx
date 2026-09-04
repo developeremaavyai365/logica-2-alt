@@ -1,6 +1,6 @@
 import type { SyntheticEvent } from 'react';
 
-/** Embeds the standalone "Registered Offices" animated showcase (supplied
+/** Embeds the standalone "Offices across India" animated showcase (supplied
  *  by Armaan as a self-contained bundled HTML file — carries its own
  *  title/city cards/timeline UI) as the full segment. Served as a static
  *  asset from public/offices-video.html and mounted via iframe so the
@@ -51,7 +51,7 @@ export default function RegisteredOfficesVideo() {
     <section className="relative w-full overflow-hidden bg-white" style={{ aspectRatio: '3 / 2' }}>
       <iframe
         src="/offices-video.html"
-        title="Logica Infoway — Registered Offices"
+        title="Logica Infoway — Offices across India"
         className="absolute inset-0 h-full w-full"
         loading="lazy"
         onLoad={handleLoad}

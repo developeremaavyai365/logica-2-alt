@@ -55,7 +55,7 @@ export default function StoreLocatorMap() {
           className="font-dm-sans font-medium text-black"
           style={{ fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '-0.04em' }}
         >
-          Our Registered Offices
+          Our offices across India
         </h2>
         <p className="font-inter mt-3 text-sm text-black/60 sm:text-base" style={{ letterSpacing: '-0.01em' }}>
           Five offices across India, backing a nationwide retail and distribution network.
