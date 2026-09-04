@@ -52,49 +52,57 @@ export default function Header() {
             Home
           </Link>
 
-          {/* Shop mega menu */}
-          <div className="group relative">
+          {/* Shop mega menu.
+
+              No `relative` on this wrapper, deliberately: that makes the panel
+              below position against the <nav> instead of against the Shop item
+              itself, so it spans the bar rather than hanging off one link. A
+              menu holding ten categories cannot be pinned to a single item
+              without running off one edge or the other — anchored left it
+              overflowed right, anchored right it overflowed left. */}
+          <div className="group">
             <Link to="/shop" className={`${NAV_LINK} flex items-center gap-1`}>
               Shop
               <ChevronDown className="w-3.5 h-3.5" />
             </Link>
-            {/* Anchored to the trigger's right rather than centred on it: the
-                row sits on the right of the bar now, and a 46rem panel centred
-                on Shop would run off the screen. */}
-            <div className="absolute right-0 top-full pt-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-40">
-              {/* Balanced columns rather than a grid. In a grid every row is
-                  as tall as its tallest cell, and Accessories carries twelve
-                  sub-items — one category was dragging the whole panel past
-                  the bottom of the screen. Flowing the categories into columns
-                  instead, each kept whole with break-inside-avoid, sizes the
-                  panel to its tallest single category. The max-height is only
-                  insurance for the day the catalogue grows again. */}
-              <div className="max-h-[calc(100vh-7rem)] w-[54rem] max-w-[92vw] overflow-y-auto rounded-2xl border border-black/10 bg-white p-7 shadow-xl">
-                <div className="columns-4 gap-x-8">
-                  {SHOP_MEGA.map((cat) => (
-                    <div key={cat.href} className="mb-6 break-inside-avoid">
-                      <Link
-                        to={cat.href}
-                        className="text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-70"
-                      >
-                        {cat.label}
-                      </Link>
-                      {cat.children && (
-                        <ul className="mt-2 space-y-1">
-                          {cat.children.map((child) => (
-                            <li key={child.href}>
-                              <Link
-                                to={child.href}
-                                className="text-xs leading-relaxed text-[#6b6b6b] transition-colors hover:text-[#000000]"
-                              >
-                                {child.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
+            {/* Sits flush under the bar rather than offset from it: a gap here
+                would break the hover as the pointer crossed it. */}
+            <div className="invisible absolute inset-x-0 top-full z-40 translate-y-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+              {/* Balanced columns rather than a grid. In a grid every row is as
+                  tall as its tallest cell, and Accessories carries twelve
+                  sub-items — that one category dragged the whole panel past the
+                  bottom of the screen. Flowing them into columns instead, each
+                  kept whole with break-inside-avoid, sizes the panel to its
+                  tallest single category. The max-height is only insurance for
+                  the day the catalogue grows again. */}
+              <div className="border-t border-black/10 bg-white shadow-xl">
+                <div className="max-h-[calc(100vh-8rem)] overflow-y-auto px-4 py-8 sm:px-6 md:px-10">
+                  <div className="mx-auto max-w-[80rem] columns-4 gap-x-8 xl:columns-5">
+                    {SHOP_MEGA.map((cat) => (
+                      <div key={cat.href} className="mb-6 break-inside-avoid">
+                        <Link
+                          to={cat.href}
+                          className="text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-70"
+                        >
+                          {cat.label}
+                        </Link>
+                        {cat.children && (
+                          <ul className="mt-2 space-y-1">
+                            {cat.children.map((child) => (
+                              <li key={child.href}>
+                                <Link
+                                  to={child.href}
+                                  className="text-xs leading-relaxed text-[#6b6b6b] transition-colors hover:text-[#000000]"
+                                >
+                                  {child.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
