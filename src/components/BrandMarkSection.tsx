@@ -271,15 +271,23 @@ export default function BrandMarkSection() {
               </span>
             </h2>
 
-            {/* The mark, miniature, on the top right corner of the pair */}
+            {/* The mark, miniature, on the top right corner of the pair.
+
+                The image is 1400x838, so its height is width / 1.67 — at the
+                old 116px it stood 69px tall while hanging only 18px clear,
+                which put two thirds of it across the letters. That passed
+                when the type was 138px; at 82px it read as a collision. Both
+                the size and the clearance are now set against the type it
+                sits on, and the top offset always exceeds the mark's own
+                height, so it rests above the line rather than on it. */}
             <img
               src="/logica-trademark.png"
               alt="Logica registered trademark"
               className="absolute h-auto transition-all ease-out"
               style={{
-                width: 'clamp(52px, 8.4vw, 116px)',
-                right: 'clamp(-30px, -4vw, -14px)',
-                top: 'clamp(-34px, -5vw, -18px)',
+                width: 'clamp(30px, 4.4vw, 60px)',
+                right: 'clamp(-26px, -3.2vw, -12px)',
+                top: 'clamp(-42px, -5vw, -22px)',
                 opacity: logoIn ? 1 : 0,
                 transform: logoIn ? 'translateY(0) scale(1)' : 'translateY(10px) scale(0.86)',
                 transitionDuration: '720ms',
