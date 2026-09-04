@@ -106,13 +106,23 @@ export default function CompanyStorySection() {
     <section ref={pinRef} className="bg-white sm:h-[220vh]">
       <div className="flex items-center px-5 py-16 sm:sticky sm:top-0 sm:h-screen sm:px-8 sm:py-0 lg:px-10">
         <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
+          {/* A heading in its own right, at the same size as every other
+              section heading on the page — not the small green label this
+              used to be. */}
+          <h2
+            className="animate-fade-up font-dm-sans font-bold text-[#111111]"
+            style={{ fontSize: 'clamp(24px, 2.8vw, 38px)', letterSpacing: '-0.03em', lineHeight: 1.12 }}
+          >
+            Who We Are
+          </h2>
+
           {/* One statement, set large with room to breathe — the emphasis is
               carried by two phrases rather than by size alone. It darkens word
               by word as the reader scrolls through the pin, the same treatment
               the Logica Infoway captions use. */}
           <RevealText
             segments={STATEMENT}
-            className="font-dm-sans"
+            className="font-dm-sans mt-8 sm:mt-10"
             style={{ fontSize: 'clamp(17px, 1.9vw, 26px)', letterSpacing: '-0.025em', lineHeight: 1.38 }}
             progress={progress ?? undefined}
           />
