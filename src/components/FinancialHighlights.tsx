@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useInView } from '../use-in-view';
 
@@ -12,18 +13,26 @@ import { useInView } from '../use-in-view';
    this block. */
 const HIGHLIGHTS = [
   {
-    value: '₹1,315.72 Cr',
+    prefix: '₹',
+    value: 1315.72,
+    decimals: 2,
+    suffix: ' Cr',
     label: 'FY2026 Revenue from operations',
     note: 'Year ended 31 March 2026',
     icon: CoinsMark,
   },
   {
-    value: '82+',
+    prefix: '',
+    value: 82,
+    decimals: 0,
+    suffix: '+',
     label: 'Stores Pan India',
     note: 'Retail counters across the country',
     icon: MapMark,
   },
 ];
+
+const COUNT_DURATION = 1400;
 
 const svg = {
   fill: 'none',
@@ -61,6 +70,75 @@ function MapMark(p: MarkProps) {
   );
 }
 
+/* Counts up to the figure once the block is reached, and — unlike the
+   decorative stats above — guarantees it lands on the real number.
+
+   The animation is driven by requestAnimationFrame, so a timer snaps the
+   value to its target once the run should have finished. If rAF never fires
+   at all (a background tab, a browser that throttles it, an embedded webview)
+   the worst case has to be a figure that appears without counting, never a
+   revenue figure left frozen part-way to its value. Reduced motion skips
+   straight to the number for the same reason. */
+function useCountUp(target: number, decimals: number, active: boolean) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (!active) {
+      setValue(0);
+      return;
+    }
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setValue(target);
+      return;
+    }
+
+    let frame = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / COUNT_DURATION);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(eased * target);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+
+    const settle = setTimeout(() => setValue(target), COUNT_DURATION + 400);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(settle);
+    };
+  }, [target, decimals, active]);
+
+  return value;
+}
+
+function Figure({
+  item,
+  active,
+}: {
+  item: (typeof HIGHLIGHTS)[number];
+  active: boolean;
+}) {
+  const value = useCountUp(item.value, item.decimals, active);
+
+  return (
+    <p
+      className="font-dm-sans font-extrabold text-[#0A0A0A] tabular-nums"
+      style={{ fontSize: 'clamp(30px, 3.6vw, 46px)', letterSpacing: '-0.035em', lineHeight: 1 }}
+    >
+      {item.prefix}
+      {/* Indian grouping, so the crore figure reads 1,315.72 rather than
+          1315.72 — and a fixed number of decimals, so the width does not
+          jitter as it counts. */}
+      {value.toLocaleString('en-IN', {
+        minimumFractionDigits: item.decimals,
+        maximumFractionDigits: item.decimals,
+      })}
+      {item.suffix}
+    </p>
+  );
+}
+
 export default function FinancialHighlights() {
   const [ref, inView] = useInView<HTMLDivElement>(0.25);
 
@@ -94,12 +172,7 @@ export default function FinancialHighlights() {
                 style={{ height: 'clamp(52px, 5vw, 68px)', width: 'clamp(52px, 5vw, 68px)' }}
               />
               <div className="min-w-0">
-                <p
-                  className="font-dm-sans font-extrabold text-[#0A0A0A] tabular-nums"
-                  style={{ fontSize: 'clamp(30px, 3.6vw, 46px)', letterSpacing: '-0.035em', lineHeight: 1 }}
-                >
-                  {item.value}
-                </p>
+                <Figure item={item} active={inView} />
                 <p
                   className="font-inter mt-2 font-medium text-[#0A0A0A]"
                   style={{ fontSize: 'clamp(14px, 1.2vw, 17px)' }}
