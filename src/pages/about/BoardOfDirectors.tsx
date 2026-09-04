@@ -41,16 +41,13 @@ export default function BoardOfDirectors() {
     <div className="w-full bg-[#ECEDEC]">
       <div className="bg-[#ECEDEC]">
         <Header />
-        <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
-          <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
-            Board of Directors &amp; KMP
-          </h1>
-        </div>
       </div>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        <h2 className="text-2xl sm:text-3xl font-normal text-black text-center" style={{ letterSpacing: '-0.03em' }}>
+        <h2
+          className="font-dm-sans text-center font-bold text-[#111111]"
+          style={{ fontSize: 'clamp(24px, 2.8vw, 38px)', letterSpacing: '-0.03em', lineHeight: 1.12 }}
+        >
           Board Members
         </h2>
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -59,7 +56,10 @@ export default function BoardOfDirectors() {
           ))}
         </div>
 
-        <h2 className="mt-20 text-2xl sm:text-3xl font-normal text-black text-center" style={{ letterSpacing: '-0.03em' }}>
+        <h2
+          className="font-dm-sans mt-20 text-center font-bold text-[#111111]"
+          style={{ fontSize: 'clamp(24px, 2.8vw, 38px)', letterSpacing: '-0.03em', lineHeight: 1.12 }}
+        >
           Key Managerial Personnel
         </h2>
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
