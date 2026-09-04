@@ -7,6 +7,7 @@ import StatsSection from '../components/StatsSection';
 import RegisteredOfficesVideo from '../components/RegisteredOfficesVideo';
 import FinancialHighlights from '../components/FinancialHighlights';
 import WorkWithUs from '../components/WorkWithUs';
+import PhilosophySection from '../components/PhilosophySection';
 import OrderTypes from '../components/OrderTypes';
 
 export default function Home() {
@@ -27,8 +28,10 @@ export default function Home() {
       <RegisteredOfficesVideo />
       {/* Straight off the offices film into the numbers behind them. */}
       <FinancialHighlights />
-      {/* Then the people side: one full-screen film carrying the invitation. */}
+      {/* Then the people side: one full-screen film carrying the invitation,
+          and what the company says it is for underneath it. */}
       <WorkWithUs />
+      <PhilosophySection />
 
       {/* Corporate, educational and the foundation close the page. */}
       <OrderTypes />
