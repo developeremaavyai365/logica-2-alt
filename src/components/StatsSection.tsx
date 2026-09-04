@@ -48,15 +48,22 @@ function StatValue({ raw, active }: { raw: string; active: boolean }) {
   const count = useCountUp(match ? Number(match[1]) : 0, active && !!match);
 
   if (!match) return <>{raw}</>;
-  // The digits carry the weight; the "+" or "/7" rides smaller and raised so
-  // it never competes with the number for size.
+
+  /* A "+" is a modifier on the number, so it rides smaller and raised and
+     never competes with the digits for size. Anything else is part of the
+     figure itself — "24/7" is read as one thing, and shrinking the 7 made it
+     look like a footnote rather than half the number — so it sets at full
+     size inline. */
+  const suffix = match[2];
   return (
     <>
       {count}
-      {match[2] && (
+      {suffix === '+' ? (
         <span style={{ fontSize: '0.44em', verticalAlign: '0.55em', letterSpacing: '-0.01em' }}>
-          {match[2]}
+          {suffix}
         </span>
+      ) : (
+        suffix
       )}
     </>
   );
