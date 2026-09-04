@@ -20,7 +20,7 @@ const VERTICALS = [
     alt: 'A customer paying by contactless phone at a retail counter',
     headline: 'See it. Hold it. Take it home.',
     caption:
-      '82+ counters across India — and the same counter that sold it handles the service afterwards.',
+      '90+ counters across India — and the same counter that sold it handles the service afterwards.',
     ink: '#D2781E',
   },
   {

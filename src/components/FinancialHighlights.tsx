@@ -7,7 +7,7 @@ import { useInView } from '../use-in-view';
    The revenue figure is the company's own reported revenue from operations
    for the year ended 31 March 2026 — 1,31,572.09 lakh, which is 1,315.72
    crore — and the results it comes from are on the investor pages. The store
-   count is the same 82+ the homepage stats already publish, so the two cannot
+   count is the same 90+ the homepage stats already publish, so the two cannot
    drift apart. Nothing here is estimated or rounded up: if a number is not
    filed or already published elsewhere on the site, it does not belong in
    this block. */
@@ -23,7 +23,7 @@ const HIGHLIGHTS = [
   },
   {
     prefix: '',
-    value: 82,
+    value: 90,
     decimals: 0,
     suffix: '+',
     label: 'Stores Pan India',

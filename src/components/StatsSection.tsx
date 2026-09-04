@@ -10,7 +10,7 @@ import { useInView } from '../use-in-view';
    captions further down publish, so the two blocks cannot end up quoting
    different numbers for the same vertical. */
 const stats = [
-  { value: '82+', label: 'Retail stores pan India' },
+  { value: '90+', label: 'Retail stores pan India' },
   { value: '5', label: 'Distribution centres nationwide' },
   { value: '7+', label: 'Countries served through export' },
   { value: '24/7', label: 'E-commerce open around the clock' },
