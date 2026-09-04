@@ -1,7 +1,16 @@
 import RevealText, { type RevealSegment } from './RevealText';
 
-/* The statement, in segments so the emphasised phrase keeps its own colour
-   once the words are split apart for the scroll reveal. */
+/* One continuous statement, split into segments only so the two emphasised
+   phrases keep their own colour once the words are broken apart for the
+   scroll reveal — not because it is two pieces of copy. It reads and fills
+   as a single run of text.
+
+   Every figure in the back half is one the site already carries elsewhere:
+   1995 and the 10+ categories from the trust strip, along with the corporate
+   and government client base; 82+ counters, five distribution centres and 7+
+   countries from the stats block; the six offices from the map. The plus
+   signs are kept rather than written out, so this cannot end up asserting an
+   exact 82 or an exact 7 where the rest of the site says "or more". */
 const STATEMENT: RevealSegment[] = [
   {
     text:
@@ -10,32 +19,22 @@ const STATEMENT: RevealSegment[] = [
       'that never closes, we move computing, mobility and network infrastructure to',
   },
   { text: 'the people and institutions that run on them', emphasis: true },
-  { text: '\u2014 from the warehouse floor to the last mile.' },
-];
-
-/* The second half, set smaller so the opening statement still leads.
-
-   Every figure and claim here is one the site already carries elsewhere: the
-   1995 founding and the ten-plus categories come from the trust strip, the
-   eight cities and the corporate and government client base from the same
-   place, the counters, centres and countries from the stats block, and the
-   offices from the map. Nothing has been added that a reader could not check
-   against another page. */
-const STATEMENT_MORE: RevealSegment[] = [
   {
     text:
-      'We have been at it since 1995. Three decades on, the shape of the company has changed ' +
-      'more than the discipline has: 82+ counters and five distribution centres in place of one ' +
-      'shop, 10+ categories in place of a handful, and offices in Kolkata, Delhi, Mumbai, ' +
-      'Bengaluru, Gurugram and Hyderabad holding the whole thing together. What has not moved ' +
-      'is the standard the counter is held to \u2014',
+      '— from the warehouse floor to the last mile. We have been at it since 1995. ' +
+      'Three decades on, the shape of the company has changed more than the discipline has: ' +
+      '82+ counters and five distribution centres in place of one shop, 10+ categories in ' +
+      'place of a handful, and offices in Kolkata, Delhi, Mumbai, Bengaluru, Gurugram and ' +
+      'Hyderabad holding the whole thing together. What has not moved is the standard the ' +
+      'counter is held to —',
   },
-  { text: 'genuine stock, the brand\u2019s own warranty, one price', emphasis: true },
+  { text: 'genuine stock, the brand’s own warranty, one price', emphasis: true },
   {
     text:
-      'whether the order comes from a household, a corporate desk, a government department or a ' +
-      'buyer in one of the 7+ countries we ship to. The catalogue is the same online as it is in ' +
-      'the shop, and the people who sold it are the people who service it afterwards.',
+      '— whether the order comes from a household, a corporate desk, a government ' +
+      'department or a buyer in one of the 7+ countries we ship to. The catalogue is the same ' +
+      'online as it is in the shop, and the people who sold it are the people who service it ' +
+      'afterwards.',
   },
 ];
 
@@ -54,23 +53,17 @@ export default function CompanyStorySection() {
 
       <div className="animate-fade-up mx-auto mt-10 flex max-w-5xl flex-col items-center text-center sm:mt-14">
         {/* One statement, set large with room to breathe — the emphasis is
-            carried by a single phrase rather than by size alone. It darkens
-            word by word as the block is scrolled through, the same treatment
-            the Logica Infoway captions use. */}
+            carried by two phrases rather than by size alone. It darkens word
+            by word as the block is scrolled through, the same treatment the
+            Logica Infoway captions use.
+
+            Slightly smaller than it was, since it now runs to a full
+            paragraph: at the old 30px a statement this long filled the screen
+            on its own. */}
         <RevealText
           segments={STATEMENT}
           className="font-dm-sans"
-          style={{ fontSize: 'clamp(19px, 2.2vw, 30px)', letterSpacing: '-0.025em', lineHeight: 1.32 }}
-        />
-
-        {/* Its own RevealText rather than more words in the first: each fills
-            as it is actually reached, so the lower half is not already dark by
-            the time the reader gets to it. Narrower measure too — this runs
-            long, and a 5xl line length at this size is tiring to read. */}
-        <RevealText
-          segments={STATEMENT_MORE}
-          className="font-inter mt-8 max-w-3xl sm:mt-10"
-          style={{ fontSize: 'clamp(14px, 1.15vw, 17px)', lineHeight: 1.7, textWrap: 'pretty' }}
+          style={{ fontSize: 'clamp(17px, 1.9vw, 26px)', letterSpacing: '-0.025em', lineHeight: 1.38 }}
         />
       </div>
     </section>
