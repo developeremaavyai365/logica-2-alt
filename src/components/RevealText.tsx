@@ -74,13 +74,22 @@ export default function RevealText({
   segments,
   className,
   style,
+  progress: externalProgress,
 }: {
   segments: RevealSegment[];
   className?: string;
   style?: React.CSSProperties;
+  /** Drives the fill from outside — used by the pinned Who We Are section,
+   *  where the progress is how far the reader has scrolled through the pin
+   *  rather than where this paragraph sits in the viewport. Left undefined,
+   *  the paragraph measures itself as before. */
+  progress?: number;
 }) {
   const ref = useRef<HTMLParagraphElement>(null);
-  const progress = useScrollProgress(ref);
+  // Called unconditionally so the hook order never changes, then ignored when
+  // a caller is driving the fill itself.
+  const selfProgress = useScrollProgress(ref);
+  const progress = externalProgress ?? selfProgress;
 
   const words = segments.flatMap((seg) =>
     seg.text.split(/\s+/).filter(Boolean).map((word) => ({ word, emphasis: !!seg.emphasis })),
