@@ -2,28 +2,28 @@ import { useEffect, useRef, useState } from 'react';
 import { useInView } from '../use-in-view';
 import RevealText, { useScrollProgress } from './RevealText';
 
-/* LOGICA slides in, INFOWAY follows beneath it at the same size and weight,
-   and the registered mark resolves last at the top right of the pair — sized
-   small so it reads as a mark on the name rather than a second logo.
+/* The heading names the four businesses in the order the photographs below
+   run — counter for retail, cart for e-commerce, centre for distribution,
+   port for export — so the line and the row underneath say the same thing
+   twice, once in words and once in pictures.
 
-   Behind them the three diagonal bands from the registered logo rake upward,
-   held light so the type stays fully legible over them.
+   It slides in a line at a time, the gesture the company name used to have
+   here. The registered mark that sat on that name is gone with it: a ® can
+   sit on a name, not on a sentence.
 
-   Beneath the name the SmartCafé stills run edge to edge at full width,
-   rather than sitting in cards, so the photographs carry the block at their
-   own scale. Each arrives on its own and is then named by its caption.
+   Behind the lines the three diagonal bands from the registered logo rake
+   upward, held light so the type stays fully legible over them.
 
-   The name and the stills watch themselves separately. They are close enough
-   now to share a trigger, but keeping them apart means the stills reveal when
-   the stills are actually reached — no reset can wipe them on the way past,
-   however tall this block grows.
+   The heading and the photographs watch themselves separately. They are
+   close enough now to share a trigger, but keeping them apart means the row
+   reveals when the row is actually reached — no reset can wipe it on the way
+   past, however tall this block grows.
 
    Both replay on every entry and reset on leaving, matching the counting
    stats above. A safety timer covers the case where the observer callback
    never fires, so nothing can be left blank. */
 const SECOND_LINE_DELAY = 200;
 const BANDS_DELAY = 460;
-const LOGO_DELAY = 1020;
 
 const BANDS = [
   { color: '#5BC5F2', left: '2%', delay: '0ms' },
@@ -80,8 +80,8 @@ const VERTICALS = [
 ];
 
 const LINE = {
-  fontSize: 'clamp(30px, 6vw, 82px)',
-  letterSpacing: '-0.042em',
+  fontSize: 'clamp(23px, 3.6vw, 50px)',
+  letterSpacing: '-0.035em',
 } as const;
 
 /* One business per frame: the photograph bare — no card, no badge, nothing
@@ -192,7 +192,6 @@ export default function BrandMarkSection() {
   const [lineOne, setLineOne] = useState(false);
   const [lineTwo, setLineTwo] = useState(false);
   const [bandsIn, setBandsIn] = useState(false);
-  const [logoIn, setLogoIn] = useState(false);
 
   /* Every step is scheduled, including the first, so the reset paints before
      anything flips back on — otherwise React batches the two and the type
@@ -202,14 +201,12 @@ export default function BrandMarkSection() {
       setLineOne(false);
       setLineTwo(false);
       setBandsIn(false);
-      setLogoIn(false);
       return;
     }
     const timers = [
       setTimeout(() => setLineOne(true), 0),
       setTimeout(() => setLineTwo(true), SECOND_LINE_DELAY),
       setTimeout(() => setBandsIn(true), BANDS_DELAY),
-      setTimeout(() => setLogoIn(true), LOGO_DELAY),
     ];
     return () => timers.forEach(clearTimeout);
   }, [nameInView]);
@@ -257,7 +254,7 @@ export default function BrandMarkSection() {
                   transitionDuration: '820ms',
                 }}
               >
-                Logica
+                The counter, the cart,
               </span>
               <span
                 className="block transition-all ease-out"
@@ -268,32 +265,10 @@ export default function BrandMarkSection() {
                   transitionDuration: '820ms',
                 }}
               >
-                Infoway
+                the centre, the port.
               </span>
             </h2>
 
-            {/* The mark, miniature, on the top right corner of the pair.
-
-                The image is 1400x838, so its height is width / 1.67 — at the
-                old 116px it stood 69px tall while hanging only 18px clear,
-                which put two thirds of it across the letters. That passed
-                when the type was 138px; at 82px it read as a collision. Both
-                the size and the clearance are now set against the type it
-                sits on, and the top offset always exceeds the mark's own
-                height, so it rests above the line rather than on it. */}
-            <img
-              src="/logica-trademark.png"
-              alt="Logica registered trademark"
-              className="absolute h-auto transition-all ease-out"
-              style={{
-                width: 'clamp(30px, 4.4vw, 60px)',
-                right: 'clamp(-26px, -3.2vw, -12px)',
-                top: 'clamp(-42px, -5vw, -22px)',
-                opacity: logoIn ? 1 : 0,
-                transform: logoIn ? 'translateY(0) scale(1)' : 'translateY(10px) scale(0.86)',
-                transitionDuration: '720ms',
-              }}
-            />
           </div>
         </div>
       </div>
