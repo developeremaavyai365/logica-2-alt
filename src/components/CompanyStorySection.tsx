@@ -8,7 +8,7 @@ import RevealText, { type RevealSegment } from './RevealText';
    Every figure in the back half is one the site already carries elsewhere:
    1995 and the 10+ categories from the trust strip, along with the corporate
    and government client base; 82+ counters, five distribution centres and 7+
-   countries from the stats block; the five offices from the map. The plus
+   countries from the stats block; the seven offices from the map. The plus
    signs are kept rather than written out, so this cannot end up asserting an
    exact 82 or an exact 7 where the rest of the site says "or more". */
 const STATEMENT: RevealSegment[] = [
@@ -24,8 +24,9 @@ const STATEMENT: RevealSegment[] = [
       '— from the warehouse floor to the last mile. We have been at it since 1995. ' +
       'Three decades on, the shape of the company has changed more than the discipline has: ' +
       '82+ counters and five distribution centres in place of one shop, 10+ categories in ' +
-      'place of a handful, and offices in Kolkata, Delhi, Mumbai, Bengaluru and Hyderabad ' +
-      'holding the whole thing together. What has not moved is the standard the ' +
+      'place of a handful, and offices in Kolkata, Delhi, Noida, Lucknow, Mumbai, Bengaluru ' +
+      'and Hyderabad holding the whole thing together. What has not moved is the standard ' +
+      'the ' +
       'counter is held to —',
   },
   { text: 'genuine stock, the brand’s own warranty, one price', emphasis: true },
