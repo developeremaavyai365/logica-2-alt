@@ -4,14 +4,9 @@ import RevealText, { type RevealSegment } from './RevealText';
 
    The quote is the one the careers page already carries, word for word — it
    is the company's stated philosophy, not a line written for this block, and
-   the two should never drift apart.
-
-   The foundation sentence picks up the quote's own last clause, "the country
-   as a whole", rather than making a separate claim of its own. It says that
-   Logica Infoway runs Super Soul Foundation and links out to it; it does not
-   describe what the foundation does, because nothing on this site sets that
-   out and an unsourced description of a charity's work is not something to
-   invent. */
+   the two should never drift apart. It stands on its own here: the closing
+   tiles below link to Super Soul Foundation, so the page still reaches it
+   without this block making a claim about the relationship. */
 const PHILOSOPHY: RevealSegment[] = [
   {
     text:
@@ -42,24 +37,6 @@ export default function PhilosophySection() {
           style={{ fontSize: 'clamp(17px, 1.9vw, 26px)', letterSpacing: '-0.025em', lineHeight: 1.38, textWrap: 'pretty' }}
         />
 
-        {/* Plain text rather than another RevealText: that component splits
-            its copy into one span per word, so a link cannot sit inside it. */}
-        <p
-          className="font-inter mt-8 max-w-2xl text-black/60 sm:mt-10"
-          style={{ fontSize: 'clamp(14px, 1.15vw, 17px)', lineHeight: 1.7, textWrap: 'pretty' }}
-        >
-          That last part is why Logica Infoway runs the{' '}
-          <a
-            href="https://www.supersoulfoundation.com/index.php"
-            target="_blank"
-            rel="noreferrer"
-            className="font-semibold text-[#15803D] underline decoration-[#15803D]/30 underline-offset-4 transition-colors hover:decoration-[#15803D]"
-          >
-            Super Soul Foundation
-          </a>
-          , its work for the good of society carried on alongside the business rather than
-          apart from it.
-        </p>
       </div>
     </section>
   );
