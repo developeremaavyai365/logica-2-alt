@@ -1,82 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useInView } from '../use-in-view';
 
-/* Marks drawn for these four verticals rather than pulled from an icon set,
-   so each one says what the business actually does: a shopfront with its
-   shutter half-raised, a depot fanning stock out to four points, a globe with
-   a shipping lane leaving it, and a storefront that lives on a screen. One
-   line weight and one 48-unit grid across all four so they read as a set. */
-type MarkProps = { className?: string; style?: React.CSSProperties };
+/* Four figures, set the way the Trent reference sets them: the number in
+   black, one line of copy beneath it, no icon and no colour anywhere.
 
-const svg = {
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeWidth: 2,
-  strokeLinecap: 'round' as const,
-  strokeLinejoin: 'round' as const,
-  viewBox: '0 0 48 48',
-};
-
-/** Retail — a shopfront: scalloped awning, open shutter, lit doorway. */
-function RetailMark(p: MarkProps) {
-  return (
-    <svg {...svg} {...p}>
-      <path d="M9 20v19h30V20" />
-      <path d="M7 20l3.5-9h27L41 20" />
-      <path d="M7 20c2 0 2 2.6 4.25 2.6S13.25 20 15.5 20s2 2.6 4.25 2.6S22 20 24 20s2 2.6 4.25 2.6S32.5 20 34.5 20s2 2.6 4.25 2.6S41 20 41 20" />
-      <path d="M19.5 39V29.5h9V39" />
-    </svg>
-  );
-}
-
-/** Distribution — a depot at the centre, stock fanning out to four points. */
-function DistributionMark(p: MarkProps) {
-  return (
-    <svg {...svg} {...p}>
-      <rect x="17" y="17" width="14" height="14" rx="2.5" />
-      <circle cx="9" cy="9" r="3.2" />
-      <circle cx="39" cy="9" r="3.2" />
-      <circle cx="9" cy="39" r="3.2" />
-      <circle cx="39" cy="39" r="3.2" />
-      <path d="M16.4 16.4l-5 -5M31.6 16.4l5 -5M16.4 31.6l-5 5M31.6 31.6l5 5" />
-    </svg>
-  );
-}
-
-/** Export — a globe with a shipping lane arcing away from it. */
-function ExportMark(p: MarkProps) {
-  return (
-    <svg {...svg} {...p}>
-      <circle cx="21" cy="25" r="13" />
-      <path d="M8 25h26" />
-      <path d="M21 12c4.2 4 4.2 22 0 26M21 12c-4.2 4-4.2 22 0 26" />
-      <path d="M31 13c5 1.5 8.5 4 10.5 6.5" strokeDasharray="3.5 3.5" />
-      <path d="M38 18.5l4 1.2-1.4 3.9" />
-    </svg>
-  );
-}
-
-/** E-commerce — a storefront that lives on a screen, open around the clock. */
-function EcommerceMark(p: MarkProps) {
-  return (
-    <svg {...svg} {...p}>
-      <rect x="6" y="9" width="36" height="27" rx="3.5" />
-      <path d="M6 17h36" />
-      <path d="M10.5 13h.02M14.5 13h.02" />
-      <path d="M17 23h15l-1.6 7.5H19.4L17 21h-2.5" />
-      <circle cx="20.5" cy="34" r="1.6" />
-      <circle cx="29" cy="34" r="1.6" />
-      <path d="M18 42h12" />
-    </svg>
-  );
-}
-
-// Logica's four core verticals — retail, warehousing, export, e-commerce.
+   The vertical each figure belongs to is carried inside its own line rather
+   than sitting above it as a coloured label, so nothing is lost by dropping
+   the second line — and the figures stay the same ones the Logica Infoway
+   captions further down publish, so the two blocks cannot end up quoting
+   different numbers for the same vertical. */
 const stats = [
-  { vertical: 'Retail', value: '82+', label: 'Stores Pan India', icon: RetailMark, chip: '#FDE8D8', ink: '#D2781E' },
-  { vertical: 'Distribution', value: '5', label: 'Distribution Centres', icon: DistributionMark, chip: '#DFF5E3', ink: '#15803D' },
-  { vertical: 'Export', value: '7+', label: 'Countries Served', icon: ExportMark, chip: '#DCEBFF', ink: '#1D4ED8' },
-  { vertical: 'E-commerce', value: '24/7', label: 'Nationwide Online Reach', icon: EcommerceMark, chip: '#EDE4FF', ink: '#6D28D9' },
+  { value: '82+', label: 'Retail stores pan India' },
+  { value: '5', label: 'Distribution centres nationwide' },
+  { value: '7+', label: 'Countries served through export' },
+  { value: '24/7', label: 'E-commerce open around the clock' },
 ];
 
 const DURATION = 1200;
@@ -173,30 +110,15 @@ export default function StatsSection() {
               transitionDuration: '600ms',
             }}
           >
-            {/* The number leads. The mark shrinks to a small coloured
-                marker above it and the vertical name drops beneath, so
-                nothing in the column competes with the figure. */}
-            <span
-              className="flex items-center justify-center rounded-full"
-              style={{ backgroundColor: stat.chip, color: stat.ink, height: 'clamp(34px, 2.8vw, 42px)', width: 'clamp(34px, 2.8vw, 42px)' }}
-            >
-              <stat.icon style={{ height: 'clamp(17px, 1.5vw, 22px)', width: 'clamp(17px, 1.5vw, 22px)' }} />
-            </span>
             <p
-              className="font-dm-sans mt-5 font-extrabold text-[#0A0A0A] tabular-nums"
-              style={{ fontSize: 'clamp(38px, 4.4vw, 62px)', letterSpacing: '-0.055em', lineHeight: 0.86 }}
+              className="font-dm-sans font-extrabold text-[#0A0A0A] tabular-nums"
+              style={{ fontSize: 'clamp(38px, 4.4vw, 62px)', letterSpacing: '-0.055em', lineHeight: 0.9 }}
             >
               <StatValue raw={stat.value} active={revealed[i]} />
             </p>
             <p
-              className="font-dm-sans mt-4 font-bold uppercase"
-              style={{ color: stat.ink, letterSpacing: '0.11em', fontSize: 'clamp(11px, 0.9vw, 13px)' }}
-            >
-              {stat.vertical}
-            </p>
-            <p
-              className="font-inter mt-1.5 text-center text-black/45"
-              style={{ letterSpacing: '-0.01em', fontSize: 'clamp(12px, 0.95vw, 14px)' }}
+              className="font-inter mt-4 max-w-[22ch] text-center text-[#0A0A0A]"
+              style={{ letterSpacing: '-0.01em', fontSize: 'clamp(13px, 1vw, 15px)', lineHeight: 1.5, textWrap: 'pretty' }}
             >
               {stat.label}
             </p>
