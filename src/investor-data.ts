@@ -1047,6 +1047,15 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
   {
+    // Regulation 44 intimation, filed 04.09.2026. The date is carried in the
+    // title because that is what the section sorts on — without it this would
+    // fall back to mid-financial-year and sit below the 01-09-2026 outcome
+    // instead of above it.
+    title: "Intimation Regarding Revision in the Cut-Off Date for the 31st Annual General Meeting — September 4, 2026",
+    year: "2026-27",
+    url: "/investor/compliance-disclosures/intimation-revision-in-cut-off-date-31st-agm-04-09-2026.pdf",
+  },
+  {
     // Same Regulation 30 filing cross-listed from Board Meeting — see the
     // note there for what it covers. Cross-listed rather than re-uploaded,
     // same file.
