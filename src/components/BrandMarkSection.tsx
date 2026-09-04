@@ -299,8 +299,12 @@ export default function BrandMarkSection() {
 
       {/* Two by two rather than four across, so each photograph is roughly
           twice the width it had in a single row. */}
-      <div ref={framesRef} className="mt-16 px-5 sm:mt-24 sm:px-8 lg:px-10">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 sm:gap-y-16 lg:gap-x-10">
+      <div ref={framesRef} className="mt-12 px-5 sm:mt-16 sm:px-8 lg:px-10">
+        {/* Still two up, but held to a narrower column than the rest of the
+            page: at max-w-6xl each 4:3 photograph came out around 556px wide
+            and half again as tall, which read as a poster rather than a
+            figure. */}
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-14 lg:gap-x-10">
           {VERTICALS.map((item, i) => (
             <VerticalFrame key={item.src} item={item} index={i} shown={framesIn} />
           ))}
