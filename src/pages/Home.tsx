@@ -7,7 +7,6 @@ import BrandMarkSection from '../components/BrandMarkSection';
 import StatsSection from '../components/StatsSection';
 import RegisteredOfficesVideo from '../components/RegisteredOfficesVideo';
 import FinancialHighlights from '../components/FinancialHighlights';
-import CareersSection from '../components/CareersSection';
 import WorkWithUs from '../components/WorkWithUs';
 import OrderTypes from '../components/OrderTypes';
 
@@ -29,8 +28,7 @@ export default function Home() {
       <RegisteredOfficesVideo />
       {/* Straight off the offices film into the numbers behind them. */}
       <FinancialHighlights />
-      {/* Then the people side: the invitation, and the film over it. */}
-      <CareersSection />
+      {/* Then the people side: one full-screen film carrying the invitation. */}
       <WorkWithUs />
 
       <BrandStrip />

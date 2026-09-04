@@ -48,43 +48,23 @@ export default function WorkWithUs() {
       {/* Enough wash for the type to hold over whatever frame is behind it. */}
       <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/75" />
 
-      <div className="relative z-10 mx-auto flex min-h-[26rem] max-w-4xl flex-col items-center justify-center px-5 py-24 text-center sm:min-h-[32rem] sm:px-8 sm:py-32 lg:min-h-[36rem]">
-        <p
-          className="font-inter font-semibold text-white/70"
-          style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
-        >
-          WORK WITH US
-        </p>
-
+      {/* svh rather than vh: on a phone, vh is the height with the browser
+          chrome hidden, so a 100vh block sits taller than the screen and the
+          button lands under the address bar until you scroll. */}
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-5 py-24 text-center sm:px-8 [min-height:100svh]">
         <h2
-          className="font-dm-sans mt-6 font-bold text-white"
-          style={{ fontSize: 'clamp(32px, 5vw, 68px)', letterSpacing: '-0.03em', lineHeight: 1.06 }}
+          className="font-dm-sans font-bold text-white"
+          style={{ fontSize: 'clamp(36px, 6vw, 88px)', letterSpacing: '-0.03em', lineHeight: 1.04 }}
         >
-          Build what the counter runs on
+          Grow with Logica Infoway
         </h2>
 
-        <p
-          className="font-inter mt-6 max-w-2xl text-white/75"
-          style={{ fontSize: 'clamp(15px, 1.3vw, 19px)', lineHeight: 1.6, textWrap: 'pretty' }}
+        <Link
+          to="/careers"
+          className="font-inter mt-10 rounded-full bg-white px-8 py-4 text-sm font-semibold text-[#0A0A0A] transition-colors duration-300 hover:bg-white/85 sm:mt-12"
         >
-          Retail floors, distribution centres, export desks and the storefront behind them — the
-          work runs across all four, in offices spread across India.
-        </p>
-
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="mailto:info@logicainfoway.com?subject=Career%20Enquiry"
-            className="font-inter rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#0A0A0A] transition-colors duration-300 hover:bg-white/85"
-          >
-            Email your resume
-          </a>
-          <Link
-            to="/careers"
-            className="font-inter rounded-full border-2 border-white/70 px-7 py-3.5 text-sm font-semibold text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-[#0A0A0A]"
-          >
-            Our offices
-          </Link>
-        </div>
+          Explore careers
+        </Link>
       </div>
     </section>
   );
