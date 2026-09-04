@@ -2,34 +2,18 @@ import { useEffect, useRef, useState } from 'react';
 import { useInView } from '../use-in-view';
 import RevealText, { useScrollProgress } from './RevealText';
 
-/* The heading names the four businesses in the order the photographs below
-   run — counter for retail, cart for e-commerce, centre for distribution,
-   port for export — so the line and the row underneath say the same thing
-   twice, once in words and once in pictures.
+/* The four businesses: the standard section header, then one photograph
+   each in a single row.
 
-   It slides in a line at a time, the gesture the company name used to have
-   here. The registered mark that sat on that name is gone with it: a ® can
-   sit on a name, not on a sentence.
+   The header is deliberately the same one every other section on this page
+   carries — green eyebrow, one bold line, centred. This block used to run an
+   animated LOGICA INFOWAY lockup instead, which made it the odd one out and
+   spent the page's largest type restating a name the header, the opening
+   statement and the footer all already carry.
 
-   Behind the lines the three diagonal bands from the registered logo rake
-   upward, held light so the type stays fully legible over them.
-
-   The heading and the photographs watch themselves separately. They are
-   close enough now to share a trigger, but keeping them apart means the row
-   reveals when the row is actually reached — no reset can wipe it on the way
-   past, however tall this block grows.
-
-   Both replay on every entry and reset on leaving, matching the counting
-   stats above. A safety timer covers the case where the observer callback
-   never fires, so nothing can be left blank. */
-const SECOND_LINE_DELAY = 200;
-const BANDS_DELAY = 460;
-
-const BANDS = [
-  { color: '#5BC5F2', left: '2%', delay: '0ms' },
-  { color: '#F5E31F', left: '30%', delay: '90ms' },
-  { color: '#7DC242', left: '58%', delay: '180ms' },
-];
+   The photographs keep their own observer so the row reveals when the row is
+   actually reached, and a safety timer covers the case where the observer
+   callback never fires, so nothing can be left blank. */
 
 /* The four businesses, one photograph each.
 
@@ -78,11 +62,6 @@ const VERTICALS = [
     ink: '#1D4ED8',
   },
 ];
-
-const LINE = {
-  fontSize: 'clamp(23px, 3.6vw, 50px)',
-  letterSpacing: '-0.035em',
-} as const;
 
 /* One business per frame: the photograph bare — no card, no badge, nothing
    laid over it — with the line Logica would put beside it underneath.
@@ -172,7 +151,6 @@ function VerticalFrame({
 }
 
 export default function BrandMarkSection() {
-  const [nameRef, nameInView] = useInView<HTMLDivElement>(0.3);
   // One trigger for all four frames, so they arrive in order instead of each
   // firing on its own and losing the sequence.
   const [framesRef, framesInView] = useInView<HTMLDivElement>(0.15);
@@ -189,92 +167,30 @@ export default function BrandMarkSection() {
     return () => clearTimeout(t);
   }, [framesInView]);
 
-  const [lineOne, setLineOne] = useState(false);
-  const [lineTwo, setLineTwo] = useState(false);
-  const [bandsIn, setBandsIn] = useState(false);
 
-  /* Every step is scheduled, including the first, so the reset paints before
-     anything flips back on — otherwise React batches the two and the type
-     appears instead of sliding. */
-  useEffect(() => {
-    if (!nameInView) {
-      setLineOne(false);
-      setLineTwo(false);
-      setBandsIn(false);
-      return;
-    }
-    const timers = [
-      setTimeout(() => setLineOne(true), 0),
-      setTimeout(() => setLineTwo(true), SECOND_LINE_DELAY),
-      setTimeout(() => setBandsIn(true), BANDS_DELAY),
-    ];
-    return () => timers.forEach(clearTimeout);
-  }, [nameInView]);
 
   return (
     <section className="overflow-hidden bg-white py-16 sm:py-20 lg:py-24">
+      {/* The same header every other section on this page carries: green
+          eyebrow, one bold line beneath it, centred. This block used to run
+          its own animated lockup, which made it the odd one out. */}
       <div className="px-5 sm:px-8 lg:px-10">
-        <div className="mx-auto flex max-w-6xl justify-center">
-          {/* Shrink-wrapped to the type so the mark can sit on its true corner */}
-          <div ref={nameRef} className="relative inline-block">
-            {/* Bands rake upward behind the pair, at the logo's own angle */}
-            <div
-              className="pointer-events-none absolute -inset-x-[8%] -inset-y-[14%] overflow-hidden"
-              aria-hidden="true"
-            >
-              {BANDS.map((b) => (
-                <span
-                  key={b.color}
-                  className="absolute block transition-all ease-out"
-                  style={{
-                    left: b.left,
-                    bottom: '-45%',
-                    width: 'clamp(20px, 2.6vw, 36px)',
-                    height: '215%',
-                    backgroundColor: b.color,
-                    transform: bandsIn
-                      ? 'rotate(38deg) translateY(0)'
-                      : 'rotate(38deg) translateY(64%)',
-                    opacity: bandsIn ? 0.22 : 0,
-                    transformOrigin: 'bottom center',
-                    transitionDuration: '900ms',
-                    transitionDelay: b.delay,
-                  }}
-                />
-              ))}
-            </div>
-
-            <h2 className="relative font-dm-sans font-extrabold uppercase leading-[0.88] text-[#0A0A0A]">
-              <span
-                className="block transition-all ease-out"
-                style={{
-                  ...LINE,
-                  opacity: lineOne ? 1 : 0,
-                  transform: lineOne ? 'translateX(0)' : 'translateX(-56px)',
-                  transitionDuration: '820ms',
-                }}
-              >
-                The counter, the cart,
-              </span>
-              <span
-                className="block transition-all ease-out"
-                style={{
-                  ...LINE,
-                  opacity: lineTwo ? 1 : 0,
-                  transform: lineTwo ? 'translateX(0)' : 'translateX(-56px)',
-                  transitionDuration: '820ms',
-                }}
-              >
-                the centre, the port.
-              </span>
-            </h2>
-
-          </div>
+        <div className="mx-auto max-w-3xl text-center">
+          <p
+            className="animate-fade-up font-inter font-semibold text-[#15803D]"
+            style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
+          >
+            OUR BUSINESSES
+          </p>
+          <h2
+            className="animate-fade-up font-dm-sans mt-6 font-bold text-[#111111]"
+            style={{ fontSize: 'clamp(24px, 2.8vw, 38px)', letterSpacing: '-0.03em', lineHeight: 1.12 }}
+          >
+            Four businesses under one name
+          </h2>
         </div>
       </div>
 
-      {/* Two by two rather than four across, so each photograph is roughly
-          twice the width it had in a single row. */}
       <div ref={framesRef} className="mt-12 px-5 sm:mt-16 sm:px-8 lg:px-10">
         {/* All four on one line from lg up. Two up put each 4:3 photograph at
             556px wide and stacked the set two rows deep, which made this the
