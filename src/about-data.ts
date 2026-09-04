@@ -39,15 +39,22 @@ export interface BoardMember {
   details: string[];
 }
 
+/* Board and KMP as set out in the company's own Board & KMP profiles
+   document. Every line below is taken from there rather than paraphrased,
+   which corrected three things the site had carried until now: Mr Gaurav
+   Goel graduated in 1995, not 1992; Mr Rakesh Kumar Goel has over 61 years'
+   experience, not 58; and Mr Sundeep Mishra has been Chief Operating Officer
+   since July 1, 2022, where the site had May 6, 2022. */
 export const BOARD_MEMBERS: BoardMember[] = [
   {
     name: 'Mr. Gaurav Goel',
     designation: 'Chairman cum Managing Director',
     photo: '/about/board/gaurav-goel.png',
     details: [
-      'Appointed to the Board on December 2, 2002',
-      'Re-designated as Managing Director on July 1, 2024',
-      '1992 graduate in Electronics & Communications Engineering',
+      'Chairman cum Managing Director and Promoter of the Company',
+      "Bachelor's in Electronics and Communications Engineering, Manipal Institute of Technology, Karnataka, 1995",
+      'With the Company since December 2, 2002; re-designated Managing Director on July 1, 2024',
+      'Over 30 years of experience in the industry',
     ],
   },
   {
@@ -55,25 +62,33 @@ export const BOARD_MEMBERS: BoardMember[] = [
     designation: 'Whole-Time Director',
     photo: '/about/board/shweta-goel.png',
     details: [
-      'Originally appointed December 2, 2002',
-      'Re-designated April 1, 2017',
-      'Graduate in English; postgraduate in Guidance & Counselling',
+      'Whole-time Director and Promoter of the Company',
+      'B.A. (Honours) in English, Loreto College, Kolkata, 1995',
+      'Postgraduate qualification in Guidance and Counselling',
+      'With the Company since December 2, 2002; re-designated Whole-time Director on April 1, 2017',
     ],
   },
   {
     name: 'Mr. Rakesh Kumar Goel',
     designation: 'Non-Executive Director',
     photo: '/about/board/rakesh-kumar-goel.png',
-    details: ['Mechanical Engineer with 58 years of experience'],
+    details: [
+      "Bachelor's in Mechanical Engineering, Jabalpur University, 1965",
+      'Over 61 years of professional experience',
+      'Has held positions with Texmaco, Titagarh Wagons Limited, Paharpur Cooling Towers Limited and HEI Limited',
+      'With the Company since July 14, 2014',
+    ],
   },
   {
     name: 'Mr. Dinesh Arya',
     designation: 'Independent Director',
     photo: '/about/board/dinesh-arya.png',
     details: [
-      'Appointed July 1, 2022, for a 5-year term',
-      'Fellow, Company Secretaries of India',
-      'PGDBA in Finance',
+      'B.Com, Ravishankar University, Raipur; PGDBA in Finance, Symbiosis Centre for Distance Learning, Pune',
+      'Fellow Member of the Institute of Company Secretaries of India',
+      'Over 34 years of experience in corporate governance, regulatory matters and general management',
+      'Formerly Company Secretary & Compliance Officer and Head (Legal), Titagarh Wagons Limited',
+      'With the Company since July 1, 2022',
     ],
   },
   {
@@ -81,45 +96,63 @@ export const BOARD_MEMBERS: BoardMember[] = [
     designation: 'Independent Director',
     photo: '/about/board/nil-kamal-samanta.png',
     details: [
-      'Appointed August 26, 2022, for a 5-year term',
-      '39 years in banking; retired as Deputy Zonal Manager, Bank of India',
+      "Bachelor's degrees in Physics and Law, Calcutta University; CAIIB",
+      'Over 39 years of banking experience, with expertise in branch banking and administrative operations',
+      'Formerly Assistant General Manager and Deputy Zonal Manager, Bank of India',
+      'With the Company since August 26, 2022, appointed for a five-year term',
     ],
   },
   {
-    name: 'Ms. Vinita Saraf',
+    name: 'Mrs. Vinita Saraf',
     designation: 'Independent Director',
     photo: '/about/board/vinita-saraf.png',
     details: [
-      'Appointed August 29, 2022, for an 8-year term',
-      'Bachelor in Commerce (Honours); NISM VIII certified',
+      "Bachelor's degree in Commerce (Honours); NISM Series VIII certified",
+      'Over 6 years of experience in company law, corporate governance, regulatory matters, corporate communication and investor relations',
+      'With the Company since August 29, 2022, appointed for an eight-year term',
     ],
   },
   {
     name: 'Mr. Sundeep Mishra',
     designation: 'Chief Operating Officer',
     photo: '/about/board/sundeep-mishra.png',
-    details: ['Appointed May 6, 2022', '~49 years in marketing, sales, and business development'],
+    details: [
+      'Bachelor of Commerce, Calcutta University',
+      'Around 49 years of experience in sales, marketing and business development',
+      'Chief Operating Officer since July 1, 2022, overseeing sales and business development',
+    ],
   },
   {
     name: 'Mr. Deepak Kumar Jha',
     designation: 'Chief Financial Officer',
     photo: '/about/board/deepak-kumar-jha.png',
-    details: ['Appointed July 1, 2022', '~22 years in Accounts & Finance; associated with the company since January 2012'],
+    details: [
+      'Bachelor of Commerce, University of Calcutta',
+      'Around 22 years of experience in Accounts and Finance',
+      'With the Company since January 2, 2012; Chief Financial Officer since July 1, 2022',
+    ],
   },
   {
     name: 'Ms. Priyanka Gera',
     designation: 'Company Secretary & Compliance Officer',
-    photo: '/about/board/priyanka-gera.jpg',
-    details: ['Appointed September 24, 2024', 'Associate ICSI; Master\'s in Commerce; Bachelor in Law'],
+    photo: '/about/board/priyanka-gera.png',
+    details: [
+      'Associate Member of the Institute of Company Secretaries of India',
+      "Master's degree in Commerce, IGNOU; Bachelor's degree in Law, Rajasthan University",
+      'Over 7 years of experience across public and private sector companies',
+      'Expertise in secretarial compliances, Board matters, corporate governance, securities law and due diligence',
+      'Appointed on September 24, 2024',
+    ],
   },
   {
     name: 'Mr. Kshitij Goel',
     designation: 'Chief Information Officer',
-    photo: '/about/board/kshitij-goel.jpg',
+    photo: '/about/board/kshitij-goel.png',
     details: [
-      'Appointed May 1, 2025',
-      'Mechanical Engineering & Business graduate, Boston University',
-      'Prior experience at Amazon Logistics',
+      'Degrees in Mechanical Engineering and Business, Boston University, USA',
+      'Experience in logistics automation and optimisation as an Engineering Project Manager with Amazon Logistics, USA',
+      'Practical experience in consumer IT and telecom hardware distribution and retail',
+      'Appointed Chief Information Officer on May 1, 2025',
     ],
   },
 ];
