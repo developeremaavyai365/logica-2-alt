@@ -80,7 +80,7 @@ const VERTICALS = [
 ];
 
 const LINE = {
-  fontSize: 'clamp(40px, 9.6vw, 138px)',
+  fontSize: 'clamp(30px, 6vw, 82px)',
   letterSpacing: '-0.042em',
 } as const;
 
@@ -154,7 +154,7 @@ function VerticalFrame({
         </span>
         <span
           className="font-dm-sans mt-2.5 block font-bold text-[#0A0A0A]"
-          style={{ fontSize: 'clamp(21px, 2.1vw, 30px)', letterSpacing: '-0.025em', lineHeight: 1.2 }}
+          style={{ fontSize: 'clamp(17px, 1.5vw, 22px)', letterSpacing: '-0.025em', lineHeight: 1.2 }}
         >
           {item.headline}
         </span>
@@ -163,7 +163,7 @@ function VerticalFrame({
         <RevealText
           segments={[{ text: item.caption }]}
           className="font-inter mt-3 max-w-[46ch]"
-          style={{ fontSize: 'clamp(14px, 1.15vw, 17px)', lineHeight: 1.6, textWrap: 'pretty' }}
+          style={{ fontSize: 'clamp(13px, 0.95vw, 15px)', lineHeight: 1.6, textWrap: 'pretty' }}
         />
       </figcaption>
     </figure>
@@ -214,7 +214,7 @@ export default function BrandMarkSection() {
   }, [nameInView]);
 
   return (
-    <section className="overflow-hidden bg-white py-24 sm:py-32 lg:py-40">
+    <section className="overflow-hidden bg-white py-16 sm:py-20 lg:py-24">
       <div className="px-5 sm:px-8 lg:px-10">
         <div className="mx-auto flex max-w-6xl justify-center">
           {/* Shrink-wrapped to the type so the mark can sit on its true corner */}
@@ -231,7 +231,7 @@ export default function BrandMarkSection() {
                   style={{
                     left: b.left,
                     bottom: '-45%',
-                    width: 'clamp(24px, 4vw, 58px)',
+                    width: 'clamp(20px, 2.6vw, 36px)',
                     height: '215%',
                     backgroundColor: b.color,
                     transform: bandsIn

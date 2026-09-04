@@ -124,7 +124,7 @@ function Figure({
   return (
     <p
       className="font-dm-sans font-extrabold text-[#0A0A0A] tabular-nums"
-      style={{ fontSize: 'clamp(30px, 3.6vw, 46px)', letterSpacing: '-0.035em', lineHeight: 1 }}
+      style={{ fontSize: 'clamp(26px, 2.6vw, 36px)', letterSpacing: '-0.035em', lineHeight: 1 }}
     >
       {item.prefix}
       {/* Indian grouping, so the crore figure reads 1,315.72 rather than
@@ -143,11 +143,11 @@ export default function FinancialHighlights() {
   const [ref, inView] = useInView<HTMLDivElement>(0.25);
 
   return (
-    <section className="bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 lg:py-32">
+    <section className="bg-white px-5 py-14 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
       <div className="mx-auto max-w-5xl">
         <h2
           className="font-dm-sans text-center font-bold text-[#111111]"
-          style={{ fontSize: 'clamp(30px, 4.4vw, 56px)', letterSpacing: '-0.03em', lineHeight: 1.1 }}
+          style={{ fontSize: 'clamp(24px, 2.8vw, 38px)', letterSpacing: '-0.03em', lineHeight: 1.1 }}
         >
           Financial Highlights
         </h2>
@@ -169,13 +169,13 @@ export default function FinancialHighlights() {
             >
               <item.icon
                 className="shrink-0 text-[#15803D]"
-                style={{ height: 'clamp(52px, 5vw, 68px)', width: 'clamp(52px, 5vw, 68px)' }}
+                style={{ height: 'clamp(40px, 3.4vw, 50px)', width: 'clamp(40px, 3.4vw, 50px)' }}
               />
               <div className="min-w-0">
                 <Figure item={item} active={inView} />
                 <p
                   className="font-inter mt-2 font-medium text-[#0A0A0A]"
-                  style={{ fontSize: 'clamp(14px, 1.2vw, 17px)' }}
+                  style={{ fontSize: 'clamp(13px, 1vw, 15px)' }}
                 >
                   {item.label}
                 </p>
@@ -199,7 +199,7 @@ export default function FinancialHighlights() {
             </span>
             <span
               className="font-inter font-medium transition-colors duration-300 group-hover:text-[#15803D] group-focus-visible:text-[#15803D]"
-              style={{ fontSize: 'clamp(15px, 1.25vw, 18px)' }}
+              style={{ fontSize: 'clamp(14px, 1.05vw, 16px)' }}
             >
               Investors Information
             </span>

@@ -41,7 +41,7 @@ export default function OrderTypes() {
             key={tile.label}
             href={tile.href}
             {...(tile.external ? { target: '_blank', rel: 'noreferrer' } : {})}
-            className="group relative flex h-[22rem] items-end overflow-hidden outline-none transition-transform duration-200 ease-out active:scale-[0.99] sm:h-[26rem]"
+            className="group relative flex h-[17rem] items-end overflow-hidden outline-none transition-transform duration-200 ease-out active:scale-[0.99] sm:h-[20rem]"
           >
             <img
               src={tile.image}
@@ -68,8 +68,8 @@ export default function OrderTypes() {
               style={{ backgroundColor: tile.ink }}
             />
 
-            <div className="relative z-10 p-6 transition-transform duration-500 ease-out group-hover:-translate-y-1 group-focus-visible:-translate-y-1 lg:p-8">
-              <p className="flex items-center gap-2 text-xl font-bold uppercase tracking-[0.08em] text-white lg:text-2xl">
+            <div className="relative z-10 p-5 transition-transform duration-500 ease-out group-hover:-translate-y-1 group-focus-visible:-translate-y-1 lg:p-8">
+              <p className="flex items-center gap-2 text-base font-bold uppercase tracking-[0.08em] text-white lg:text-lg">
                 {tile.label}
                 <span
                   aria-hidden="true"

@@ -54,7 +54,7 @@ export default function WorkWithUs() {
       <div className="relative z-10 mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-5 py-24 text-center sm:px-8 [min-height:100svh]">
         <h2
           className="font-dm-sans font-bold text-white"
-          style={{ fontSize: 'clamp(36px, 6vw, 88px)', letterSpacing: '-0.03em', lineHeight: 1.04 }}
+          style={{ fontSize: 'clamp(28px, 3.6vw, 50px)', letterSpacing: '-0.03em', lineHeight: 1.04 }}
         >
           Grow with Logica Infoway
         </h2>

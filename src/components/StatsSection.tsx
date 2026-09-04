@@ -158,7 +158,7 @@ export default function StatsSection() {
   }, [inView]);
 
   return (
-    <section className="bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 lg:py-32">
+    <section className="bg-white px-5 py-14 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
       <div
         ref={statsRef}
         className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-x-8 gap-y-14 sm:grid-cols-4"
@@ -178,25 +178,25 @@ export default function StatsSection() {
                 nothing in the column competes with the figure. */}
             <span
               className="flex items-center justify-center rounded-full"
-              style={{ backgroundColor: stat.chip, color: stat.ink, height: 'clamp(38px, 3.6vw, 50px)', width: 'clamp(38px, 3.6vw, 50px)' }}
+              style={{ backgroundColor: stat.chip, color: stat.ink, height: 'clamp(34px, 2.8vw, 42px)', width: 'clamp(34px, 2.8vw, 42px)' }}
             >
-              <stat.icon style={{ height: 'clamp(20px, 2vw, 27px)', width: 'clamp(20px, 2vw, 27px)' }} />
+              <stat.icon style={{ height: 'clamp(17px, 1.5vw, 22px)', width: 'clamp(17px, 1.5vw, 22px)' }} />
             </span>
             <p
               className="font-dm-sans mt-5 font-extrabold text-[#0A0A0A] tabular-nums"
-              style={{ fontSize: 'clamp(58px, 8.4vw, 116px)', letterSpacing: '-0.055em', lineHeight: 0.86 }}
+              style={{ fontSize: 'clamp(38px, 4.4vw, 62px)', letterSpacing: '-0.055em', lineHeight: 0.86 }}
             >
               <StatValue raw={stat.value} active={revealed[i]} />
             </p>
             <p
               className="font-dm-sans mt-4 font-bold uppercase"
-              style={{ color: stat.ink, letterSpacing: '0.11em', fontSize: 'clamp(12px, 1.15vw, 15px)' }}
+              style={{ color: stat.ink, letterSpacing: '0.11em', fontSize: 'clamp(11px, 0.9vw, 13px)' }}
             >
               {stat.vertical}
             </p>
             <p
               className="font-inter mt-1.5 text-center text-black/45"
-              style={{ letterSpacing: '-0.01em', fontSize: 'clamp(13px, 1.2vw, 16px)' }}
+              style={{ letterSpacing: '-0.01em', fontSize: 'clamp(12px, 0.95vw, 14px)' }}
             >
               {stat.label}
             </p>

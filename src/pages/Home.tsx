@@ -1,7 +1,6 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import HeroVideo from '../components/HeroVideo';
-import BrandStrip from '../components/BrandStrip';
 import CompanyStorySection from '../components/CompanyStorySection';
 import BrandMarkSection from '../components/BrandMarkSection';
 import StatsSection from '../components/StatsSection';
@@ -31,7 +30,6 @@ export default function Home() {
       {/* Then the people side: one full-screen film carrying the invitation. */}
       <WorkWithUs />
 
-      <BrandStrip />
       {/* Corporate, educational and the foundation close the page. */}
       <OrderTypes />
       <Footer />
