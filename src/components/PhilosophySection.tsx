@@ -22,18 +22,11 @@ export default function PhilosophySection() {
   return (
     <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
       <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-        <p
-          className="animate-fade-up font-inter font-semibold text-[#15803D]"
-          style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
-        >
-          WHAT WE STAND FOR
-        </p>
-
         {/* Darkens word by word on scroll, the same treatment the Who We Are
             statement uses. */}
         <RevealText
           segments={PHILOSOPHY}
-          className="font-dm-sans mt-8 sm:mt-10"
+          className="font-dm-sans"
           style={{ fontSize: 'clamp(17px, 1.9vw, 26px)', letterSpacing: '-0.025em', lineHeight: 1.38, textWrap: 'pretty' }}
         />
 

@@ -2,18 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useInView } from '../use-in-view';
 import RevealText, { useScrollProgress } from './RevealText';
 
-/* The four businesses: the standard section header, then one photograph
-   each in a single row.
-
-   The header is deliberately the same one every other section on this page
-   carries — green eyebrow, one bold line, centred. This block used to run an
-   animated LOGICA INFOWAY lockup instead, which made it the odd one out and
-   spent the page's largest type restating a name the header, the opening
-   statement and the footer all already carry.
-
-   The photographs keep their own observer so the row reveals when the row is
-   actually reached, and a safety timer covers the case where the observer
-   callback never fires, so nothing can be left blank. */
 
 /* The four businesses, one photograph each.
 
@@ -171,19 +159,12 @@ export default function BrandMarkSection() {
 
   return (
     <section className="overflow-hidden bg-white py-16 sm:py-20 lg:py-24">
-      {/* The same header every other section on this page carries: green
-          eyebrow, one bold line beneath it, centred. This block used to run
-          its own animated lockup, which made it the odd one out. */}
+      {/* One centred line, the same treatment every other section on this
+          page carries. */}
       <div className="px-5 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-3xl text-center">
-          <p
-            className="animate-fade-up font-inter font-semibold text-[#15803D]"
-            style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
-          >
-            OUR BUSINESSES
-          </p>
           <h2
-            className="animate-fade-up font-dm-sans mt-6 font-bold text-[#111111]"
+            className="animate-fade-up font-dm-sans font-bold text-[#111111]"
             style={{ fontSize: 'clamp(24px, 2.8vw, 38px)', letterSpacing: '-0.03em', lineHeight: 1.12 }}
           >
             Four Verticals. One Powerful Ecosystem.

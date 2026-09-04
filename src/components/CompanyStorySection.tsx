@@ -45,14 +45,7 @@ export default function CompanyStorySection() {
       {/* Brand green rather than a grey tint: it carries the same accent as the
           emphasised phrase below, and clears AA on white at 5:1 where the old
           45% black did not. */}
-      <p
-        className="animate-fade-up font-inter text-center font-semibold text-[#15803D]"
-        style={{ fontSize: 'clamp(11px, 1vw, 13px)', letterSpacing: '0.22em' }}
-      >
-        WHO WE ARE
-      </p>
-
-      <div className="animate-fade-up mx-auto mt-10 flex max-w-5xl flex-col items-center text-center sm:mt-14">
+      <div className="animate-fade-up mx-auto flex max-w-5xl flex-col items-center text-center">
         {/* One statement, set large with room to breathe — the emphasis is
             carried by two phrases rather than by size alone. It darkens word
             by word as the block is scrolled through, the same treatment the
