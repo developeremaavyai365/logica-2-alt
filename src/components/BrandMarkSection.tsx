@@ -88,8 +88,9 @@ const LINE = {
    laid over it — with the line Logica would put beside it underneath.
 
    The four share a single trigger and come in one after another rather than
-   each watching itself. They sit two by two, close enough that independent
-   triggers would fire together and lose the sequence. */
+   each watching itself. On a wide screen they sit on one line, where
+   independent triggers would all fire at once and lose the sequence
+   entirely; the shared one sweeps across the row instead. */
 const CASCADE = 320;
 
 function VerticalFrame({
@@ -145,7 +146,7 @@ function VerticalFrame({
         />
       </div>
 
-      <figcaption className="mt-5">
+      <figcaption className="mt-4">
         <span
           className="font-inter block font-semibold uppercase"
           style={{ color: item.ink, fontSize: 'clamp(10px, 0.85vw, 12px)', letterSpacing: '0.22em' }}
@@ -153,8 +154,8 @@ function VerticalFrame({
           {item.name}
         </span>
         <span
-          className="font-dm-sans mt-2.5 block font-bold text-[#0A0A0A]"
-          style={{ fontSize: 'clamp(17px, 1.5vw, 22px)', letterSpacing: '-0.025em', lineHeight: 1.2 }}
+          className="font-dm-sans mt-2 block font-bold text-[#0A0A0A]"
+          style={{ fontSize: 'clamp(16px, 1.25vw, 19px)', letterSpacing: '-0.025em', lineHeight: 1.25 }}
         >
           {item.headline}
         </span>
@@ -162,8 +163,8 @@ function VerticalFrame({
             statement uses. */}
         <RevealText
           segments={[{ text: item.caption }]}
-          className="font-inter mt-3 max-w-[46ch]"
-          style={{ fontSize: 'clamp(13px, 0.95vw, 15px)', lineHeight: 1.6, textWrap: 'pretty' }}
+          className="font-inter mt-2.5"
+          style={{ fontSize: 'clamp(12.5px, 0.85vw, 14px)', lineHeight: 1.6, textWrap: 'pretty' }}
         />
       </figcaption>
     </figure>
@@ -300,11 +301,13 @@ export default function BrandMarkSection() {
       {/* Two by two rather than four across, so each photograph is roughly
           twice the width it had in a single row. */}
       <div ref={framesRef} className="mt-12 px-5 sm:mt-16 sm:px-8 lg:px-10">
-        {/* Still two up, but held to a narrower column than the rest of the
-            page: at max-w-6xl each 4:3 photograph came out around 556px wide
-            and half again as tall, which read as a poster rather than a
-            figure. */}
-        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-14 lg:gap-x-10">
+        {/* All four on one line from lg up. Two up put each 4:3 photograph at
+            556px wide and stacked the set two rows deep, which made this the
+            tallest block on the page for the least it had to say. One row of
+            four is about 264px each and a third of the height. Two up on a
+            tablet and stacked on a phone, where a quarter-width column would
+            leave the captions unreadable. */}
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
           {VERTICALS.map((item, i) => (
             <VerticalFrame key={item.src} item={item} index={i} shown={framesIn} />
           ))}
