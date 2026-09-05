@@ -16,10 +16,10 @@ export default function WorkWithUs() {
       {/* Enough wash for the type to hold over the photograph. */}
       <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/75" />
 
-      {/* svh rather than vh: on a phone, vh is the height with the browser
-          chrome hidden, so a 100vh block sits taller than the screen and the
-          button lands under the address bar until you scroll. */}
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-5 py-24 text-center sm:px-8 [min-height:100svh]">
+      {/* Down from a full min-h-screen/100svh section to a fixed band, then
+          down again — the first fixed height still read as too tall.
+          Still full-bleed, still the same photo and wash, just shorter. */}
+      <div className="relative z-10 mx-auto flex h-[19rem] max-w-4xl flex-col items-center justify-center px-5 text-center sm:h-[22rem] sm:px-8 lg:h-[25rem]">
         <h2
           className="font-dm-sans font-bold text-white"
           style={{ fontSize: 'clamp(28px, 3.6vw, 50px)', letterSpacing: '-0.03em', lineHeight: 1.04 }}
