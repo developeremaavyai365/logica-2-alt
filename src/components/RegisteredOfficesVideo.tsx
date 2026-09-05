@@ -48,14 +48,25 @@ export default function RegisteredOfficesVideo() {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-white" style={{ aspectRatio: '3 / 2' }}>
-      <iframe
-        src="/offices-video.html"
-        title="Logica Infoway — Offices across India"
-        className="absolute inset-0 h-full w-full"
-        loading="lazy"
-        onLoad={handleLoad}
-      />
+    // Held to the same max width and section padding as everything else on
+    // the page, rather than running the film full-bleed edge to edge — at
+    // full width and its native 3:2 ratio this stood over 900px tall on a
+    // normal screen, dwarfing every section around it. The aspect ratio
+    // itself is untouched, so the crop the bundle's own composition frames
+    // is unchanged; only the footprint on wide screens comes down.
+    <section className="bg-white px-5 py-14 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
+      <div
+        className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl"
+        style={{ aspectRatio: '3 / 2' }}
+      >
+        <iframe
+          src="/offices-video.html"
+          title="Logica Infoway — Offices across India"
+          className="absolute inset-0 h-full w-full"
+          loading="lazy"
+          onLoad={handleLoad}
+        />
+      </div>
     </section>
   );
 }
