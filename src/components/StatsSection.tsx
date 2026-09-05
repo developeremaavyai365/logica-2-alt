@@ -11,8 +11,8 @@ import { useInView } from '../use-in-view';
    different numbers for the same vertical. */
 const stats = [
   { value: '90+', label: 'Retail stores pan India' },
-  { value: '5', label: 'Distribution centres nationwide' },
-  { value: '7+', label: 'Countries served through export' },
+  { value: '11+', label: 'Distribution centres, reaching further every year' },
+  { value: '15+', label: 'Countries served through export' },
   { value: '24/7', label: 'E-commerce open around the clock' },
 ];
 

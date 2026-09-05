@@ -38,7 +38,7 @@ const VERTICALS = [
     alt: 'Racking and palletised stock inside a distribution warehouse',
     headline: 'Stocked closer to you.',
     caption:
-      'Five distribution centres holding inventory near demand, so an order moves sooner.',
+      '11+ distribution centres holding inventory near demand, so an order moves sooner.',
     ink: '#15803D',
   },
   {
@@ -46,7 +46,7 @@ const VERTICALS = [
     name: 'Export',
     alt: 'A reach stacker moving containers in a shipping yard',
     headline: 'We do not stop at the border.',
-    caption: 'Cleared, packed and shipped to 7+ countries beyond the domestic market.',
+    caption: 'Cleared, packed and shipped to 15+ countries beyond the domestic market.',
     ink: '#1D4ED8',
   },
 ];

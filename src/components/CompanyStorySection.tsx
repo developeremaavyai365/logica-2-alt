@@ -8,10 +8,12 @@ import RevealText, { type RevealSegment } from './RevealText';
 
    Every figure in the back half is one the site already carries elsewhere:
    1995 and the 10+ categories from the trust strip, along with the corporate
-   and government client base; 90+ counters, five distribution centres and 7+
-   countries from the stats block; the seven offices from the map. The plus
-   signs are kept rather than written out, so this cannot end up asserting an
-   exact 90 or an exact 7 where the rest of the site says "or more". */
+   and government client base; 90+ counters, 11+ distribution centres and 15+
+   countries from the stats block. The office cities are the ones the contact
+   page lists — the map below is a different claim, the states the company is
+   registered in, so the two lists are not meant to match. The plus signs are
+   kept rather than written out, so this cannot end up asserting an exact 90
+   or an exact 15 where the rest of the site says "or more". */
 const STATEMENT: RevealSegment[] = [
   {
     text:
@@ -24,7 +26,7 @@ const STATEMENT: RevealSegment[] = [
     text:
       '— from the warehouse floor to the last mile. We have been at it since 1995. ' +
       'Three decades on, the shape of the company has changed more than the discipline has: ' +
-      '90+ counters and five distribution centres in place of one shop, 10+ categories in ' +
+      '90+ counters and 11+ distribution centres in place of one shop, 10+ categories in ' +
       'place of a handful, and offices in Kolkata, Delhi, Noida, Lucknow, Mumbai, Bengaluru ' +
       'and Hyderabad holding the whole thing together. What has not moved is the standard ' +
       'the ' +
@@ -34,7 +36,7 @@ const STATEMENT: RevealSegment[] = [
   {
     text:
       '— whether the order comes from a household, a corporate desk, a government ' +
-      'department or a buyer in one of the 7+ countries we ship to. The catalogue is the same ' +
+      'department or a buyer in one of the 15+ countries we ship to. The catalogue is the same ' +
       'online as it is in the shop, and the people who sold it are the people who service it ' +
       'afterwards.',
   },
