@@ -47,11 +47,25 @@ export const trustStrip = [
   { value: 'Corp & Govt', label: 'Trusted client base' },
 ];
 
+/* Brought in line with the figures the rest of the site publishes, which had
+   drifted well past these: the homepage stats block, the vertical captions
+   and the Who We Are statement were all on 90+ stores and 11+ distribution
+   centres while this block still said 52 and 5.
+
+   Every figure here traces to one the site already carries rather than a new
+   claim — stores and distribution centres from the homepage stats block,
+   cities from the trust strip's own "8 cities served nationwide" (which this
+   block contradicted with 11), and offices from the seven office cities the
+   site has been publishing.
+
+   The plus signs are kept rather than written out, matching the homepage, so
+   this cannot end up asserting an exact 90 where the rest of the site says
+   "or more". */
 export const scaleStats = [
-  { value: '6', label: 'Offices' },
-  { value: '52', label: 'Retail stores' },
-  { value: '5', label: 'Distribution centres' },
-  { value: '11', label: 'Cities' },
+  { value: '7', label: 'Offices' },
+  { value: '90+', label: 'Retail stores' },
+  { value: '11+', label: 'Distribution centres' },
+  { value: '8', label: 'Cities' },
 ];
 
 export const nameHistory = [

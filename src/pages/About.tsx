@@ -61,7 +61,12 @@ export default function About() {
             </div>
           ))}
         </div>
-        <p className="mt-3 text-xs text-[#6b6b6b]/70">As of March 31, 2025.</p>
+        {/* Was "As of March 31, 2025." That stamp has to go with the figures:
+            these are the current operating figures the rest of the site
+            publishes, not the ones that stood at that balance-sheet date, and
+            leaving the old date under new numbers would attribute them to a
+            reporting period they did not come from. */}
+        <p className="mt-3 text-xs text-[#6b6b6b]/70">Current operating scale.</p>
 
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div className="rounded-2xl border border-[#000000]/10 p-5">
