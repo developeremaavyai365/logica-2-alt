@@ -9,12 +9,12 @@ import LogoMarquee, { type LogoItem } from './LogoMarquee';
    Artwork is in public/logos/retail, each file cropped to its own mark and,
    where it arrived flattened onto a coloured or off-white rectangle, keyed
    back to transparent. Lenovo, OnePlus, Acer, Honor and Canon came from
-   Wikimedia Commons; the rest were already in the repo.
+   Wikimedia Commons; Zebronics was supplied by Armaan, Commons having only
+   photographs of their hardware; the rest were already in the repo.
 
-   Zebronics is the one brand with no mark available — Commons carries photos
-   of their hardware but no logo — so it falls back to its name set as a
-   wordmark, which is also where any file that fails to load ends up. Drop a
-   file into public/logos/retail and point `src` at it and it takes over. */
+   Every brand now carries a mark. Any that loses its file still falls back to
+   its name set as a wordmark rather than showing a broken image — drop a
+   replacement into public/logos/retail and point `src` at it. */
 const BRANDS: LogoItem[] = [
   { name: 'Samsung', src: '/logos/retail/samsung.png' },
   { name: 'Apple', src: '/logos/retail/apple.png', scale: 0.82 },
@@ -33,7 +33,7 @@ const BRANDS: LogoItem[] = [
   { name: 'Acer', src: '/logos/retail/acer.svg' },
   { name: 'Honor', src: '/logos/retail/honor.svg' },
   { name: 'Canon', src: '/logos/retail/canon.svg' },
-  { name: 'Zebronics' },
+  { name: 'Zebronics', src: '/logos/retail/zebronics.png' },
 ];
 
 export default function RetailBrands() {
