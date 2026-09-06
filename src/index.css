@@ -28,6 +28,11 @@ html, body, #root {
 }
 .animate-marquee { animation: marqueeScroll linear infinite; }
 .animate-marquee:hover { animation-play-state: paused; }
+/* A strip that never stops moving is the one thing a reduced-motion setting
+   is most likely to be asking about, so it holds still instead. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee { animation: none; }
+}
 
 /* Map marker "ping" — a soft expanding ring behind each office pin on the
    dynamic India store locator map, signalling a live/interactive point. */

@@ -3,7 +3,9 @@ import Footer from '../components/Footer';
 import HeroVideo from '../components/HeroVideo';
 import CompanyStorySection from '../components/CompanyStorySection';
 import BrandMarkSection from '../components/BrandMarkSection';
+import ChannelPartners from '../components/ChannelPartners';
 import StatsSection from '../components/StatsSection';
+import RetailBrands from '../components/RetailBrands';
 import RegisteredOfficesVideo from '../components/RegisteredOfficesVideo';
 import FinancialHighlights from '../components/FinancialHighlights';
 import WorkWithUs from '../components/WorkWithUs';
@@ -23,8 +25,13 @@ export default function Home() {
       <CompanyStorySection />
       {/* The name signs off the identity block, as on the Trent reference. */}
       <BrandMarkSection />
+      {/* Who the four verticals sell through, as a short strip rather than a
+          section of its own. */}
+      <ChannelPartners />
       {/* The counting stats, now anchored to the four verticals just shown. */}
       <StatsSection />
+      {/* The brands behind the counters those figures count. */}
+      <RetailBrands />
       <RegisteredOfficesVideo />
       {/* Straight off the offices film into the numbers behind them. */}
       <FinancialHighlights />
