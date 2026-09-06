@@ -6,39 +6,31 @@ import RevealText, { type RevealSegment } from './RevealText';
    scroll reveal — not because it is two pieces of copy. It reads and fills
    as a single run of text.
 
-   Every figure in the back half is one the site already carries elsewhere:
-   1995 and the 10+ categories from the trust strip, along with the corporate
-   and government client base; 90+ counters, 11+ distribution centres and 15+
-   countries from the stats block. The office cities are the ones the contact
-   page lists — the map below is a different claim, the states the company is
-   registered in, so the two lists are not meant to match. The plus signs are
-   kept rather than written out, so this cannot end up asserting an exact 90
-   or an exact 15 where the rest of the site says "or more". */
+   Cut to about half its former length. The counter figures and the list of
+   office cities went first: the stats block and the vertical captions
+   directly below already publish them, so repeating them here only slowed
+   the statement down on the way to the point. 1995 and the 15+ countries
+   stay as the two anchors, plus sign kept rather than written out so this
+   cannot end up asserting an exact 15 where the rest of the site says "or
+   more". */
 const STATEMENT: RevealSegment[] = [
   {
     text:
       'Four businesses, one discipline: put the right technology in the right hands. ' +
-      'Through retail counters, distribution centres, export desks and a storefront ' +
-      'that never closes, we move computing, mobility and network infrastructure to',
+      'Through counters, distribution centres, export desks and a storefront that ' +
+      'never closes, we move computing, mobility and network infrastructure to',
   },
   { text: 'the people and institutions that run on them', emphasis: true },
   {
     text:
-      '— from the warehouse floor to the last mile. We have been at it since 1995. ' +
-      'Three decades on, the shape of the company has changed more than the discipline has: ' +
-      '90+ counters and 11+ distribution centres in place of one shop, 10+ categories in ' +
-      'place of a handful, and offices in Kolkata, Delhi, Noida, Lucknow, Mumbai, Bengaluru ' +
-      'and Hyderabad holding the whole thing together. What has not moved is the standard ' +
-      'the ' +
-      'counter is held to —',
+      '— and have since 1995. What has not moved in three decades is the standard ' +
+      'the counter is held to:',
   },
   { text: 'genuine stock, the brand’s own warranty, one price', emphasis: true },
   {
     text:
-      '— whether the order comes from a household, a corporate desk, a government ' +
-      'department or a buyer in one of the 15+ countries we ship to. The catalogue is the same ' +
-      'online as it is in the shop, and the people who sold it are the people who service it ' +
-      'afterwards.',
+      '— whether the buyer is a household, a corporate desk, or in one of the 15+ ' +
+      'countries we ship to.',
   },
 ];
 
@@ -100,12 +92,15 @@ export default function CompanyStorySection() {
 
   return (
     /* Tall enough to hold the statement on screen while it fills: 100vh of
-       that is the pinned view, the remaining 120vh is the scroll that drives
-       the fill. Not pinned below sm — a phone has barely room for the
-       statement itself, let alone a screen's worth of travel around it, so
-       there it stays an ordinary block and the paragraph goes back to
-       measuring its own position. */
-    <section ref={pinRef} className="bg-white sm:h-[220vh]">
+       that is the pinned view, the remaining 50vh is the scroll that drives
+       the fill. That travel was 120vh when the statement was twice as long —
+       left alone, half the words would have filled over the same distance and
+       the reader would be scrolling a screen and a bit watching very little
+       happen. Not pinned below sm — a phone has barely room for the statement
+       itself, let alone a screen's worth of travel around it, so there it
+       stays an ordinary block and the paragraph goes back to measuring its
+       own position. */
+    <section ref={pinRef} className="bg-white sm:h-[150vh]">
       <div className="flex items-center px-5 py-16 sm:sticky sm:top-0 sm:h-screen sm:px-8 sm:py-0 lg:px-10">
         <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
           {/* A heading in its own right, at the same size as every other
