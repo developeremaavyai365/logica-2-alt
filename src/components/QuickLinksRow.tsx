@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { categories, products } from '../data';
 
 const QUICK_LINKS = categories.slice(0, 6);
@@ -20,9 +19,16 @@ function categoryImage(slug: string): string {
   return match?.image ?? '/lifestyle/laptops.jpg';
 }
 
+/* Six category tiles, straight across.
+
+   There were a previous/next pair and a rule under the row: two buttons with
+   no handler and nothing wired to them, so they rendered and hovered and did
+   nothing. All six tiles fit on one line at every width, so there was never
+   anything to page through. Both are gone, and the padding they were
+   incidentally providing at the foot is now set on the section itself. */
 export default function QuickLinksRow() {
   return (
-    <section className="w-full bg-white px-5 pt-10 sm:px-8 sm:pt-14 lg:px-10">
+    <section className="w-full bg-white px-5 py-10 sm:px-8 sm:py-14 lg:px-10">
       <div className="mx-auto grid max-w-5xl grid-cols-3 gap-x-4 gap-y-8 sm:flex sm:items-start sm:justify-center sm:gap-8 lg:gap-14">
         {QUICK_LINKS.map((c) => (
           <Link key={c.slug} to={`/shop/${c.slug}`} className="group flex shrink-0 flex-col items-center gap-3 text-center">
@@ -38,24 +44,6 @@ export default function QuickLinksRow() {
         ))}
       </div>
 
-      <div className="mt-8 border-t border-black/10 sm:mt-10" />
-
-      <div className="flex items-center justify-center gap-3 py-3">
-        <button
-          type="button"
-          aria-label="Previous"
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-[#ECEDEC]"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          aria-label="Next"
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-[#ECEDEC]"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      </div>
     </section>
   );
 }
