@@ -42,18 +42,18 @@ export default function FinancialHighlights() {
             a destination it does not lead to. The one way into the investor
             pages is the single CTA on the right.
 
-            The hover is .btn-liquid, the same rise-from-the-bottom fill the
-            careers page's own buttons use elsewhere on the site, rather than
-            a treatment invented just for this row. No entry animation —
-            visible immediately, nothing waiting on any state to reveal it. */}
+            They carry no hover at all. The .btn-liquid fill has been taken
+            off on request, and the white icon disc that went with it went too
+            — it only made sense against the green rising behind it, and on a
+            plain white card it would have washed the icon out. Nothing here
+            is clickable in any case, so there is no state left to signal. No
+            entry animation either: visible immediately, nothing waiting on
+            any state to reveal it. */}
         <ol className="m-0 flex list-none flex-col gap-3 p-0">
           {BANNERS.map(({ category, Icon }) => (
             <li key={category}>
-              <div
-                className="group btn-liquid flex items-center gap-4 rounded-2xl border border-black/10 px-6 py-5 sm:px-7"
-                style={{ '--liquid': '#15803D', '--liquid-ink': '#ffffff' } as React.CSSProperties}
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F4F2] text-[#15803D] transition-colors duration-300 group-hover:bg-white/90 sm:h-12 sm:w-12">
+              <div className="flex items-center gap-4 rounded-2xl border border-black/10 px-6 py-5 sm:px-7">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F4F2] text-[#15803D] sm:h-12 sm:w-12">
                   {Icon && <Icon className="h-5 w-5" strokeWidth={2} />}
                 </span>
                 <span
