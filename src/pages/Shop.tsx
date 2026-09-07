@@ -3,7 +3,6 @@ import Footer from '../components/Footer';
 import ShopBrowser from '../components/shop/ShopBrowser';
 import QuickLinksRow from '../components/QuickLinksRow';
 import CategorySpotlight from '../components/CategorySpotlight';
-import ShopHeroCarousel from '../components/ShopHeroCarousel';
 import BestsellerDeals from '../components/BestsellerDeals';
 import { products } from '../data';
 
@@ -17,8 +16,9 @@ export default function Shop() {
         <Header />
       </div>
 
-      <ShopHeroCarousel />
-
+      {/* The hero was a full-screen carousel rotating eight banners on a five
+          second timer, with arrows and dots. Removed on request, so the page
+          opens straight onto the quick links and the catalogue. */}
       <div className="w-full divide-y divide-black/10 bg-white">
         <QuickLinksRow />
       </div>
