@@ -13,6 +13,21 @@ export interface AnnualReport {
 
 export const ANNUAL_REPORTS: AnnualReport[] = [
   {
+    // Self-hosted rather than linked to the WordPress uploads folder the
+    // older reports use, because this URL is handed to officials directly and
+    // has to survive the document being reissued. WordPress will not overwrite
+    // a file — it appends a number, which is how the FY 2024-25 report on that
+    // host ended up as Annual-Report-FY-2024-25-1.pdf — so a replacement there
+    // takes a new URL and leaves anyone holding the old link on a superseded
+    // report. Here a reissue is the same path with new contents.
+    //
+    // The filename carries no version or date on purpose. Versioning belongs
+    // in this title; the moment the path moves, the shared link is dead.
+    title: "Annual Report 2025-26",
+    year: "2025-26",
+    url: "/investor/annual-reports/annual-report-2025-26.pdf",
+  },
+  {
     // The realigned report is now the annual report for the year: the earlier
     // Annual-Report-FY-2024-25-1.pdf entry was removed and this one retitled
     // to take its place, so the year is published once rather than twice.
