@@ -13,14 +13,14 @@ export interface AnnualReport {
 
 export const ANNUAL_REPORTS: AnnualReport[] = [
   {
-    title: "Realigned Annual Report 2024-25",
-    year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/09/Realligned-Annual-Report-2024-25.pdf",
-  },
-  {
+    // The realigned report is now the annual report for the year: the earlier
+    // Annual-Report-FY-2024-25-1.pdf entry was removed and this one retitled
+    // to take its place, so the year is published once rather than twice.
+    // The URL is left as filed — the source filename carries the original
+    // "Realligned" spelling, and repointing it would break the link.
     title: "Annual Report 2024-25",
     year: "2024-25",
-    url: "https://www.logicainfoway.com/wp-content/uploads/2025/09/Annual-Report-FY-2024-25-1.pdf",
+    url: "https://www.logicainfoway.com/wp-content/uploads/2025/09/Realligned-Annual-Report-2024-25.pdf",
   },
   {
     title: "Annual Report 2023-24",
