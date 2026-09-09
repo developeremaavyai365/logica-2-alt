@@ -5,6 +5,14 @@ export interface AnnualReport {
   title: string;
   year: string;
   url: string;
+  /** Filing date as YYYY-MM-DD, for documents whose title carries no date.
+   *
+   *  The section orders documents by a date parsed out of the title, falling
+   *  back to the middle of the financial year when there is none — which puts
+   *  an undated filing below every dated one from the same year, however
+   *  recent it actually is. Set this where the title has to stay verbatim,
+   *  as with the BSE announcement headlines, and it sorts by this instead. */
+  date?: string;
   /** false for the handful of documents confirmed absent from the source
    *  site's full backup/database — rendered as "Document unavailable"
    *  instead of a dead link. Omitted (defaults to available) everywhere else. */
@@ -1061,42 +1069,53 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  documents (Regulation 30/57/74 disclosures, trading-window closures,
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
-  /* The five filings of 08.09.2026 concerning the 31st AGM, listed on
-     Armaan's instruction as five rows.
+  /* The five BSE announcements of 08.09.2026 covering the 31st AGM, titled
+     verbatim as the exchange lists them — including the capitalisation and
+     the trailing full stop on the Reg. 34 (1) row. They are not rewritten to
+     house style precisely so that anyone comparing this page against the BSE
+     filing sees the same words.
 
-     Three of the supplied files are byte-identical — one sha256,
-     1f06407c25f41053, across all three — so rows one to three are the same
-     document. They are hosted as three separate files rather than three rows
-     pointing at one URL because DocRows keys on doc.url: identical keys make
-     React treat them as one row, and only one would appear.
+     Two of them are separate announcements carrying the same attachment, and
+     the Reg. 34 (1) submission carries it a third time: one sha256,
+     1f06407c25f41053, across all three files. That is the exchange's own
+     doing rather than an error here. The file is hosted three times rather
+     than three rows sharing a URL because DocRows keys on doc.url — identical
+     keys collapse into a single row, and only one would appear.
 
-     Each title carries its date for the same reason the 04.09.2026 entry
-     below does: the section sorts on a date parsed out of the title, and
-     without one these would fall back to mid-financial-year and sink beneath
-     filings they postdate. */
+     Each filename matches the announcement it is listed under, so the
+     document a reader downloads is named for the row they clicked.
+
+     `date` rather than a date in the title: these headlines carry none, and
+     without an explicit one they would sort to mid-financial-year and fall
+     below the 04.09.2026 filing they postdate. */
   {
-    title: "Notice Convening the 31st Annual General Meeting & Annual Report FY 2025-26 — September 8, 2026",
+    title: "Announcement under Regulation 30 (LODR)-Newspaper Publication",
     year: "2026-27",
-    url: "/investor/compliance-disclosures/notice-of-31st-agm-and-annual-report-fy-2025-26-08-09-2026.pdf",
+    date: "2026-09-08",
+    url: "/investor/compliance-disclosures/announcement-under-regulation-30-lodr-newspaper-publication-08-09-2026.pdf",
   },
   {
-    title: "Notice Convening the 31st Annual General Meeting & Annual Report FY 2025-26 — September 8, 2026",
+    title: "Notice Of 31St Annual General Meeting",
     year: "2026-27",
-    url: "/investor/compliance-disclosures/notice-of-31st-agm-and-annual-report-fy-2025-26-08-09-2026-2.pdf",
+    date: "2026-09-08",
+    url: "/investor/compliance-disclosures/notice-of-31st-annual-general-meeting-08-09-2026.pdf",
   },
   {
-    title: "Notice Convening the 31st Annual General Meeting & Annual Report FY 2025-26 — September 8, 2026",
+    title: "Notice Of 31St Annual General Meeting",
     year: "2026-27",
-    url: "/investor/compliance-disclosures/notice-of-31st-agm-and-annual-report-fy-2025-26-08-09-2026-3.pdf",
+    date: "2026-09-08",
+    url: "/investor/compliance-disclosures/notice-of-31st-annual-general-meeting-08-09-2026-2.pdf",
   },
   {
-    title: "Newspaper Advertisement — Notice of the 31st Annual General Meeting — September 8, 2026",
+    title: "Reg. 34 (1) Annual Report.",
     year: "2026-27",
-    url: "/investor/compliance-disclosures/newspaper-advertisement-31st-agm-08-09-2026.pdf",
+    date: "2026-09-08",
+    url: "/investor/compliance-disclosures/reg-34-1-annual-report-08-09-2026.pdf",
   },
   {
-    title: "Intimation of the Date of the 31st Annual General Meeting — September 8, 2026",
+    title: "Intimation Of Date Of 31St AGM",
     year: "2026-27",
+    date: "2026-09-08",
     url: "/investor/compliance-disclosures/intimation-of-date-of-31st-agm-08-09-2026.pdf",
   },
   {

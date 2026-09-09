@@ -53,6 +53,15 @@ function titleDate(title: string): number | null {
  *  year placed mid-year so undated docs interleave sensibly rather than
  *  always sinking below dated ones from the same year. */
 function sortKey(doc: AnnualReport): number {
+  // An explicit filing date wins over anything read out of the title, which
+  // is what lets a document keep a verbatim title — a BSE announcement
+  // headline carries no date, and without this it would sort to the middle of
+  // the financial year and sink below older filings that happen to name
+  // theirs.
+  if (doc.date) {
+    const [y, m, d] = doc.date.split('-').map(Number);
+    if (y && m && d) return y * 10000 + m * 100 + d;
+  }
   const d = titleDate(doc.title);
   if (d !== null) return d;
   const y = leadingYear(doc.year);
