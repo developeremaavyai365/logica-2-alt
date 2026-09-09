@@ -1061,6 +1061,44 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  documents (Regulation 30/57/74 disclosures, trading-window closures,
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
+  /* The five filings of 08.09.2026 concerning the 31st AGM, listed on
+     Armaan's instruction as five rows.
+
+     Three of the supplied files are byte-identical — one sha256,
+     1f06407c25f41053, across all three — so rows one to three are the same
+     document. They are hosted as three separate files rather than three rows
+     pointing at one URL because DocRows keys on doc.url: identical keys make
+     React treat them as one row, and only one would appear.
+
+     Each title carries its date for the same reason the 04.09.2026 entry
+     below does: the section sorts on a date parsed out of the title, and
+     without one these would fall back to mid-financial-year and sink beneath
+     filings they postdate. */
+  {
+    title: "Notice Convening the 31st Annual General Meeting & Annual Report FY 2025-26 — September 8, 2026",
+    year: "2026-27",
+    url: "/investor/compliance-disclosures/notice-of-31st-agm-and-annual-report-fy-2025-26-08-09-2026.pdf",
+  },
+  {
+    title: "Notice Convening the 31st Annual General Meeting & Annual Report FY 2025-26 — September 8, 2026",
+    year: "2026-27",
+    url: "/investor/compliance-disclosures/notice-of-31st-agm-and-annual-report-fy-2025-26-08-09-2026-2.pdf",
+  },
+  {
+    title: "Notice Convening the 31st Annual General Meeting & Annual Report FY 2025-26 — September 8, 2026",
+    year: "2026-27",
+    url: "/investor/compliance-disclosures/notice-of-31st-agm-and-annual-report-fy-2025-26-08-09-2026-3.pdf",
+  },
+  {
+    title: "Newspaper Advertisement — Notice of the 31st Annual General Meeting — September 8, 2026",
+    year: "2026-27",
+    url: "/investor/compliance-disclosures/newspaper-advertisement-31st-agm-08-09-2026.pdf",
+  },
+  {
+    title: "Intimation of the Date of the 31st Annual General Meeting — September 8, 2026",
+    year: "2026-27",
+    url: "/investor/compliance-disclosures/intimation-of-date-of-31st-agm-08-09-2026.pdf",
+  },
   {
     // Regulation 44 intimation, filed 04.09.2026. The date is carried in the
     // title because that is what the section sorts on — without it this would
