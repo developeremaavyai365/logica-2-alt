@@ -7,6 +7,11 @@ import InvestorTabs from '../../components/InvestorTabs';
 import { INVESTOR_SECTIONS, CATEGORY_ICONS } from '../../investor-sections';
 import type { AnnualReport } from '../../investor-data';
 
+/** Printed in front of internal paths in the Regulation 46 table so each row
+ *  shows a complete, copyable address. Navigation still goes through the
+ *  router — only the text is absolute. */
+const SITE_ORIGIN = 'https://www.logicainfoway.com';
+
 /** Extracts the leading 4-digit year from a "year" field like "2025-26",
  *  "2024", or "" — used both to sort newest-first and to group. Raw year
  *  strings on these docs are inconsistently formatted ("2025-26" vs "2025"
@@ -513,8 +518,8 @@ export default function InvestorSection() {
                     <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
                       Particulars
                     </th>
-                    <th className="w-56 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-                      Published at
+                    <th className="w-[42%] px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+                      URL
                     </th>
                   </tr>
                 </thead>
@@ -527,23 +532,30 @@ export default function InvestorSection() {
                       <td className="px-5 py-4 text-sm leading-relaxed text-[#000000]">
                         {row.particulars}
                       </td>
-                      <td className="px-5 py-4 text-sm">
+                      {/* The address is printed in full rather than hidden
+                          behind "View": this table is read as much off a
+                          printout or a PDF of the page as on screen, where a
+                          link with no address showing says nothing. Long
+                          document URLs break anywhere so they wrap inside the
+                          cell instead of forcing the table wider. */}
+                      <td className="px-5 py-4 text-[13px] leading-relaxed [overflow-wrap:anywhere]">
                         {row.href ? (
                           row.href.startsWith('/') ? (
                             <Link
                               to={row.href}
-                              className="inline-flex items-center gap-1 font-medium text-black underline underline-offset-4 hover:opacity-70"
+                              className="text-black underline underline-offset-2 hover:opacity-70"
                             >
-                              View
+                              {SITE_ORIGIN}
+                              {row.href}
                             </Link>
                           ) : (
                             <a
                               href={row.href}
                               target="_blank"
                               rel="noreferrer"
-                              className="inline-flex items-center gap-1 font-medium text-black underline underline-offset-4 hover:opacity-70"
+                              className="text-black underline underline-offset-2 hover:opacity-70"
                             >
-                              View <ArrowUpRight className="h-3.5 w-3.5" />
+                              {row.href}
                             </a>
                           )
                         ) : (
