@@ -499,12 +499,6 @@ export default function InvestorSection() {
 
         {section.kind === 'disclosure' && (
           <>
-            <p className="mb-6 max-w-3xl text-sm leading-relaxed text-[#6b6b6b]">
-              Disclosure under Regulation 46 of the SEBI (Listing Obligations and Disclosure
-              Requirements) Regulations, 2015 — the information the Company is required to keep on
-              its website, and where each item is published.
-            </p>
-
             {/* Scrolls inside its own container: a three-column table with a
                 long particulars column cannot narrow enough for a phone
                 without the page itself scrolling sideways. */}
