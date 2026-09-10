@@ -69,7 +69,7 @@ function StatValue({ raw, active }: { raw: string; active: boolean }) {
   );
 }
 
-/* The four counting stats, previously the foot of the Who We Are statement.
+/* The four counting stats, previously the foot of the company statement above.
    Moved to its own section below the Logica Infoway verticals.
 
    Runs on the shared useInView rather than an observer of its own: that hook

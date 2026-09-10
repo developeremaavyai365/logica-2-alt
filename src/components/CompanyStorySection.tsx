@@ -1,36 +1,34 @@
 import { useEffect, useRef, useState } from 'react';
 import RevealText, { type RevealSegment } from './RevealText';
 
-/* One continuous statement, split into segments only so the two emphasised
-   phrases keep their own colour once the words are broken apart for the
-   scroll reveal — not because it is two pieces of copy. It reads and fills
-   as a single run of text.
+/* The Company's vision, carrying over the hierarchy the Annual Report gives
+   it: the statement is the display line and the paragraph beneath explains
+   it, rather than both running together as one block of text.
 
-   Cut to about half its former length. The counter figures and the list of
-   office cities went first: the stats block and the vertical captions
-   directly below already publish them, so repeating them here only slowed
-   the statement down on the way to the point. 1995 and the 15+ countries
-   stay as the two anchors, plus sign kept rather than written out so this
-   cannot end up asserting an exact 15 where the rest of the site says "or
-   more". */
+   Set in capitals and with FUTURE-READY picked out, as the report does — the
+   report highlights it in yellow, which becomes the green this site already
+   uses for accented copy. */
+const VISION_LEAD = 'TO BE A LEADING, ';
+const VISION_ACCENT = 'FUTURE-READY';
+const VISION_TAIL = ' TECHNOLOGY RETAIL AND DISTRIBUTION ECOSYSTEM';
+
+/* The supporting paragraph. One unaccented run: the closing phrase used to
+   carry the green, which put a second accent under a statement that already
+   has one and split the paragraph in two for no reason. It reads as a single
+   piece now, set bold throughout.
+
+   Left verbatim — this is a formal statement, so the overlap between the
+   label, the statement and this opening is the Company's to change, not this
+   page's. The one correction is "longterm", which was a line break in the
+   report rather than a spelling. */
 const STATEMENT: RevealSegment[] = [
   {
     text:
-      'Four businesses, one discipline: put the right technology in the right hands. ' +
-      'Through counters, distribution centres, export desks and a storefront that ' +
-      'never closes, we move computing, mobility and network infrastructure to',
-  },
-  { text: 'the people and institutions that run on them', emphasis: true },
-  {
-    text:
-      '— and have since 1995. What has not moved in three decades is the standard ' +
-      'the counter is held to:',
-  },
-  { text: 'genuine stock, the brand’s own warranty, one price', emphasis: true },
-  {
-    text:
-      '— whether the buyer is a household, a corporate desk, or in one of the 15+ ' +
-      'countries we ship to.',
+      'Our vision is to emerge as the preferred retail and distribution partner for ' +
+      'global consumer technology brands in India. We aim to scale our network by ' +
+      'increasing stores and strengthening our presence across urban and Tier-2 ' +
+      'markets, while building a growing presence in international markets and ' +
+      'creating sustainable, long-term value for all our stakeholders.',
   },
 ];
 
@@ -103,24 +101,43 @@ export default function CompanyStorySection() {
     <section ref={pinRef} className="bg-white sm:h-[150vh]">
       <div className="flex items-center px-5 py-16 sm:sticky sm:top-0 sm:h-screen sm:px-8 sm:py-0 lg:px-10">
         <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
-          {/* A heading in its own right, at the same size as every other
-              section heading on the page — not the small green label this
-              used to be. */}
+          {/* Steps back to a label so the vision statement below can be the
+              largest thing in the section — the report sets it the same way,
+              a small VISION rule over the statement. */}
           <h2
-            className="animate-fade-up font-dm-sans font-bold text-[#111111]"
-            style={{ fontSize: 'clamp(24px, 2.8vw, 38px)', letterSpacing: '-0.03em', lineHeight: 1.12 }}
+            className="animate-fade-up font-inter font-semibold uppercase text-[#15803D]"
+            style={{ fontSize: 'clamp(11px, 0.95vw, 13px)', letterSpacing: '0.2em' }}
           >
-            Who We Are
+            Our Vision
           </h2>
 
-          {/* One statement, set large with room to breathe — the emphasis is
-              carried by two phrases rather than by size alone. It darkens word
-              by word as the reader scrolls through the pin, the same treatment
-              the Logica Infoway captions use. */}
+          {/* The statement itself, and the largest type on the page after the
+              hero. Not put through the scroll reveal: it is the one line the
+              section exists to deliver, so it is legible the moment the
+              section is reached rather than waiting on scroll. */}
+          <p
+            className="font-dm-sans mt-5 max-w-4xl font-bold text-[#111111] sm:mt-6"
+            style={{
+              fontSize: 'clamp(26px, 4.1vw, 54px)',
+              lineHeight: 1.06,
+              letterSpacing: '-0.015em',
+              textWrap: 'balance',
+            }}
+          >
+            {VISION_LEAD}
+            <span className="text-[#15803D]">{VISION_ACCENT}</span>
+            {VISION_TAIL}
+          </p>
+
+          {/* The supporting paragraph, deliberately much smaller than the
+              statement so the two read in order — size carries the hierarchy
+              now that both are bold. It darkens word by word as the reader
+              scrolls through the pin, the same treatment the Logica Infoway
+              captions use. */}
           <RevealText
             segments={STATEMENT}
-            className="font-dm-sans mt-8 sm:mt-10"
-            style={{ fontSize: 'clamp(17px, 1.9vw, 26px)', letterSpacing: '-0.025em', lineHeight: 1.38 }}
+            className="font-dm-sans mt-7 max-w-3xl font-bold sm:mt-9"
+            style={{ fontSize: 'clamp(15px, 1.35vw, 19px)', letterSpacing: '-0.015em', lineHeight: 1.5 }}
             progress={progress ?? undefined}
           />
         </div>

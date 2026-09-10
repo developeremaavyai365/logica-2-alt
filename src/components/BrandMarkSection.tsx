@@ -126,7 +126,7 @@ function VerticalFrame({
         >
           {item.headline}
         </span>
-        {/* Darkens word by word on scroll, the same treatment the Who We Are
+        {/* Darkens word by word on scroll, the same treatment the vision
             statement uses. */}
         <RevealText
           segments={[{ text: item.caption }]}

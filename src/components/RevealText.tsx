@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
    at a legible grey and each fills to full ink as the block travels up the
    viewport.
 
-   Shared by the Who We Are statement and the Logica Infoway captions so the
+   Shared by the vision statement and the Logica Infoway captions so the
    two behave identically rather than drifting into two implementations. */
 
 export interface RevealSegment {
@@ -79,7 +79,7 @@ export default function RevealText({
   segments: RevealSegment[];
   className?: string;
   style?: React.CSSProperties;
-  /** Drives the fill from outside — used by the pinned Who We Are section,
+  /** Drives the fill from outside — used by the pinned vision section,
    *  where the progress is how far the reader has scrolled through the pin
    *  rather than where this paragraph sits in the viewport. Left undefined,
    *  the paragraph measures itself as before. */

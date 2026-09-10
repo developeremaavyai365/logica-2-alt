@@ -22,7 +22,7 @@ export default function PhilosophySection() {
   return (
     <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
       <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-        {/* Darkens word by word on scroll, the same treatment the Who We Are
+        {/* Darkens word by word on scroll, the same treatment the vision
             statement uses. */}
         <RevealText
           segments={PHILOSOPHY}

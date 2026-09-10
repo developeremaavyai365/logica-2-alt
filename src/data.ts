@@ -48,9 +48,9 @@ export const trustStrip = [
 ];
 
 /* Brought in line with the figures the rest of the site publishes, which had
-   drifted well past these: the homepage stats block, the vertical captions
-   and the Who We Are statement were all on 90+ stores and 11+ distribution
-   centres while this block still said 52 and 5.
+   drifted well past these: the homepage stats block and the vertical captions
+   were on 90+ stores and 11+ distribution centres while this block still said
+   52 and 5.
 
    Every figure here traces to one the site already carries rather than a new
    claim — stores and distribution centres from the homepage stats block,
