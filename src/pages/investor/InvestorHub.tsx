@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FileText, Building2, ChevronRight } from 'lucide-react';
+import { FileText, Building2, ChevronRight, ListChecks } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import InvestorTabs from '../../components/InvestorTabs';
@@ -10,6 +10,8 @@ const KIND_ICONS = {
   groups: FileText,
   single: FileText,
   names: Building2,
+  // An index of where things are published, not a document itself.
+  disclosure: ListChecks,
 } as const;
 
 export default function InvestorHub() {

@@ -17,7 +17,9 @@ import {
   COMPLIANCE_DISCLOSURES,
   GROUP_COMPANIES,
   SUBSIDIARY_AUDIT_REPORTS,
+  REG_46,
   type AnnualReport,
+  type Reg46Row,
 } from './investor-data';
 
 export interface DocGroup {
@@ -29,7 +31,10 @@ export type InvestorSection =
   | { slug: string; label: string; category: string; kind: 'docs'; items: AnnualReport[] }
   | { slug: string; label: string; category: string; kind: 'groups'; groups: DocGroup[] }
   | { slug: string; label: string; category: string; kind: 'single'; doc: AnnualReport }
-  | { slug: string; label: string; category: string; kind: 'names'; items: string[] };
+  | { slug: string; label: string; category: string; kind: 'names'; items: string[] }
+  /** The Regulation 46 index: a table of mandated items against where each one
+   *  lives, rather than a list of documents. */
+  | { slug: string; label: string; category: string; kind: 'disclosure'; rows: Reg46Row[] };
 
 /** A convening notice rather than what the meeting decided. Board and general
  *  meeting records hold both, and the Notice page is meant to gather only the
@@ -77,6 +82,7 @@ export const INVESTOR_SECTIONS: InvestorSection[] = [
   { slug: 'prospectus', label: 'Prospectus', category: 'Fund Raising', kind: 'single', doc: PROSPECTUS_DOC },
 
   { slug: 'corporate-announcement', label: 'Corporate Announcement', category: 'Stock Exchange', kind: 'docs', items: COMPLIANCE_DISCLOSURES },
+  { slug: 'reg-46', label: 'Regulation 46 Disclosures', category: 'Stock Exchange', kind: 'disclosure', rows: REG_46 },
 
   { slug: 'group-companies', label: 'Group Companies', category: 'Group Companies', kind: 'names', items: GROUP_COMPANIES },
   { slug: 'subsidiary-audit-reports', label: 'Subsidiary Audit Reports', category: 'Group Companies', kind: 'docs', items: SUBSIDIARY_AUDIT_REPORTS },

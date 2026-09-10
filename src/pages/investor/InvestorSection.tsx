@@ -491,6 +491,74 @@ export default function InvestorSection() {
             </div>
           </>
         )}
+
+        {section.kind === 'disclosure' && (
+          <>
+            <p className="mb-6 max-w-3xl text-sm leading-relaxed text-[#6b6b6b]">
+              Disclosure under Regulation 46 of the SEBI (Listing Obligations and Disclosure
+              Requirements) Regulations, 2015 — the information the Company is required to keep on
+              its website, and where each item is published.
+            </p>
+
+            {/* Scrolls inside its own container: a three-column table with a
+                long particulars column cannot narrow enough for a phone
+                without the page itself scrolling sideways. */}
+            <div className="overflow-x-auto rounded-2xl border border-[#000000]/10 bg-white">
+              <table className="w-full min-w-[640px] border-collapse text-left">
+                <thead>
+                  <tr className="border-b border-[#000000]/10 bg-[#ECEDEC]">
+                    <th className="w-16 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+                      Clause
+                    </th>
+                    <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+                      Particulars
+                    </th>
+                    <th className="w-56 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+                      Published at
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {section.rows.map((row) => (
+                    <tr key={row.clause} className="border-b border-[#000000]/10 last:border-0 align-top">
+                      <td className="px-5 py-4 text-sm font-medium tabular-nums text-[#6b6b6b]">
+                        {row.clause}
+                      </td>
+                      <td className="px-5 py-4 text-sm leading-relaxed text-[#000000]">
+                        {row.particulars}
+                      </td>
+                      <td className="px-5 py-4 text-sm">
+                        {row.href ? (
+                          row.href.startsWith('/') ? (
+                            <Link
+                              to={row.href}
+                              className="inline-flex items-center gap-1 font-medium text-black underline underline-offset-4 hover:opacity-70"
+                            >
+                              View
+                            </Link>
+                          ) : (
+                            <a
+                              href={row.href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 font-medium text-black underline underline-offset-4 hover:opacity-70"
+                            >
+                              View <ArrowUpRight className="h-3.5 w-3.5" />
+                            </a>
+                          )
+                        ) : (
+                          /* Answered rather than blank: an inspector looking
+                             for a clause should find why it does not apply. */
+                          <span className="text-[#6b6b6b]">{row.na}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </section>
 
       <Footer />

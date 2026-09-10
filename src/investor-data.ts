@@ -1684,3 +1684,149 @@ export const SUBSIDIARY_AUDIT_REPORTS: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2022/10/AUDIT-REPORT-KALPATURU-TRADEVIN-PRIVATE-LTD.pdf",
   },
 ];
+
+/** Regulation 46 disclosure table — the index SEBI requires a listed entity to
+ *  keep on its own website, naming each mandated item and where it sits.
+ *
+ *  Every `href` points at a page or document that exists on this site: the
+ *  whole point of the table is that a regulator or shareholder can click
+ *  through, so a row pointing nowhere is worse than a row marked not
+ *  applicable. Where the requirement genuinely does not apply, `na` carries
+ *  the reason rather than the row being dropped — an inspector looking for a
+ *  clause should find it answered, not missing.
+ *
+ *  The clause lettering follows the order the regulation is commonly
+ *  published in. SEBI amends Regulation 46 periodically, so the Company
+ *  Secretary should check both the lettering and the applicability calls
+ *  against the current text before this is relied on. */
+export interface Reg46Row {
+  clause: string;
+  particulars: string;
+  href?: string;
+  /** Reason the item does not apply, shown in place of a link. */
+  na?: string;
+}
+
+export const REG_46: Reg46Row[] = [
+  { clause: "(a)", particulars: "Details of its business", href: "/about" },
+  {
+    clause: "(b)",
+    particulars: "Terms and conditions of appointment of independent directors",
+    href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Terms-of-Appointment-of-Independent-Directors-1.pdf",
+  },
+  {
+    clause: "(c)",
+    particulars: "Composition of various committees of the board of directors",
+    href: "/about/composition-of-committees",
+  },
+  {
+    clause: "(d)",
+    particulars: "Code of conduct of board of directors and senior management personnel",
+    href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Code-of-Conduct-for-Directors-and-Senior-Management-1.pdf",
+  },
+  {
+    clause: "(e)",
+    particulars: "Details of establishment of vigil mechanism / whistle blower policy",
+    href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Vigil-Mechanism_Whistle-Blower-Policy-for-Directors-and-Employees-1.pdf",
+  },
+  {
+    clause: "(f)",
+    particulars: "Criteria of making payments to non-executive directors",
+    href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Nomination-and-Remuneration-Policy-1.pdf",
+  },
+  {
+    clause: "(g)",
+    particulars: "Policy on dealing with related party transactions",
+    href: "https://www.logicainfoway.com/wp-content/uploads/2026/05/Revised-Related-Party-Policy-signed.pdf",
+  },
+  {
+    clause: "(h)",
+    particulars: "Policy for determining material subsidiaries",
+    href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Materiality-Policy-for-Identification-of-Group-Companies-1.pdf",
+  },
+  {
+    clause: "(i)",
+    particulars: "Details of familiarisation programmes imparted to independent directors",
+    href: "/investor/familiarization-program",
+  },
+  {
+    clause: "(j)",
+    particulars: "Email address for grievance redressal and other relevant details",
+    href: "/grievance-redressal",
+  },
+  {
+    clause: "(k)",
+    particulars:
+      "Contact information of the designated officials responsible for assisting and handling investor grievances",
+    href: "/grievance-redressal",
+  },
+  {
+    clause: "(l)(i)",
+    particulars: "Notice of meeting of the board of directors where financial results are to be discussed",
+    href: "/investor/board-meeting",
+  },
+  {
+    clause: "(l)(ii)",
+    particulars: "Financial results, on conclusion of the meeting of the board of directors",
+    href: "/investor/financial-results",
+  },
+  {
+    clause: "(l)(iii)",
+    particulars:
+      "Complete copy of the annual report, including balance sheet, statement of profit and loss, directors' report and corporate governance report",
+    href: "/investor/annual-report",
+  },
+  { clause: "(m)", particulars: "Shareholding pattern", href: "/investor/shareholding-pattern" },
+  {
+    clause: "(n)",
+    particulars: "Details of agreements entered into with media companies and/or their associates",
+    na: "No such agreement has been entered into",
+  },
+  {
+    clause: "(o)",
+    particulars: "Schedule of analyst or institutional investor meets and presentations made",
+    na: "No such meet or presentation held",
+  },
+  {
+    clause: "(p)",
+    particulars:
+      "New name and old name of the listed entity, for a continuous period of one year from the date of the change",
+    href: "/about",
+  },
+  {
+    clause: "(q)",
+    particulars: "Advertisements as per regulation 47(1)",
+    href: "/advertisement",
+  },
+  { clause: "(r)", particulars: "Credit ratings obtained", na: "No credit rating obtained" },
+  {
+    clause: "(s)",
+    particulars: "Separate audited financial statements of each subsidiary",
+    href: "/investor/subsidiary-audit-reports",
+  },
+  {
+    clause: "(t)",
+    particulars: "Secretarial compliance report",
+    href: "/investor/secretarial-compliance",
+  },
+  {
+    clause: "(u)",
+    particulars: "Disclosure of related party transactions on a consolidated basis",
+    href: "/investor/corporate-announcement",
+  },
+  {
+    clause: "(v)",
+    particulars: "Statements of deviation or variation as specified in regulation 32",
+    href: "/investor/fund-raising",
+  },
+  {
+    clause: "(w)",
+    particulars: "Dividend distribution policy",
+    na: "Not applicable — the Company is not among the top 1000 listed entities by market capitalisation",
+  },
+  {
+    clause: "(x)",
+    particulars: "Annual return as provided under section 92 of the Companies Act, 2013",
+    href: "/investor/annual-return",
+  },
+];
