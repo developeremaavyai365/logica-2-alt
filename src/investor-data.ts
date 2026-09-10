@@ -1690,10 +1690,9 @@ export const SUBSIDIARY_AUDIT_REPORTS: AnnualReport[] = [
  *
  *  Every `href` points at a page or document that exists on this site: the
  *  whole point of the table is that a regulator or shareholder can click
- *  through, so a row pointing nowhere is worse than a row marked not
- *  applicable. Where the requirement genuinely does not apply, `na` carries
- *  the reason rather than the row being dropped — an inspector looking for a
- *  clause should find it answered, not missing.
+ *  through, so a row pointing nowhere is worse than no row at all. Items with
+ *  nothing published against them are left out rather than carrying an
+ *  assertion about the Company that has not been confirmed.
  *
  *  The clause lettering follows the order the regulation is commonly
  *  published in. SEBI amends Regulation 46 periodically, so the Company
@@ -1702,9 +1701,8 @@ export const SUBSIDIARY_AUDIT_REPORTS: AnnualReport[] = [
 export interface Reg46Row {
   clause: string;
   particulars: string;
-  href?: string;
-  /** Reason the item does not apply, shown in place of a link. */
-  na?: string;
+  /** Required: a row that links nowhere does not belong in this table. */
+  href: string;
 }
 
 export const REG_46: Reg46Row[] = [
@@ -1778,16 +1776,6 @@ export const REG_46: Reg46Row[] = [
   },
   { clause: "(m)", particulars: "Shareholding pattern", href: "/investor/shareholding-pattern" },
   {
-    clause: "(n)",
-    particulars: "Details of agreements entered into with media companies and/or their associates",
-    na: "No such agreement has been entered into",
-  },
-  {
-    clause: "(o)",
-    particulars: "Schedule of analyst or institutional investor meets and presentations made",
-    na: "No such meet or presentation held",
-  },
-  {
     clause: "(p)",
     particulars:
       "New name and old name of the listed entity, for a continuous period of one year from the date of the change",
@@ -1798,7 +1786,6 @@ export const REG_46: Reg46Row[] = [
     particulars: "Advertisements as per regulation 47(1)",
     href: "/advertisement",
   },
-  { clause: "(r)", particulars: "Credit ratings obtained", na: "No credit rating obtained" },
   {
     clause: "(s)",
     particulars: "Separate audited financial statements of each subsidiary",
@@ -1818,11 +1805,6 @@ export const REG_46: Reg46Row[] = [
     clause: "(v)",
     particulars: "Statements of deviation or variation as specified in regulation 32",
     href: "/investor/fund-raising",
-  },
-  {
-    clause: "(w)",
-    particulars: "Dividend distribution policy",
-    na: "Not applicable — the Company is not among the top 1000 listed entities by market capitalisation",
   },
   {
     clause: "(x)",

@@ -539,29 +539,23 @@ export default function InvestorSection() {
                           document URLs break anywhere so they wrap inside the
                           cell instead of forcing the table wider. */}
                       <td className="px-5 py-4 text-[13px] leading-relaxed [overflow-wrap:anywhere]">
-                        {row.href ? (
-                          row.href.startsWith('/') ? (
-                            <Link
-                              to={row.href}
-                              className="text-black underline underline-offset-2 hover:opacity-70"
-                            >
-                              {SITE_ORIGIN}
-                              {row.href}
-                            </Link>
-                          ) : (
-                            <a
-                              href={row.href}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-black underline underline-offset-2 hover:opacity-70"
-                            >
-                              {row.href}
-                            </a>
-                          )
+                        {row.href.startsWith('/') ? (
+                          <Link
+                            to={row.href}
+                            className="text-black underline underline-offset-2 hover:opacity-70"
+                          >
+                            {SITE_ORIGIN}
+                            {row.href}
+                          </Link>
                         ) : (
-                          /* Answered rather than blank: an inspector looking
-                             for a clause should find why it does not apply. */
-                          <span className="text-[#6b6b6b]">{row.na}</span>
+                          <a
+                            href={row.href}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-black underline underline-offset-2 hover:opacity-70"
+                          >
+                            {row.href}
+                          </a>
                         )}
                       </td>
                     </tr>
