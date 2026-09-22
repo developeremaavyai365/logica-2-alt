@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, ChevronLeft, ChevronRight, ArrowUpDown, Mail } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import Select from '../../components/careers/fields/Select';
+import Select from '../../components/form/fields/Select';
 import { jobPostings, HIRING_LOCATIONS } from '../../careers-data';
 
 const PAGE_SIZE = 20;
@@ -101,6 +101,7 @@ export default function OpenRoles() {
             onChange={updateLocation}
             options={locationOptions}
             className="sm:w-56"
+            accent="#15803D"
           />
         </div>
 

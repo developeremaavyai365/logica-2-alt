@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 
 export type SelectOption = { value: string; label: string };
@@ -7,19 +7,23 @@ export type SelectOption = { value: string; label: string };
  *  open panel can't be styled at all in most browsers (no rounded corners,
  *  no custom hover state, no brand colour on the selected row), which is
  *  exactly the "generic" look this was asked to move away from. Closes on
- *  an outside click or Escape; Enter/Space opens it from the trigger. */
+ *  an outside click or Escape; Enter/Space opens it from the trigger.
+ *  `accent` lets each form keep its own identity (green for careers, black
+ *  elsewhere) without forking the component. */
 export default function Select({
   label,
   value,
   onChange,
   options,
   className,
+  accent = '#000000',
 }: {
   label?: string;
   value: string;
   onChange: (next: string) => void;
   options: SelectOption[];
   className?: string;
+  accent?: string;
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -42,7 +46,7 @@ export default function Select({
   }, [open]);
 
   return (
-    <div ref={rootRef} className={`relative ${className ?? ''}`}>
+    <div ref={rootRef} className={`relative ${className ?? ''}`} style={{ '--accent': accent } as CSSProperties}>
       {label && (
         <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">{label}</span>
       )}
@@ -52,7 +56,7 @@ export default function Select({
         aria-haspopup="listbox"
         aria-expanded={open}
         className={`flex h-[52px] w-full items-center justify-between gap-2 rounded-xl border-2 bg-white px-4 text-sm text-[#000000] transition-colors ${
-          open ? 'border-[#15803D]' : 'border-[#000000]/10 hover:border-[#000000]/20'
+          open ? 'border-[var(--accent)]' : 'border-[#000000]/10 hover:border-[#000000]/20'
         }`}
       >
         <span className="truncate">{current?.label}</span>
@@ -75,7 +79,7 @@ export default function Select({
                     setOpen(false);
                   }}
                   className={`flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-colors ${
-                    selected ? 'font-semibold text-[#15803D]' : 'text-[#000000] hover:bg-[#ECEDEC]/60'
+                    selected ? 'font-semibold text-[var(--accent)]' : 'text-[#000000] hover:bg-[#ECEDEC]/60'
                   }`}
                 >
                   {opt.label}

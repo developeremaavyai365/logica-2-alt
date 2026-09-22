@@ -5,6 +5,8 @@ import Footer from '../components/Footer';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { useAuthStore } from '../auth-store';
 import TextField from '../components/form/fields/TextField';
+import Select from '../components/form/fields/Select';
+import DateField from '../components/form/fields/DateField';
 
 const GENDER_OPTIONS = [
   { value: '', label: 'Prefer not to say' },
@@ -12,6 +14,8 @@ const GENDER_OPTIONS = [
   { value: 'female', label: 'Female' },
   { value: 'other', label: 'Other' },
 ];
+
+const TODAY_ISO = new Date().toISOString().slice(0, 10);
 
 function ProfileForm() {
   const { user, updateProfile } = useAuthStore();
@@ -77,30 +81,13 @@ function ProfileForm() {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+91 XXXXX XXXXX"
             />
-            <TextField
-              label="Date of birth"
-              type="date"
-              id="dob"
-              value={dateOfBirth}
-              onChange={(e) => setDateOfBirth(e.target.value)}
+            <DateField label="Date of birth" id="dob" value={dateOfBirth} onChange={setDateOfBirth} max={TODAY_ISO} />
+            <Select
+              label="Gender"
+              value={gender}
+              onChange={setGender}
+              options={GENDER_OPTIONS}
             />
-            <div>
-              <label htmlFor="gender" className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-                Gender
-              </label>
-              <select
-                id="gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-                className="h-[52px] w-full rounded-xl border-2 border-black/10 bg-white px-4 text-sm text-black outline-none transition-colors focus:border-black"
-              >
-                {GENDER_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
 
           <div className="mt-6 space-y-3 border-t border-black/10 pt-6">

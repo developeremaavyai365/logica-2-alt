@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../ProductCard';
 import { FilterSidebar, type FilterSelection } from './FilterSidebar';
 import TypewriterSearchInput from './TypewriterSearchInput';
+import Select from '../form/fields/Select';
 import { FACET_ORDER, SHOP_COLORS, buildFacets, getPriceBounds, priceStepFor, type FacetKey } from '../../shop-facets';
 import type { Product } from '../../data';
 
@@ -248,17 +249,13 @@ export default function ShopBrowser({
             </button>
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="hidden h-4 w-4 text-[#6b6b6b]/50 sm:block" />
-              <select
+              <Select
                 value={sort}
-                onChange={(e) => setSort(e.target.value as SortKey)}
-                className="rounded-full border border-[#000000]/15 bg-white py-2.5 pl-3 pr-8 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
-              >
-                {SORT_OPTIONS.map((o) => (
-                  <option key={o.key} value={o.key}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(v) => setSort(v as SortKey)}
+                options={SORT_OPTIONS.map((o) => ({ value: o.key, label: o.label }))}
+                className="w-48"
+                accent={accent}
+              />
             </div>
           </div>
         </div>
