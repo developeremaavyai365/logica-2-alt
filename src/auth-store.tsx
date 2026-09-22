@@ -15,6 +15,8 @@ export interface AuthUser {
   name: string | null;
   email: string | null;
   phone: string | null;
+  dateOfBirth: string | null;
+  gender: string | null;
   role: string;
   emailVerified: boolean;
 }
@@ -37,6 +39,7 @@ interface AuthApi {
   resendVerification: (email: string) => Promise<AuthResult>;
   forgotPassword: (email: string) => Promise<AuthResult>;
   resetPassword: (token: string, newPassword: string) => Promise<AuthResult>;
+  updateProfile: (data: { name?: string; phone?: string; dateOfBirth?: string; gender?: string }) => Promise<AuthResult>;
 }
 
 const AuthContext = createContext<AuthApi | null>(null);
@@ -161,9 +164,33 @@ export function AuthStoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const updateProfile = useCallback(
+    async (data: { name?: string; phone?: string; dateOfBirth?: string; gender?: string }): Promise<AuthResult> => {
+      try {
+        const profile = await apiFetch<AuthUser>('/auth/me', { method: 'PATCH', body: data });
+        setUser(profile);
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, error: messageFrom(err, 'Could not save your changes.') };
+      }
+    },
+    [],
+  );
+
   return (
     <AuthContext.Provider
-      value={{ user, ready, signUp, signIn, signOut, verifyEmail, resendVerification, forgotPassword, resetPassword }}
+      value={{
+        user,
+        ready,
+        signUp,
+        signIn,
+        signOut,
+        verifyEmail,
+        resendVerification,
+        forgotPassword,
+        resetPassword,
+        updateProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>

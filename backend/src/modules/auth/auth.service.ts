@@ -7,6 +7,7 @@ import { MailService } from '../../mail/mail.service';
 import { TokensService, IssuedTokens } from './tokens.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
@@ -154,6 +155,39 @@ export class AuthService {
       name: user.name,
       email: user.email,
       phone: user.phone,
+      dateOfBirth: user.dateOfBirth,
+      gender: user.gender,
+      role: user.role,
+      emailVerified: Boolean(user.emailVerifiedAt),
+    };
+  }
+
+  /** Phone is unique across accounts (same as email), so a duplicate here
+   *  fails the same way signup does rather than silently overwriting
+   *  someone else's row. */
+  async updateProfile(userId: string, dto: UpdateProfileDto) {
+    if (dto.phone) {
+      const existing = await this.prisma.user.findUnique({ where: { phone: dto.phone } });
+      if (existing && existing.id !== userId) throw new ConflictException('That phone number is already in use.');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(dto.name !== undefined && { name: dto.name }),
+        ...(dto.phone !== undefined && { phone: dto.phone }),
+        ...(dto.dateOfBirth !== undefined && { dateOfBirth: new Date(dto.dateOfBirth) }),
+        ...(dto.gender !== undefined && { gender: dto.gender }),
+      },
+    });
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      dateOfBirth: user.dateOfBirth,
+      gender: user.gender,
       role: user.role,
       emailVerified: Boolean(user.emailVerifiedAt),
     };

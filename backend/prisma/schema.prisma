@@ -42,6 +42,8 @@ model User {
   name             String?
   email            String?   @unique
   phone            String?   @unique
+  dateOfBirth      DateTime?
+  gender           String?
   passwordHash     String
   role             Role      @default(CUSTOMER)
   emailVerifiedAt  DateTime?

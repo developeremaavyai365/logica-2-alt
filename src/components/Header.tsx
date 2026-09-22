@@ -208,8 +208,8 @@ export default function Header() {
                     </div>
                   </div>
                   <div className="p-2">
-                    <button
-                      type="button"
+                    <Link
+                      to="/profile"
                       onClick={() => setAccountMenuOpen(false)}
                       className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-black transition-colors hover:bg-[#ECEDEC]"
                     >
@@ -217,9 +217,9 @@ export default function Header() {
                         <User className="h-4 w-4" />
                       </span>
                       Profile
-                    </button>
+                    </Link>
                     <Link
-                      to="/cart"
+                      to="/orders"
                       onClick={() => setAccountMenuOpen(false)}
                       className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-black transition-colors hover:bg-[#ECEDEC]"
                     >
@@ -364,6 +364,14 @@ export default function Header() {
                 <p className="text-sm text-[#6b6b6b]">
                   Signed in as <span className="font-semibold text-[#000000]">{user.name || user.email}</span>
                 </p>
+                <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-sm font-medium text-[#000000]">
+                  <User className="w-4 h-4" />
+                  Profile
+                </Link>
+                <Link to="/orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-sm font-medium text-[#000000]">
+                  <Package className="w-4 h-4" />
+                  Orders
+                </Link>
                 <button
                   type="button"
                   onClick={() => {

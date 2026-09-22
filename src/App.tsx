@@ -26,6 +26,8 @@ import GrievanceRedressal from './pages/investor/GrievanceRedressal';
 import InvestorEmptyPage from './pages/investor/InvestorEmptyPage';
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
+import Profile from './pages/Profile';
+import Orders from './pages/Orders';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
@@ -51,6 +53,8 @@ function App() {
         <Route path="/media" element={<Media />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/login" element={<Auth mode="signin" />} />
         <Route path="/signup" element={<Auth mode="signup" />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

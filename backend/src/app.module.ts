@@ -7,6 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CareersModule } from './modules/careers/careers.module';
+import { OrdersModule } from './modules/orders/orders.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { GlobalExceptionFilter } from './common/filters/http-exception.filter';
 import { CsrfMiddleware } from './common/middleware/csrf.middleware';
@@ -21,6 +22,7 @@ import { CsrfMiddleware } from './common/middleware/csrf.middleware';
     RedisModule,
     AuthModule,
     CareersModule,
+    OrdersModule,
   ],
   providers: [
     // Every route requires a valid access token by default; opt out
