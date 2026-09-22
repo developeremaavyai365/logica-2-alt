@@ -6,22 +6,27 @@ import Footer from '../../components/Footer';
 import TextField from '../../components/careers/fields/TextField';
 import TextAreaField from '../../components/careers/fields/TextAreaField';
 import FileField from '../../components/careers/fields/FileField';
-import { WEB3FORMS_ACCESS_KEY, WEB3FORMS_ENDPOINT } from '../../lib/web3forms';
+import { readCsrfToken } from '../../lib/csrf';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
 const LIQUID_GREEN = { '--liquid': '#15803D', '--liquid-ink': '#ffffff' } as CSSProperties;
 
+const API_URL = import.meta.env.VITE_API_URL as string | undefined;
+
 /** A dedicated application form rather than a mailto link, so a resume can
  *  actually be attached instead of asking the applicant to remember to
  *  attach it themselves in their own email client.
  *
- *  Submits as multipart FormData (not JSON, unlike ContactFormSection) —
- *  that's what lets the resume file ride along in the same request; Web3Forms
- *  reads attachments out of a multipart body, not a JSON one. No
- *  'Content-Type' header is set here deliberately — the browser fills in the
- *  multipart boundary itself when given a FormData body, and setting the
- *  header manually strips that boundary and breaks the upload. */
+ *  Submits as multipart FormData straight to this site's own backend
+ *  (/careers/apply), not Web3Forms — Web3Forms' free plan rejects any
+ *  submission carrying a file attachment. No 'Content-Type' header is set
+ *  here deliberately — the browser fills in the multipart boundary itself
+ *  when given a FormData body, and setting the header manually strips that
+ *  boundary and breaks the upload. This route is @Public() but still
+ *  mutating, so it needs the CSRF header and credentials like any other
+ *  mutating request — it just can't go through apiFetch() since that
+ *  JSON-stringifies bodies, which doesn't work for a file upload. */
 export default function Apply() {
   const [searchParams] = useSearchParams();
   const roleParam = searchParams.get('role') ?? '';
@@ -38,19 +43,21 @@ export default function Apply() {
     setMessage('Please wait...');
 
     try {
-      const res = await fetch(WEB3FORMS_ENDPOINT, {
+      const res = await fetch(`${API_URL}/careers/apply`, {
         method: 'POST',
-        headers: { Accept: 'application/json' },
+        credentials: 'include',
+        headers: { 'x-csrf-token': readCsrfToken() ?? '' },
         body: formData,
       });
-      const json = await res.json();
-      if (res.status === 200) {
+      const json = await res.json().catch(() => null);
+      if (res.ok) {
         setStatus('success');
-        setMessage(json.message);
+        setMessage(json?.message ?? 'Application received — thank you.');
         form.reset();
       } else {
         setStatus('error');
-        setMessage(json.message);
+        const backendMessage = json?.message;
+        setMessage(Array.isArray(backendMessage) ? backendMessage.join(' ') : backendMessage ?? 'Something went wrong!');
       }
     } catch {
       setStatus('error');
@@ -112,10 +119,6 @@ export default function Apply() {
             onSubmit={handleSubmit}
             className="mt-10 w-full max-w-md space-y-5 rounded-3xl bg-white p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] sm:p-8"
           >
-            <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
-            <input type="hidden" name="subject" value="Career application — logicainfoway.com" />
-            <input type="checkbox" name="botcheck" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
-
             <TextField label="Full Name" type="text" name="name" id="name" placeholder="Your full name" required />
 
             <TextField

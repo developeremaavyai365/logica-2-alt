@@ -79,6 +79,113 @@ export class MailService {
     `;
   }
 
+  /** Career application emails — a different shape from the transactional
+   *  auth emails above (no magic link, an attachment instead), so this goes
+   *  through its own send path rather than being forced into `dispatch`'s
+   *  signature. Same three providers, same "console logs instead of
+   *  sending" dev behaviour. */
+  async sendCareerApplication(args: {
+    to: string;
+    applicantName: string;
+    applicantEmail: string;
+    applicantPhone: string;
+    role: string;
+    message: string;
+    resume: { buffer: Buffer; filename: string; contentType: string };
+  }): Promise<void> {
+    const subject = args.role
+      ? `Career application: ${args.role} — ${args.applicantName}`
+      : `Career application — ${args.applicantName}`;
+
+    const html = `
+      <div style="font-family: -apple-system, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px;">
+        <h1 style="font-size: 20px; color: #111;">New career application</h1>
+        <table style="font-size: 14px; color: #333; line-height: 1.8; margin-top: 12px;">
+          <tr><td style="color:#888; padding-right:16px;">Name</td><td>${this.escapeHtml(args.applicantName)}</td></tr>
+          <tr><td style="color:#888; padding-right:16px;">Email</td><td>${this.escapeHtml(args.applicantEmail)}</td></tr>
+          <tr><td style="color:#888; padding-right:16px;">Phone</td><td>${this.escapeHtml(args.applicantPhone)}</td></tr>
+          <tr><td style="color:#888; padding-right:16px;">Role</td><td>${this.escapeHtml(args.role || 'General application')}</td></tr>
+        </table>
+        ${args.message ? `<p style="font-size: 14px; color: #555; line-height: 1.6; margin-top: 20px; white-space: pre-wrap;">${this.escapeHtml(args.message)}</p>` : ''}
+        <p style="margin-top: 24px; font-size: 12px; color: #999;">Resume attached — ${this.escapeHtml(args.resume.filename)}.</p>
+      </div>
+    `;
+
+    const provider = this.config.get<string>('MAIL_PROVIDER');
+
+    if (provider === 'console') {
+      this.logger.warn(
+        `[CAREER APPLICATION] -> ${args.to}\n  ${args.applicantName} <${args.applicantEmail}> ${args.applicantPhone}\n` +
+          `  Role: ${args.role || '(general)'}\n  Resume: ${args.resume.filename} (${args.resume.buffer.length} bytes, not sent — console provider)`,
+      );
+      return;
+    }
+
+    if (provider === 'resend') {
+      if (!this.resendClient) throw new Error('Resend client not initialized.');
+      const result = await this.resendClient.emails.send({
+        from: this.config.getOrThrow<string>('MAIL_FROM'),
+        to: args.to,
+        replyTo: args.applicantEmail,
+        subject,
+        html,
+        attachments: [
+          {
+            filename: args.resume.filename,
+            content: args.resume.buffer,
+            contentType: args.resume.contentType,
+          },
+        ],
+      });
+      if (result.error) {
+        this.logger.error(`Resend send failed for CAREER APPLICATION -> ${args.to}: ${result.error.message}`);
+        throw new Error(`Failed to send email: ${result.error.message}`);
+      }
+      this.logger.log(`[CAREER APPLICATION] sent -> ${args.to} (id: ${result.data?.id})`);
+      return;
+    }
+
+    if (provider === 'smtp') {
+      if (!this.smtpTransport) throw new Error('SMTP transport not initialized.');
+      try {
+        const info = await this.smtpTransport.sendMail({
+          from: this.config.getOrThrow<string>('MAIL_FROM'),
+          to: args.to,
+          replyTo: args.applicantEmail,
+          subject,
+          html,
+          attachments: [
+            {
+              filename: args.resume.filename,
+              content: args.resume.buffer,
+              contentType: args.resume.contentType,
+            },
+          ],
+        });
+        this.logger.log(`[CAREER APPLICATION] sent -> ${args.to} (id: ${info.messageId})`);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        this.logger.error(`SMTP send failed for CAREER APPLICATION -> ${args.to}: ${message}`);
+        throw new Error(`Failed to send email: ${message}`);
+      }
+      return;
+    }
+
+    throw new Error(`Mail provider "${provider}" is not implemented yet.`);
+  }
+
+  /** Applicant-supplied fields ride straight into an HTML email body — never
+   *  trust them as markup. Minimal, dependency-free escaping rather than
+   *  pulling in a library for four characters. */
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   private async dispatch(args: { to: string; subject: string; html: string; logLabel: string; link: string }): Promise<void> {
     const provider = this.config.get<string>('MAIL_PROVIDER');
 
