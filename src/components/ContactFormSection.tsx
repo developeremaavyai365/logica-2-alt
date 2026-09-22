@@ -2,12 +2,9 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Facebook, Twitter, Instagram, Linkedin, Share2, Phone, type LucideIcon } from 'lucide-react';
 import { socials } from '../data';
 import { useInView } from '../use-in-view';
+import { WEB3FORMS_ACCESS_KEY } from '../lib/web3forms';
 
 const PHONE_NUMBER = '+91 7003999192';
-
-// Get a free key at https://web3forms.com/ and paste it here to make this
-// form actually deliver email.
-const WEB3FORMS_ACCESS_KEY = 'YOUR_ACCESS_KEY_HERE';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 

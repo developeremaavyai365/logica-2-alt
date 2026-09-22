@@ -10,6 +10,9 @@ import BoardOfDirectors from './pages/about/BoardOfDirectors';
 import Committees from './pages/about/Committees';
 import Contact from './pages/Contact';
 import Careers from './pages/Careers';
+import OpenRoles from './pages/careers/OpenRoles';
+import Apply from './pages/careers/Apply';
+import RoleDetail from './pages/careers/RoleDetail';
 import Media from './pages/Media';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
@@ -42,6 +45,9 @@ function App() {
         <Route path="/about/composition-of-committees" element={<Committees />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<Careers />} />
+        <Route path="/careers/open-roles" element={<OpenRoles />} />
+        <Route path="/careers/open-roles/:id" element={<RoleDetail />} />
+        <Route path="/careers/apply" element={<Apply />} />
         <Route path="/media" element={<Media />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />

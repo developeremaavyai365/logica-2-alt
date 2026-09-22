@@ -1,8 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { MessageCircleMore, X } from 'lucide-react';
-
-// Same key used by ContactFormSection — get a free one at https://web3forms.com/
-const WEB3FORMS_ACCESS_KEY = 'YOUR_ACCESS_KEY_HERE';
+import { WEB3FORMS_ACCESS_KEY } from '../lib/web3forms';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
