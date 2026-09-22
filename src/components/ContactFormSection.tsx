@@ -3,6 +3,8 @@ import { Facebook, Twitter, Instagram, Linkedin, Share2, Phone, type LucideIcon 
 import { socials } from '../data';
 import { useInView } from '../use-in-view';
 import { WEB3FORMS_ACCESS_KEY } from '../lib/web3forms';
+import TextField from './form/fields/TextField';
+import TextAreaField from './form/fields/TextAreaField';
 
 const PHONE_NUMBER = '+91 7003999192';
 
@@ -125,61 +127,34 @@ export default function ContactFormSection() {
           <input type="hidden" name="subject" value="New enquiry from logicainfoway.com" />
           <input type="checkbox" name="botcheck" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
 
-          <div>
-            <label htmlFor="name" className="font-inter mb-2 block text-sm text-black/60" style={{ letterSpacing: '-0.02em' }}>
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="John Doe"
-              required
-              className="font-inter h-12 w-full rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
-            />
-          </div>
+          <TextField label="Full Name" type="text" name="name" id="name" placeholder="John Doe" required />
 
-          <div>
-            <label htmlFor="email" className="font-inter mb-2 block text-sm text-black/60" style={{ letterSpacing: '-0.02em' }}>
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="you@company.com"
-              required
-              className="font-inter h-12 w-full rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
-            />
-          </div>
+          <TextField
+            label="Email Address"
+            type="email"
+            name="email"
+            id="email"
+            placeholder="you@company.com"
+            required
+          />
 
-          <div>
-            <label htmlFor="phone" className="font-inter mb-2 block text-sm text-black/60" style={{ letterSpacing: '-0.02em' }}>
-              Phone Number
-            </label>
-            <input
-              type="text"
-              name="phone"
-              id="phone"
-              placeholder="+91 7003999192"
-              required
-              className="font-inter h-12 w-full rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
-            />
-          </div>
+          <TextField
+            label="Phone Number"
+            type="text"
+            name="phone"
+            id="phone"
+            placeholder="+91 7003999192"
+            required
+          />
 
-          <div>
-            <label htmlFor="message" className="font-inter mb-2 block text-sm text-black/60" style={{ letterSpacing: '-0.02em' }}>
-              Your Message
-            </label>
-            <textarea
-              rows={5}
-              name="message"
-              id="message"
-              placeholder="Your Message"
-              required
-              className="font-inter w-full rounded-md border border-black/10 bg-white px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
-            />
-          </div>
+          <TextAreaField
+            label="Your Message"
+            rows={5}
+            name="message"
+            id="message"
+            placeholder="Your Message"
+            required
+          />
 
           <button
             type="submit"

@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent } from 'react';
+import { useRef, useState, type CSSProperties, type ChangeEvent } from 'react';
 import { UploadCloud, FileText, X } from 'lucide-react';
 
 /** A real file input under the hood (visually hidden, still a genuine
@@ -13,7 +13,9 @@ export default function FileField({
   accept,
   required,
   hint,
+  accent = '#000000',
   compact,
+  ctaText,
 }: {
   label: string;
   name: string;
@@ -21,7 +23,9 @@ export default function FileField({
   accept?: string;
   required?: boolean;
   hint?: string;
+  accent?: string;
   compact?: boolean;
+  ctaText?: string;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -36,7 +40,7 @@ export default function FileField({
   }
 
   return (
-    <div>
+    <div style={{ '--accent': accent } as CSSProperties}>
       <label
         htmlFor={id}
         className={`block font-semibold uppercase tracking-wide text-[#6b6b6b] ${
@@ -59,11 +63,11 @@ export default function FileField({
 
       {fileName ? (
         <div
-          className={`flex items-center gap-3 rounded-xl border-2 border-[#15803D]/30 bg-[#15803D]/5 ${
+          className={`flex items-center gap-3 rounded-xl border-2 border-[var(--accent)]/30 bg-[var(--accent)]/5 ${
             compact ? 'px-3.5 py-2' : 'px-4 py-3.5'
           }`}
         >
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#15803D] text-white">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-white">
             <FileText className="h-3.5 w-3.5" />
           </span>
           <span className="min-w-0 flex-1 truncate text-sm font-medium text-[#000000]">{fileName}</span>
@@ -79,13 +83,13 @@ export default function FileField({
       ) : (
         <label
           htmlFor={id}
-          className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#000000]/15 bg-[#ECEDEC]/40 text-center transition-colors hover:border-[#15803D]/50 hover:bg-[#15803D]/5 ${
+          className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#000000]/15 bg-[#ECEDEC]/40 text-center transition-colors hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5 ${
             compact ? 'px-3.5 py-2.5' : 'flex-col py-6 px-4'
           }`}
         >
           <UploadCloud className="h-4 w-4 shrink-0 text-[#6b6b6b]" />
           <span className="text-sm font-medium text-[#000000]">
-            {compact ? 'Upload resume' : 'Click to upload your resume'}
+            {ctaText ?? (compact ? 'Upload file' : 'Click to upload')}
           </span>
           {hint && !compact && <span className="text-xs text-[#6b6b6b]">{hint}</span>}
         </label>

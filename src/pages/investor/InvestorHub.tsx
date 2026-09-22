@@ -19,16 +19,40 @@ export default function InvestorHub() {
     <div className="w-full bg-[#ECEDEC]">
       <div className="bg-[#ECEDEC]">
         <Header />
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">Investor Relations</span>
-          <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
-            Reports, filings &amp; disclosures
-          </h1>
-          <p className="mt-4 text-[#6b6b6b] text-sm leading-relaxed">
-            Logica Infoway Limited — CIN L30007WB1995PLC073218
-          </p>
+
+        {/* Full-bleed hero, same heading treatment as the careers page's
+            hero: the photo carries only the section identity — eyebrow,
+            heading, CIN line, all in white directly on the image. The
+            category/page navigation stays where it already worked, in its
+            own bar right below the photo, rather than crowding onto it. */}
+        <section className="relative isolate overflow-hidden bg-black">
+          <img
+            src="/images/investor/investor-relations-hero.jpg"
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            aria-hidden="true"
+          />
+          <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/70" />
+
+          <div className="relative z-10 flex flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-20 md:px-10">
+            <span className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-white/70">
+              Investor Relations
+            </span>
+            <h1
+              className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-white"
+              style={{ letterSpacing: '-0.03em' }}
+            >
+              Reports, filings &amp; disclosures
+            </h1>
+            <p className="mt-4 text-sm leading-relaxed text-white/70">
+              Logica Infoway Limited — CIN L30007WB1995PLC073218
+            </p>
+          </div>
+        </section>
+
+        <div className="pt-6">
+          <InvestorTabs pathname="/investor" />
         </div>
-        <InvestorTabs pathname="/investor" />
       </div>
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20">

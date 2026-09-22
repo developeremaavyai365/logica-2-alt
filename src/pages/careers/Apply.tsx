@@ -3,14 +3,15 @@ import { useSearchParams } from 'react-router-dom';
 import { Mail } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import TextField from '../../components/careers/fields/TextField';
-import TextAreaField from '../../components/careers/fields/TextAreaField';
-import FileField from '../../components/careers/fields/FileField';
+import TextField from '../../components/form/fields/TextField';
+import TextAreaField from '../../components/form/fields/TextAreaField';
+import FileField from '../../components/form/fields/FileField';
 import { readCsrfToken } from '../../lib/csrf';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
-const LIQUID_GREEN = { '--liquid': '#15803D', '--liquid-ink': '#ffffff' } as CSSProperties;
+const GREEN = '#15803D';
+const LIQUID_GREEN = { '--liquid': GREEN, '--liquid-ink': '#ffffff' } as CSSProperties;
 
 const API_URL = import.meta.env.VITE_API_URL as string | undefined;
 
@@ -119,7 +120,15 @@ export default function Apply() {
             onSubmit={handleSubmit}
             className="mt-10 w-full max-w-md space-y-5 rounded-3xl bg-white p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] sm:p-8"
           >
-            <TextField label="Full Name" type="text" name="name" id="name" placeholder="Your full name" required />
+            <TextField
+              label="Full Name"
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Your full name"
+              required
+              accent={GREEN}
+            />
 
             <TextField
               label="Email Address"
@@ -128,6 +137,7 @@ export default function Apply() {
               id="email"
               placeholder="you@example.com"
               required
+              accent={GREEN}
             />
 
             <TextField
@@ -137,6 +147,7 @@ export default function Apply() {
               id="phone"
               placeholder="+91 XXXXX XXXXX"
               required
+              accent={GREEN}
             />
 
             <TextField
@@ -146,6 +157,7 @@ export default function Apply() {
               id="role"
               defaultValue={roleParam}
               placeholder="e.g. Retail Associate, or leave blank if general"
+              accent={GREEN}
             />
 
             <FileField
@@ -155,12 +167,15 @@ export default function Apply() {
               accept=".pdf,.doc,.docx"
               required
               hint="PDF, DOC or DOCX"
+              accent={GREEN}
+              ctaText="Click to upload your resume"
             />
 
             <TextAreaField
               label="Anything else you'd like us to know?"
               name="message"
               id="message"
+              accent={GREEN}
               rows={4}
               placeholder="Optional"
             />

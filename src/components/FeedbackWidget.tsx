@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { MessageCircleMore, X } from 'lucide-react';
 import { WEB3FORMS_ACCESS_KEY } from '../lib/web3forms';
+import TextField from './form/fields/TextField';
+import TextAreaField from './form/fields/TextAreaField';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
@@ -72,18 +74,22 @@ export default function FeedbackWidget() {
           <input type="hidden" name="subject" value="Quick feedback from logicainfoway.com" />
           <input type="checkbox" name="botcheck" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
 
-          <input
+          <TextField
+            label="Email"
             type="email"
             name="email"
+            id="feedback-email"
             placeholder="Your email (optional)"
-            className="font-inter h-11 w-full rounded-md border border-black/10 bg-[#ECEDEC] px-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
+            compact
           />
-          <textarea
+          <TextAreaField
+            label="Feedback"
             name="message"
+            id="feedback-message"
             rows={3}
             required
             placeholder="Your feedback..."
-            className="font-inter w-full rounded-md border border-black/10 bg-[#ECEDEC] px-3 py-2 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/40"
+            compact
           />
           <button
             type="submit"
