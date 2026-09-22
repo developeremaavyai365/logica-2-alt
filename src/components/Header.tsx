@@ -182,7 +182,10 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setAccountMenuOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 bg-white text-sm font-semibold text-[#000000] transition-colors hover:bg-black/5"
+              className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 ${
+                accountMenuOpen ? 'ring-2 ring-black ring-offset-2' : ''
+              }`}
+              style={{ background: 'linear-gradient(135deg, #15803D 0%, #000000 100%)' }}
               aria-label="Account menu"
               aria-expanded={accountMenuOpen}
             >
@@ -191,35 +194,52 @@ export default function Header() {
             {accountMenuOpen && (
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setAccountMenuOpen(false)} />
-                <div className="absolute right-0 top-full z-40 mt-2 w-56 rounded-2xl border border-[#000000]/10 bg-white p-2 shadow-xl">
-                  <div className="px-3 py-2 border-b border-[#000000]/10 mb-1">
-                    <p className="text-sm font-semibold text-[#000000] truncate">{user.name || 'My Account'}</p>
-                    {user.email && <p className="text-xs text-[#6b6b6b] truncate">{user.email}</p>}
+                <div className="animate-fade-up absolute right-0 top-full z-40 mt-3 w-64 overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)]">
+                  <div className="flex items-center gap-3 bg-[#ECEDEC] px-4 py-4">
+                    <span
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-semibold text-white"
+                      style={{ background: 'linear-gradient(135deg, #15803D 0%, #000000 100%)' }}
+                    >
+                      {(user.name || user.email || '?').slice(0, 1).toUpperCase()}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-black">{user.name || 'My Account'}</p>
+                      {user.email && <p className="truncate text-xs text-[#6b6b6b]">{user.email}</p>}
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setAccountMenuOpen(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#000000] hover:bg-[#ECEDEC] transition-colors"
-                  >
-                    <User className="w-4 h-4" />
-                    Profile
-                  </button>
-                  <Link
-                    to="/cart"
-                    onClick={() => setAccountMenuOpen(false)}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#000000] hover:bg-[#ECEDEC] transition-colors"
-                  >
-                    <Package className="w-4 h-4" />
-                    Orders
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={handleSignOut}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Logout
-                  </button>
+                  <div className="p-2">
+                    <button
+                      type="button"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-black transition-colors hover:bg-[#ECEDEC]"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black transition-colors group-hover:bg-white">
+                        <User className="h-4 w-4" />
+                      </span>
+                      Profile
+                    </button>
+                    <Link
+                      to="/cart"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-black transition-colors hover:bg-[#ECEDEC]"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black transition-colors group-hover:bg-white">
+                        <Package className="h-4 w-4" />
+                      </span>
+                      Orders
+                    </Link>
+                    <div className="my-1.5 h-px bg-black/10" />
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600 transition-colors group-hover:bg-white">
+                        <LogOut className="h-4 w-4" />
+                      </span>
+                      Logout
+                    </button>
+                  </div>
                 </div>
               </>
             )}
