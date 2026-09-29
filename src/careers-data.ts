@@ -1,38 +1,63 @@
-/** A single open role. `id` is used as the React key and as the expand
- *  target on the open roles page — keep it stable (a slug like
- *  `retail-associate-kolkata`) rather than regenerating it, since a link to
- *  a specific role should keep working as long as the role is still listed.
+/** A single open role. `id` is the URL slug for its detail page
+ *  (/careers/open-roles/:id) — keep it stable, since a shared link to a
+ *  role should keep working as long as the role is listed.
  *
- *  To add a real opening: add one object to `jobPostings` below. Nothing
- *  else needs to change — the search box, the location filter, the sort and
- *  the pagination on /careers/open-roles all read from this array. Removing
- *  a role is the same in reverse: delete its object. */
+ *  To add a real opening: add one object to `jobPostings` below. The open
+ *  roles list, its search/filter, and the detail page all read from this
+ *  array. Removing a role is the same in reverse: delete its object. */
 export type JobPosting = {
   id: string;
   title: string;
-  /** Which of the four verticals or a support function. */
+  /** Team / function, e.g. "Channel Sales". */
   department: string;
   location: string;
-  /** 'Full-time' | 'Internship' | 'Contract' — free text, kept short since
-   *  it renders as a small tag. */
+  /** 'Full-time' | 'Internship' | 'Contract' — kept short, renders as a tag. */
   employmentType: string;
-  /** ISO date (YYYY-MM-DD) the role was posted. */
+  /** ISO date (YYYY-MM-DD) the role was listed on the site. */
   postedOn: string;
+  reportingTo?: string;
   summary: string;
   responsibilities: string[];
   requirements: string[];
+  education?: string;
 };
 
-/** No roles are open right now — this is the honest current state, not a
- *  placeholder waiting to be filled with fabricated postings. The open
- *  roles page still renders its search bar and table with this empty, and
- *  shows a plain "no roles match" row rather than hiding the page. */
-export const jobPostings: JobPosting[] = [];
+export const jobPostings: JobPosting[] = [
+  {
+    id: 'area-sales-manager-delhi-ncr',
+    title: 'Area Sales Manager',
+    department: 'Channel Sales',
+    location: 'Delhi & NCR',
+    employmentType: 'Full-time',
+    postedOn: '2026-09-29',
+    reportingTo: 'Sales Head',
+    summary:
+      'Logica Infoway Ltd. is looking for a result-oriented Area Sales Manager to drive Samsung Laptop sales across Delhi & NCR. The role will focus on expanding the retail and channel network, onboarding new retailers, driving sell-out, maintaining product visibility and developing strong relationships with channel partners.',
+    responsibilities: [
+      'Manage and develop relationships with existing retailers, dealers and channel partners across the assigned territory.',
+      'Identify, approach and onboard new retailers/channel partners for Samsung Laptop products.',
+      'Drive sell-in and sell-out of laptops through the assigned retail network.',
+      'Develop relationships with LFRs and key retail outlets and ensure effective product placement and sales.',
+      'Present product features, pricing, schemes, promotions and commercial offers to retailers.',
+      'Ensure adequate stock availability, product visibility and merchandising at retail outlets.',
+      'Regularly visit retailers and monitor sales, stock movement, orders and market demand.',
+      'Achieve assigned sales, revenue, distribution and retailer onboarding targets.',
+      'Track competitor pricing, schemes, products and market activities and provide regular market feedback.',
+      'Identify new business opportunities and expand the retailer/dealer network.',
+      'Coordinate with the internal sales, distribution and operations teams for orders, stock availability, schemes and partner support.',
+      'Ensure timely follow-up on outstanding orders, payments and other channel-related requirements.',
+      'Maintain regular daily/weekly sales and market visit reports.',
+    ],
+    requirements: [
+      '1–4 years of experience in channel sales, retail sales or distribution sales.',
+      'Experience in laptops, IT hardware, consumer electronics or similar products preferred.',
+      'Experience handling retailers, dealers, distributors, LFRs or channel partners.',
+      'Good knowledge of the Delhi & NCR retail/channel market.',
+    ],
+    education: 'Graduate degree / MBA.',
+  },
+];
 
-/** Cities to offer in the location filter regardless of whether a posting
- *  exists there yet — otherwise the dropdown has nothing to show while
- *  `jobPostings` is empty, since it would have nowhere else to read a
- *  location from. OpenRoles.tsx merges this with whatever locations show up
- *  in real postings, so a future role in a city not listed here still gets
- *  picked up automatically rather than needing this list kept in sync. */
-export const HIRING_LOCATIONS = ['Kolkata', 'Delhi'];
+/** Cities offered in the location filter even before a posting exists
+ *  there. OpenRoles.tsx merges this with the locations real postings carry. */
+export const HIRING_LOCATIONS = ['Kolkata', 'Delhi & NCR'];

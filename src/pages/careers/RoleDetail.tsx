@@ -1,26 +1,39 @@
-import { type CSSProperties } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { MapPin, Briefcase, ArrowRight } from 'lucide-react';
+import { CalendarDays, ChevronLeft, MapPin, UserRound, Briefcase } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import WavePanel, { CAREERS_BLUE, CAREERS_NAVY } from '../../components/careers/WavePanel';
 import { jobPostings } from '../../careers-data';
 
-const LIQUID_GREEN = { '--liquid': '#15803D', '--liquid-ink': '#ffffff' } as CSSProperties;
-
-function formatDate(iso: string) {
-  const d = new Date(iso + 'T00:00:00');
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="mt-12 first:mt-0">
+      <h2
+        className="font-dm-sans font-bold"
+        style={{ color: CAREERS_NAVY, fontSize: 'clamp(24px, 2.6vw, 36px)', letterSpacing: '-0.02em' }}
+      >
+        {title}
+      </h2>
+      <div className="mt-5 pl-1 sm:pl-5">{children}</div>
+    </section>
+  );
 }
 
-/** One role, at its own URL rather than an expand-in-place panel — so a
- *  role can be linked to directly (shared, bookmarked, come back to) and so
- *  "Apply" has somewhere real to send the applicant with the role already
- *  attached, via the `role` query param the Apply form already reads.
- *
- *  A job.id that doesn't match anything — a stale link, or a role that's
- *  been taken down since — redirects to Open Roles rather than rendering a
- *  blank page; the list is exactly what's still current. */
+function Lines({ items }: { items: string[] }) {
+  return (
+    <ul className="space-y-4">
+      {items.map((item) => (
+        <li key={item} className="text-base leading-relaxed text-[#6B7280] sm:text-[17px]">
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** One role at its own URL. A job id that doesn't match anything — a stale
+ *  link, or a role taken down since — goes back to the list instead of a
+ *  blank page. */
 export default function RoleDetail() {
   const { id } = useParams<{ id: string }>();
   const job = jobPostings.find((j) => j.id === id);
@@ -29,83 +42,113 @@ export default function RoleDetail() {
 
   const applyHref = `/careers/apply?role=${encodeURIComponent(job.title)}`;
 
+  const facts = [
+    { icon: CalendarDays, text: job.employmentType },
+    { icon: MapPin, text: job.location },
+    { icon: Briefcase, text: job.department },
+    ...(job.reportingTo ? [{ icon: UserRound, text: `Reports to ${job.reportingTo}` }] : []),
+  ];
+
   return (
-    <div className="w-full bg-[#ECEDEC]">
-      <Header />
+    <div className="w-full bg-[#F5F8FC]">
+      <div className="bg-white">
+        <Header />
+      </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16">
-        <Link
-          to="/careers/open-roles"
-          className="text-xs font-medium text-[#6b6b6b] hover:text-[#000000] transition-colors"
-        >
-          &larr; Open Roles
-        </Link>
-
-        <div className="mt-4 rounded-3xl border border-[#000000]/10 bg-white p-6 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.3)] sm:p-10">
-          <h1
-            className="font-dm-sans font-bold text-[#000000]"
-            style={{ fontSize: 'clamp(24px, 3vw, 34px)', letterSpacing: '-0.02em', lineHeight: 1.15 }}
-          >
-            {job.title}
-          </h1>
-
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-[#6b6b6b]">
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin className="h-4 w-4" /> {job.location}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Briefcase className="h-4 w-4" /> {job.department}
-            </span>
-            <span className="rounded-full bg-[#ECEDEC] px-2.5 py-1 text-xs font-medium text-[#000000]">
-              {job.employmentType}
-            </span>
-            <span className="text-xs">Posted {formatDate(job.postedOn)}</span>
+      {/* Hero */}
+      <div className="bg-white px-4 pb-10 sm:px-6 md:px-5">
+        <WavePanel className="mx-auto max-w-[1300px]">
+          <div className="flex min-h-[360px] flex-col items-center px-6 pb-16 pt-10 text-center sm:min-h-[440px]">
+            <Link
+              to="/careers/open-roles"
+              className="inline-flex items-center gap-1 text-lg text-white transition-opacity hover:opacity-80"
+            >
+              <ChevronLeft className="h-5 w-5" /> Careers
+            </Link>
+            <div className="flex flex-1 flex-col items-center justify-center">
+              <h1
+                className="font-dm-sans font-bold text-white"
+                style={{ fontSize: 'clamp(36px, 6vw, 80px)', letterSpacing: '-0.02em', lineHeight: 1.05 }}
+              >
+                {job.title}
+              </h1>
+              <p className="mt-4 text-base text-white/70 sm:text-lg">
+                {job.department} · {job.location}
+              </p>
+            </div>
           </div>
+        </WavePanel>
+      </div>
 
-          <p className="mt-6 text-sm text-[#6b6b6b] leading-relaxed sm:text-base">{job.summary}</p>
+      {/* Body + side card */}
+      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_380px] lg:gap-16 md:px-10">
+        <div className="min-w-0">
+          <Section title="Role Overview">
+            <p className="text-base leading-relaxed text-[#6B7280] sm:text-[17px]">{job.summary}</p>
+          </Section>
 
           {job.responsibilities.length > 0 && (
-            <div className="mt-6">
-              <h2 className="text-xs font-semibold uppercase tracking-wide text-[#000000]">What you'll do</h2>
-              <ul className="mt-3 space-y-2">
-                {job.responsibilities.map((item) => (
-                  <li
-                    key={item}
-                    className="text-sm text-[#6b6b6b] leading-relaxed pl-4 relative before:content-['—'] before:absolute before:left-0 before:text-[#000000]/40 sm:text-base"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <Section title="Key Responsibilities">
+              <Lines items={job.responsibilities} />
+            </Section>
           )}
 
           {job.requirements.length > 0 && (
-            <div className="mt-6">
-              <h2 className="text-xs font-semibold uppercase tracking-wide text-[#000000]">
-                What we're looking for
-              </h2>
-              <ul className="mt-3 space-y-2">
-                {job.requirements.map((item) => (
-                  <li
-                    key={item}
-                    className="text-sm text-[#6b6b6b] leading-relaxed pl-4 relative before:content-['—'] before:absolute before:left-0 before:text-[#000000]/40 sm:text-base"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <Section title="Desired Candidate Profile">
+              <Lines items={job.requirements} />
+            </Section>
           )}
 
-          <Link
-            to={applyHref}
-            style={LIQUID_GREEN}
-            className="btn-liquid inline-flex items-center gap-2 mt-8 border-2 border-[#15803D] text-[#15803D] text-sm font-semibold px-7 py-3.5 rounded-full transition-colors"
-          >
-            Apply for this role <ArrowRight className="h-4 w-4" />
-          </Link>
+          {job.education && (
+            <Section title="Education">
+              <p className="text-base leading-relaxed text-[#6B7280] sm:text-[17px]">{job.education}</p>
+            </Section>
+          )}
         </div>
+
+        <aside className="lg:sticky lg:top-28 lg:self-start">
+          <div className="rounded-2xl border border-[#E5E7EB] bg-white p-8 shadow-[0_10px_30px_-12px_rgba(6,26,64,0.15)]">
+            <ul className="space-y-6">
+              {facts.map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-center gap-3 text-lg" style={{ color: CAREERS_NAVY }}>
+                  <Icon className="h-5 w-5 shrink-0" style={{ color: CAREERS_BLUE }} />
+                  {text}
+                </li>
+              ))}
+            </ul>
+            <Link
+              to={applyHref}
+              className="mt-8 flex h-12 w-full items-center justify-center rounded-md text-base font-medium text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: CAREERS_BLUE }}
+            >
+              Apply now
+            </Link>
+          </div>
+        </aside>
+      </div>
+
+      {/* Closing call-to-action */}
+      <div className="px-4 pb-20 sm:px-6 md:px-10">
+        <WavePanel className="mx-auto max-w-[1200px]">
+          <div className="flex flex-col items-center px-6 py-16 text-center sm:py-20">
+            <h2
+              className="font-dm-sans font-bold text-white"
+              style={{ fontSize: 'clamp(28px, 4vw, 52px)', letterSpacing: '-0.02em' }}
+            >
+              Grow Your Career With Us
+            </h2>
+            <p className="mt-4 max-w-md text-base text-white/85 sm:text-lg">
+              Think you&rsquo;re the right fit? Send us your application and our team will get in touch.
+            </p>
+            <Link
+              to={applyHref}
+              className="mt-8 inline-flex h-12 items-center justify-center rounded-md px-7 text-base font-medium text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: CAREERS_BLUE }}
+            >
+              Apply now
+            </Link>
+          </div>
+        </WavePanel>
       </div>
 
       <Footer />

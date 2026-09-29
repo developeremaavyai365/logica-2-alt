@@ -1,29 +1,17 @@
-import { useMemo, useState, type CSSProperties } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ChevronLeft, ChevronRight, ArrowUpDown, Mail } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Mail } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Select from '../../components/form/fields/Select';
+import { CAREERS_BLUE, CAREERS_NAVY } from '../../components/careers/WavePanel';
 import { jobPostings, HIRING_LOCATIONS } from '../../careers-data';
 
 const PAGE_SIZE = 20;
 
-// The section's own accent for .btn-liquid — green fill, white text once
-// filled — rather than the black the rest of the site's buttons default to,
-// matching the green "Our Vision" / "Why Work With Us" treatment already
-// established on the Careers page.
-const LIQUID_GREEN = { '--liquid': '#15803D', '--liquid-ink': '#ffffff' } as CSSProperties;
-
-function formatDate(iso: string) {
-  const d = new Date(iso + 'T00:00:00');
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
 export default function OpenRoles() {
   const [query, setQuery] = useState('');
   const [location, setLocation] = useState('all');
-  const [sortDir, setSortDir] = useState<'desc' | 'asc'>('desc');
   const [page, setPage] = useState(1);
 
   // HIRING_LOCATIONS keeps the filter populated before any posting exists;
@@ -45,11 +33,9 @@ export default function OpenRoles() {
           j.department.toLowerCase().includes(q) ||
           j.location.toLowerCase().includes(q),
       );
-    rows.sort((a, b) =>
-      sortDir === 'desc' ? b.postedOn.localeCompare(a.postedOn) : a.postedOn.localeCompare(b.postedOn),
-    );
+    rows.sort((a, b) => b.postedOn.localeCompare(a.postedOn));
     return rows;
-  }, [query, location, sortDir]);
+  }, [query, location]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
@@ -67,95 +53,82 @@ export default function OpenRoles() {
   }
 
   return (
-    <div className="w-full bg-[#ECEDEC]">
+    <div className="w-full bg-white">
       <Header />
 
-      <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-8">
+      <div className="mx-auto max-w-3xl px-4 pb-10 pt-12 text-center sm:px-6 md:px-10">
+        <span className="text-sm font-medium uppercase tracking-wide" style={{ color: CAREERS_BLUE }}>
+          Openings
+        </span>
         <h1
-          className="font-dm-sans font-bold text-[#000000]"
-          style={{ fontSize: 'clamp(26px, 3.2vw, 40px)', letterSpacing: '-0.02em', lineHeight: 1.1 }}
+          className="font-dm-sans mt-3 font-bold"
+          style={{ color: CAREERS_NAVY, fontSize: 'clamp(32px, 4.5vw, 56px)', letterSpacing: '-0.02em', lineHeight: 1.1 }}
         >
-          Open Roles
+          Join Our Growing Team
         </h1>
+        <p className="mt-5 text-base leading-relaxed text-[#6B7280] sm:text-lg">
+          We&rsquo;re building the teams behind three decades of retail, distribution and technology across India.
+          Explore our open positions and find where you fit.
+        </p>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-10 pb-16 sm:pb-20">
-        {/* Search + location filter, both built rather than the browser's
-            own controls — the search field gets the section's green focus
-            ring instead of a generic grey one, and the location filter is
-            the custom Select rather than a native <select>, whose dropdown
-            panel can't be styled at all in most browsers. */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      <div className="mx-auto max-w-[1200px] px-4 pb-16 sm:px-6 sm:pb-20 md:px-10">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6b6b6b]/60" />
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b6b6b]/60" />
             <input
               type="text"
               value={query}
               onChange={(e) => updateQuery(e.target.value)}
               placeholder="Search by role, department or location..."
-              className="h-[52px] w-full rounded-xl border-2 border-[#000000]/10 bg-white pl-11 pr-4 text-sm text-[#000000] outline-none transition-colors placeholder:text-[#6b6b6b]/50 focus:border-[#15803D]"
+              className="h-[52px] w-full rounded-xl border border-[#E5E7EB] bg-[#F5F8FC] pl-11 pr-4 text-sm text-[#000000] outline-none transition-colors placeholder:text-[#6b6b6b]/50 focus:border-[#3D4FE0]"
             />
           </div>
-          <Select
-            value={location}
-            onChange={updateLocation}
-            options={locationOptions}
-            className="sm:w-56"
-            accent="#15803D"
-          />
+          <Select value={location} onChange={updateLocation} options={locationOptions} className="sm:w-56" accent={CAREERS_BLUE} />
         </div>
 
-        <p className="text-xs text-[#6b6b6b] mb-3">
-          {filtered.length === 0
-            ? 'Results 0 of 0'
-            : `Results ${rangeStart}–${rangeEnd} of ${filtered.length}`}
+        <p className="mb-4 text-xs text-[#6b6b6b]">
+          {filtered.length === 0 ? 'Results 0 of 0' : `Results ${rangeStart}–${rangeEnd} of ${filtered.length}`}
         </p>
 
-        {/* Results list. Title | Location | Date, the same three columns
-            the reference board leads with; Date is the one sortable column,
-            since it's the one a returning visitor actually re-sorts by. */}
-        <div className="rounded-2xl border border-[#000000]/10 bg-white overflow-hidden shadow-[0_20px_50px_-30px_rgba(0,0,0,0.3)]">
-          <div className="hidden sm:grid grid-cols-[1fr_180px_160px] gap-4 px-6 py-3.5 border-b border-[#000000]/10 bg-[#ECEDEC]/60 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-            <span>Title</span>
-            <span>Location</span>
-            <button
-              type="button"
-              onClick={() => setSortDir(sortDir === 'desc' ? 'asc' : 'desc')}
-              className="flex items-center gap-1 text-left transition-colors hover:text-[#15803D]"
+        {pageRows.length === 0 ? (
+          <div className="rounded-xl border border-[#E5E7EB] bg-[#F5F8FC] px-6 py-12 text-center">
+            <p className="text-sm text-[#6b6b6b]">
+              {jobPostings.length === 0
+                ? "We don't have any open roles listed right now. Send your resume and we'll reach out when something opens up that fits."
+                : 'No roles match your search. Try a different keyword or clear the filters.'}
+            </p>
+            <Link
+              to="/careers/apply"
+              className="mt-6 inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: CAREERS_BLUE }}
             >
-              Date <ArrowUpDown className="h-3 w-3" />
-            </button>
+              <Mail className="h-4 w-4" /> Email your resume
+            </Link>
           </div>
-
-          {pageRows.length === 0 ? (
-            <div className="px-6 py-12 text-center">
-              <p className="text-sm text-[#6b6b6b]">
-                {jobPostings.length === 0
-                  ? "We don't have any open roles listed right now. Send your resume and we'll reach out when something opens up that fits."
-                  : 'No roles match your search. Try a different keyword or clear the filters.'}
-              </p>
-              <Link
-                to="/careers/apply"
-                style={LIQUID_GREEN}
-                className="btn-liquid inline-flex items-center gap-2 mt-6 border-2 border-[#15803D] text-[#15803D] text-sm font-semibold px-6 py-3 rounded-full transition-colors"
-              >
-                <Mail className="w-4 h-4" /> Email your resume
-              </Link>
-            </div>
-          ) : (
-            pageRows.map((job) => (
+        ) : (
+          <div className="space-y-4">
+            {pageRows.map((job) => (
               <Link
                 key={job.id}
                 to={`/careers/open-roles/${job.id}`}
-                className="block border-b border-[#000000]/10 last:border-0 grid grid-cols-1 sm:grid-cols-[1fr_180px_160px] gap-1 sm:gap-4 px-6 py-4 transition-colors hover:bg-[#15803D]/5"
+                className="grid grid-cols-1 items-center gap-3 rounded-xl border border-[#E5E7EB] bg-[#F5F8FC] px-6 py-6 transition-colors hover:border-[#3D4FE0]/40 sm:grid-cols-[1fr_200px_200px_auto] sm:gap-6 sm:px-9 sm:py-8"
               >
-                <span className="text-sm font-semibold text-[#000000]">{job.title}</span>
-                <span className="text-sm text-[#6b6b6b]">{job.location}</span>
-                <span className="text-sm text-[#6b6b6b]">{formatDate(job.postedOn)}</span>
+                <span className="font-dm-sans text-xl font-bold sm:text-2xl" style={{ color: CAREERS_NAVY }}>
+                  {job.title}
+                </span>
+                <span className="text-base text-[#6B7280] sm:text-lg">{job.location}</span>
+                <span className="text-base text-[#6B7280] sm:text-lg">{job.employmentType}</span>
+                <span
+                  className="inline-flex h-12 w-full items-center justify-center rounded-md px-7 text-base font-medium text-white sm:w-auto"
+                  style={{ backgroundColor: CAREERS_BLUE }}
+                >
+                  Apply now
+                </span>
               </Link>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Pagination — wired for real even though there's nothing to page
             through yet, so it doesn't need rebuilding once roles exist. */}
@@ -165,7 +138,7 @@ export default function OpenRoles() {
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#000000]/10 text-[#000000] disabled:opacity-30 transition-colors hover:border-[#15803D] hover:text-[#15803D]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#000000]/10 text-[#000000] disabled:opacity-30 transition-colors hover:border-[#3D4FE0] hover:text-[#3D4FE0]"
               aria-label="Previous page"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -177,7 +150,7 @@ export default function OpenRoles() {
               type="button"
               onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
               disabled={currentPage === pageCount}
-              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#000000]/10 text-[#000000] disabled:opacity-30 transition-colors hover:border-[#15803D] hover:text-[#15803D]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#000000]/10 text-[#000000] disabled:opacity-30 transition-colors hover:border-[#3D4FE0] hover:text-[#3D4FE0]"
               aria-label="Next page"
             >
               <ChevronRight className="h-4 w-4" />

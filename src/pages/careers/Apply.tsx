@@ -10,8 +10,8 @@ import { readCsrfToken } from '../../lib/csrf';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
-const GREEN = '#15803D';
-const LIQUID_GREEN = { '--liquid': GREEN, '--liquid-ink': '#ffffff' } as CSSProperties;
+const ACCENT = '#3D4FE0';
+const LIQUID_ACCENT = { '--liquid': ACCENT, '--liquid-ink': '#ffffff' } as CSSProperties;
 
 const API_URL = import.meta.env.VITE_API_URL as string | undefined;
 
@@ -127,7 +127,7 @@ export default function Apply() {
               id="name"
               placeholder="Your full name"
               required
-              accent={GREEN}
+              accent={ACCENT}
             />
 
             <TextField
@@ -137,7 +137,7 @@ export default function Apply() {
               id="email"
               placeholder="you@example.com"
               required
-              accent={GREEN}
+              accent={ACCENT}
             />
 
             <TextField
@@ -147,7 +147,7 @@ export default function Apply() {
               id="phone"
               placeholder="+91 XXXXX XXXXX"
               required
-              accent={GREEN}
+              accent={ACCENT}
             />
 
             <TextField
@@ -157,7 +157,7 @@ export default function Apply() {
               id="role"
               defaultValue={roleParam}
               placeholder="e.g. Retail Associate, or leave blank if general"
-              accent={GREEN}
+              accent={ACCENT}
             />
 
             <FileField
@@ -167,7 +167,7 @@ export default function Apply() {
               accept=".pdf,.doc,.docx"
               required
               hint="PDF, DOC or DOCX"
-              accent={GREEN}
+              accent={ACCENT}
               ctaText="Click to upload your resume"
             />
 
@@ -175,7 +175,7 @@ export default function Apply() {
               label="Anything else you'd like us to know?"
               name="message"
               id="message"
-              accent={GREEN}
+              accent={ACCENT}
               rows={4}
               placeholder="Optional"
             />
@@ -183,8 +183,8 @@ export default function Apply() {
             <button
               type="submit"
               disabled={status === 'sending'}
-              style={LIQUID_GREEN}
-              className="btn-liquid inline-flex h-14 w-full items-center justify-center gap-2 rounded-full border-2 border-[#15803D] text-sm font-semibold text-[#15803D] transition-colors disabled:opacity-60"
+              style={LIQUID_ACCENT}
+              className="btn-liquid inline-flex h-14 w-full items-center justify-center gap-2 rounded-full border-2 border-[#3D4FE0] text-sm font-semibold text-[#3D4FE0] transition-colors disabled:opacity-60"
             >
               <Mail className="h-4 w-4" /> {status === 'sending' ? 'Sending…' : 'Submit Application'}
             </button>
