@@ -395,6 +395,14 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
  *  dead-link "period folder" list now that we have the actual filed
  *  documents. */
 export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
+  // 31st AGM notice — the same file listed under Corporate Announcements
+  // (one of the two identical BSE uploads there), cross-listed here.
+  {
+    title: "Notice of the 31st Annual General Meeting",
+    year: "2026-27",
+    date: "2026-09-08",
+    url: "/investor/compliance-disclosures/notice-of-31st-annual-general-meeting-08-09-2026.pdf",
+  },
   {
     // Regulation 34(1) submission carrying the 29th AGM notice and the
     // FY2023-24 annual report.
