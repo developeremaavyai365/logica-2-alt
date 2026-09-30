@@ -1077,18 +1077,17 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  documents (Regulation 30/57/74 disclosures, trading-window closures,
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
-  /* The five BSE announcements of 08.09.2026 covering the 31st AGM, titled
+  /* The BSE announcements of 08.09.2026 covering the 31st AGM, titled
      verbatim as the exchange lists them — including the capitalisation and
      the trailing full stop on the Reg. 34 (1) row. They are not rewritten to
      house style precisely so that anyone comparing this page against the BSE
      filing sees the same words.
 
-     Two of them are separate announcements carrying the same attachment, and
-     the Reg. 34 (1) submission carries it a third time: one sha256,
-     1f06407c25f41053, across all three files. That is the exchange's own
-     doing rather than an error here. The file is hosted three times rather
-     than three rows sharing a URL because DocRows keys on doc.url — identical
-     keys collapse into a single row, and only one would appear.
+     BSE carried the AGM notice as two separate announcements with the same
+     attachment; only one is listed here, since the second was an exact
+     duplicate. The Reg. 34 (1) submission carries the same file again
+     (sha256 1f06407c25f41053), hosted as its own file because DocRows keys
+     on doc.url — rows sharing a URL would collapse into one.
 
      Each filename matches the announcement it is listed under, so the
      document a reader downloads is named for the row they clicked.
@@ -1107,12 +1106,6 @@ export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
     year: "2026-27",
     date: "2026-09-08",
     url: "/investor/compliance-disclosures/notice-of-31st-annual-general-meeting-08-09-2026.pdf",
-  },
-  {
-    title: "Notice Of 31St Annual General Meeting",
-    year: "2026-27",
-    date: "2026-09-08",
-    url: "/investor/compliance-disclosures/notice-of-31st-annual-general-meeting-08-09-2026-2.pdf",
   },
   {
     title: "Reg. 34 (1) Annual Report.",
