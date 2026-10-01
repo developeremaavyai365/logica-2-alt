@@ -395,6 +395,20 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
  *  dead-link "period folder" list now that we have the actual filed
  *  documents. */
 export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
+  // 31st AGM (held 30.09.2026): voting results and proceedings — the same
+  // files listed under Corporate Announcements, cross-listed here.
+  {
+    title: "Disclosure of Voting Results and Consolidated Scrutinizer's Report of the 31st AGM",
+    year: "2026-27",
+    date: "2026-10-01",
+    url: "/investor/compliance-disclosures/voting-results-and-scrutinizers-report-of-31st-agm-01-10-2026.pdf",
+  },
+  {
+    title: "Proceedings of the 31st Annual General Meeting for F.Y. 2025-26",
+    year: "2026-27",
+    date: "2026-09-30",
+    url: "/investor/compliance-disclosures/proceedings-of-31st-annual-general-meeting-30-09-2026.pdf",
+  },
   // 31st AGM notice — the same file listed under Corporate Announcements
   // (one of the two identical BSE uploads there), cross-listed here.
   {
@@ -1077,6 +1091,28 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  documents (Regulation 30/57/74 disclosures, trading-window closures,
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
+  /* Filings around the 31st AGM of 30.09.2026, titled from the subject line
+     of each letter to BSE. The proceedings and the voting results are
+     cross-listed under General Meeting; the trading-window closure is only
+     here. `date` is the date on each letter. */
+  {
+    title: "Voting Results and Scrutinizer's Report — 31st AGM (Regulation 44)",
+    year: "2026-27",
+    date: "2026-10-01",
+    url: "/investor/compliance-disclosures/voting-results-and-scrutinizers-report-of-31st-agm-01-10-2026.pdf",
+  },
+  {
+    title: "Proceedings of the 31st Annual General Meeting for F.Y. 2025-26",
+    year: "2026-27",
+    date: "2026-09-30",
+    url: "/investor/compliance-disclosures/proceedings-of-31st-annual-general-meeting-30-09-2026.pdf",
+  },
+  {
+    title: "Intimation of Closure of Trading Window — Half Year Ended September 30, 2026",
+    year: "2026-27",
+    date: "2026-09-28",
+    url: "/investor/compliance-disclosures/intimation-of-closure-of-trading-window-28-09-2026.pdf",
+  },
   /* The BSE announcements of 08.09.2026 covering the 31st AGM, titled
      verbatim as the exchange lists them — including the capitalisation and
      the trailing full stop on the Reg. 34 (1) row. They are not rewritten to
