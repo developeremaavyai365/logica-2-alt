@@ -1,12 +1,14 @@
-import { useMemo, useState, type ReactNode } from 'react';
-import { ChevronDown, Minus, Plus, Search } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
+import { ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { formatINR } from '../../data';
 import { PriceRangeSlider } from './PriceRangeSlider';
-import type { FacetGroup } from '../../shop-facets';
+import BrandLogoFilter from './BrandLogoFilter';
+import DiscountFilter from './DiscountFilter';
 
 export interface FilterSelection {
-  attrs: Record<string, string[]>;
   brands: string[];
   price: [number, number];
+  disc: number | undefined;
 }
 
 interface CountedOption {
@@ -15,205 +17,151 @@ interface CountedOption {
 }
 
 export interface FilterSidebarProps {
-  facets: FacetGroup[];
   brands: CountedOption[];
-  colors: CountedOption[];
   priceMin: number;
   priceMax: number;
-  priceStep: number;
   priceValue: [number, number];
   onPriceChange: (next: [number, number]) => void;
+  discCounts: Map<number, number>;
+  discMaxAvailable: number;
   selected: FilterSelection;
-  onToggle: (type: 'attr' | 'brand', group: string, value: string) => void;
+  onToggleBrand: (brand: string) => void;
+  onClearBrands: () => void;
+  onDiscChange: (next: number | undefined) => void;
   onClear: () => void;
   accent: string;
   activeCount: number;
+  /** true inside the mobile bottom sheet — expands the brand panel inline
+   *  instead of behind a popover trigger. */
+  inline?: boolean;
 }
 
-function Section({ title, defaultOpen = false, children }: { title: string; defaultOpen?: boolean; children: ReactNode }) {
-  const [open, setOpen] = useState(defaultOpen);
+/** One filter as its own module: a header row (name, what is currently
+ *  chosen, a chevron to fold it away) over the control itself, divided from
+ *  its neighbours by a hairline. The current value sits in the header so a
+ *  folded module still says what it is filtering by. */
+function FilterModule({
+  title,
+  summary,
+  active,
+  pad,
+  children,
+}: {
+  title: string;
+  summary: string;
+  /** true when this filter is narrowing the results — tints the summary. */
+  active: boolean;
+  pad: string;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(true);
+
   return (
-    <div className="border-b border-[#000000]/10">
+    <section className="border-t border-shop-line">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between py-3.5 text-left"
+        aria-expanded={open}
+        className={`flex w-full items-center justify-between gap-3 py-3 text-left outline-none shop-focus-ring ${pad}`}
       >
-        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#000000]/80">{title}</span>
-        {open ? <Minus className="h-3.5 w-3.5 text-[#6b6b6b]/60" /> : <Plus className="h-3.5 w-3.5 text-[#6b6b6b]/60" />}
+        <span className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-shop-ink">{title}</span>
+        <span className="flex min-w-0 items-center gap-2">
+          <span
+            className={`truncate font-mono text-[11px] tabular-nums ${active ? 'font-semibold text-shop-accent' : 'text-shop-ink/45'}`}
+          >
+            {summary}
+          </span>
+          <ChevronDown
+            className={`h-4 w-4 shrink-0 text-shop-ink/40 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          />
+        </span>
       </button>
-      {open && <div className="pb-4 pr-1">{children}</div>}
-    </div>
-  );
-}
-
-function CheckRow({
-  label,
-  count,
-  checked,
-  accent,
-  swatch,
-  onChange,
-}: {
-  label: string;
-  count?: number;
-  checked: boolean;
-  accent: string;
-  swatch?: string;
-  onChange: () => void;
-}) {
-  return (
-    <button type="button" onClick={onChange} className="group flex w-full items-center gap-2.5 rounded-md py-1.5 text-left">
-      <span
-        className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
-          checked ? 'border-transparent' : 'border-[#000000]/25 group-hover:border-[#000000]/50'
-        }`}
-        style={checked ? { backgroundColor: accent } : undefined}
-      >
-        {checked && (
-          <svg viewBox="0 0 12 12" className="h-3 w-3 text-white" fill="none">
-            <path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        )}
-      </span>
-      {swatch && <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-[#000000]/15" style={{ background: swatch }} />}
-      <span className={`flex-1 text-sm transition-colors ${checked ? 'text-[#000000]' : 'text-[#6b6b6b] group-hover:text-[#000000]'}`}>
-        {label}
-      </span>
-      {count !== undefined && <span className="text-xs text-[#6b6b6b]/40">{count}</span>}
-    </button>
-  );
-}
-
-/** Best-effort CSS color from a marketing colour name, for the swatch dot. */
-function swatchFor(name: string): string | undefined {
-  const n = name.toLowerCase();
-  const map: [string, string][] = [
-    ['gold', '#d4af37'], ['silver', '#c0c4c9'], ['graphite', '#3a3a3c'], ['grey', '#8e8e93'],
-    ['gray', '#8e8e93'], ['black', '#1c1c1e'], ['white', '#f2f2f7'], ['cream', '#f5f0e1'],
-    ['beige', '#e8dcc4'], ['red', '#d0342c'], ['burgundy', '#800020'], ['rose', '#e0989a'],
-    ['pink', '#ff6fa5'], ['orange', '#ff8c42'], ['amber', '#ffbf00'], ['yellow', '#ffd60a'],
-    ['lime', '#b9e769'], ['mint', '#87e0c0'], ['teal', '#2aa198'], ['emerald', '#2ecc71'],
-    ['forest', '#228b22'], ['olive', '#808000'], ['green', '#34c759'], ['aqua', '#4fd1c5'],
-    ['navy', '#1b2a4a'], ['cobalt', '#1f47a3'], ['ultramarine', '#3f5fff'], ['sky', '#7dd3fc'],
-    ['blue', '#3b82f6'], ['violet', '#8b5cf6'], ['purple', '#7c3aed'], ['lavendar', '#c4b5fd'],
-    ['lavender', '#c4b5fd'], ['mauve', '#b784a7'], ['titanium', '#7c7c80'], ['midnight', '#0f1b2d'],
-    ['starlight', '#eae7dc'], ['bronze', '#cd7f32'], ['copper', '#b87333'],
-  ];
-  for (const [k, v] of map) if (n.includes(k)) return v;
-  return undefined;
-}
-
-function ColourSection({
-  colors,
-  selected,
-  accent,
-  onToggle,
-}: {
-  colors: CountedOption[];
-  selected: string[];
-  accent: string;
-  onToggle: (value: string) => void;
-}) {
-  const [open, setOpen] = useState(true);
-  const [q, setQ] = useState('');
-  const filtered = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    return s ? colors.filter((c) => c.value.toLowerCase().includes(s)) : colors;
-  }, [colors, q]);
-
-  return (
-    <div className="border-b border-[#000000]/10">
-      <button type="button" onClick={() => setOpen((o) => !o)} className="flex w-full items-center justify-between py-3.5 text-left">
-        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#000000]/80">Colour</span>
-        {open ? <Minus className="h-3.5 w-3.5 text-[#6b6b6b]/60" /> : <Plus className="h-3.5 w-3.5 text-[#6b6b6b]/60" />}
-      </button>
-      {open && (
-        <div className="pb-4">
-          <div className="relative mb-2">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b6b6b]/50" />
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search colours..."
-              className="w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] py-1.5 pl-8 pr-2 text-xs text-[#000000] placeholder:text-[#6b6b6b]/50 outline-none focus:border-[#000000]/40"
-            />
-          </div>
-          <div className="max-h-56 overflow-y-auto pr-1">
-            {filtered.map((c) => (
-              <CheckRow key={c.value} label={c.value} checked={selected.includes(c.value)} accent={accent} swatch={swatchFor(c.value)} onChange={() => onToggle(c.value)} />
-            ))}
-            {filtered.length === 0 && <p className="py-2 text-xs text-[#6b6b6b]/50">No colours match.</p>}
-          </div>
-        </div>
-      )}
-    </div>
+      {open && <div className={`pb-4 ${pad}`}>{children}</div>}
+    </section>
   );
 }
 
 export function FilterSidebar({
-  facets,
   brands,
-  colors,
   priceMin,
   priceMax,
-  priceStep,
   priceValue,
   onPriceChange,
+  discCounts,
+  discMaxAvailable,
   selected,
-  onToggle,
+  onToggleBrand,
+  onClearBrands,
+  onDiscChange,
   onClear,
   accent,
   activeCount,
+  inline = false,
 }: FilterSidebarProps) {
+  // On the desktop rail the filters are one bordered card; inside the mobile
+  // sheet (which is already a white panel with its own title) the same
+  // modules run edge to edge without a second frame around them.
+  const pad = inline ? '' : 'px-4';
+  const priceNarrowed = priceValue[0] > priceMin || priceValue[1] < priceMax;
+
   return (
     <div>
-      <div className="mb-2 flex items-center justify-between">
-        <h3 className="flex items-center gap-2 text-base font-semibold text-[#000000]">
-          Filters
+      <div className={inline ? '' : 'overflow-hidden rounded-2xl border border-shop-line bg-white'}>
+        {/* Module — header strip */}
+        <div className={`flex items-center justify-between gap-3 py-3 ${pad}`}>
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-shop-ink">
+            <SlidersHorizontal className="h-4 w-4" />
+            Filters
+            {activeCount > 0 && (
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-shop-accent px-1.5 font-mono text-[11px] font-bold leading-none text-white">
+                {activeCount}
+              </span>
+            )}
+          </h3>
           {activeCount > 0 && (
-            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-white" style={{ backgroundColor: accent }}>
-              {activeCount}
-            </span>
+            <button
+              type="button"
+              onClick={onClear}
+              className="rounded-full border border-shop-line px-2.5 py-1 text-[11px] font-medium text-shop-ink/60 transition-colors hover:border-shop-ink hover:bg-shop-ink hover:text-white"
+            >
+              Clear all
+            </button>
           )}
-        </h3>
-        {activeCount > 0 && (
-          <button type="button" onClick={onClear} className="text-xs font-medium text-[#6b6b6b] transition-colors hover:text-[#000000]">
-            Clear all
-          </button>
-        )}
+        </div>
+
+        <FilterModule
+          title="Price"
+          summary={priceNarrowed ? `${formatINR(priceValue[0])} – ${formatINR(priceValue[1])}` : 'Any'}
+          active={priceNarrowed}
+          pad={pad}
+        >
+          <PriceRangeSlider
+            min={priceMin}
+            max={priceMax}
+            value={priceValue}
+            accent={accent}
+            onChange={onPriceChange}
+          />
+        </FilterModule>
+
+        <FilterModule
+          title="Brand"
+          summary={selected.brands.length > 0 ? `${selected.brands.length} selected` : 'All'}
+          active={selected.brands.length > 0}
+          pad={pad}
+        >
+          <BrandLogoFilter brands={brands} selected={selected.brands} onToggle={onToggleBrand} onClear={onClearBrands} inline={inline} />
+        </FilterModule>
+
+        <FilterModule
+          title="Discount"
+          summary={selected.disc !== undefined ? `${selected.disc}% or more` : 'Any'}
+          active={selected.disc !== undefined}
+          pad={pad}
+        >
+          <DiscountFilter value={selected.disc} counts={discCounts} maxAvailable={discMaxAvailable} onChange={onDiscChange} />
+        </FilterModule>
       </div>
-
-      <Section title="Pricing" defaultOpen>
-        <PriceRangeSlider min={priceMin} max={priceMax} step={priceStep} value={priceValue} accent={accent} onChange={onPriceChange} />
-      </Section>
-
-      {colors.length > 0 && (
-        <ColourSection colors={colors} selected={selected.attrs['Colour'] ?? []} accent={accent} onToggle={(value) => onToggle('attr', 'Colour', value)} />
-      )}
-
-      {facets.map((group, i) => (
-        <Section key={group.key} title={group.key} defaultOpen={i === 0}>
-          {group.options.map((opt) => (
-            <CheckRow
-              key={opt.value}
-              label={opt.value}
-              count={opt.count}
-              checked={(selected.attrs[group.key] ?? []).includes(opt.value)}
-              accent={accent}
-              onChange={() => onToggle('attr', group.key, opt.value)}
-            />
-          ))}
-        </Section>
-      ))}
-
-      <Section title="Brands" defaultOpen>
-        {brands.map((b) => (
-          <CheckRow key={b.value} label={b.value} count={b.count} checked={selected.brands.includes(b.value)} accent={accent} onChange={() => onToggle('brand', 'brand', b.value)} />
-        ))}
-      </Section>
     </div>
   );
 }
-
-export const FilterChevron = ChevronDown;

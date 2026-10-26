@@ -11,6 +11,7 @@ import {
   Radio,
   type LucideIcon,
 } from 'lucide-react';
+import { products as rawProducts, type Product } from './products-data';
 
 export type Category = {
   slug: string;
@@ -85,7 +86,7 @@ export type Office = {
 
 export const offices: Office[] = [
   { city: 'Kolkata', label: 'Head Office', address: '2 Saklat Place, 1st Floor, Kolkata, West Bengal – 700072', phone: '+91 7003999192 / 033 4058-0000' },
-  { city: 'Delhi', label: 'Delhi', address: 'A-78, 3rd Floor, Okhla Phase II, New Delhi – 110020', phone: '+91 7003999192 / 011 4362-8116' },
+  { city: 'Delhi', label: 'Corporate Office', address: 'A-78, 3rd Floor, Okhla Phase II, New Delhi – 110020', phone: '+91 7003999192 / 011 4362-8116' },
   { city: 'Bangalore', label: 'Bangalore', address: '14, Sunkalpet Main Road, 1st Floor, Bangalore – 560002', phone: '+91 7003999192' },
   { city: 'Hyderabad', label: 'Hyderabad', address: 'Shop No. 12B, G. Floor, Emarald House, S.D. Road, Telengana – 500003', phone: '+91 7003999192' },
   { city: 'Mumbai', label: 'Mumbai', address: 'Build no. A-7, Gala no. S-102, Anmol Textile Market, Bhiwandi, Mumbai – 421302', phone: '+91 7003999192' },
@@ -100,7 +101,63 @@ export const socials = [
 ];
 
 export type { Product } from './products-data';
-export { products } from './products-data';
+
+/* The scraped catalogue spells a few brands two ways ("Dell" / "DELL",
+   "Redmi" / "REDMI"), which showed up as two separate brands in the shop
+   filter. Every product is given one spelling per brand here — whichever
+   spelling the catalogue itself uses most — so the whole site sees a single
+   brand, without editing the catalogue file. */
+const brandSpellings = new Map<string, Map<string, number>>();
+for (const p of rawProducts) {
+  const key = p.brand.trim().toLowerCase();
+  const spellings = brandSpellings.get(key) ?? new Map<string, number>();
+  spellings.set(p.brand.trim(), (spellings.get(p.brand.trim()) ?? 0) + 1);
+  brandSpellings.set(key, spellings);
+}
+/* How each brand writes its own name. The catalogue has "Wd", "Oppo",
+   "Vivo" and "Honor", and files Xiaomi's phones under "Mi"; these are the
+   spellings the brands themselves use. A brand not listed here keeps the
+   catalogue's most common spelling. */
+const PROPER_BRAND_NAMES: Record<string, string> = {
+  acer: 'Acer',
+  aoc: 'AOC',
+  apple: 'Apple',
+  asus: 'ASUS',
+  brother: 'Brother',
+  canon: 'Canon',
+  dell: 'Dell',
+  epson: 'Epson',
+  honor: 'HONOR',
+  hp: 'HP',
+  lenovo: 'Lenovo',
+  logitech: 'Logitech',
+  mi: 'Xiaomi',
+  microsoft: 'Microsoft',
+  microtek: 'Microtek',
+  oneplus: 'OnePlus',
+  oppo: 'OPPO',
+  realme: 'realme',
+  redmi: 'Redmi',
+  samsung: 'Samsung',
+  vivo: 'vivo',
+  wd: 'WD',
+  xiaomi: 'Xiaomi',
+  zebronics: 'Zebronics',
+};
+
+const canonicalBrand = new Map<string, string>();
+for (const [key, spellings] of brandSpellings) {
+  // Most-used spelling wins; on a tie, the one that is not all capitals.
+  const [best] = [...spellings.entries()].sort(
+    (a, b) => b[1] - a[1] || Number(a[0] === a[0].toUpperCase()) - Number(b[0] === b[0].toUpperCase()),
+  );
+  canonicalBrand.set(key, PROPER_BRAND_NAMES[key] ?? best[0]);
+}
+
+export const products: Product[] = rawProducts.map((p) => {
+  const brand = canonicalBrand.get(p.brand.trim().toLowerCase()) ?? p.brand;
+  return brand === p.brand ? p : { ...p, brand };
+});
 
 export const formatINR = (value: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);

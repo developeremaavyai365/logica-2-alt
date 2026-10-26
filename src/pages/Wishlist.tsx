@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { ArrowRight, Heart } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
+import PageHeaderCard from '../components/shop/PageHeaderCard';
 import { products } from '../data';
 import { useShopStore } from '../store';
 
@@ -13,28 +14,31 @@ export default function Wishlist() {
   if (!ready) return null;
 
   return (
-    <div className="w-full bg-[#ECEDEC]">
+    <div className="w-full bg-shop-canvas">
       <div className="bg-[#ECEDEC]">
         <Header />
       </div>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-14">
-        <h1 className="text-3xl sm:text-4xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
-          Your Wishlist {items.length > 0 && `(${items.length})`}
-        </h1>
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        <PageHeaderCard label="Saved for later" title="Your Wishlist" count={items.length} countLabel="Saved" />
 
         {items.length === 0 ? (
-          <div className="mt-16 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-[#ECEDEC] flex items-center justify-center mb-5">
-              <Heart className="w-7 h-7 text-black" />
-            </div>
-            <p className="text-[#6b6b6b] text-sm mb-6">Nothing saved yet — tap the heart on any product to add it here.</p>
-            <Link to="/shop" className="btn-liquid border-2 border-[#000000] text-[#000000] text-sm font-semibold px-6 py-3 rounded-full transition-colors">
+          <div className="mt-5 flex flex-col items-center rounded-2xl border border-dashed border-shop-ink/20 bg-white px-6 py-16 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-shop-canvas">
+              <Heart className="h-6 w-6 text-shop-ink/40" />
+            </span>
+            <p className="mt-4 text-base font-semibold text-shop-ink">Nothing saved yet</p>
+            <p className="mt-1 max-w-sm text-sm text-shop-ink/55">Tap the heart on any product to add it here.</p>
+            <Link
+              to="/shop"
+              className="group mt-6 flex h-12 items-center gap-2 rounded-xl bg-shop-ink px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
+            >
               Continue Shopping
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
             </Link>
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+          <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
             {items.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

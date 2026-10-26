@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
+import { ArrowRight, Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import PageHeaderCard from '../components/shop/PageHeaderCard';
 import { products, formatINR } from '../data';
-import { useShopStore } from '../store';
+import { findColour, productTitle } from '../product-colours';
+import { lineKey, useShopStore } from '../store';
 import { useAuthStore } from '../auth-store';
+
+const MICRO_LABEL = 'font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-shop-ink/45';
+const STEP_CELL =
+  'flex h-10 w-10 items-center justify-center border-r border-shop-line text-shop-ink transition-colors duration-300 hover:bg-shop-ink hover:text-white';
 
 export default function Cart() {
   const { cart, setQty, removeFromCart, ready } = useShopStore();
@@ -23,9 +29,10 @@ export default function Cart() {
   }
 
   const lines = cart
-    .map((line) => ({ line, product: products.find((p) => p.id === line.id) }))
-    .filter((l): l is { line: typeof cart[number]; product: NonNullable<typeof l.product> } => !!l.product);
+    .map((line) => ({ line, product: products.find((p) => p.id === line.id), colour: findColour(line.id, line.colour) }))
+    .filter((l): l is typeof l & { product: NonNullable<typeof l.product> } => !!l.product);
 
+  const itemCount = lines.reduce((sum, { line }) => sum + line.qty, 0);
   const subtotal = lines.reduce((sum, { line, product }) => sum + product.price * line.qty, 0);
   const mrpTotal = lines.reduce((sum, { line, product }) => sum + (product.mrp ?? product.price) * line.qty, 0);
   const savings = mrpTotal - subtotal;
@@ -33,106 +40,172 @@ export default function Cart() {
   if (!ready) return null;
 
   return (
-    <div className="w-full bg-[#ECEDEC]">
+    <div className="w-full bg-shop-canvas">
       <div className="bg-[#ECEDEC]">
         <Header />
       </div>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-14">
-        <h1 className="text-3xl sm:text-4xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
-          Your Cart
-        </h1>
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        <PageHeaderCard label="Shopping cart" title="Your Cart" count={itemCount} countLabel="Items" />
 
         {lines.length === 0 ? (
-          <div className="mt-16 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-[#ECEDEC] flex items-center justify-center mb-5">
-              <ShoppingCart className="w-7 h-7 text-black" />
-            </div>
-            <p className="text-[#6b6b6b] text-sm mb-6">Your cart is empty.</p>
-            <Link to="/shop" className="btn-liquid border-2 border-[#000000] text-[#000000] text-sm font-semibold px-6 py-3 rounded-full transition-colors">
+          <div className="mt-5 flex flex-col items-center rounded-2xl border border-dashed border-shop-ink/20 bg-white px-6 py-16 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-shop-canvas">
+              <ShoppingCart className="h-6 w-6 text-shop-ink/40" />
+            </span>
+            <p className="mt-4 text-base font-semibold text-shop-ink">Your cart is empty</p>
+            <p className="mt-1 text-sm text-shop-ink/55">Add a product and it will show up here.</p>
+            <Link
+              to="/shop"
+              className="group mt-6 flex h-12 items-center gap-2 rounded-xl bg-shop-ink px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
+            >
               Continue Shopping
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
             </Link>
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-1 lg:grid-cols-[1fr_20rem] gap-10">
-            {/* Line items */}
-            <div className="space-y-4">
-              {lines.map(({ line, product }) => (
-                <div key={product.id} className="flex items-center gap-4 rounded-2xl border border-[#000000]/10 p-4">
-                  <Link to={`/product/${product.id}`} className="w-20 h-20 rounded-xl bg-[#ECEDEC] overflow-hidden shrink-0">
-                    <img src={product.image} alt={product.name} className="w-full h-full object-contain mix-blend-multiply" />
+          <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[1fr_22rem]">
+            {/* Line items — each one a card: image tile, details, and a
+                footer row holding the quantity stepper and Remove. */}
+            <ul className="flex flex-col gap-4">
+              {lines.map(({ line, product, colour }) => {
+                const key = lineKey(line);
+                const href = colour ? `/product/${product.id}?colour=${colour.key}` : `/product/${product.id}`;
+                return (
+                <li key={key} className="flex overflow-hidden rounded-2xl border border-shop-line bg-white">
+                  {/* Module — image tile */}
+                  <Link
+                    to={href}
+                    className="relative w-24 shrink-0 border-r border-shop-line bg-shop-canvas sm:w-36"
+                  >
+                    <img
+                      src={colour?.images[0] ?? product.image}
+                      alt={productTitle(product, colour)}
+                      className="absolute inset-0 h-full w-full object-contain p-3 mix-blend-multiply"
+                    />
                   </Link>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[11px] font-medium text-black uppercase tracking-wide">{product.brand}</span>
-                    <Link to={`/product/${product.id}`} className="block text-sm font-semibold text-[#000000] leading-snug line-clamp-2 hover:opacity-80">
-                      {product.name}
-                    </Link>
-                    <div className="mt-2 flex items-center gap-3">
-                      <div className="flex items-center border border-[#000000]/15 rounded-full">
+
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    {/* Module — details + line total */}
+                    <div className="flex flex-1 items-start justify-between gap-4 px-4 py-3.5">
+                      <div className="min-w-0">
+                        <span className={MICRO_LABEL}>{product.brand}</span>
+                        <Link
+                          to={href}
+                          className="mt-1 block text-sm font-semibold leading-snug text-shop-ink line-clamp-2 transition-opacity hover:opacity-70"
+                        >
+                          {productTitle(product, colour)}
+                        </Link>
+                        {colour && (
+                          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-shop-ink/65">
+                            <span className="h-3 w-3 rounded-full border border-shop-ink/15" style={{ backgroundColor: colour.hex }} aria-hidden="true" />
+                            Colour: <span className="font-semibold text-shop-ink">{colour.name}</span>
+                          </p>
+                        )}
+                        <p className="mt-1.5 font-mono text-[11px] tabular-nums text-shop-ink/55">
+                          {formatINR(product.price)} each
+                        </p>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <span className={MICRO_LABEL}>Total</span>
+                        <span
+                          className="mt-0.5 block font-dm-sans text-lg font-semibold tabular-nums text-shop-ink"
+                          style={{ letterSpacing: '-0.03em' }}
+                        >
+                          {formatINR(product.price * line.qty)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Module — quantity + remove */}
+                    <div className="flex items-stretch justify-between border-t border-shop-line">
+                      <div className="flex items-stretch">
                         <button
-                          onClick={() => setQty(product.id, line.qty - 1)}
-                          className="w-7 h-7 flex items-center justify-center text-[#000000] hover:bg-[#ECEDEC] rounded-full transition-colors"
+                          type="button"
+                          onClick={() => setQty(key, line.qty - 1)}
+                          className={STEP_CELL}
                           aria-label="Decrease quantity"
                         >
-                          <Minus className="w-3 h-3" />
+                          <Minus className="h-3.5 w-3.5" />
                         </button>
-                        <span className="w-8 text-center text-sm">{line.qty}</span>
+                        <span className="flex h-10 w-11 items-center justify-center border-r border-shop-line font-mono text-sm font-bold tabular-nums text-shop-ink">
+                          {line.qty}
+                        </span>
                         <button
-                          onClick={() => setQty(product.id, line.qty + 1)}
-                          className="w-7 h-7 flex items-center justify-center text-[#000000] hover:bg-[#ECEDEC] rounded-full transition-colors"
+                          type="button"
+                          onClick={() => setQty(key, line.qty + 1)}
+                          className={STEP_CELL}
                           aria-label="Increase quantity"
                         >
-                          <Plus className="w-3 h-3" />
+                          <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
                       <button
-                        onClick={() => removeFromCart(product.id)}
-                        className="text-xs text-[#6b6b6b] hover:text-red-600 transition-colors flex items-center gap-1"
+                        type="button"
+                        onClick={() => removeFromCart(key)}
+                        className="flex items-center gap-1.5 border-l border-shop-line px-4 text-xs font-semibold text-shop-ink/60 transition-colors duration-300 hover:bg-red-600 hover:text-white"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="h-3.5 w-3.5" />
                         Remove
                       </button>
                     </div>
                   </div>
-                  <span className="text-sm font-semibold text-[#000000] shrink-0">{formatINR(product.price * line.qty)}</span>
-                </div>
-              ))}
-            </div>
+                </li>
+                );
+              })}
+            </ul>
 
-            {/* Summary */}
-            <div className="rounded-2xl border border-[#000000]/10 bg-[#ECEDEC] p-6 h-fit">
-              <h2 className="text-sm font-semibold text-[#000000] mb-4">Order Summary</h2>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between text-[#6b6b6b]">
-                  <span>Subtotal</span>
-                  <span>{formatINR(subtotal)}</span>
+            {/* Order summary card */}
+            <div className="h-fit overflow-hidden rounded-2xl border border-shop-line bg-white lg:sticky lg:top-6">
+              <div className="flex items-center justify-between gap-3 border-b border-shop-line px-5 py-2.5">
+                <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-shop-ink">Order summary</h2>
+                <span className="font-mono text-[11px] tabular-nums text-shop-ink/45">
+                  {String(itemCount).padStart(2, '0')} item{itemCount !== 1 ? 's' : ''}
+                </span>
+              </div>
+
+              <dl className="divide-y divide-shop-line text-sm">
+                <div className="flex items-center justify-between gap-4 px-5 py-3">
+                  <dt className="text-shop-ink/60">Subtotal</dt>
+                  <dd className="font-mono tabular-nums text-shop-ink">{formatINR(subtotal)}</dd>
                 </div>
                 {savings > 0 && (
-                  <div className="flex justify-between text-black font-medium">
-                    <span>You save</span>
-                    <span>-{formatINR(savings)}</span>
+                  <div className="flex items-center justify-between gap-4 px-5 py-3">
+                    <dt className="text-shop-ink/60">You save</dt>
+                    <dd className="font-mono font-bold tabular-nums text-shop-accent">−{formatINR(savings)}</dd>
                   </div>
                 )}
-                <div className="flex justify-between text-[#6b6b6b]">
-                  <span>Shipping</span>
-                  <span>Calculated at checkout</span>
+                <div className="flex items-center justify-between gap-4 px-5 py-3">
+                  <dt className="text-shop-ink/60">Shipping</dt>
+                  <dd className="text-right text-shop-ink/60">Calculated at checkout</dd>
                 </div>
+              </dl>
+
+              <div className="flex items-end justify-between gap-4 border-t border-shop-line bg-shop-canvas px-5 py-4">
+                <span className={MICRO_LABEL}>Total</span>
+                <span
+                  className="font-dm-sans text-2xl font-semibold tabular-nums leading-none text-shop-ink"
+                  style={{ letterSpacing: '-0.03em' }}
+                >
+                  {formatINR(subtotal)}
+                </span>
               </div>
-              <div className="mt-4 pt-4 border-t border-[#000000]/10 flex justify-between text-base font-semibold text-[#000000]">
-                <span>Total</span>
-                <span>{formatINR(subtotal)}</span>
+
+              <div className="border-t border-shop-line p-3">
+                <button
+                  type="button"
+                  onClick={handleCheckoutClick}
+                  className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
+                >
+                  Checkout
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
+                </button>
+                {checkoutNotice && (
+                  <p className="mt-2 px-2 text-center text-[11px] text-shop-ink/55">
+                    Checkout isn't connected to a payment provider in this preview.
+                  </p>
+                )}
               </div>
-              <button
-                onClick={handleCheckoutClick}
-                className="btn-liquid mt-6 w-full border-2 border-[#000000] text-[#000000] text-sm font-semibold px-6 py-3 rounded-full transition-colors"
-              >
-                Checkout
-              </button>
-              {checkoutNotice && (
-                <p className="mt-2 text-[11px] text-[#6b6b6b]/70 text-center">
-                  Checkout isn't connected to a payment provider in this preview.
-                </p>
-              )}
             </div>
           </div>
         )}
@@ -142,33 +215,47 @@ export default function Cart() {
       {showAuthGuard && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowAuthGuard(false)} />
-          <div className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <button
-              type="button"
-              onClick={() => setShowAuthGuard(false)}
-              aria-label="Close"
-              className="absolute right-4 top-4 text-[#6b6b6b] hover:text-[#000000] transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="w-12 h-12 rounded-full bg-[#ECEDEC] flex items-center justify-center mb-4">
-              <ShoppingCart className="w-5 h-5 text-black" />
+          <div className="relative w-full max-w-sm overflow-hidden rounded-2xl border border-shop-line bg-white shadow-2xl">
+            <div className="flex items-stretch justify-between border-b border-shop-line">
+              <span className="flex items-center gap-2 px-5 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-shop-ink">
+                <span className="h-1.5 w-1.5 rounded-full bg-shop-accent" aria-hidden="true" />
+                Checkout
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowAuthGuard(false)}
+                aria-label="Close"
+                className="flex w-12 items-center justify-center border-l border-shop-line text-shop-ink/60 transition-colors duration-300 hover:bg-shop-ink hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
-            <h2 className="text-lg font-semibold text-[#000000]">Sign in to continue</h2>
-            <p className="mt-2 text-sm text-[#6b6b6b] leading-relaxed">
-              Please sign in or create an account to complete your purchase. Your cart will be right here when you
-              come back.
-            </p>
-            <div className="mt-6 flex flex-col gap-3">
+
+            <div className="flex items-start gap-4 px-5 py-5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-shop-canvas">
+                <ShoppingCart className="h-5 w-5 text-shop-ink" />
+              </span>
+              <div>
+                <h2 className="text-lg font-semibold text-shop-ink" style={{ letterSpacing: '-0.02em' }}>
+                  Sign in to continue
+                </h2>
+                <p className="mt-1.5 text-sm leading-relaxed text-shop-ink/60">
+                  Please sign in or create an account to complete your purchase. Your cart will be right here when you
+                  come back.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2 border-t border-shop-line p-3">
               <Link
                 to="/login?redirect=/cart"
-                className="w-full rounded-full bg-[#000000] py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-[#1a1a1a]"
+                className="flex h-12 w-full items-center justify-center rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
               >
                 Sign In
               </Link>
               <Link
                 to="/signup?redirect=/cart"
-                className="w-full rounded-full border-2 border-[#000000] py-3 text-center text-sm font-semibold text-[#000000] transition-colors"
+                className="flex h-12 w-full items-center justify-center rounded-xl border border-shop-line text-sm font-semibold text-shop-ink transition-colors duration-300 hover:border-shop-ink"
               >
                 Create Account
               </Link>

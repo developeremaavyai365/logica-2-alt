@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { categories, formatINR, products, type Product } from '../data';
+import { baseName } from '../product-colours';
 
 const TABS = categories.slice(0, 9);
 const BADGES = ['Trending', 'No Cost EMI', '50+ Bought'];
@@ -18,13 +19,13 @@ function DealCard({ product, index }: { product: Product; index: number }) {
       <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#ECEDEC]">
         <img
           src={product.image}
-          alt={product.name}
+          alt={baseName(product)}
           className="h-full w-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
         />
       </div>
       <div className="p-4">
         <p className="font-inter line-clamp-2 text-sm text-black" style={{ letterSpacing: '-0.01em' }}>
-          {product.name}
+          {baseName(product)}
         </p>
         <div className="mt-1.5 flex items-center gap-0.5">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -47,7 +48,7 @@ export default function BestsellerDeals() {
   return (
     <section className="relative overflow-hidden bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
       <h2
-        className="font-dm-sans bg-gradient-to-r from-black to-[#15803D] bg-clip-text font-extrabold text-transparent"
+        className="font-dm-sans bg-gradient-to-r from-black to-[#3D4FE0] bg-clip-text font-extrabold text-transparent"
         style={{ fontSize: 'clamp(28px, 4vw, 48px)', letterSpacing: '-0.05em', lineHeight: 1.05 }}
       >
         Bestseller Deals

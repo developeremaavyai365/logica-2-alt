@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, Zap } from 'lucide-react';
 import { formatINR, type Product } from '../data';
+import { baseName } from '../product-colours';
 
 interface CategorySpotlightProps {
   title: string;
@@ -22,13 +23,13 @@ function SpotlightCard({ product }: { product: Product }) {
       <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-lg bg-[#ECEDEC]">
         <img
           src={product.image}
-          alt={product.name}
+          alt={baseName(product)}
           className="h-full w-full object-contain p-8 transition-transform duration-500 group-hover:scale-105"
         />
       </div>
 
       <p className="font-inter mt-4 line-clamp-2 text-sm text-black sm:text-base" style={{ letterSpacing: '-0.01em' }}>
-        {product.name}
+        {baseName(product)}
       </p>
 
       <div className="mt-2 flex items-center gap-0.5">
@@ -62,7 +63,7 @@ export default function CategorySpotlight({ title, description, emiNote, viewAll
       <div className="mx-auto flex max-w-6xl gap-8 lg:gap-12">
         <div className="hidden w-[260px] shrink-0 flex-col lg:flex">
           <h2
-            className="font-dm-sans bg-gradient-to-r from-black to-[#15803D] bg-clip-text font-extrabold text-transparent"
+            className="font-dm-sans bg-gradient-to-r from-black to-[#3D4FE0] bg-clip-text font-extrabold text-transparent"
             style={{ fontSize: 'clamp(26px, 3vw, 34px)', letterSpacing: '-0.04em', lineHeight: 1.15 }}
           >
             {title}
@@ -92,7 +93,7 @@ export default function CategorySpotlight({ title, description, emiNote, viewAll
 
         <div className="flex w-full flex-col lg:hidden">
           <div className="flex items-end justify-between gap-4">
-            <h2 className="font-dm-sans bg-gradient-to-r from-black to-[#15803D] bg-clip-text font-extrabold text-transparent" style={{ fontSize: 'clamp(24px, 4vw, 32px)', letterSpacing: '-0.04em' }}>
+            <h2 className="font-dm-sans bg-gradient-to-r from-black to-[#3D4FE0] bg-clip-text font-extrabold text-transparent" style={{ fontSize: 'clamp(24px, 4vw, 32px)', letterSpacing: '-0.04em' }}>
               {title}
             </h2>
             <Link to={viewAllHref} className="font-inter shrink-0 text-sm text-black hover:opacity-60" style={{ letterSpacing: '-0.02em' }}>

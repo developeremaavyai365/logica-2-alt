@@ -1,12 +1,17 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { Star, ImagePlus, X, Check } from 'lucide-react';
 import { useProductReviews } from '../reviews-store';
+import SectionHeading from './shop/SectionHeading';
 
 const MAX_PHOTOS = 4;
 
+const MICRO_LABEL = 'font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-shop-ink/45';
+const FIELD =
+  'w-full rounded-xl border border-shop-line bg-shop-canvas px-3.5 text-sm text-shop-ink outline-none transition-colors placeholder:text-shop-ink/35 focus:border-shop-accent focus:bg-white';
+
 function StarRow({ rating, size = 'w-4 h-4' }: { rating: number; size?: string }) {
   return (
-    <div className="flex items-center gap-0.5">
+    <div className="flex items-center gap-0.5" role="img" aria-label={`${rating} out of 5 stars`}>
       {[1, 2, 3, 4, 5].map((n) => (
         <Star key={n} className={size} fill={n <= rating ? '#FFC107' : 'none'} stroke={n <= rating ? '#FFC107' : '#C8C8C8'} />
       ))}
@@ -45,6 +50,19 @@ function readAsDataUrl(file: File): Promise<string> {
   });
 }
 
+/** A card in the shop's modular language: header strip over content. */
+function Card({ title, aside, children }: { title: string; aside?: ReactNode; children: ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-shop-line bg-white">
+      <div className="flex items-center justify-between gap-3 border-b border-shop-line px-5 py-2.5">
+        <h3 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-shop-ink">{title}</h3>
+        {aside}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 export default function ProductReviews({ productId }: { productId: string }) {
   const { reviews, addReview } = useProductReviews(productId);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -57,6 +75,12 @@ export default function ProductReviews({ productId }: { productId: string }) {
   const [submitted, setSubmitted] = useState(false);
 
   const average = reviews.length ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
+  // How many reviews gave each star rating, 5 down to 1 — counted from the
+  // reviews themselves.
+  const breakdown = [5, 4, 3, 2, 1].map((stars) => ({
+    stars,
+    count: reviews.filter((r) => r.rating === stars).length,
+  }));
 
   async function handleFiles(files: FileList | null) {
     if (!files) return;
@@ -91,147 +115,222 @@ export default function ProductReviews({ productId }: { productId: string }) {
   }
 
   return (
-    <div className="mt-20 border-t border-[#000000]/10 pt-12">
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-        <h2 className="text-xl font-semibold text-[#000000]">Ratings &amp; Reviews</h2>
-        {reviews.length > 0 && (
-          <div className="flex items-center gap-2">
-            <StarRow rating={Math.round(average)} size="w-5 h-5" />
-            <span className="text-sm text-[#6b6b6b]">
-              {average.toFixed(1)} out of 5 · {reviews.length} review{reviews.length !== 1 ? 's' : ''}
-            </span>
-          </div>
-        )}
-      </div>
+    <div className="mt-14">
+      <SectionHeading className="mb-5">
+        Ratings <span className="text-shop-accent">&amp;</span> reviews
+      </SectionHeading>
 
-      {/* Write a review */}
-      <form onSubmit={handleSubmit} className="rounded-2xl bg-[#ECEDEC] p-5 sm:p-6 mb-10">
-        <h3 className="text-sm font-semibold text-[#000000] mb-4">Share your experience</h3>
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        {/* Left column — summary + write a review */}
+        <div className="flex flex-col gap-5 lg:col-span-5">
+          {/* Summary card */}
+          <Card
+            title="Summary"
+            aside={
+              <span className="font-mono text-[11px] tabular-nums text-shop-ink/45">
+                {reviews.length} review{reviews.length !== 1 ? 's' : ''}
+              </span>
+            }
+          >
+            {reviews.length === 0 ? (
+              <p className="px-5 py-6 text-sm text-shop-ink/55">No ratings yet for this product.</p>
+            ) : (
+              <div className="flex items-stretch">
+                {/* Module — average */}
+                <div className="flex w-36 shrink-0 flex-col items-center justify-center border-r border-shop-line px-4 py-5">
+                  <span className="font-dm-sans text-5xl font-bold tabular-nums leading-none text-shop-ink" style={{ letterSpacing: '-0.04em' }}>
+                    {average.toFixed(1)}
+                  </span>
+                  <div className="mt-2">
+                    <StarRow rating={Math.round(average)} />
+                  </div>
+                  <span className={`mt-1.5 ${MICRO_LABEL}`}>out of 5</span>
+                </div>
 
-        <div className="mb-4">
-          <label className="block text-xs font-medium text-[#6b6b6b] mb-2">Your rating</label>
-          <StarRatingInput value={rating} onChange={setRating} />
-        </div>
+                {/* Module — breakdown */}
+                <ul className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 px-5 py-4">
+                  {breakdown.map(({ stars, count }) => (
+                    <li key={stars} className="flex items-center gap-2.5">
+                      <span className="w-3 shrink-0 font-mono text-[11px] tabular-nums text-shop-ink/60">{stars}</span>
+                      <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-shop-canvas">
+                        <span
+                          className="block h-full rounded-full bg-shop-accent"
+                          style={{ width: `${(count / reviews.length) * 100}%` }}
+                        />
+                      </span>
+                      <span className="w-5 shrink-0 text-right font-mono text-[11px] tabular-nums text-shop-ink/45">{count}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Card>
 
-        <div className="mb-4">
-          <label htmlFor="review-name" className="block text-xs font-medium text-[#6b6b6b] mb-1.5">
-            Your name (optional)
-          </label>
-          <input
-            id="review-name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="John Doe"
-            className="w-full h-11 px-3 rounded-lg border border-[#000000]/15 bg-white text-sm text-[#000000] outline-none focus:border-[#000000]/40 transition-colors"
-          />
-        </div>
+          {/* Write a review card */}
+          <form onSubmit={handleSubmit}>
+            <Card title="Write a review">
+              {/* Module — rating */}
+              <div className="px-5 py-4">
+                <span className={`block ${MICRO_LABEL}`}>Your rating</span>
+                <div className="mt-1.5">
+                  <StarRatingInput value={rating} onChange={setRating} />
+                </div>
+              </div>
 
-        <div className="mb-4">
-          <label htmlFor="review-text" className="block text-xs font-medium text-[#6b6b6b] mb-1.5">
-            Your review
-          </label>
-          <textarea
-            id="review-text"
-            rows={4}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="How was the product you received? Quality, packaging, delivery..."
-            className="w-full px-3 py-2.5 rounded-lg border border-[#000000]/15 bg-white text-sm text-[#000000] outline-none focus:border-[#000000]/40 transition-colors resize-none"
-          />
-        </div>
+              {/* Module — name + review */}
+              <div className="space-y-4 border-t border-shop-line px-5 py-4">
+                <div>
+                  <label htmlFor="review-name" className={`block ${MICRO_LABEL}`}>
+                    Your name (optional)
+                  </label>
+                  <input
+                    id="review-name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="John Doe"
+                    className={`mt-1.5 h-11 ${FIELD}`}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="review-text" className={`block ${MICRO_LABEL}`}>
+                    Your review
+                  </label>
+                  <textarea
+                    id="review-text"
+                    rows={4}
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="How was the product you received? Quality, packaging, delivery..."
+                    className={`mt-1.5 resize-none py-2.5 ${FIELD}`}
+                  />
+                </div>
+              </div>
 
-        <div className="mb-4">
-          <label className="block text-xs font-medium text-[#6b6b6b] mb-1.5">Photos of the product you received</label>
-          <div className="flex flex-wrap gap-2.5">
-            {photos.map((p, i) => (
-              <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#000000]/15">
-                <img src={p} alt="" className="w-full h-full object-cover" />
+              {/* Module — photos */}
+              <div className="border-t border-shop-line px-5 py-4">
+                <div className="flex items-center justify-between gap-3">
+                  <span className={MICRO_LABEL}>Photos of the product you received</span>
+                  <span className="shrink-0 font-mono text-[11px] tabular-nums text-shop-ink/45">
+                    {photos.length} / {MAX_PHOTOS}
+                  </span>
+                </div>
+                <div className="mt-2 flex flex-wrap gap-2.5">
+                  {photos.map((p, i) => (
+                    <div key={i} className="relative h-16 w-16 overflow-hidden rounded-xl border border-shop-line">
+                      <img src={p} alt="" className="h-full w-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removePhoto(i)}
+                        aria-label="Remove photo"
+                        className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                  {photos.length < MAX_PHOTOS && (
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex h-16 w-16 flex-col items-center justify-center gap-0.5 rounded-xl border border-dashed border-shop-ink/25 bg-shop-canvas text-shop-ink/55 transition-colors hover:border-shop-accent hover:text-shop-accent"
+                    >
+                      <ImagePlus className="h-4 w-4" />
+                      <span className="font-mono text-[9px] uppercase tracking-[0.14em]">Add</span>
+                    </button>
+                  )}
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    handleFiles(e.target.files);
+                    e.target.value = '';
+                  }}
+                  className="hidden"
+                />
+              </div>
+
+              {/* Module — submit row */}
+              <div className="border-t border-shop-line p-3">
+                {error && <p className="mb-2 px-2 text-xs font-medium text-red-600">{error}</p>}
                 <button
-                  type="button"
-                  onClick={() => removePhoto(i)}
-                  aria-label="Remove photo"
-                  className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/60 text-white flex items-center justify-center"
+                  type="submit"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
                 >
-                  <X className="w-3 h-3" />
+                  {submitted ? (
+                    <>
+                      Submitted <Check className="h-4 w-4" />
+                    </>
+                  ) : (
+                    'Submit Review'
+                  )}
                 </button>
               </div>
-            ))}
-            {photos.length < MAX_PHOTOS && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-16 h-16 rounded-lg border-2 border-dashed border-[#000000]/20 flex flex-col items-center justify-center gap-0.5 text-[#6b6b6b] hover:border-[#000000]/40 hover:text-[#000000] transition-colors"
-              >
-                <ImagePlus className="w-4 h-4" />
-                <span className="text-[9px]">Add</span>
-              </button>
-            )}
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => {
-              handleFiles(e.target.files);
-              e.target.value = '';
-            }}
-            className="hidden"
-          />
+            </Card>
+          </form>
         </div>
 
-        {error && <p className="text-xs text-red-600 mb-3">{error}</p>}
-
-        <button
-          type="submit"
-          className="btn-liquid border-2 border-[#000000] text-[#000000] text-sm font-semibold px-6 py-2.5 rounded-full transition-colors"
-        >
-          {submitted ? (
-            <span className="inline-flex items-center gap-1.5">
-              Submitted <Check className="w-4 h-4" />
-            </span>
-          ) : (
-            'Submit Review'
-          )}
-        </button>
-      </form>
-
-      {/* Review list */}
-      {reviews.length === 0 ? (
-        <p className="text-sm text-[#6b6b6b]">No reviews yet — be the first to share your experience.</p>
-      ) : (
-        <div className="space-y-6">
-          {reviews.map((r) => (
-            <div key={r.id} className="border-b border-[#000000]/10 pb-6 last:border-0">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center gap-3">
-                  <span className="w-9 h-9 rounded-full bg-[#000000] text-white text-xs font-semibold flex items-center justify-center shrink-0">
-                    {r.name.slice(0, 1).toUpperCase()}
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold text-[#000000]">{r.name}</p>
-                    <StarRow rating={r.rating} />
-                  </div>
-                </div>
-                <span className="text-xs text-[#6b6b6b]/60">
-                  {new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </span>
-              </div>
-              {r.text && <p className="mt-3 text-sm text-[#6b6b6b] leading-relaxed">{r.text}</p>}
-              {r.photos.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2.5">
-                  {r.photos.map((p, i) => (
-                    <a key={i} href={p} target="_blank" rel="noreferrer" className="block w-16 h-16 rounded-lg overflow-hidden border border-[#000000]/15">
-                      <img src={p} alt="" className="w-full h-full object-cover" />
-                    </a>
-                  ))}
-                </div>
-              )}
+        {/* Right column — the reviews */}
+        <div className="lg:col-span-7">
+          {reviews.length === 0 ? (
+            <div className="flex h-full min-h-[200px] flex-col items-center justify-center rounded-2xl border border-dashed border-shop-ink/20 bg-white px-6 py-12 text-center">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-shop-canvas">
+                <Star className="h-5 w-5 text-shop-ink/40" />
+              </span>
+              <p className="mt-3 text-sm font-semibold text-shop-ink">No reviews yet</p>
+              <p className="mt-1 text-sm text-shop-ink/55">Be the first to share your experience.</p>
             </div>
-          ))}
+          ) : (
+            <ul className="flex flex-col gap-4">
+              {reviews.map((r) => (
+                <li key={r.id} className="overflow-hidden rounded-2xl border border-shop-line bg-white">
+                  {/* Module — header strip: who and when */}
+                  <div className="flex items-center justify-between gap-3 border-b border-shop-line px-5 py-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-shop-ink text-xs font-semibold text-white">
+                        {r.name.slice(0, 1).toUpperCase()}
+                      </span>
+                      <p className="truncate text-sm font-semibold text-shop-ink">{r.name}</p>
+                    </div>
+                    <span className="shrink-0 font-mono text-[11px] tabular-nums text-shop-ink/45">
+                      {new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                  </div>
+
+                  {/* Module — rating + text */}
+                  <div className="px-5 py-4">
+                    <div className="flex items-center gap-2">
+                      <StarRow rating={r.rating} />
+                      <span className="font-mono text-[11px] tabular-nums text-shop-ink/45">{r.rating}.0</span>
+                    </div>
+                    {r.text && <p className="mt-2.5 text-sm leading-relaxed text-shop-ink/75">{r.text}</p>}
+                  </div>
+
+                  {/* Module — photos */}
+                  {r.photos.length > 0 && (
+                    <div className="flex flex-wrap gap-2.5 border-t border-shop-line px-5 py-3">
+                      {r.photos.map((p, i) => (
+                        <a
+                          key={i}
+                          href={p}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="block h-16 w-16 overflow-hidden rounded-xl border border-shop-line transition-colors hover:border-shop-ink/40"
+                        >
+                          <img src={p} alt="" className="h-full w-full object-cover" />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

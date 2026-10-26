@@ -1,166 +1,152 @@
-import { useMemo, useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { useMemo, useState, type ReactNode } from 'react';
+import { Maximize2 } from 'lucide-react';
+import { CAREERS_BLUE, CAREERS_NAVY } from '../components/careers/WavePanel';
+import MediaLightbox, { type LightboxPhoto } from '../components/media/MediaLightbox';
+import HighlightsSlider from '../components/media/HighlightsSlider';
+import PhotoMosaic from '../components/media/PhotoMosaic';
+import Reveal from '../components/media/Reveal';
 import { MEDIA_ENTRIES, MEDIA_CERTIFICATES, type MediaEntry } from '../media-data';
 
-function MediaCard({ entry }: { entry: MediaEntry }) {
-  const [expanded, setExpanded] = useState(false);
-  const cover = entry.images[0];
-  const extra = entry.images.length - 1;
+const byNewest = (a: MediaEntry, b: MediaEntry) => (a.sortDate < b.sortDate ? 1 : -1);
+const AWARDS = MEDIA_ENTRIES.filter((e) => e.category === 'award').sort(byNewest);
+const CELEBRATIONS = MEDIA_ENTRIES.filter((e) => e.category === 'event').sort(byNewest);
+/** Every photo of every award, newest award first, each its own slide. The
+ *  showcase is the only place awards appear, so no award photo shows twice. */
+const HIGHLIGHTS = AWARDS.flatMap((e) => e.images.map((src) => ({ src, title: e.title, date: e.date })));
+const HIGHLIGHT_PHOTOS: LightboxPhoto[] = HIGHLIGHTS.map((h) => ({ src: h.src, title: h.title, meta: h.date }));
 
+/** A section title, centred: a small blue label over the heading. */
+function SectionHeading({ eyebrow, children }: { eyebrow: string; children: ReactNode }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl bg-[#000000] shadow-sm transition-shadow duration-300 hover:shadow-xl">
-      <button
-        type="button"
-        onClick={() => setExpanded((v) => !v)}
-        className="relative block aspect-[4/3] w-full overflow-hidden"
+    <div className="text-center">
+      <span className="text-sm font-semibold uppercase tracking-[0.18em]" style={{ color: CAREERS_BLUE }}>
+        {eyebrow}
+      </span>
+      <h2
+        className="mt-3 font-dm-sans font-bold"
+        style={{ color: CAREERS_NAVY, fontSize: 'clamp(26px, 3vw, 40px)', letterSpacing: '-0.02em', lineHeight: 1.15 }}
       >
-        <img
-          src={cover}
-          alt={entry.title}
-          loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent transition-opacity duration-300 group-hover:from-black/90" />
-
-        {/* Category badge */}
-        <span
-          className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${
-            entry.category === 'award' ? 'bg-black text-white' : 'bg-white text-[#000000]'
-          }`}
-        >
-          {entry.category === 'award' ? '★ Award' : 'Celebration'}
-        </span>
-
-        {extra > 0 && (
-          <span className="absolute right-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
-            +{extra} photo{extra > 1 ? 's' : ''}
-          </span>
-        )}
-
-        {/* Title/date */}
-        <div className="absolute inset-x-0 bottom-0 p-4 text-left">
-          <h3 className="text-sm font-bold leading-snug text-white sm:text-base" style={{ letterSpacing: '-0.01em' }}>
-            {entry.title}
-          </h3>
-          <p className="mt-1 text-xs font-medium text-white/70">{entry.date}</p>
-        </div>
-      </button>
-
-      {/* Expanded photo strip */}
-      {expanded && entry.images.length > 1 && (
-        <div className="grid grid-cols-3 gap-1 bg-black p-1">
-          {entry.images.map((img) => (
-            <div key={img} className="aspect-square overflow-hidden">
-              <img src={img} alt={entry.title} className="h-full w-full object-cover" />
-            </div>
-          ))}
-        </div>
-      )}
+        {children}
+      </h2>
     </div>
   );
 }
 
-export default function Media() {
-  const awards = useMemo(
-    () => [...MEDIA_ENTRIES].filter((e) => e.category === 'award').sort((a, b) => (a.sortDate < b.sortDate ? 1 : -1)),
-    [],
+const photosOf = (entry: MediaEntry): LightboxPhoto[] => entry.images.map((src) => ({ src, title: entry.title, meta: entry.date }));
+
+/** One award or celebration: its badge, date and title centred on top, and
+ *  its photos below across the full width, each of which opens full screen. */
+function EntryRow({ entry, onOpen }: { entry: MediaEntry; onOpen: (photos: LightboxPhoto[], index: number) => void }) {
+  return (
+    <Reveal>
+      <article>
+        <header className="mx-auto mb-8 flex max-w-3xl flex-col items-center text-center sm:mb-10">
+          <h3
+            className="font-dm-sans font-bold text-[#061A40]"
+            style={{ fontSize: 'clamp(24px, 3vw, 38px)', letterSpacing: '-0.025em', lineHeight: 1.15 }}
+          >
+            {entry.title}
+          </h3>
+        </header>
+        <div className={entry.images.length === 1 ? 'mx-auto max-w-4xl' : ''}>
+          <PhotoMosaic photos={entry.images} title={entry.title} onOpen={(i) => onOpen(photosOf(entry), i)} />
+        </div>
+      </article>
+    </Reveal>
   );
-  const celebrations = useMemo(
-    () => [...MEDIA_ENTRIES].filter((e) => e.category === 'event').sort((a, b) => (a.sortDate < b.sortDate ? 1 : -1)),
+}
+
+/** Between two entries: a fine line fading in and out, a blue dot at its
+ *  centre. */
+function Divider() {
+  return (
+    <div aria-hidden="true" className="mx-auto my-16 flex w-56 items-center gap-3 sm:my-24">
+      <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#C9D3F2]" />
+      <span className="h-1.5 w-1.5 rounded-full bg-[#3D4FE0]" />
+      <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C9D3F2]" />
+    </div>
+  );
+}
+
+function Entries({ entries, onOpen }: { entries: MediaEntry[]; onOpen: (photos: LightboxPhoto[], index: number) => void }) {
+  return (
+    <div className="mt-12 sm:mt-16">
+      {entries.map((entry, i) => (
+        <div key={entry.title}>
+          {i > 0 && <Divider />}
+          <EntryRow entry={entry} onOpen={onOpen} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** The Media tab of the About page: the awards showcase, celebrations and
+ *  certifications, under the About page's hero. */
+export default function Media() {
+  const [lightbox, setLightbox] = useState<{ photos: LightboxPhoto[]; index: number } | null>(null);
+  const open = (photos: LightboxPhoto[], index: number) => setLightbox({ photos, index });
+
+  const certificatePhotos = useMemo<LightboxPhoto[]>(
+    () => MEDIA_CERTIFICATES.map((c) => ({ src: c.image, title: c.name, meta: 'Brand recognition' })),
     [],
   );
 
   return (
-    <div className="w-full bg-white">
-      {/* Hero */}
-      <div className="relative overflow-hidden bg-[#000000]">
-        <img
-          src={awards[0]?.images[0]}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-25"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/60 via-[#000000]/85 to-[#000000]" />
-        <div className="relative">
-          <Header />
-          <div className="mx-auto max-w-4xl px-4 pb-20 pt-10 text-center sm:px-6 sm:pb-24 md:px-10">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/70 sm:text-sm">Newsroom</span>
-            <h1
-              className="mt-4 text-4xl font-bold text-white sm:text-5xl md:text-6xl"
-              style={{ letterSpacing: '-0.03em' }}
-            >
-              Awards &amp; Moments
-            </h1>
-            <p className="mx-auto mt-4 max-w-xl text-sm text-white/60 sm:text-base">
-              Recognition from the brands we partner with, and the moments that make Logica Infoway what it is.
-            </p>
-          </div>
-        </div>
-      </div>
+    <>
+      <section className="mx-auto max-w-6xl px-4 pb-24 pt-14 sm:px-6 md:px-10">
+        <Reveal>
+          <SectionHeading eyebrow="Highlights">Awards &amp; Recognitions</SectionHeading>
+        </Reveal>
+        <Reveal delay={120} className="mt-10">
+          <HighlightsSlider slides={HIGHLIGHTS} onOpen={(i) => open(HIGHLIGHT_PHOTOS, i)} />
+        </Reveal>
+      </section>
 
-      {/* Awards */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:px-10">
-        <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10">
-          <div>
-            <h2 className="text-2xl font-bold text-[#000000] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
-              Awards &amp; Recognitions
-            </h2>
-            <p className="mt-1 text-sm text-[#6b6b6b]">{awards.length} accolades from our brand partners</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {awards.map((entry) => (
-            <MediaCard key={entry.title} entry={entry} />
+      <section className="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-6 md:px-10">
+        <Reveal>
+          <SectionHeading eyebrow="Life at Logica">Celebrations &amp; Moments</SectionHeading>
+        </Reveal>
+        <Entries entries={CELEBRATIONS} onOpen={open} />
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-28 pt-8 sm:px-6 md:px-10">
+        <Reveal>
+          <SectionHeading eyebrow="Authorized partner certifications">Brand Recognition &amp; Certifications</SectionHeading>
+        </Reveal>
+        {/* Ten certificates: five to a row from md up (two full rows), two to a
+            row on a phone (five full rows), so no row is left part-empty. */}
+        <div className="mt-12 grid grid-cols-2 gap-x-5 gap-y-10 sm:mt-16 md:grid-cols-5 md:gap-x-6">
+          {MEDIA_CERTIFICATES.map((cert, i) => (
+            <Reveal key={cert.name} delay={(i % 5) * 80}>
+              <button
+                type="button"
+                onClick={() => open(certificatePhotos, i)}
+                aria-label={`View ${cert.name} certificate`}
+                className="group flex w-full flex-col items-center text-center"
+              >
+                <span className="relative block aspect-square w-full overflow-hidden rounded-2xl bg-white shadow-[0_22px_44px_-26px_rgba(6,26,64,0.5)] ring-1 ring-[#061A40]/[0.06] transition-all duration-500 group-hover:-translate-y-1.5 group-hover:shadow-[0_34px_60px_-28px_rgba(6,26,64,0.55)]">
+                  <img
+                    src={cert.image}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+                  />
+                  <span className="absolute bottom-3 right-3 flex h-9 w-9 translate-y-2 items-center justify-center rounded-full bg-white/90 text-[#061A40] opacity-0 shadow-lg transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                    <Maximize2 className="h-4 w-4" />
+                  </span>
+                </span>
+                {/* Room for two lines on every name, so the rows line up. */}
+                <span className="mt-4 line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-5 text-[#061A40] transition-colors group-hover:text-[#3D4FE0]">
+                  {cert.name}
+                </span>
+              </button>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Celebrations */}
-      <section className="bg-[#ECEDEC] px-4 py-16 sm:px-6 sm:py-20 md:px-10">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-8 sm:mb-10">
-            <h2 className="text-2xl font-bold text-[#000000] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
-              Celebrations &amp; Moments
-            </h2>
-            <p className="mt-1 text-sm text-[#6b6b6b]">Life at Logica — festivals, milestones, and team moments</p>
-          </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {celebrations.map((entry) => (
-              <MediaCard key={entry.title} entry={entry} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Brand recognition */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 md:px-10">
-        <div className="mb-8 sm:mb-10">
-          <h2 className="text-2xl font-bold text-[#000000] sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
-            Brand Recognition &amp; Certifications
-          </h2>
-          <p className="mt-1 text-sm text-[#6b6b6b]">Authorized partner certifications from the brands we carry</p>
-        </div>
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-6">
-          {MEDIA_CERTIFICATES.map((cert) => (
-            <div
-              key={cert.name}
-              className="group flex flex-col items-center rounded-xl border border-[#000000]/10 p-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#000000]/25 hover:shadow-md"
-            >
-              <div className="mb-2 aspect-square w-full overflow-hidden rounded-lg bg-white">
-                <img
-                  src={cert.image}
-                  alt={cert.name}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-              </div>
-              <span className="text-[10px] font-medium text-[#6b6b6b]">{cert.name}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+      {lightbox && <MediaLightbox photos={lightbox.photos} index={lightbox.index} onClose={() => setLightbox(null)} />}
+    </>
   );
 }

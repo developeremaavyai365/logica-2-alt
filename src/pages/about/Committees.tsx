@@ -1,42 +1,43 @@
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import { CAREERS_NAVY } from '../../components/careers/WavePanel';
+import { ABOUT_CARD } from '../../components/about/AboutHero';
 import { COMMITTEES } from '../../about-data';
 
+/** The Composition of Committees tab of the About page: each committee as
+ *  a plain card, its members listed with their roles. */
 export default function Committees() {
   return (
-    <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-        <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">About us</span>
-          <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
-            Composition of Committees
-          </h1>
-        </div>
+    <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20 md:px-10">
+      <h2
+        className="font-dm-sans font-bold"
+        style={{ color: CAREERS_NAVY, fontSize: 'clamp(24px, 2.6vw, 36px)', letterSpacing: '-0.02em', lineHeight: 1.15 }}
+      >
+        Board Committees
+      </h2>
+
+      {/* Two to a row; a last card on its own sits in the middle. */}
+      <div className="mt-8 flex flex-wrap justify-center gap-6">
+        {COMMITTEES.map((committee, i) => (
+          <div
+            key={committee.name}
+            className={`animate-fade-up w-full lg:w-[calc(50%-12px)] ${ABOUT_CARD}`}
+            style={{ animationDelay: `${i * 0.06}s` }}
+          >
+            <h3 className="border-b border-[#E5E7EB] px-6 py-5 text-lg font-semibold sm:px-7" style={{ color: CAREERS_NAVY }}>
+              {committee.name}
+            </h3>
+            <ul className="divide-y divide-[#EEF1F6] px-6 sm:px-7">
+              {committee.members.map((m) => (
+                <li key={m.name} className="flex items-center justify-between gap-4 py-3.5 text-[15px]">
+                  <span className="font-medium" style={{ color: CAREERS_NAVY }}>
+                    {m.name}
+                  </span>
+                  <span className="text-right text-[#6B7280]">{m.role}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
-
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {COMMITTEES.map((committee) => (
-            <div key={committee.name} className="rounded-2xl border border-[#000000]/10 p-6">
-              <h3 className="text-base font-semibold text-[#000000] mb-4">{committee.name}</h3>
-              <div className="rounded-xl overflow-hidden border border-[#000000]/10">
-                {committee.members.map((m, i) => (
-                  <div
-                    key={m.name}
-                    className={`flex justify-between px-4 py-2.5 text-sm ${i % 2 === 0 ? 'bg-[#ECEDEC]' : 'bg-white'}`}
-                  >
-                    <span className="text-[#000000] font-medium">{m.name}</span>
-                    <span className="text-[#6b6b6b]">{m.role}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+    </section>
   );
 }

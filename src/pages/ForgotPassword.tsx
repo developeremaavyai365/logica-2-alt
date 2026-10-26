@@ -1,8 +1,17 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { ArrowLeft, ArrowRight, KeyRound, Mail, MailCheck, MousePointerClick } from 'lucide-react';
 import { useAuthStore } from '../auth-store';
+import AuthShell, { TitleGlow } from '../components/auth/AuthShell';
+import { AUTH_HEADING, AUTH_SUBMIT, IconField } from '../components/auth/fields';
+import { ABOUT_CARD } from '../components/about/AboutHero';
+
+/** How a reset works, shown on the navy panel. */
+const STEPS = [
+  { icon: Mail, text: 'Enter the email address you signed up with' },
+  { icon: MousePointerClick, text: 'Open the reset link we send you, valid for 30 minutes' },
+  { icon: KeyRound, text: 'Choose a new password and sign back in' },
+];
 
 export default function ForgotPassword() {
   const { forgotPassword } = useAuthStore();
@@ -22,44 +31,70 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-      </div>
-      <section className="flex justify-center px-4 py-20 sm:px-6 md:px-10">
-        <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg">
-          <h1 className="text-xl font-bold text-[#000000]">Reset your password</h1>
+    <AuthShell
+      eyebrow="Account recovery"
+      title={
+        <>
+          Locked out? <TitleGlow>We&rsquo;ve got you.</TitleGlow>
+        </>
+      }
+      text="Reset your password in three quick steps and get back to your orders and wishlist."
+      points={STEPS}
+    >
+      <div className="w-full max-w-md">
+        <div className={`overflow-hidden ${ABOUT_CARD}`}>
           {submitted ? (
-            <p className="mt-4 text-sm text-[#6b6b6b]">
-              If an account exists for <span className="font-medium text-[#000000]">{email}</span>, a reset link
-              has been sent. It's valid for 30 minutes.
-            </p>
+            <div className="animate-fade-up flex flex-col items-center px-6 py-12 text-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EEF1FF] text-[#3D4FE0]">
+                <MailCheck className="h-7 w-7" />
+              </span>
+              <h1 className="mt-4 font-dm-sans text-2xl font-bold text-[#061A40]">Check your email</h1>
+              <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#6B7280]">
+                If an account exists for <span className="font-medium text-[#061A40]">{email}</span>, a reset link has been
+                sent. It&rsquo;s valid for 30 minutes.
+              </p>
+            </div>
           ) : (
-            <form onSubmit={handleSubmit}>
-              <p className="mt-2 text-sm text-[#6b6b6b]">Enter your email and we'll send you a reset link.</p>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-liquid mt-5 w-full rounded-full border-2 border-[#000000] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {loading ? 'Sending…' : 'Send Reset Link'}
-              </button>
+            <form onSubmit={handleSubmit} className="animate-fade-up">
+              <div className="px-5 pb-2 pt-7 sm:px-7">
+                <h1 className={AUTH_HEADING} style={{ letterSpacing: '-0.025em', lineHeight: 1.15 }}>
+                  Reset your password
+                </h1>
+                <p className="mt-2 text-[15px] text-[#6B7280]">Enter your email and we&rsquo;ll send you a reset link.</p>
+
+                <div className="mt-6">
+                  <IconField
+                    icon={<Mail className="h-4 w-4" />}
+                    type="email"
+                    value={email}
+                    onChange={setEmail}
+                    placeholder="Email address"
+                    required
+                    autoComplete="email"
+                  />
+                </div>
+              </div>
+
+              <div className="px-5 pb-7 pt-5 sm:px-7">
+                <button type="submit" disabled={loading} className={AUTH_SUBMIT}>
+                  {loading ? 'Sending…' : 'Send Reset Link'}
+                  {!loading && (
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
+                  )}
+                </button>
+              </div>
             </form>
           )}
-          <Link to="/login" className="mt-5 block text-center text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
-            Back to Sign In
-          </Link>
         </div>
-      </section>
-      <Footer />
-    </div>
+
+        <Link
+          to="/login"
+          className="group mx-auto mt-5 flex w-fit items-center gap-1.5 text-sm font-semibold text-[#061A40] transition-colors hover:text-[#3D4FE0]"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:-translate-x-1" />
+          Back to Sign In
+        </Link>
+      </div>
+    </AuthShell>
   );
 }

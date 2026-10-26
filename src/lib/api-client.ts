@@ -85,8 +85,13 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   const { body, _isRetry, headers, ...rest } = options;
   const method = (options.method ?? 'GET').toUpperCase();
 
+  // A FormData body (a file upload) is sent as it is: the browser sets the
+  // multipart Content-Type itself, boundary included, so it must not be
+  // overridden here. Everything else goes as JSON.
+  const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
+
   const finalHeaders = new Headers(headers);
-  if (body !== undefined) finalHeaders.set('Content-Type', 'application/json');
+  if (body !== undefined && !isForm) finalHeaders.set('Content-Type', 'application/json');
 
   const token = getAccessToken();
   if (token) finalHeaders.set('Authorization', `Bearer ${token}`);
@@ -100,7 +105,7 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
     method,
     credentials: 'include', // required so the httpOnly refresh cookie and the CSRF cookie are sent
     headers: finalHeaders,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: body === undefined ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
   });
 
   if (res.status === 401 && !_isRetry && !NO_REFRESH_RETRY_PATHS.has(path)) {

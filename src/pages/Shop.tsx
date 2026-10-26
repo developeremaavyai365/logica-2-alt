@@ -1,64 +1,17 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ShopBrowser from '../components/shop/ShopBrowser';
-import QuickLinksRow from '../components/QuickLinksRow';
-import CategorySpotlight from '../components/CategorySpotlight';
-import BestsellerDeals from '../components/BestsellerDeals';
 import { products } from '../data';
-
-const APPLE = products.filter((p) => p.brand === 'Apple').slice(0, 10);
-const SAMSUNG = products.filter((p) => p.brand === 'Samsung').slice(0, 10);
 
 export default function Shop() {
   return (
-    <div className="w-full">
+    <div className="w-full bg-shop-canvas">
       <div className="bg-[#ECEDEC]">
         <Header />
       </div>
 
-      {/* The hero was a full-screen carousel rotating eight banners on a five
-          second timer, with arrows and dots. Removed on request, so the page
-          opens straight onto the quick links and the catalogue. */}
-      <div className="w-full divide-y divide-black/10 bg-white">
-        <QuickLinksRow />
-      </div>
-
-      {/* ================= ALL PRODUCTS ================= */}
-      <div className="w-full bg-[#ECEDEC]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-16">
-          <h2 className="text-xl font-semibold text-[#000000] mb-6">All products</h2>
-          <ShopBrowser
-            products={products}
-            accent="#000000"
-            interstitials={[
-              {
-                afterCount: 8,
-                node: (
-                  <CategorySpotlight
-                    title="Best Of Samsung"
-                    description="Save up to ₹8,000 instantly on eligible Galaxy devices using ICICI, HDFC & SBI Bank Credit Cards. Exchange bonus available on select models."
-                    emiNote="No Cost EMI Available"
-                    viewAllHref="/shop?brand=Samsung"
-                    products={SAMSUNG}
-                  />
-                ),
-              },
-              { afterCount: 14, node: <BestsellerDeals /> },
-              {
-                afterCount: 20,
-                node: (
-                  <CategorySpotlight
-                    title="Best Of Apple"
-                    description="Save up to ₹10,000 instantly on eligible products using ICICI, AXIS & SBI Bank Credit Cards. Exchange bonus upto ₹6,000 on iPhone."
-                    emiNote="No Cost EMI Available"
-                    viewAllHref="/shop?brand=Apple"
-                    products={APPLE}
-                  />
-                ),
-              },
-            ]}
-          />
-        </div>
+      <div className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6">
+        <ShopBrowser products={products} accent="#3D4FE0" />
       </div>
 
       <Footer />

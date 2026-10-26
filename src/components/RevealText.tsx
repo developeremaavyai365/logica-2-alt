@@ -22,7 +22,7 @@ const WORD_RAMP = 0.2;
    be read before the reveal reaches it, which matters on a page investors
    read. inkAt/accentAt below carry it up from there to solid. */
 const FILL_INK = '#111111';
-const FILL_ACCENT = '#15803D';
+const FILL_ACCENT = '#3D4FE0';
 
 /** Reports how far the element has travelled through its reveal window, 0-1.
  *

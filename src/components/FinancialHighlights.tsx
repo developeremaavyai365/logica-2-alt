@@ -53,7 +53,7 @@ export default function FinancialHighlights() {
           {BANNERS.map(({ category, Icon }) => (
             <li key={category}>
               <div className="flex items-center gap-4 rounded-2xl border border-black/10 px-6 py-5 sm:px-7">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F4F2] text-[#15803D] sm:h-12 sm:w-12">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F4F4F2] text-[#3D4FE0] sm:h-12 sm:w-12">
                   {Icon && <Icon className="h-5 w-5" strokeWidth={2} />}
                 </span>
                 <span
@@ -101,7 +101,7 @@ export default function FinancialHighlights() {
               to="/investor"
               className="mt-6 inline-flex items-center gap-3 text-white outline-none"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/50 transition-colors duration-300 group-hover:border-[#15803D] group-hover:bg-[#15803D]">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/50 transition-colors duration-300 group-hover:border-[#3D4FE0] group-hover:bg-[#3D4FE0]">
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 6l6 6-6 6" />
                 </svg>

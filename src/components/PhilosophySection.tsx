@@ -13,7 +13,7 @@ export default function PhilosophySection() {
     <section className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
       <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
         <p
-          className="font-inter font-semibold uppercase text-[#15803D]"
+          className="font-inter font-semibold uppercase text-[#3D4FE0]"
           style={{ fontSize: 'clamp(11px, 0.95vw, 13px)', letterSpacing: '0.2em' }}
         >
           Our Philosophy
@@ -23,7 +23,7 @@ export default function PhilosophySection() {
           className="font-dm-sans mt-5 font-bold text-[#111111] sm:mt-6"
           style={{ fontSize: 'clamp(20px, 2.6vw, 34px)', letterSpacing: '-0.025em', lineHeight: 1.3, textWrap: 'balance' }}
         >
-          Empowerment through <span className="text-[#15803D]">Digital Technology</span> to make it
+          Empowerment through <span className="text-[#3D4FE0]">Digital Technology</span> to make it
           more accessible, relevant and meaningful in everyday life.
         </h2>
       </div>

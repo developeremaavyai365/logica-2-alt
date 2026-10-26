@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FileText, Building2, ChevronRight, ListChecks } from 'lucide-react';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import InvestorTabs from '../../components/InvestorTabs';
-import { INVESTOR_SECTIONS, INVESTOR_CATEGORIES, CATEGORY_ICONS } from '../../investor-sections';
+import { ABOUT_CARD } from '../../components/about/AboutHero';
+import { INVESTOR_CATEGORIES, CATEGORY_ICONS, INVESTOR_SECTIONS, INVESTOR_TABS } from '../../investor-sections';
 
 const KIND_ICONS = {
   docs: FileText,
@@ -14,86 +12,49 @@ const KIND_ICONS = {
   disclosure: ListChecks,
 } as const;
 
+/** The Investor Relations overview: every page, grouped by category. The
+ *  body of /investor, under the investor page's hero. */
 export default function InvestorHub() {
   return (
-    <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-
-        {/* Full-bleed hero, same heading treatment as the careers page's
-            hero: the photo carries only the section identity — eyebrow,
-            heading, CIN line, all in white directly on the image. The
-            category/page navigation stays where it already worked, in its
-            own bar right below the photo, rather than crowding onto it. */}
-        <section className="relative isolate overflow-hidden bg-black">
-          <img
-            src="/images/investor/investor-relations-hero.jpg"
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover"
-            aria-hidden="true"
-          />
-          <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/70" />
-
-          <div className="relative z-10 flex flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-20 md:px-10">
-            <span className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-white/70">
-              Investor Relations
-            </span>
-            <h1
-              className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-white"
-              style={{ letterSpacing: '-0.03em' }}
-            >
-              Reports, filings &amp; disclosures
-            </h1>
-            <p className="mt-4 text-sm leading-relaxed text-white/70">
-              Logica Infoway Limited — CIN L30007WB1995PLC073218
-            </p>
-          </div>
-        </section>
-
-        <div className="pt-6">
-          <InvestorTabs pathname="/investor" />
-        </div>
-      </div>
-
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        {INVESTOR_CATEGORIES.map((category) => {
-          const sections = INVESTOR_SECTIONS.filter((s) => s.category === category);
-          if (sections.length === 0) return null;
-          const CategoryIcon = CATEGORY_ICONS[category];
-          return (
-            <div key={category} className="mb-12">
-              <div className="mb-4 flex items-center gap-2.5">
-                {CategoryIcon && (
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
-                    <CategoryIcon className="h-4 w-4" />
-                  </span>
-                )}
-                <h2 className="text-lg font-semibold text-[#000000]">{category}</h2>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {sections.map((s) => {
-                  const ItemIcon = KIND_ICONS[s.kind];
-                  return (
-                    <Link
-                      key={s.slug}
-                      to={`/investor/${s.slug}`}
-                      className="flex items-center gap-3 rounded-xl border border-[#000000]/10 px-5 py-4 text-sm font-medium text-[#000000] hover:border-[#000000]/40 hover:bg-[#ECEDEC] transition-colors"
-                    >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
-                        <ItemIcon className="h-3.5 w-3.5" />
-                      </span>
-                      <span className="flex-1">{s.label}</span>
-                      <ChevronRight className="h-4 w-4 shrink-0 text-[#6b6b6b]" />
-                    </Link>
-                  );
-                })}
-              </div>
+    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:px-10">
+      {INVESTOR_CATEGORIES.map((category) => {
+        const pages = INVESTOR_TABS.find((g) => g.category === category)?.items ?? [];
+        if (pages.length === 0) return null;
+        const CategoryIcon = CATEGORY_ICONS[category];
+        return (
+          <div key={category} className="mb-12 last:mb-0">
+            <div className="mb-5 flex items-center gap-3">
+              {CategoryIcon && (
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EEF1FD] text-[#3D4FE0]">
+                  <CategoryIcon className="h-5 w-5" />
+                </span>
+              )}
+              <h2 className="font-dm-sans text-2xl font-bold text-[#061A40]" style={{ letterSpacing: '-0.02em' }}>
+                {category}
+              </h2>
             </div>
-          );
-        })}
-      </section>
-
-      <Footer />
-    </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {pages.map((page) => {
+                const kind = INVESTOR_SECTIONS.find((sec) => sec.slug === page.slug)?.kind;
+                const ItemIcon = kind ? KIND_ICONS[kind] : FileText;
+                return (
+                  <Link
+                    key={page.href}
+                    to={page.href}
+                    className={`group flex items-center gap-3.5 px-5 py-4 transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-18px_rgba(6,26,64,0.3)] ${ABOUT_CARD}`}
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F5F8FC] text-[#3D4FE0]">
+                      <ItemIcon className="h-4 w-4" />
+                    </span>
+                    <span className="flex-1 text-[15px] font-semibold text-[#061A40]">{page.label}</span>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-[#6B7280] transition-transform group-hover:translate-x-0.5 group-hover:text-[#3D4FE0]" />
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </section>
   );
 }

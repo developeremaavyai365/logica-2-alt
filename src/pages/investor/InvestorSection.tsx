@@ -1,77 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useParams, Link, Navigate } from 'react-router-dom';
 import { FileText, Building2, ArrowUpRight, Search, Download, ChevronDown, Check } from 'lucide-react';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import InvestorTabs from '../../components/InvestorTabs';
-import { INVESTOR_SECTIONS, CATEGORY_ICONS } from '../../investor-sections';
+import { CAREERS_BLUE, CAREERS_NAVY } from '../../components/careers/WavePanel';
+import { ABOUT_CARD } from '../../components/about/AboutHero';
+import type { InvestorSection as InvestorSectionData } from '../../investor-sections';
 import type { AnnualReport } from '../../investor-data';
-
-/** Printed in front of internal paths in the Regulation 46 table so each row
- *  shows a complete, copyable address. Navigation still goes through the
- *  router — only the text is absolute. */
-const SITE_ORIGIN = 'https://www.logicainfoway.com';
-
-/** Extracts the leading 4-digit year from a "year" field like "2025-26",
- *  "2024", or "" — used both to sort newest-first and to group. Raw year
- *  strings on these docs are inconsistently formatted ("2025-26" vs "2025"
- *  vs "2026" for filings from the same fiscal year), so every doc is
- *  folded into a single "Financial Year NN" bucket keyed off this leading
- *  year rather than the raw string, which would otherwise fragment one
- *  fiscal year into three or four near-duplicate headings. */
-function leadingYear(year: string): number | null {
-  const m = year.match(/\d{4}/);
-  return m ? Number(m[0]) : null;
-}
-
-const MONTHS: Record<string, number> = {
-  january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
-  july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
-};
-
-/** Best-effort date embedded in a document title, as a sortable number
- *  (YYYYMMDD). Most of these filings name their date — "March 13, 2026",
- *  "30-09-2023", "14.11.2024" — and the `year` field alone can't order
- *  documents inside one financial year, which is where the bulk of them
- *  sit. Returns null when no date is present so callers fall back to year. */
-function titleDate(title: string): number | null {
-  const named = title.match(
-    /\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+(\d{1,2})\b[,\s]+(\d{4})/i,
-  );
-  if (named) {
-    const mm = MONTHS[named[1].toLowerCase()];
-    return Number(named[3]) * 10000 + mm * 100 + Number(named[2]);
-  }
-  // dd-mm-yyyy / dd.mm.yyyy / dd mm yyyy (Indian filing convention)
-  const numeric = title.match(/\b(\d{1,2})[-./\s](\d{1,2})[-./\s](\d{4})\b/);
-  if (numeric) {
-    const d = Number(numeric[1]);
-    const mm = Number(numeric[2]);
-    if (d >= 1 && d <= 31 && mm >= 1 && mm <= 12) {
-      return Number(numeric[3]) * 10000 + mm * 100 + d;
-    }
-  }
-  return null;
-}
-
-/** Sort key: real date when the title carries one, otherwise the financial
- *  year placed mid-year so undated docs interleave sensibly rather than
- *  always sinking below dated ones from the same year. */
-function sortKey(doc: AnnualReport): number {
-  // An explicit filing date wins over anything read out of the title, which
-  // is what lets a document keep a verbatim title — a BSE announcement
-  // headline carries no date, and without this it would sort to the middle of
-  // the financial year and sink below older filings that happen to name
-  // theirs.
-  if (doc.date) {
-    const [y, m, d] = doc.date.split('-').map(Number);
-    if (y && m && d) return y * 10000 + m * 100 + d;
-  }
-  const d = titleDate(doc.title);
-  if (d !== null) return d;
-  const y = leadingYear(doc.year);
-  return y === null ? -1 : y * 10000 + 630;
-}
+import { leadingYear, sortKey } from '../../investor-sort';
+import Reg46Accordion from '../../components/investor/Reg46Accordion';
 
 /** Financial-year bucket for the year filter, e.g. "2025-26".
  *
@@ -106,18 +40,18 @@ const NO_YEAR_FILTER = new Set(['policies']);
  *  hairline dividers between rows instead of a card grid. */
 function DocRows({ docs }: { docs: AnnualReport[] }) {
   return (
-    <div className="divide-y divide-[#000000]/10 rounded-2xl border border-[#000000]/10 bg-white">
+    <div className={`divide-y divide-[#EEF1F6] overflow-hidden ${ABOUT_CARD}`}>
       {docs.map((doc) =>
         doc.available === false ? (
           <div
             key={doc.url}
-            className="flex cursor-not-allowed items-center justify-between gap-4 px-5 py-4 opacity-60"
+            className="flex cursor-not-allowed items-center justify-between gap-4 px-6 py-4 opacity-60"
           >
-            <span className="flex items-center gap-3 text-sm font-medium text-[#000000]">
-              <FileText className="h-4 w-4 shrink-0 text-[#6b6b6b]" />
+            <span className="flex items-center gap-3 text-[15px] font-medium" style={{ color: CAREERS_NAVY }}>
+              <FileText className="h-4 w-4 shrink-0 text-[#6B7280]" />
               {doc.title}
             </span>
-            <span className="flex shrink-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+            <span className="flex shrink-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
               Document unavailable
             </span>
           </div>
@@ -127,13 +61,13 @@ function DocRows({ docs }: { docs: AnnualReport[] }) {
             href={doc.url}
             target="_blank"
             rel="noreferrer"
-            className="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-[#ECEDEC]/60"
+            className="group flex items-center justify-between gap-4 px-6 py-4 transition-colors hover:bg-[#F5F8FC]"
           >
-            <span className="flex items-center gap-3 text-sm font-medium text-[#000000]">
-              <FileText className="h-4 w-4 shrink-0 text-[#6b6b6b]" />
+            <span className="flex items-center gap-3 text-[15px] font-medium" style={{ color: CAREERS_NAVY }}>
+              <FileText className="h-4 w-4 shrink-0" style={{ color: CAREERS_BLUE }} />
               {doc.title}
             </span>
-            <span className="flex shrink-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b] transition-colors group-hover:text-black">
+            <span className="flex shrink-0 items-center gap-1.5 rounded-md border border-[#E5E7EB] px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-[#3D4FE0] transition-colors group-hover:border-transparent group-hover:bg-[#3D4FE0] group-hover:text-white">
               PDF
               <Download className="h-3.5 w-3.5" />
             </span>
@@ -186,9 +120,7 @@ function YearFilter({
 
   return (
     <div className="mb-6 flex flex-wrap items-center gap-3">
-      <span className="text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-        Financial year
-      </span>
+      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#6B7280]">Financial year</span>
 
       <div ref={wrap} className="relative">
         <button
@@ -196,7 +128,8 @@ function YearFilter({
           onClick={() => setOpen((o) => !o)}
           aria-haspopup="listbox"
           aria-expanded={open}
-          className="flex items-center gap-2 rounded-lg border border-black bg-black py-2 pl-4 pr-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          className="flex items-center gap-2 rounded-md py-2 pl-4 pr-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          style={{ backgroundColor: CAREERS_BLUE }}
         >
           {labelFor(active)}
           <ChevronDown
@@ -208,7 +141,7 @@ function YearFilter({
           <ul
             role="listbox"
             aria-label="Financial year"
-            className="absolute left-0 top-full z-30 mt-1.5 max-h-72 min-w-[13rem] overflow-y-auto rounded-lg border border-[#000000]/10 bg-white py-1 shadow-xl"
+            className="absolute left-0 top-full z-30 mt-1.5 max-h-72 min-w-[13rem] overflow-y-auto rounded-xl border border-[#E5E7EB] bg-white py-1 shadow-[0_20px_40px_-16px_rgba(6,26,64,0.3)]"
           >
             {options.map((y) => {
               const on = y === active;
@@ -222,8 +155,8 @@ function YearFilter({
                       onChange(y);
                       setOpen(false);
                     }}
-                    className={`flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition-colors hover:bg-[#ECEDEC] ${
-                      on ? 'font-semibold text-[#000000]' : 'text-[#6b6b6b]'
+                    className={`flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition-colors hover:bg-[#F5F8FC] ${
+                      on ? 'font-semibold text-[#3D4FE0]' : 'text-[#6B7280]'
                     }`}
                   >
                     {on ? (
@@ -243,9 +176,10 @@ function YearFilter({
   );
 }
 
-export default function InvestorSection() {
-  const { slug } = useParams<{ slug: string }>();
-  const section = INVESTOR_SECTIONS.find((s) => s.slug === slug);
+/** One investor section's documents: the body of /investor/:slug, under the
+ *  investor page's hero (which carries the title and the navigation). */
+export default function InvestorSection({ section }: { section: InvestorSectionData }) {
+  const slug = section.slug;
   const [query, setQuery] = useState('');
   const [year, setYear] = useState<string>(ALL_YEARS);
 
@@ -333,53 +267,26 @@ export default function InvestorSection() {
     };
   }, [section]);
 
-  if (!section) {
-    return <Navigate to="/investor" replace />;
-  }
-
-  const CategoryIcon = CATEGORY_ICONS[section.category];
   const showSearch = section.kind === 'docs' && section.items.length > 8;
 
   return (
-    <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <Link to="/investor" className="text-xs font-medium text-black hover:opacity-80 transition-opacity">
-            ← Investor Relations
-          </Link>
-          <div className="mt-4 flex items-center gap-2">
-            {CategoryIcon && (
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-black">
-                <CategoryIcon className="h-3.5 w-3.5" />
-              </span>
-            )}
-            <p className="text-xs font-semibold uppercase tracking-wide text-black">{section.category}</p>
-          </div>
-          <h1 className="mt-2 text-3xl sm:text-4xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
-            {section.label}
-          </h1>
-        </div>
-        <InvestorTabs pathname={`/investor/${section.slug}`} />
-      </div>
-
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-14">
+    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:px-10">
         {section.kind === 'docs' && (
           <>
             {section.items.length === 0 ? (
-              <p className="text-sm text-[#6b6b6b]">No documents published yet.</p>
+              <p className={`${ABOUT_CARD} px-6 py-10 text-center text-[15px] text-[#6B7280]`}>No documents published yet.</p>
             ) : (
               <div className="min-w-0">
                 {showSearch && (
                   <div className="relative mb-6 max-w-md">
-                    <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b6b6b]" />
+                    <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
                     <input
                       type="search"
                       aria-label={`Search ${section.label} documents`}
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder={`Search ${section.items.length} documents…`}
-                      className="w-full rounded-full border border-[#000000]/15 bg-white py-2.5 pl-11 pr-4 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+                      className="w-full rounded-xl border border-[#E5E7EB] bg-white py-3 pl-11 pr-4 text-sm text-[#061A40] shadow-[0_6px_18px_-12px_rgba(6,26,64,0.2)] outline-none transition-colors placeholder:text-[#6B7280]/70 focus:border-[#3D4FE0] focus:ring-2 focus:ring-[#3D4FE0]/15"
                     />
                   </div>
                 )}
@@ -389,7 +296,7 @@ export default function InvestorSection() {
                 )}
 
                 {sortedFiltered.length === 0 ? (
-                  <p className="text-sm text-[#6b6b6b]">
+                  <p className={`${ABOUT_CARD} px-6 py-10 text-center text-[15px] text-[#6B7280]`}>
                     {isSearching
                       ? `No documents match "${trimmedQuery}"${year === ALL_YEARS ? '' : ` in ${year}`}.`
                       : `No documents filed in ${year}.`}
@@ -397,7 +304,7 @@ export default function InvestorSection() {
                 ) : (
                   <>
                     {isSearching && (
-                      <h2 className="mb-4 text-lg font-semibold text-[#000000]">
+                      <h2 className="mb-4 font-dm-sans text-xl font-bold text-[#061A40]">
                         {sortedFiltered.length} {sortedFiltered.length === 1 ? 'result' : 'results'} for "{trimmedQuery}"
                       </h2>
                     )}
@@ -413,14 +320,14 @@ export default function InvestorSection() {
           <div className="min-w-0">
             {groupTotal > 8 && (
               <div className="relative mb-8 max-w-md">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b6b6b]" />
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
                 <input
                   type="search"
                   aria-label={`Search ${section.label} documents`}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={`Search ${groupTotal} documents…`}
-                  className="w-full rounded-full border border-[#000000]/15 bg-white py-2.5 pl-11 pr-4 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
+                  className="w-full rounded-xl border border-[#E5E7EB] bg-white py-3 pl-11 pr-4 text-sm text-[#061A40] shadow-[0_6px_18px_-12px_rgba(6,26,64,0.2)] outline-none transition-colors placeholder:text-[#6B7280]/70 focus:border-[#3D4FE0] focus:ring-2 focus:ring-[#3D4FE0]/15"
                 />
               </div>
             )}
@@ -430,13 +337,13 @@ export default function InvestorSection() {
             )}
 
             {isSearching && (
-              <h2 className="mb-4 text-lg font-semibold text-[#000000]">
+              <h2 className="mb-4 font-dm-sans text-xl font-bold text-[#061A40]">
                 {groupMatches} {groupMatches === 1 ? 'result' : 'results'} for "{trimmedQuery}"
               </h2>
             )}
 
             {filteredGroups.length === 0 ? (
-              <p className="text-sm text-[#6b6b6b]">
+              <p className={`${ABOUT_CARD} px-6 py-10 text-center text-[15px] text-[#6B7280]`}>
                 {isSearching
                   ? `No documents match "${trimmedQuery}"${year === ALL_YEARS ? '' : ` in ${year}`}.`
                   : `No documents filed in ${year}.`}
@@ -444,9 +351,9 @@ export default function InvestorSection() {
             ) : (
               filteredGroups.map((g) => (
                 <section key={g.label} className="mb-12 last:mb-0">
-                  <h2 className="mb-4 text-lg font-semibold text-[#000000]">
+                  <h2 className="mb-4 font-dm-sans text-xl font-bold text-[#061A40]">
                     {g.label}
-                    <span className="ml-2 text-sm font-normal text-[#6b6b6b]">({g.items.length})</span>
+                    <span className="ml-2 text-sm font-normal text-[#6B7280]">({g.items.length})</span>
                   </h2>
                   <DocRows docs={g.items} />
                 </section>
@@ -461,18 +368,18 @@ export default function InvestorSection() {
               href={section.doc.url}
               target="_blank"
               rel="noreferrer"
-              className="group flex flex-col rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#000000]/30 hover:shadow-md"
+              className={`group flex flex-col p-6 transition-all hover:-translate-y-0.5 ${ABOUT_CARD}`}
             >
               <div className="flex items-center justify-between">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EEF1FD] text-[#3D4FE0]">
                   <FileText className="w-5 h-5" />
                 </span>
-                <span className="rounded-full bg-[#ECEDEC] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#000000]">
+                <span className="rounded-md border border-[#E5E7EB] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#6B7280]">
                   PDF
                 </span>
               </div>
-              <p className="mt-4 flex-1 text-sm font-semibold leading-snug text-[#000000]">{section.doc.title}</p>
-              <span className="mt-4 flex items-center gap-1 self-end text-xs font-medium text-black opacity-0 transition-opacity group-hover:opacity-100">
+              <p className="mt-4 flex-1 text-base font-semibold leading-snug text-[#061A40]">{section.doc.title}</p>
+              <span className="mt-4 flex items-center gap-1 self-end text-sm font-medium text-[#3D4FE0]">
                 View <ArrowUpRight className="w-3.5 h-3.5" />
               </span>
             </a>
@@ -481,87 +388,23 @@ export default function InvestorSection() {
 
         {section.kind === 'names' && (
           <>
-            <p className="text-sm text-[#6b6b6b] mb-6 leading-relaxed">
+            <p className="mb-6 text-[15px] leading-relaxed text-[#6B7280]">
               Group companies associated with Logica Infoway Limited.
             </p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {section.items.map((name) => (
-                <div key={name} className="flex flex-col items-start rounded-2xl border border-[#000000]/10 bg-white p-5 shadow-sm">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black">
+                <div key={name} className={`flex flex-col items-start p-6 ${ABOUT_CARD}`}>
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EEF1FD] text-[#3D4FE0]">
                     <Building2 className="w-5 h-5" />
                   </span>
-                  <p className="mt-4 text-sm font-semibold leading-snug text-[#000000]">{name}</p>
+                  <p className="mt-4 text-base font-semibold leading-snug text-[#061A40]">{name}</p>
                 </div>
               ))}
             </div>
           </>
         )}
 
-        {section.kind === 'disclosure' && (
-          <>
-            {/* Scrolls inside its own container: a three-column table with a
-                long particulars column cannot narrow enough for a phone
-                without the page itself scrolling sideways. */}
-            <div className="overflow-x-auto rounded-2xl border border-[#000000]/10 bg-white">
-              <table className="w-full min-w-[640px] border-collapse text-left">
-                <thead>
-                  <tr className="border-b border-[#000000]/10 bg-[#ECEDEC]">
-                    <th className="w-16 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-                      Clause
-                    </th>
-                    <th className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-                      Particulars
-                    </th>
-                    <th className="w-[42%] px-5 py-3 text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
-                      URL
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {section.rows.map((row) => (
-                    <tr key={row.clause} className="border-b border-[#000000]/10 last:border-0 align-top">
-                      <td className="px-5 py-4 text-sm font-medium tabular-nums text-[#6b6b6b]">
-                        {row.clause}
-                      </td>
-                      <td className="px-5 py-4 text-sm leading-relaxed text-[#000000]">
-                        {row.particulars}
-                      </td>
-                      {/* The address is printed in full rather than hidden
-                          behind "View": this table is read as much off a
-                          printout or a PDF of the page as on screen, where a
-                          link with no address showing says nothing. Long
-                          document URLs break anywhere so they wrap inside the
-                          cell instead of forcing the table wider. */}
-                      <td className="px-5 py-4 text-[13px] leading-relaxed [overflow-wrap:anywhere]">
-                        {row.href.startsWith('/') ? (
-                          <Link
-                            to={row.href}
-                            className="text-black underline underline-offset-2 hover:opacity-70"
-                          >
-                            {SITE_ORIGIN}
-                            {row.href}
-                          </Link>
-                        ) : (
-                          <a
-                            href={row.href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-black underline underline-offset-2 hover:opacity-70"
-                          >
-                            {row.href}
-                          </a>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
-      </section>
-
-      <Footer />
-    </div>
+        {section.kind === 'disclosure' && <Reg46Accordion rows={section.rows} />}
+    </section>
   );
 }

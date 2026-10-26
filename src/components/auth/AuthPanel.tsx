@@ -1,76 +1,16 @@
-import { useState, type CSSProperties, type FormEvent, type ReactNode } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Lock, User as UserIcon, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useAuthStore } from '../../auth-store';
+import { ABOUT_CARD } from '../about/AboutHero';
+import { AUTH_HEADING as HEADING, AUTH_SUBMIT as SUBMIT, IconField } from './fields';
 
 type Mode = 'signin' | 'signup';
-
-// Same green as the split-screen's gradient half, so the form half reads as
-// part of the same design instead of a plain black-accented card dropped
-// next to it.
-const GREEN = '#15803D';
-const LIQUID_GREEN = { '--liquid': GREEN, '--liquid-ink': '#ffffff' } as CSSProperties;
 
 interface Props {
   initialMode?: Mode;
   /** Called once sign-in or sign-up succeeds. */
   onSuccess?: () => void;
-}
-
-/** A single modern card rather than the old two-panel "slide the colored
- *  overlay across" pattern — that layout is a recognizable tutorial
- *  template (Florin Pop's CodePen), which reads as generic rather than
- *  something built for this site. One card, a pill segmented control to
- *  switch modes, icon-accented inputs and a password visibility toggle
- *  instead. */
-function IconField({
-  icon,
-  type,
-  value,
-  onChange,
-  placeholder,
-  required,
-  minLength,
-  autoComplete,
-}: {
-  icon: ReactNode;
-  type: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  required?: boolean;
-  minLength?: number;
-  autoComplete?: string;
-}) {
-  const [show, setShow] = useState(false);
-  const isPassword = type === 'password';
-  const resolvedType = isPassword ? (show ? 'text' : 'password') : type;
-
-  return (
-    <div className="relative">
-      <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9a9a9a]">{icon}</span>
-      <input
-        type={resolvedType}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        required={required}
-        minLength={minLength}
-        autoComplete={autoComplete}
-        className="h-[52px] w-full rounded-2xl border-2 border-black/10 bg-[#F7F7F7] pl-11 pr-11 text-sm text-black outline-none transition-colors placeholder:text-[#9a9a9a] focus:border-[#15803D] focus:bg-white"
-      />
-      {isPassword && (
-        <button
-          type="button"
-          onClick={() => setShow((v) => !v)}
-          aria-label={show ? 'Hide password' : 'Show password'}
-          className="absolute right-3.5 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full text-[#9a9a9a] transition-colors hover:bg-black/5 hover:text-black"
-        >
-          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-        </button>
-      )}
-    </div>
-  );
 }
 
 export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) {
@@ -128,46 +68,42 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
     setSignUpDone(true);
   }
 
+  const tab = (target: Mode) =>
+    `flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all duration-300 ${
+      mode === target
+        ? 'bg-[#061A40] text-white shadow-[0_8px_18px_-10px_rgba(6,26,64,0.7)]'
+        : 'text-[#6B7280] hover:text-[#061A40]'
+    }`;
+
   return (
     <div className="w-full max-w-md">
-      <div className="overflow-hidden rounded-3xl bg-white shadow-[0_30px_80px_-25px_rgba(0,0,0,0.35)]">
-        {/* Segmented control */}
-        <div className="p-6 pb-0 sm:p-8 sm:pb-0">
-          <div className="relative flex rounded-full bg-[#ECEDEC] p-1">
-            <span
-              className="absolute inset-y-1 w-[calc(50%-4px)] rounded-full bg-[#15803D] shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
-              style={{ transform: mode === 'signup' ? 'translateX(calc(100% + 8px))' : 'translateX(0)' }}
-            />
-            <button
-              type="button"
-              onClick={() => setMode('signin')}
-              className={`relative z-10 flex-1 rounded-full py-2.5 text-sm font-semibold transition-colors ${
-                mode === 'signin' ? 'text-white' : 'text-[#6b6b6b]'
-              }`}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode('signup')}
-              className={`relative z-10 flex-1 rounded-full py-2.5 text-sm font-semibold transition-colors ${
-                mode === 'signup' ? 'text-white' : 'text-[#6b6b6b]'
-              }`}
-            >
-              Sign Up
-            </button>
-          </div>
+      {/* One card: the Sign In / Sign Up switch, then the form. */}
+      <div className={`overflow-hidden ${ABOUT_CARD}`}>
+        {/* Sign In / Sign Up switch */}
+        <div className="mx-5 mt-5 flex gap-1 rounded-xl bg-[#F1F4FF] p-1 sm:mx-7 sm:mt-7">
+          <button type="button" onClick={() => setMode('signin')} aria-pressed={mode === 'signin'} className={tab('signin')}>
+            Sign In
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('signup')}
+            aria-pressed={mode === 'signup'}
+            className={tab('signup')}
+          >
+            Sign Up
+          </button>
         </div>
 
-        <div className="p-6 sm:p-8">
-          {mode === 'signin' ? (
-            <form onSubmit={handleSignIn} className="animate-fade-up">
-              <h1 className="text-2xl font-bold text-black" style={{ letterSpacing: '-0.02em' }}>
+        {mode === 'signin' ? (
+          <form onSubmit={handleSignIn} className="animate-fade-up">
+            {/* Module — fields */}
+            <div className="px-5 pb-2 pt-7 sm:px-7">
+              <h1 className={HEADING} style={{ letterSpacing: '-0.025em', lineHeight: 1.15 }}>
                 Welcome back
               </h1>
-              <p className="mt-1.5 text-sm text-[#6b6b6b]">Sign in to pick up right where you left off.</p>
+              <p className="mt-2 text-[15px] text-[#6B7280]">Sign in to pick up right where you left off.</p>
 
-              <div className="mt-6 space-y-3.5">
+              <div className="mt-6 space-y-3">
                 <IconField
                   icon={<Mail className="h-4 w-4" />}
                   type="email"
@@ -192,53 +128,55 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
 
               {signInError === 'Please verify your email before logging in.' &&
                 (resendSent ? (
-                  <p className="mt-1 text-xs text-[#6b6b6b]">If that account is unverified, a new link has been sent.</p>
+                  <p className="mt-1 text-xs text-[#6B7280]">If that account is unverified, a new link has been sent.</p>
                 ) : (
                   <button
                     type="button"
                     onClick={handleResendVerification}
                     disabled={resendLoading}
-                    className="mt-1 text-xs font-medium text-black underline underline-offset-2 hover:opacity-70 disabled:opacity-50"
+                    className="mt-1 text-xs font-medium text-[#061A40] underline underline-offset-2 hover:text-[#3D4FE0] disabled:opacity-50"
                   >
                     {resendLoading ? 'Sending…' : 'Resend verification email'}
                   </button>
                 ))}
 
               <div className="mt-3 flex justify-end">
-                <Link to="/forgot-password" className="text-xs text-[#6b6b6b] transition-colors hover:text-black">
+                <Link to="/forgot-password" className="text-xs font-medium text-[#6B7280] transition-colors hover:text-[#3D4FE0]">
                   Forgot your password?
                 </Link>
               </div>
-
-              <button
-                type="submit"
-                disabled={signInLoading}
-                style={LIQUID_GREEN}
-                className="btn-liquid mt-6 flex h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#15803D] text-sm font-semibold text-[#15803D] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {signInLoading ? 'Signing In…' : 'Sign In'}
-                {!signInLoading && <ArrowRight className="h-4 w-4" />}
-              </button>
-            </form>
-          ) : signUpDone ? (
-            <div className="animate-fade-up flex flex-col items-center py-6 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#DFF5E3] text-[#15803D]">
-                <CheckCircle2 className="h-7 w-7" />
-              </span>
-              <h1 className="mt-4 text-xl font-bold text-black">Check your email</h1>
-              <p className="mt-2 max-w-xs text-sm text-[#6b6b6b]">
-                We've sent a verification link to <span className="font-medium text-black">{signUpEmail}</span>. Verify
-                your address to finish creating your account.
-              </p>
             </div>
-          ) : (
-            <form onSubmit={handleSignUp} className="animate-fade-up">
-              <h1 className="text-2xl font-bold text-black" style={{ letterSpacing: '-0.02em' }}>
+
+            <div className="px-5 pb-7 pt-5 sm:px-7">
+              <button type="submit" disabled={signInLoading} className={SUBMIT}>
+                {signInLoading ? 'Signing In…' : 'Sign In'}
+                {!signInLoading && (
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
+                )}
+              </button>
+            </div>
+          </form>
+        ) : signUpDone ? (
+          <div className="animate-fade-up flex flex-col items-center px-6 py-10 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EEF1FF] text-[#3D4FE0]">
+              <CheckCircle2 className="h-7 w-7" />
+            </span>
+            <h1 className="mt-4 font-dm-sans text-2xl font-bold text-[#061A40]">Check your email</h1>
+            <p className="mt-2 max-w-xs text-sm text-[#6B7280]">
+              We've sent a verification link to <span className="font-medium text-[#061A40]">{signUpEmail}</span>. Verify
+              your address to finish creating your account.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSignUp} className="animate-fade-up">
+            {/* Module — fields */}
+            <div className="px-5 pb-2 pt-7 sm:px-7">
+              <h1 className={HEADING} style={{ letterSpacing: '-0.025em', lineHeight: 1.15 }}>
                 Create your account
               </h1>
-              <p className="mt-1.5 text-sm text-[#6b6b6b]">Takes less than a minute.</p>
+              <p className="mt-2 text-[15px] text-[#6B7280]">Takes less than a minute.</p>
 
-              <div className="mt-6 space-y-3.5">
+              <div className="mt-6 space-y-3">
                 <IconField
                   icon={<UserIcon className="h-4 w-4" />}
                   type="text"
@@ -268,34 +206,33 @@ export default function AuthPanel({ initialMode = 'signin', onSuccess }: Props) 
                     minLength={10}
                     autoComplete="new-password"
                   />
-                  <p className="mt-1.5 text-[11px] text-[#9a9a9a]">
+                  <p className="mt-2 text-xs leading-relaxed text-[#9CA3AF]">
                     10+ characters, with upper &amp; lower case, a number, and a symbol.
                   </p>
                 </div>
               </div>
 
               {signUpError && <p className="mt-3 text-xs font-medium text-red-600">{signUpError}</p>}
+            </div>
 
-              <button
-                type="submit"
-                disabled={signUpLoading}
-                style={LIQUID_GREEN}
-                className="btn-liquid mt-6 flex h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#15803D] text-sm font-semibold text-[#15803D] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-              >
+            <div className="px-5 pb-7 pt-5 sm:px-7">
+              <button type="submit" disabled={signUpLoading} className={SUBMIT}>
                 {signUpLoading ? 'Creating…' : 'Create Account'}
-                {!signUpLoading && <ArrowRight className="h-4 w-4" />}
+                {!signUpLoading && (
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
+                )}
               </button>
-            </form>
-          )}
-        </div>
+            </div>
+          </form>
+        )}
       </div>
 
-      <p className="mt-5 text-center text-xs text-[#6b6b6b]">
+      <p className="mt-5 text-center text-sm text-[#6B7280]">
         {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
         <button
           type="button"
           onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
-          className="font-semibold text-black underline underline-offset-2"
+          className="font-semibold text-[#061A40] underline underline-offset-2 hover:text-[#3D4FE0]"
         >
           {mode === 'signin' ? 'Sign up' : 'Sign in'}
         </button>

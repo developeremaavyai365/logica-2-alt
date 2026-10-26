@@ -22,7 +22,7 @@ const ORDER_TYPES = [
     image: '/images/supersoul-foundation.jpg',
     href: 'https://www.supersoulfoundation.com/index.php',
     external: true,
-    ink: '#15803D',
+    ink: '#3D4FE0',
   },
 ];
 

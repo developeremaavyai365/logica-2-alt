@@ -313,7 +313,8 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Board-Meeting-Notice-30.04.2025.pdf",
   },
   {
-    title: "Board Meeting Notice — 4th Meeting (FY 2023-24), November 6, 2023",
+    // The meeting date, as the notice gives it (Tuesday 14th November, 2023).
+    title: "Board Meeting Notice — 4th Meeting (FY 2023-24), November 14, 2023",
     year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2023/11/Board-Meeting-Notice-4.pdf",
   },
@@ -323,7 +324,8 @@ export const BOARD_MEETING_NOTICES: AnnualReport[] = [
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/Notice-and-Agenda-Board-Meeting-14.11.2024.pdf",
   },
   {
-    title: "Board Meeting Notice — 7th Meeting (FY 2023-24), February 20, 2024",
+    // The meeting date, as the notice gives it (Tuesday 27th February, 2024).
+    title: "Board Meeting Notice — 7th Meeting (FY 2023-24), February 27, 2024",
     year: "2023-24",
     url: "https://www.logicainfoway.com/wp-content/uploads/2024/08/Notice-for-Board-Meeting-7.pdf",
   },
@@ -958,6 +960,13 @@ export const MATERIAL_CREDITORS_DOC: AnnualReport = {
 
 /** Real shareholding pattern filings, mirrored from logicainfoway.com/shareholding-pattern. */
 export const SHAREHOLDING_PATTERN: AnnualReport[] = [
+  {
+    // Signed half-yearly filing (BSE SME, scrip 543746); contents checked:
+    // half year ended 30-09-2026.
+    title: "Shareholding Pattern for HY Ended 30-09-2026",
+    year: "2026-27",
+    url: "/investor/shareholding-pattern/shareholding-pattern-30-09-2026-signed.pdf",
+  },
   {
     title: "Shareholding Pattern for FY ended 31-03-2026",
     year: "2025-26",
@@ -1740,33 +1749,101 @@ export interface Reg46Row {
   particulars: string;
   /** Required: a row that links nowhere does not belong in this table. */
   href: string;
+  /** Rows that open onto contact details instead of a document list:
+   *  "officer" the Company Secretary, "officials" the Secretary and the
+   *  registrar. */
+  contact?: 'officer' | 'officials' | 'authorized';
+  /** What opens under the row, where it is not simply where `href` goes:
+   *  "names" the old and new name, "none-yet" a note that nothing has been
+   *  published. */
+  show?: 'names' | 'none-yet';
+  /** Title for the document `href` opens, where it is not `particulars`. */
+  docTitle?: string;
+  /** The exact documents the clause shows, newest first, where its section
+   *  holds more than belongs to it. A title is only needed for a document no
+   *  investor section lists. */
+  docs?: { url: string; title?: string }[];
+  /** For a clause showing its section's documents: ones to leave out, by
+   *  URL, because they are filed there but are not what the clause asks for. */
+  exclude?: string[];
+  /** For a clause showing its section's documents: ones filed in another
+   *  section that belong here as well, by URL. */
+  include?: string[];
+  /** A boxed statement in place of documents ("Nil Disclosure", "Not
+   *  Applicable"). */
+  notice?: { title: string; text: string };
 }
 
+/** Grievance contacts, as published on the Grievance Redressal page
+ *  (public/images/investor/grievance-redressal.jpg). */
+export const GRIEVANCE_OFFICER = {
+  name: 'Ms. Priyanka Gera',
+  designation: 'Company Secretary and Compliance Officer',
+  company: 'Logica Infoway Limited',
+  formerly: 'Formerly known as Eastern Logica Infoway Limited',
+  registeredOffice: '2, Saklat Place, 1st Floor, Kolkata 700072, West Bengal',
+  email: 'investor.relations@easternlogica.com',
+  phone: '011 4362 8116',
+};
+
+/** The key managerial personnel authorised to determine materiality and
+ *  make disclosures to the stock exchanges, as published on the Authorized
+ *  Person page (public/images/investor/authorized-person.jpg). */
+export const AUTHORIZED_PERSON = {
+  name: 'Mr. Deepak Kumar Jha',
+  designation: 'Chief Financial Officer',
+  email: 'deepak.jha@logicainfoway.com',
+  phone: '033 4058-0000',
+};
+
+export const REGISTRAR = {
+  name: 'KFin Technologies Limited',
+  role: 'Registrar and Share Transfer Agent',
+  address: 'Selenium, Tower-B, Plot 31 & 32, Gachibowli, Financial District, Nanakramguda, Hyderabad 500032, Telangana',
+  email: 'easternlogica.ipo@kfintech.com',
+};
+
 export const REG_46: Reg46Row[] = [
-  { clause: "(a)", particulars: "Details of its business", href: "/about" },
+  { clause: "(a)", particulars: "Details of Business", href: "/about" },
+  {
+    clause: "(aa)",
+    particulars: "Memorandum of Association and Articles of Association",
+    href: "/investor/reg-46/coi-moa-aoa.pdf",
+    docs: [
+      {
+        url: "/investor/reg-46/coi-moa-aoa.pdf",
+        title: "Certificate of Incorporation, Memorandum of Association and Articles of Association",
+      },
+    ],
+  },
+  {
+    clause: "(ab)",
+    particulars: "Brief profile of board of directors including directorship and full time positions in body corporates",
+    href: "/about/board-of-directors-and-kmp",
+  },
   {
     clause: "(b)",
-    particulars: "Terms and conditions of appointment of independent directors",
+    particulars: "Terms and conditions of appointment of Independent Directors",
     href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-on-Terms-of-Appointment-of-Independent-Directors-1.pdf",
   },
   {
     clause: "(c)",
-    particulars: "Composition of various committees of the board of directors",
+    particulars: "Composition of various committees of Board of Directors",
     href: "/about/composition-of-committees",
   },
   {
     clause: "(d)",
-    particulars: "Code of conduct of board of directors and senior management personnel",
+    particulars: "Code of conduct of Board of Directors and Senior Management",
     href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Code-of-Conduct-for-Directors-and-Senior-Management-1.pdf",
   },
   {
     clause: "(e)",
-    particulars: "Details of establishment of vigil mechanism / whistle blower policy",
+    particulars: "Details of establishment of vigil mechanism / Whistle Blower policy",
     href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Vigil-Mechanism_Whistle-Blower-Policy-for-Directors-and-Employees-1.pdf",
   },
   {
     clause: "(f)",
-    particulars: "Criteria of making payments to non-executive directors",
+    particulars: "Criteria of making payments to non-executive Directors",
     href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Nomination-and-Remuneration-Policy-1.pdf",
   },
   {
@@ -1777,75 +1854,201 @@ export const REG_46: Reg46Row[] = [
   {
     clause: "(h)",
     particulars: "Policy for determining material subsidiaries",
-    href: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Materiality-Policy-for-Identification-of-Group-Companies-1.pdf",
+    href: "/investor/policies",
+    notice: {
+      title: "Not Applicable",
+      text: "The Company does not have any subsidiary. Hence, the policy for determining material subsidiaries is not applicable.",
+    },
   },
   {
     clause: "(i)",
-    particulars: "Details of familiarisation programmes imparted to independent directors",
+    particulars: "Familiarization programmes imparted to Independent Directors",
     href: "/investor/familiarization-program",
   },
   {
     clause: "(j)",
     particulars: "Email address for grievance redressal and other relevant details",
     href: "/grievance-redressal",
+    contact: "officer",
   },
   {
     clause: "(k)",
     particulars:
       "Contact information of the designated officials responsible for assisting and handling investor grievances",
     href: "/grievance-redressal",
+    contact: "officials",
   },
   {
     clause: "(l)(i)",
     particulars: "Notice of meeting of the board of directors where financial results are to be discussed",
     href: "/investor/board-meeting",
+    // One per results meeting: the intimation to the exchange where there is
+    // one, otherwise the notice to the directors, whose agenda lists the
+    // results (checked against each document).
+    docs: [
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/Board-Meeting-Intimation-for-Approval-Of-Audited-Financial-Results-Of-The-Company-For-The-Period-Ended-March-31-2026-And-Other-Routine-Business-Matters.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Board-Meeting-Intimation-for-Approval-of-Half-yearly-FS-to-be-held-on-Friday-November-14-2025.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2025/05/Board-Meeting-intimation-for-approval-of-Financial-Statement-for-the-Year-ended-31-03-2025.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2024/11/BM-Intimation-for-approval-of-half-year-FS-30-Sept-24-signed.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2024/10/Notice-of-Board-Meeting-dated-30-05-2024.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2023/11/Board-Meeting-Notice-4.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2023/05/INTIMATION-UNDER-REG-29.pdf" },
+    ],
   },
   {
     clause: "(l)(ii)",
     particulars: "Financial results, on conclusion of the meeting of the board of directors",
     href: "/investor/financial-results",
+    exclude: [
+      // Not financial results: a governance compliance report, a results
+      // presentation, and two years' directors' reports.
+      "https://www.logicainfoway.com/wp-content/uploads/2025/01/Integrated-Governance-Report-Quarter-Ended-Dec-31-2024.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2024/11/Investor-Presentation-for-FR-30092024_compressed.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2022/08/REPORT-OF-THE-DIRECTORS-FOR-THE-FINANCIAL-YEAR-2019-20.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2022/08/REPORT-OF-THE-DIRECTORS-FOR-THE-FINANCIAL-YEAR-2020-21.pdf",
+      // Second copies of documents already listed.
+      "https://www.logicainfoway.com/wp-content/uploads/2025/06/Revised-Financial-Results-For-Half-Year-And-Year-Ended-March-31-2025._compressed-2.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2023/05/Financial-Result.pdf",
+      // Management discussion and analysis submissions, not results.
+      "https://www.logicainfoway.com/wp-content/uploads/2025/11/Submission-Of-Management-Discussion-Analysis-Report-On-Unaudited-Financial-Results-For-Half-Year-Ended-September-30-2025.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2026/05/Submission-Of-Management-Discussion-Analysis-H2-FY26-FY26.pdf",
+    ],
   },
   {
     clause: "(l)(iii)",
     particulars:
       "Complete copy of the annual report, including balance sheet, statement of profit and loss, directors' report and corporate governance report",
     href: "/investor/annual-report",
+    exclude: [
+      "https://www.logicainfoway.com/wp-content/uploads/2025/09/30TH-AGM-NOTICE-ANNUAL-REPORT-FY-202425.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2025/09/Corrigendum-To-The-Annual-Report-For-FY-2024-25-And-Notice-Of-The-30Th-Annual-General-Meeting-AGM-Material-Update.pdf",
+    ],
   },
-  { clause: "(m)", particulars: "Shareholding pattern", href: "/investor/shareholding-pattern" },
+  {
+    clause: "(m)",
+    particulars: "Shareholding Pattern",
+    href: "/investor/shareholding-pattern",
+    include: ["https://www.logicainfoway.com/wp-content/uploads/2023/04/Shareholding-Pattern-as-per-Regulation-31.pdf"],
+  },
+  {
+    clause: "(n)",
+    particulars: "Details of agreements entered into with the media companies and/or their associates, etc",
+    href: "/investor/reg-46",
+    notice: {
+      title: "Nil Disclosure",
+      text: "No agreements have been entered into with media companies and/or their associates.",
+    },
+  },
+  {
+    clause: "(o)",
+    particulars:
+      "Schedule of analysts or institutional investors meet and presentations made by the listed entity to analysts or institutional investors",
+    href: "/investor/corporate-announcement",
+    docs: [
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Outcome-of-AnalystInstitutional-Investor-Meeting-under-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Announcement-under-Regulation-30-LODR-Investor-Presentation.pdf" },
+    ],
+  },
   {
     clause: "(p)",
     particulars:
       "New name and old name of the listed entity, for a continuous period of one year from the date of the change",
     href: "/about",
+    show: "names",
   },
   {
     clause: "(q)",
     particulars: "Advertisements as per regulation 47(1)",
     href: "/advertisement",
+    docs: [{ url: "/investor/compliance-disclosures/announcement-under-regulation-30-lodr-newspaper-publication-08-09-2026.pdf", title: "Newspaper Advertisement — Notice of the 31st Annual General Meeting (Financial Express and Ek Din), September 8, 2026" }],
+  },
+  {
+    clause: "(r)",
+    particulars:
+      "Credit ratings obtained by the entity for all its outstanding instruments, updated immediately as and when there is any revision in any of the ratings",
+    // No credit rating is published.
+    href: "/investor/reg-46",
+    show: "none-yet",
   },
   {
     clause: "(s)",
     particulars: "Separate audited financial statements of each subsidiary",
     href: "/investor/subsidiary-audit-reports",
+    notice: {
+      title: "Not Applicable",
+      text: "The Company does not have any subsidiary. Hence, separate audited financial statements of subsidiaries are not applicable.",
+    },
   },
   {
     clause: "(t)",
     particulars: "Secretarial compliance report",
     href: "/investor/secretarial-compliance",
+    // The clause is the annual secretarial compliance report of Regulation
+    // 24A, which the Company files a non-applicability letter for as an SME.
+    // The secretarial audit reports (Form MR-3, section 204 of the Companies
+    // Act) are a different report and stay on their own page.
+    exclude: [
+      "https://www.logicainfoway.com/wp-content/uploads/2024/10/SECRETARIAL-AUDIT-REPORT-MR3-signed.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2023/07/SEC-REPORT.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2023/03/Secretarial-Audit-report-2021-22.pdf",
+    ],
+    include: [
+      "https://www.logicainfoway.com/wp-content/uploads/2024/04/Declaration-with-respect-to-Non-Applicability-of-Annual-Secretarial-Compliance-Report.pdf",
+      "https://www.logicainfoway.com/wp-content/uploads/2023/05/REG-24A-NON-APPLICABILITY.pdf",
+    ],
   },
   {
     clause: "(u)",
-    particulars: "Disclosure of related party transactions on a consolidated basis",
-    href: "/investor/corporate-announcement",
+    particulars:
+      "Disclosure of the policy for determination of materiality of events or information required under clause (ii), sub-regulation (4) of regulation 30",
+    href: "/investor/policies",
+    docs: [
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/Policy-on-Disclosure-of-Material-EventsInformation.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2023/07/policy-on-disclosure-of-material-event.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Determination-of-Material-Events-and-Disclosure.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2022/09/Policy-for-Determination-of-Material-Events-and-Disclosure-1.pdf" },
+    ],
   },
   {
     clause: "(v)",
-    particulars: "Statements of deviation or variation as specified in regulation 32",
-    href: "/investor/fund-raising",
+    particulars:
+      "Contact details of key managerial personnel who are authorized for the purpose of determining materiality of an event or information",
+    href: "/authorized-person",
+    contact: "authorized",
+  },
+  {
+    clause: "(w)",
+    particulars: "Disclosures under sub-regulation (8) of regulation 30",
+    href: "/investor/corporate-announcement",
   },
   {
     clause: "(x)",
-    particulars: "Annual return as provided under section 92 of the Companies Act, 2013",
+    particulars: "Statements of deviation(s) or variation(s) as specified in regulation 32",
+    href: "/investor/fund-raising",
+    docs: [
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2026/05/3.-Statement-Of-Deviation-Or-Variation-In-Utilization-Of-Funds-For-The-Half-Year-Ended-March-31-2026.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Statement-Of-Deviation-Or-Variation-In-Utilization-Of-Funds-For-The-Half-Year-Ended-September-30-2025.pdf" },
+      { url: "https://www.logicainfoway.com/wp-content/uploads/2025/06/Statement-of-DeviationVariation-for-half-year-ended-March-31-2025-pertaining-to-funds-raised-under-Preferential-Issue-on-March-01-2025.-investor.pdf" },
+    ],
+  },
+  {
+    clause: "(y)",
+    particulars:
+      "Dividend distribution policy by listed entities based on market capitalization as specified in sub-regulation (1) of regulation 43A",
+    // No dividend distribution policy is published.
+    href: "/investor/policies",
+    show: "none-yet",
+  },
+  {
+    clause: "(z)",
+    particulars: "Annual Return",
     href: "/investor/annual-return",
+  },
+  {
+    clause: "(za)",
+    particulars: "ESOP Scheme",
+    // No employee stock option scheme document is published.
+    href: "/investor/policies",
+    show: "none-yet",
   },
 ];

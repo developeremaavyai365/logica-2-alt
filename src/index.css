@@ -22,6 +22,113 @@ html, body, #root {
   display: none;
 }
 
+/* ===== Shop page primitives ===== */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.shop-focus-ring:focus-visible {
+  outline: 2px solid #0E0E0E;
+  outline-offset: 2px;
+}
+
+/* Non-linear dual-thumb price slider — same native-range technique as
+   .price-range: two transparent range inputs stacked over a track of blocks
+   drawn in JSX. The thumb is a rounded-rectangle handle, 18px wide (kept in
+   step with THUMB_PX in PriceRangeSlider.tsx). */
+.shop-range {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+}
+.shop-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  box-sizing: border-box;
+  height: 26px;
+  width: 18px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 2px solid #0E0E0E;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+}
+.shop-range::-moz-range-thumb {
+  pointer-events: auto;
+  box-sizing: border-box;
+  height: 26px;
+  width: 18px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 2px solid #0E0E0E;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+}
+.shop-range::-moz-range-track {
+  background: transparent;
+}
+.shop-range::-webkit-slider-thumb:hover,
+.shop-range:focus-visible::-webkit-slider-thumb {
+  border-color: #3D4FE0;
+}
+.shop-range::-moz-range-thumb:hover,
+.shop-range:focus-visible::-moz-range-thumb {
+  border-color: #3D4FE0;
+}
+.shop-range:active::-webkit-slider-thumb {
+  cursor: grabbing;
+}
+.shop-range:focus-visible {
+  outline: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .shop-range::-webkit-slider-thumb {
+    transition: border-color 0.15s ease-out;
+  }
+}
+
+/* Brand filter: the tick on a selected brand card pops in — overshoots a
+   little and settles — rather than just appearing. */
+@keyframes brandTick {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.brand-tick { animation: brandTick 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .brand-tick { animation: none; }
+}
+
+/* Express-delivery banner: the lettering that turns around the clock. The
+   rest of the scene is animated from ExpressScene.tsx, which also holds it
+   still under a reduced-motion setting. */
+@keyframes expressSpin {
+  to { transform: rotate(360deg); }
+}
+.express-spin { transform-origin: 50% 50%; animation: expressSpin 40s linear infinite; }
+/* The pincode ticket: a rounded card with a half-circle notch bitten out of
+   each side, level with its tear line (68px + the 2px line above the foot). */
+.express-ticket {
+  border-radius: 18px;
+  -webkit-mask:
+    radial-gradient(circle 11px at 0 calc(100% - 69px), transparent 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 11px at 100% calc(100% - 69px), transparent 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 11px at 0 calc(100% - 69px), transparent 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 11px at 100% calc(100% - 69px), transparent 97%, #000) right / 51% 100% no-repeat;
+}
+@media (prefers-reduced-motion: reduce) {
+  .express-spin { animation: none; }
+}
+
 @keyframes marqueeScroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -318,7 +425,7 @@ html, body, #root {
   --sweep: 0deg;
   animation: journeyProgressRing linear both;
   border: none !important;
-  background: conic-gradient(var(--ring-color, #15803D) var(--sweep), transparent var(--sweep));
+  background: conic-gradient(var(--ring-color, #3D4FE0) var(--sweep), transparent var(--sweep));
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
   mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
 }
@@ -330,4 +437,26 @@ html, body, #root {
 }
 .animate-journey-click {
   animation: journeyClick 0.6s ease-out both;
+}
+
+/* Media page: a photo sliding into the lightbox from the side it came from
+   (--from is set on the image), and the slow zoom on the highlights slider. */
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--from, 0)) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes media-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
 }

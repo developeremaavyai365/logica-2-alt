@@ -1,8 +1,48 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { ArrowLeft, ArrowRight, CheckCircle2, Hash, LinkIcon, Lock, LogOut, Type } from 'lucide-react';
 import { useAuthStore } from '../auth-store';
+import AuthShell, { TitleGlow } from '../components/auth/AuthShell';
+import { AUTH_HEADING, AUTH_SUBMIT, IconField } from '../components/auth/fields';
+import { ABOUT_CARD } from '../components/about/AboutHero';
+
+/** What makes a password the backend accepts, and what happens after. */
+const TIPS = [
+  { icon: Type, text: 'At least 10 characters, with upper and lower case letters' },
+  { icon: Hash, text: 'Include at least one number and one symbol' },
+  { icon: LogOut, text: 'For your safety, every signed-in device is signed out once you reset' },
+];
+
+/** A centred message in the card: an icon, a title, a line of text and an
+ *  action. Used for the missing-link and the done states. */
+function Notice({
+  tone,
+  icon,
+  title,
+  children,
+  action,
+}: {
+  tone: 'ok' | 'error';
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+  action: React.ReactNode;
+}) {
+  return (
+    <div className="animate-fade-up flex flex-col items-center px-6 py-12 text-center sm:px-10">
+      <span
+        className={`flex h-14 w-14 items-center justify-center rounded-full ${
+          tone === 'ok' ? 'bg-[#EEF1FF] text-[#3D4FE0]' : 'bg-red-50 text-red-600'
+        }`}
+      >
+        {icon}
+      </span>
+      <h1 className="mt-4 font-dm-sans text-2xl font-bold text-[#061A40]">{title}</h1>
+      <p className="mt-2 max-w-xs text-sm leading-relaxed text-[#6B7280]">{children}</p>
+      <div className="mt-7 w-full">{action}</div>
+    </div>
+  );
+}
 
 export default function ResetPassword() {
   const { resetPassword } = useAuthStore();
@@ -17,7 +57,7 @@ export default function ResetPassword() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!token) {
-      setError('This reset link is missing its token — please request a new one.');
+      setError('This reset link is missing its token. Please request a new one.');
       return;
     }
     setError('');
@@ -31,69 +71,96 @@ export default function ResetPassword() {
     setDone(true);
   }
 
+  const arrow = <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />;
+
   return (
-    <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-      </div>
-      <section className="flex justify-center px-4 py-20 sm:px-6 md:px-10">
-        <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg">
-          <h1 className="text-xl font-bold text-[#000000]">Set a new password</h1>
+    <AuthShell
+      eyebrow="Account recovery"
+      title={
+        <>
+          Almost there. <TitleGlow>Pick a new password.</TitleGlow>
+        </>
+      }
+      text="Choose a strong password you haven't used before, then sign back in."
+      points={TIPS}
+    >
+      <div className="w-full max-w-md">
+        <div className={`overflow-hidden ${ABOUT_CARD}`}>
+          {!token ? (
+            <Notice
+              tone="error"
+              icon={<LinkIcon className="h-7 w-7" />}
+              title="This link isn't complete"
+              action={
+                <Link to="/forgot-password" className={AUTH_SUBMIT}>
+                  Request a new link
+                  {arrow}
+                </Link>
+              }
+            >
+              The reset link is missing its token. Request a new one and use the link from that email.
+            </Notice>
+          ) : done ? (
+            <Notice
+              tone="ok"
+              icon={<CheckCircle2 className="h-7 w-7" />}
+              title="Password reset"
+              action={
+                <Link to="/login" className={AUTH_SUBMIT}>
+                  Sign in
+                  {arrow}
+                </Link>
+              }
+            >
+              For your safety, every existing session on your account has been signed out. Sign in with your new password.
+            </Notice>
+          ) : (
+            <form onSubmit={handleSubmit} className="animate-fade-up">
+              <div className="px-5 pb-2 pt-7 sm:px-7">
+                <h1 className={AUTH_HEADING} style={{ letterSpacing: '-0.025em', lineHeight: 1.15 }}>
+                  Set a new password
+                </h1>
+                <p className="mt-2 text-[15px] text-[#6B7280]">Choose a new password for your account.</p>
 
-          {!token && (
-            <p className="mt-4 text-sm text-red-600">
-              This link is missing its reset token. Request a new one from the{' '}
-              <Link to="/forgot-password" className="underline">
-                forgot password
-              </Link>{' '}
-              page.
-            </p>
-          )}
+                <div className="mt-6">
+                  <IconField
+                    icon={<Lock className="h-4 w-4" />}
+                    type="password"
+                    value={password}
+                    onChange={setPassword}
+                    placeholder="New password"
+                    required
+                    minLength={10}
+                    autoComplete="new-password"
+                  />
+                  <p className="mt-2 text-xs leading-relaxed text-[#9CA3AF]">
+                    10+ characters, with upper &amp; lower case, a number, and a symbol.
+                  </p>
+                </div>
 
-          {token && !done && (
-            <form onSubmit={handleSubmit}>
-              <p className="mt-2 text-sm text-[#6b6b6b]">Choose a new password for your account.</p>
-              <input
-                type="password"
-                required
-                minLength={10}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="New password"
-                className="mt-5 w-full rounded-lg border border-[#000000]/15 bg-[#ECEDEC] px-4 py-3 text-sm text-[#000000] outline-none transition-colors focus:border-[#000000]/40"
-              />
-              <p className="mt-1.5 text-[11px] text-[#6b6b6b]">
-                10+ characters, with upper &amp; lower case, a number, and a symbol.
-              </p>
+                {error && <p className="mt-3 text-xs font-medium text-red-600">{error}</p>}
+              </div>
 
-              {error && <p className="mt-3 text-xs font-medium text-red-600">{error}</p>}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-liquid mt-5 w-full rounded-full border-2 border-[#000000] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#000000] transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {loading ? 'Resetting…' : 'Reset Password'}
-              </button>
+              <div className="px-5 pb-7 pt-5 sm:px-7">
+                <button type="submit" disabled={loading} className={AUTH_SUBMIT}>
+                  {loading ? 'Resetting…' : 'Reset Password'}
+                  {!loading && arrow}
+                </button>
+              </div>
             </form>
           )}
+        </div>
 
-          {done && (
-            <p className="mt-4 text-sm text-[#6b6b6b]">
-              Password reset. Every existing session on your account has been signed out for safety — please{' '}
-              <Link to="/login" className="font-medium text-[#000000] underline">
-                sign in
-              </Link>{' '}
-              with your new password.
-            </p>
-          )}
-
-          <Link to="/login" className="mt-5 block text-center text-xs text-[#6b6b6b] hover:text-[#000000] transition-colors">
+        {!done && (
+          <Link
+            to="/login"
+            className="group mx-auto mt-5 flex w-fit items-center gap-1.5 text-sm font-semibold text-[#061A40] transition-colors hover:text-[#3D4FE0]"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:-translate-x-1" />
             Back to Sign In
           </Link>
-        </div>
-      </section>
-      <Footer />
-    </div>
+        )}
+      </div>
+    </AuthShell>
   );
 }

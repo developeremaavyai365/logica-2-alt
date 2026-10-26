@@ -14,11 +14,16 @@ export const OVERVIEW_SCALE = {
   cities: 11,
 };
 
+/* Revenue from operations, from the audited results for the year ended
+   March 31, 2026 (public/investor/financial-results/
+   board-meeting-outcome-financial-results-31-03-2026.pdf), which also gives
+   the FY2025 figure it is compared with. */
 export const OVERVIEW_FINANCIALS = {
-  year: '2021',
-  profitBeforeTax: '₹314.20 lakhs',
-  priorYear: '2020',
-  priorYearProfitBeforeTax: '₹255.86 lakhs',
+  metric: 'Revenue from operations',
+  year: '2026',
+  value: '₹1,31,572.09 lakhs',
+  priorYear: '2025',
+  priorYearValue: '₹1,11,924.00 lakhs',
 };
 
 export const MISSION_STATEMENT =

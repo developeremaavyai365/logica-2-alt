@@ -40,13 +40,11 @@ export const MEDIA_ENTRIES: MediaEntry[] = [
     date: "August 2025",
     sortDate: "2025-08",
     category: "award",
-    images: [
-      "/media/2025/INDUSTRY-EXCELLENCE-AWARD--scaled.jpg",
-      "/media/2025/PSP_6589.jpg",
-      "/media/2025/100.jpg",
-      "/media/2025/01.jpg",
-      "/media/2025/10.jpg",
-    ],
+    // 100.jpg, 01.jpg and 10.jpg used to be listed here too, but they are
+    // Holi photos (moved to Holi 2025): when the old site's uploads were
+    // copied into one /media/2025 folder, Holi photos with the same file
+    // names took the place of this award's own.
+    images: ["/media/2025/INDUSTRY-EXCELLENCE-AWARD--scaled.jpg", "/media/2025/PSP_6589.jpg"],
   },
   {
     title: "Distribution of the Year 2025 — CNB (Kolkata)",
@@ -60,14 +58,24 @@ export const MEDIA_ENTRIES: MediaEntry[] = [
     date: "August 2025",
     sortDate: "2025-08",
     category: "award",
-    images: ["/media/2025/MBO-OF-THE-YEAR-2025-KOLKATA--scaled.jpg", "/media/2025/003.jpg"],
+    // 003.jpg was listed here too, but it is a Holi 2025 photo — see the
+    // note on the Industry Excellence Award.
+    images: ["/media/2025/MBO-OF-THE-YEAR-2025-KOLKATA--scaled.jpg"],
   },
   {
     title: "Holi Celebration - 2025",
     date: "March 2025",
     sortDate: "2025-03",
     category: "event",
-    images: ["/media/2025/001-1.jpg", "/media/2025/008.jpg", "/media/2025/003.jpg"],
+    images: [
+      "/media/2025/001-1.jpg",
+      "/media/2025/008.jpg",
+      "/media/2025/003.jpg",
+      // Found filed under awards; they are from this Holi.
+      "/media/2025/01.jpg",
+      "/media/2025/100.jpg",
+      "/media/2025/10.jpg",
+    ],
   },
   {
     title: "Women's Day Celebration - 2025",
@@ -123,8 +131,8 @@ export const MEDIA_ENTRIES: MediaEntry[] = [
     images: [
       "/media/2024/hp-award-002-1-scaled.jpg",
       "/media/2024/hp-award-001-1-scaled.jpg",
+      // 002-1-scaled.jpg was a near-identical second frame of 001-2.jpg.
       "/media/2024/001-2.jpg",
-      "/media/2024/002-1-scaled.jpg",
     ],
   },
   {
@@ -181,7 +189,7 @@ export const MEDIA_ENTRIES: MediaEntry[] = [
 /** Standing brand-partner certifications (no specific date — evergreen archive). */
 export const MEDIA_CERTIFICATES: { name: string; image: string }[] = [
   { name: "Vivo", image: "/media/certificates/VIVO-CERTIFICATE-1-300x300.jpg" },
-  { name: "Samsung", image: "/media/certificates/SAMSUNG-SUPERSTAR-1-300x300.jpg" },
+  // The Samsung Super Star trophy is shown once, as its award entry.
   { name: "OPPO Certificate of Appreciation", image: "/media/certificates/OPPO-CERTIFICATE-OF-APPRECIATION-1-300x300.jpg" },
   { name: "OPPO", image: "/media/certificates/OPPO-1-300x300.jpg" },
   { name: "Lenovo", image: "/media/certificates/LENOVO-CERTIFICATE-1-300x300.jpg" },

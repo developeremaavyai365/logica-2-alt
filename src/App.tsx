@@ -1,29 +1,26 @@
 import { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { LayoutGroup } from 'framer-motion';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import CategoryPage from './pages/CategoryPage';
 import ProductPage from './pages/ProductPage';
 import About from './pages/About';
-import BoardOfDirectors from './pages/about/BoardOfDirectors';
-import Committees from './pages/about/Committees';
 import Contact from './pages/Contact';
 import Careers from './pages/Careers';
 import OpenRoles from './pages/careers/OpenRoles';
 import Apply from './pages/careers/Apply';
 import RoleDetail from './pages/careers/RoleDetail';
-import Media from './pages/Media';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 // The investor pages pull in investor-data.ts (~70KB of document metadata for
 // ~300 filings). Loading them lazily keeps that out of the main bundle, so a
 // visitor to the homepage or shop no longer downloads the whole IR dataset.
-const InvestorHub = lazy(() => import('./pages/investor/InvestorHub'));
-const InvestorSection = lazy(() => import('./pages/investor/InvestorSection'));
-import AuthorizedPerson from './pages/investor/AuthorizedPerson';
-import GrievanceRedressal from './pages/investor/GrievanceRedressal';
-import InvestorEmptyPage from './pages/investor/InvestorEmptyPage';
+// Every investor address renders the one investor page, which swaps its
+// content in place under a shared hero.
+const InvestorPage = lazy(() => import('./pages/investor/InvestorPage'));
+// Admin-only, so it stays out of the bundle every visitor downloads.
+const SapImport = lazy(() => import('./pages/admin/SapImport'));
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
@@ -45,49 +42,46 @@ function App() {
         <Route path="/shop/:category" element={<CategoryPage />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/about" element={<About />} />
-        <Route path="/about/board-of-directors-and-kmp" element={<BoardOfDirectors />} />
-        <Route path="/about/composition-of-committees" element={<Committees />} />
+        <Route path="/about/board-of-directors-and-kmp" element={<About />} />
+        <Route path="/about/composition-of-committees" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/careers/open-roles" element={<OpenRoles />} />
         <Route path="/careers/open-roles/:id" element={<RoleDetail />} />
         <Route path="/careers/apply" element={<Apply />} />
-        <Route path="/media" element={<Media />} />
+        <Route path="/about/media" element={<About />} />
+        {/* Media is a tab of About now; keep old links working. */}
+        <Route path="/media" element={<Navigate to="/about/media" replace />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<Orders />} />
+        <Route
+          path="/admin/sap-import"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#ECEDEC]" />}>
+              <SapImport />
+            </Suspense>
+          }
+        />
         <Route path="/login" element={<Auth mode="signin" />} />
         <Route path="/signup" element={<Auth mode="signup" />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route
-          path="/investor"
-          element={
-            <Suspense fallback={<div className="min-h-screen bg-[#ECEDEC]" />}>
-              <InvestorHub />
-            </Suspense>
-          }
-        />
-        <Route path="/authorized-person" element={<AuthorizedPerson />} />
-        <Route path="/grievance-redressal" element={<GrievanceRedressal />} />
-        <Route
-          path="/advertisement"
-          element={<InvestorEmptyPage title="Advertisement" message="No advertisements have been published yet." />}
-        />
-        <Route
-          path="/basis-of-allotment"
-          element={<InvestorEmptyPage title="Basis Of Allotment" message="No basis of allotment records have been published yet." />}
-        />
-        <Route
-          path="/investor/:slug"
-          element={
-            <Suspense fallback={<div className="min-h-screen bg-[#ECEDEC]" />}>
-              <InvestorSection />
-            </Suspense>
-          }
-        />
+        {['/investor', '/investor/:slug', '/advertisement', '/basis-of-allotment', '/authorized-person', '/grievance-redressal'].map(
+          (path) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+                  <InvestorPage />
+                </Suspense>
+              }
+            />
+          ),
+        )}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <FeedbackWidget />

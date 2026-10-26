@@ -1,81 +1,136 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import ProductCard from '../ProductCard';
 import { FilterSidebar, type FilterSelection } from './FilterSidebar';
 import TypewriterSearchInput from './TypewriterSearchInput';
-import Select from '../form/fields/Select';
-import { FACET_ORDER, SHOP_COLORS, buildFacets, getPriceBounds, priceStepFor, type FacetKey } from '../../shop-facets';
-import type { Product } from '../../data';
+import CategoryNavBar from './CategoryNavBar';
+import ResultsToolbar from './ResultsToolbar';
+import Pagination from './Pagination';
+import { buildActiveChips } from './ActiveFilterChips';
+import { discountOf } from './DiscountFilter';
+import DealsRow from './DealsRow';
+import DeliveryBanner from './DeliveryBanner';
+import BrandSpotlightSlider, { type BrandSlide } from './BrandSpotlightSlider';
+import TopFiveStrip from './TopFiveStrip';
+import { getPriceBounds } from '../../shop-facets';
+import { parseShopParams, serializeShopParams } from '../../shop-filter-state';
+import { matchProduct } from '../../shop-search';
+import { categories, type Product } from '../../data';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
-type SortKey = 'featured' | 'price-asc' | 'price-desc' | 'rating' | 'discount';
-
-const SORT_OPTIONS: { key: SortKey; label: string }[] = [
-  { key: 'featured', label: 'Featured' },
-  { key: 'price-asc', label: 'Price: Low to High' },
-  { key: 'price-desc', label: 'Price: High to Low' },
-  { key: 'rating', label: 'Top Rated' },
-  { key: 'discount', label: 'Biggest Discount' },
-];
+const PAGE_SIZE = 24;
 
 function scoreDiscount(p: Product) {
   if (!p.mrp || p.mrp <= p.price) return 0;
   return (p.mrp - p.price) / p.mrp;
 }
 
-const PAGE_SIZE = 24;
-
-function pageItems(current: number, total: number): (number | '…')[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-  const out: (number | '…')[] = [1];
-  const start = Math.max(2, current - 1);
-  const end = Math.min(total - 1, current + 1);
-  if (start > 2) out.push('…');
-  for (let i = start; i <= end; i++) out.push(i);
-  if (end < total - 1) out.push('…');
-  out.push(total);
-  return out;
-}
-
 export default function ShopBrowser({
   products,
   accent,
   initialBrand,
-  interstitials,
+  lockCategory,
 }: {
   products: Product[];
   accent: string;
   initialBrand?: string;
-  /** Full-width promo blocks spliced into the grid, only on page 1 —
-   *  `afterCount` is how many product cards should render before it. */
-  interstitials?: { afterCount: number; node: ReactNode }[];
+  /** When set (from CategoryPage), the category filter is fixed and the
+   *  `?cat=` param is not used — `products` is already scoped. */
+  lockCategory?: boolean;
 }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const parsed = useMemo(() => parseShopParams(searchParams), [searchParams]);
+  const reducedMotion = usePrefersReducedMotion();
+
   const [priceMin, priceMax] = useMemo(() => getPriceBounds(products), [products]);
-  const priceStep = useMemo(() => priceStepFor(priceMax - priceMin), [priceMin, priceMax]);
 
-  const emptySelection = useMemo<FilterSelection>(
-    () => ({ attrs: {}, brands: initialBrand ? [initialBrand] : [], price: [priceMin, priceMax] }),
-    [initialBrand, priceMin, priceMax],
-  );
+  // Merchandising sections have no real slot/deal data behind them yet, so
+  // every one is derived from the catalog that's already loaded, per a
+  // fixed fallback formula rather than left empty or fabricated:
+  //  - Deal of the Day: highest-discount in-stock product
+  //  - Promo cards: the next 3 highest-discount in-stock products
+  //  - "More top deals" grid: the 4 after those
+  //  - Top 5: the 5 after those, so no product appears twice
+  const merch = useMemo(() => {
+    const byDiscount = [...products].filter((p) => p.inStock).sort((a, b) => scoreDiscount(b) - scoreDiscount(a));
+    const dealProduct = byDiscount[0];
+    const promoProducts = byDiscount.slice(1, 4);
+    const gridProducts = byDiscount.slice(4, 8);
+    const topFive = byDiscount.slice(8, 13);
 
-  const [queryInput, setQueryInput] = useState('');
-  const [query, setQuery] = useState('');
+    const brandSlideDefs: {
+      key: string;
+      brand: string;
+      headline: string;
+      category?: string;
+      bg: string;
+      video?: string;
+      playThrough?: boolean;
+      vimeoEmbedUrl?: string;
+    }[] = [
+      {
+        key: 'apple',
+        brand: 'Apple',
+        headline: 'The latest from Apple',
+        bg: '#000000',
+        // A 66-second film, not a short loop — so the slide waits for it to
+        // finish instead of cutting it off after the usual five seconds.
+        video: '/video/iphone-duo.mp4',
+        playThrough: true,
+      },
+      {
+        key: 'samsung-phones',
+        brand: 'Samsung',
+        category: 'mobile-phones',
+        headline: 'Galaxy, unlocked',
+        bg: '#0a1929',
+        video: '/video/samsung-z-fold.mp4',
+      },
+      {
+        key: 'samsung-laptops',
+        brand: 'Samsung',
+        category: 'laptops',
+        headline: 'Samsung, built for work',
+        bg: '#111827',
+        vimeoEmbedUrl: 'https://player.vimeo.com/video/1069639052?h=6d93e2a4ae&background=1&autoplay=1&loop=1&muted=1',
+      },
+    ];
+    const brandSlides: BrandSlide[] = brandSlideDefs.map((def) => {
+      const slideProducts = products.filter(
+        (p) => p.brand === def.brand && (def.category ? p.category === def.category : true),
+      );
+      const params = new URLSearchParams({ brand: def.brand });
+      if (def.category) params.set('cat', def.category);
+      return {
+        key: def.key,
+        brand: def.brand,
+        headline: def.headline,
+        href: `/shop?${params.toString()}`,
+        products: slideProducts.slice(0, 3),
+        bg: def.bg,
+        video: def.video,
+        playThrough: def.playThrough,
+        vimeoEmbedUrl: def.vimeoEmbedUrl,
+      };
+    });
 
-  useEffect(() => {
-    const id = setTimeout(() => setQuery(queryInput), 220);
-    return () => clearTimeout(id);
-  }, [queryInput]);
+    return { dealProduct, promoProducts, gridProducts, topFive, brandSlides };
+  }, [products]);
 
-  const [sort, setSort] = useState<SortKey>('featured');
-  const [sel, setSel] = useState<FilterSelection>(emptySelection);
+  const [queryInput, setQueryInput] = useState(parsed.q);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [page, setPage] = useState(1);
   const topRef = useRef<HTMLDivElement>(null);
 
-  // Reset selection whenever the underlying product set changes (e.g. switching category).
+  // Debounce the search box into the URL.
   useEffect(() => {
-    setSel(emptySelection);
-  }, [emptySelection]);
+    const id = setTimeout(() => {
+      if (queryInput !== parsed.q) update({ q: queryInput, page: 1 });
+    }, 220);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryInput]);
 
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? 'hidden' : '';
@@ -84,55 +139,83 @@ export default function ShopBrowser({
     };
   }, [drawerOpen]);
 
-  const facets = useMemo(() => buildFacets(products), [products]);
-  const brandOptions = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const p of products) counts.set(p.brand, (counts.get(p.brand) ?? 0) + 1);
-    return Array.from(counts.entries())
-      .map(([value, count]) => ({ value, count }))
-      .sort((a, b) => a.value.localeCompare(b.value));
-  }, [products]);
-
-  const colorOptions = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const p of products) {
-      const c = (p as Product & { attrs?: Partial<Record<FacetKey, string>> }).attrs?.Colour;
-      if (c) counts.set(c, (counts.get(c) ?? 0) + 1);
+  // Seed the brand filter from `initialBrand` (e.g. a "View all" link from a
+  // homepage brand rail) only if the URL doesn't already specify brands.
+  useEffect(() => {
+    if (initialBrand && searchParams.get('brand') === null) {
+      update({ brands: [initialBrand] });
     }
-    const all = new Set<string>([...SHOP_COLORS, ...counts.keys()]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialBrand]);
+
+  function update(patch: Partial<ReturnType<typeof parseShopParams>>) {
+    const next = serializeShopParams({ ...parsed, ...patch });
+    // `?sub=` belongs to the category page, not to the filters — carry it
+    // through, or applying any filter on a sub-category page (MacBook, say)
+    // would drop it and widen the list back to the whole category.
+    const sub = searchParams.get('sub');
+    if (sub) next.set('sub', sub);
+    setSearchParams(next, { replace: true });
+  }
+
+  const brands: string[] = parsed.brands;
+  const price: [number, number] = [parsed.min ?? priceMin, parsed.max ?? priceMax];
+  const priceNarrowed = parsed.min !== undefined || parsed.max !== undefined;
+
+  // Scoped by category first (locked or from ?cat=).
+  const categoryScoped = useMemo(() => {
+    if (lockCategory) return products;
+    if (!parsed.cat) return products;
+    return products.filter((p) => p.category === parsed.cat);
+  }, [products, parsed.cat, lockCategory]);
+
+  const q = parsed.q.trim().toLowerCase();
+
+  // The same rule as the search suggestions: every word in the brand or
+  // name, or a colour the product comes in ("blue iphone").
+  const matchesText = (p: Product) => !q || matchProduct(p, q) !== null;
+  const matchesBrand = (p: Product) => brands.length === 0 || brands.includes(p.brand);
+  const matchesPrice = (p: Product) => p.price >= price[0] && p.price <= price[1];
+  const matchesDisc = (p: Product) => parsed.disc === undefined || discountOf(p.mrp, p.price) >= parsed.disc;
+
+  // Faceted counts: each facet is computed against the set filtered by
+  // every OTHER active filter, standard faceted-search behaviour.
+  const brandOptions = useMemo(() => {
+    const scope = categoryScoped.filter((p) => matchesText(p) && matchesPrice(p) && matchesDisc(p));
+    const counts = new Map<string, number>();
+    for (const p of scope) counts.set(p.brand, (counts.get(p.brand) ?? 0) + 1);
+    const all = new Set<string>([...categoryScoped.map((p) => p.brand)]);
     return Array.from(all)
       .sort((a, b) => a.localeCompare(b))
       .map((value) => ({ value, count: counts.get(value) ?? 0 }));
-  }, [products]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryScoped, q, price[0], price[1], parsed.disc]);
 
-  const priceNarrowed = sel.price[0] > priceMin || sel.price[1] < priceMax;
-  const activeCount = sel.brands.length + (priceNarrowed ? 1 : 0) + Object.values(sel.attrs).reduce((n, v) => n + v.length, 0);
+  const discCounts = useMemo(() => {
+    const scope = categoryScoped.filter((p) => matchesText(p) && matchesBrand(p) && matchesPrice(p));
+    const buckets = [5, 10, 20, 30, 40, 50];
+    const counts = new Map<number, number>();
+    let maxAvailable = 0;
+    for (const b of buckets) {
+      const n = scope.filter((p) => discountOf(p.mrp, p.price) >= b).length;
+      counts.set(b, n);
+      if (n > 0) maxAvailable = b;
+    }
+    return { counts, maxAvailable };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryScoped, q, brands.join(','), price[0], price[1]]);
+
+  const activeCount =
+    brands.length + (priceNarrowed ? 1 : 0) + (parsed.disc !== undefined ? 1 : 0) + (!lockCategory && parsed.cat ? 1 : 0);
 
   const filtered = useMemo(() => {
-    let list = products.filter((p) => {
-      const q = query.trim().toLowerCase();
-      if (q && !(p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q))) return false;
-      if (sel.brands.length && !sel.brands.includes(p.brand)) return false;
-      if (p.price < sel.price[0] || p.price > sel.price[1]) return false;
-      for (const key of FACET_ORDER) {
-        const picked = sel.attrs[key];
-        if (picked && picked.length) {
-          const v = (p as Product & { attrs?: Partial<Record<FacetKey, string>> }).attrs?.[key];
-          if (!v || !picked.includes(v)) return false;
-        }
-      }
-      return true;
-    });
-
-    switch (sort) {
+    let list = categoryScoped.filter((p) => matchesText(p) && matchesBrand(p) && matchesPrice(p) && matchesDisc(p));
+    switch (parsed.sort) {
       case 'price-asc':
         list = [...list].sort((a, b) => a.price - b.price);
         break;
       case 'price-desc':
         list = [...list].sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         break;
       case 'discount':
         list = [...list].sort((a, b) => scoreDiscount(b) - scoreDiscount(a));
@@ -141,233 +224,205 @@ export default function ShopBrowser({
         break;
     }
     return list;
-  }, [products, query, sel, sort]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryScoped, q, brands.join(','), price[0], price[1], parsed.disc, parsed.sort]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
+  const currentPage = Math.min(Math.max(1, parsed.page), pageCount);
   const paged = useMemo(() => filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE), [filtered, currentPage]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [query, sel, sort]);
-
   function goToPage(next: number) {
-    setPage(Math.min(Math.max(1, next), pageCount));
-    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    update({ page: Math.min(Math.max(1, next), pageCount) });
+    topRef.current?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
   }
 
-  function toggle(type: 'attr' | 'brand', group: string, value: string) {
-    setSel((prev) => {
-      if (type === 'brand') {
-        const has = prev.brands.includes(value);
-        return { ...prev, brands: has ? prev.brands.filter((b) => b !== value) : [...prev.brands, value] };
-      }
-      const cur = prev.attrs[group] ?? [];
-      const has = cur.includes(value);
-      const next = has ? cur.filter((v) => v !== value) : [...cur, value];
-      const attrs = { ...prev.attrs, [group]: next };
-      if (next.length === 0) delete attrs[group];
-      return { ...prev, attrs };
-    });
+  const sel: FilterSelection = { brands, price, disc: parsed.disc };
+
+  function toggleBrand(brand: string) {
+    const has = brands.includes(brand);
+    update({ brands: has ? brands.filter((b) => b !== brand) : [...brands, brand], page: 1 });
   }
 
-  const sidebar = (
+  const catLabel = categories.find((c) => c.slug === parsed.cat)?.name;
+
+  const chips = buildActiveChips({
+    q: parsed.q,
+    onClearQ: () => {
+      setQueryInput('');
+      update({ q: '', page: 1 });
+    },
+    cat: lockCategory ? '' : parsed.cat,
+    catLabel,
+    onClearCat: () => update({ cat: '', page: 1 }),
+    brands,
+    onRemoveBrand: toggleBrand,
+    priceNarrowed,
+    min: price[0],
+    max: price[1],
+    onClearPrice: () => update({ min: undefined, max: undefined, page: 1 }),
+    disc: parsed.disc,
+    onClearDisc: () => update({ disc: undefined, page: 1 }),
+  });
+
+  function clearAll() {
+    setQueryInput('');
+    update({ q: '', cat: lockCategory ? parsed.cat : '', brands: [], min: undefined, max: undefined, disc: undefined, page: 1 });
+  }
+
+  const rail = (
     <FilterSidebar
-      facets={facets}
       brands={brandOptions}
-      colors={colorOptions}
       priceMin={priceMin}
       priceMax={priceMax}
-      priceStep={priceStep}
-      priceValue={sel.price}
-      onPriceChange={(price) => setSel((prev) => ({ ...prev, price }))}
+      priceValue={price}
+      onPriceChange={(next) => update({ min: next[0] === priceMin ? undefined : next[0], max: next[1] === priceMax ? undefined : next[1], page: 1 })}
+      discCounts={discCounts.counts}
+      discMaxAvailable={discCounts.maxAvailable}
       selected={sel}
-      onToggle={toggle}
-      onClear={() => setSel(emptySelection)}
+      onToggleBrand={toggleBrand}
+      onClearBrands={() => update({ brands: [], page: 1 })}
+      onDiscChange={(next) => update({ disc: next, page: 1 })}
+      onClear={clearAll}
       accent={accent}
       activeCount={activeCount}
     />
   );
 
   return (
-    <div className="flex gap-8">
-      {/* Desktop sidebar — the toggle button lives here and filters expand in place */}
-      <aside className={`hidden shrink-0 lg:block transition-[width] duration-300 ease-in-out ${sidebarOpen ? 'w-64' : 'w-12'}`}>
-        <div className="sticky top-24">
-          <button
-            type="button"
-            onClick={() => setSidebarOpen((v) => !v)}
-            aria-expanded={sidebarOpen}
-            aria-label={sidebarOpen ? 'Collapse filters' : 'Expand filters'}
-            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#000000]/20 text-[#000000] transition-colors hover:border-[#000000]/40"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            {activeCount > 0 && (
-              <span
-                className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white"
-                style={{ backgroundColor: accent }}
-              >
-                {activeCount}
-              </span>
-            )}
-          </button>
-
-          <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              sidebarOpen ? 'mt-4 max-h-[2000px] w-64 opacity-100' : 'mt-0 max-h-0 w-64 opacity-0'
-            }`}
-          >
-            {sidebar}
-          </div>
-        </div>
-      </aside>
-
-      {/* Main */}
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <TypewriterSearchInput
-            value={queryInput}
-            onChange={(next) => {
-              setQueryInput(next);
-              if (next === '') setQuery('');
-            }}
-          />
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setDrawerOpen(true)}
-              className="inline-flex items-center gap-2 rounded-full border border-[#000000]/20 px-4 py-2.5 text-sm font-medium text-[#000000] transition-colors hover:border-[#000000]/40 lg:hidden"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              Filters
-              {activeCount > 0 && (
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-bold text-white" style={{ backgroundColor: accent }}>
-                  {activeCount}
-                </span>
-              )}
-            </button>
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="hidden h-4 w-4 text-[#6b6b6b]/50 sm:block" />
-              <Select
-                value={sort}
-                onChange={(v) => setSort(v as SortKey)}
-                options={SORT_OPTIONS.map((o) => ({ value: o.key, label: o.label }))}
-                className="w-48"
-                accent={accent}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div ref={topRef} className="mt-6 scroll-mt-28">
-          <p className="text-sm text-[#6b6b6b]">
-            {filtered.length === 0 ? (
-              'No products'
-            ) : (
-              <>
-                Showing{' '}
-                <span className="text-[#000000] font-medium">
-                  {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)}
-                </span>{' '}
-                of {filtered.length} {filtered.length === 1 ? 'product' : 'products'}
-              </>
-            )}
-          </p>
-        </div>
-
-        <div
-          className={`mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5 transition-all duration-300 ${
-            sidebarOpen ? 'lg:grid-cols-4' : 'lg:grid-cols-4 xl:grid-cols-5'
-          }`}
-        >
-          {paged.map((product, i) => (
-            <Fragment key={product.id}>
-              <ProductCard product={product} />
-              {currentPage === 1 &&
-                interstitials
-                  ?.filter((it) => it.afterCount === i + 1)
-                  .map((it, j) => (
-                    <div key={`interstitial-${i}-${j}`} className="col-span-full">
-                      {it.node}
-                    </div>
-                  ))}
-            </Fragment>
-          ))}
-        </div>
-
-        {pageCount > 1 && (
-          <nav aria-label="Pagination" className="mt-10 flex flex-wrap items-center justify-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              aria-label="Previous page"
-              className="inline-flex h-9 items-center gap-1 rounded-full border border-[#000000]/15 px-3 text-sm text-[#6b6b6b] transition-colors hover:border-[#000000]/40 hover:text-[#000000] disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Prev</span>
-            </button>
-
-            {pageItems(currentPage, pageCount).map((it, i) =>
-              it === '…' ? (
-                <span key={`gap-${i}`} className="px-2 text-sm text-[#6b6b6b]/50">
-                  …
-                </span>
-              ) : (
-                <button
-                  key={it}
-                  type="button"
-                  onClick={() => goToPage(it)}
-                  aria-current={it === currentPage ? 'page' : undefined}
-                  className={
-                    it === currentPage
-                      ? 'inline-flex h-9 min-w-9 items-center justify-center rounded-full px-3 text-sm font-bold text-white'
-                      : 'inline-flex h-9 min-w-9 items-center justify-center rounded-full border border-[#000000]/15 px-3 text-sm text-[#6b6b6b] transition-colors hover:border-[#000000]/40 hover:text-[#000000]'
-                  }
-                  style={it === currentPage ? { backgroundColor: accent } : undefined}
-                >
-                  {it}
-                </button>
-              ),
-            )}
-
-            <button
-              type="button"
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage === pageCount}
-              aria-label="Next page"
-              className="inline-flex h-9 items-center gap-1 rounded-full border border-[#000000]/15 px-3 text-sm text-[#6b6b6b] transition-colors hover:border-[#000000]/40 hover:text-[#000000] disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <span className="hidden sm:inline">Next</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </nav>
-        )}
+    <div>
+      {/* Row A — search, then (on the main shop page) the category
+          navigation with its hover menus of sub-categories. */}
+      <div className="flex flex-col gap-4">
+        <TypewriterSearchInput value={queryInput} onChange={setQueryInput} />
+        {!lockCategory && <CategoryNavBar accent={accent} />}
       </div>
 
-      {/* Mobile drawer */}
+      {/* The merchandising stack is the main shop page's alone. A category
+          or sub-category page is where someone has already chosen what they
+          want to see, so it goes straight from the search box to the
+          products instead of making them scroll past banners first. */}
+      {!lockCategory && (
+        <>
+          {/* Row A2 — Brand spotlight (Apple / Samsung videos), a full-width
+              landscape banner directly under the category bar. */}
+          <div className="mt-4">
+            <BrandSpotlightSlider slides={merch.brandSlides} className="aspect-[16/9] sm:aspect-[5/2] xl:aspect-[3/1]" />
+          </div>
+
+          {/* Row B — the deal strip: Deal of the Day, three promo cards and
+              a 2×2 card of four more deals */}
+          <div className="mt-8">
+            <DealsRow deal={merch.dealProduct} promos={merch.promoProducts} grid={merch.gridProducts} />
+          </div>
+
+          {/* Row B2 — Express delivery advertisement (Delhi NCR, under 1
+              hour) with its pincode check. Full page width, as the break
+              between the merchandising above and the product listing below. */}
+          <div className="mt-8">
+            <DeliveryBanner />
+          </div>
+        </>
+      )}
+
+      {/* Row C — Filter rail (left, 3/12) + main column (right, 9/12) */}
+      <div className={`grid grid-cols-1 gap-8 xl:grid-cols-12 ${lockCategory ? 'mt-5' : 'mt-8'}`}>
+        <aside aria-label="Product filters" className="hidden xl:col-span-3 xl:block">
+          <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pb-6 pr-1">{rail}</div>
+        </aside>
+
+        <div className="min-w-0 xl:col-span-9">
+          {/* C1 — Top 5 this week (main shop page only) */}
+          {!lockCategory && <TopFiveStrip products={merch.topFive} />}
+
+          {/* C4 — Results toolbar */}
+          <div ref={topRef} className={`scroll-mt-28 ${lockCategory ? '' : 'mt-8'}`}>
+            <ResultsToolbar
+              from={filtered.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}
+              to={Math.min(currentPage * PAGE_SIZE, filtered.length)}
+              total={filtered.length}
+              page={currentPage}
+              pageCount={pageCount}
+              chips={chips}
+              onClearAll={clearAll}
+              onOpenFilters={() => setDrawerOpen(true)}
+              activeCount={activeCount}
+            />
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="mt-10 rounded-lg border border-shop-line bg-white py-16 text-center">
+              <p className="text-sm font-medium text-shop-ink">No products match these filters.</p>
+              <p className="mt-1 text-sm text-shop-ink/50">Try removing a filter or clearing everything.</p>
+              {chips.length > 0 && (
+                <button type="button" onClick={clearAll} className="mt-4 rounded-full bg-shop-ink px-5 py-2 text-sm font-medium text-white">
+                  Clear all filters
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="mt-5 grid grid-cols-2 gap-4 sm:gap-5 xl:grid-cols-3">
+              <AnimatePresence initial={false}>
+                {paged.map((product) => (
+                  <motion.div
+                    key={product.id}
+                    layout={!reducedMotion}
+                    initial={reducedMotion ? undefined : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.18, ease: 'easeOut' }}
+                  >
+                    <ProductCard product={product} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          )}
+
+          <div className="mt-10">
+            <Pagination current={currentPage} total={pageCount} accent={accent} onChange={goToPage} />
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile / tablet filter sheet */}
       {drawerOpen && (
-        <div className="fixed inset-0 z-[60] lg:hidden">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
-          <div className="absolute inset-y-0 left-0 flex w-[86%] max-w-sm flex-col bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#000000]/10 px-5 py-4">
-              <span className="text-lg font-semibold text-[#000000]">Filters</span>
+        <div className="fixed inset-0 z-[60] xl:hidden">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setDrawerOpen(false)} />
+          <div className="absolute inset-x-0 bottom-0 flex max-h-[85vh] flex-col rounded-t-2xl bg-white shadow-2xl sm:inset-y-0 sm:left-0 sm:right-auto sm:w-[86%] sm:max-w-sm sm:rounded-none sm:rounded-r-2xl">
+            <div className="flex items-center justify-between border-b border-shop-line px-5 py-4">
+              <span className="text-lg font-semibold text-shop-ink">Filters</span>
               <button
                 type="button"
                 aria-label="Close filters"
                 onClick={() => setDrawerOpen(false)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#6b6b6b] hover:bg-[#ECEDEC]"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-shop-ink/50 hover:bg-shop-canvas"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-5 pb-6">{sidebar}</div>
-            <div className="border-t border-[#000000]/10 p-4">
+            <div className="flex-1 overflow-y-auto px-5 pb-6">
+              <FilterSidebar
+                brands={brandOptions}
+                priceMin={priceMin}
+                priceMax={priceMax}
+                priceValue={price}
+                          onPriceChange={(next) => update({ min: next[0] === priceMin ? undefined : next[0], max: next[1] === priceMax ? undefined : next[1], page: 1 })}
+                discCounts={discCounts.counts}
+                discMaxAvailable={discCounts.maxAvailable}
+                selected={sel}
+                onToggleBrand={toggleBrand}
+                onClearBrands={() => update({ brands: [], page: 1 })}
+                onDiscChange={(next) => update({ disc: next, page: 1 })}
+                onClear={clearAll}
+                accent={accent}
+                activeCount={activeCount}
+                inline
+              />
+            </div>
+            <div className="border-t border-shop-line p-4">
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                className="btn-liquid w-full rounded-full border-2 border-[#000000] py-3 text-sm font-bold text-[#000000] transition-colors"
+                className="w-full rounded-full bg-shop-ink py-3 text-sm font-bold text-white"
               >
                 Show {filtered.length} results
               </button>
@@ -378,3 +433,5 @@ export default function ShopBrowser({
     </div>
   );
 }
+
+export type { FilterSelection };

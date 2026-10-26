@@ -39,7 +39,7 @@ const VERTICALS = [
     headline: 'Stocked closer to you.',
     caption:
       '11+ distribution centres holding inventory near demand, so an order moves sooner.',
-    ink: '#15803D',
+    ink: '#3D4FE0',
   },
   {
     src: '/images/verticals/export.jpg',

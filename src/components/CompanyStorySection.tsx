@@ -34,7 +34,7 @@ export default function CompanyStorySection() {
             largest thing here — the report sets it the same way, a small
             VISION rule over the statement. */}
         <p
-          className="font-inter font-semibold uppercase text-[#15803D]"
+          className="font-inter font-semibold uppercase text-[#3D4FE0]"
           style={{ fontSize: 'clamp(11px, 0.95vw, 13px)', letterSpacing: '0.2em' }}
         >
           Our Vision
@@ -51,7 +51,7 @@ export default function CompanyStorySection() {
           }}
         >
           {VISION_LEAD}
-          <span className="text-[#15803D]">{VISION_ACCENT}</span>
+          <span className="text-[#3D4FE0]">{VISION_ACCENT}</span>
           {VISION_TAIL}
         </h2>
 

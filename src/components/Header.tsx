@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, Heart, LogOut, Menu, Package, ShoppingCart, User, X } from 'lucide-react';
+import { ChevronDown, FileSpreadsheet, Heart, LogOut, Menu, Package, ShoppingCart, User, X } from 'lucide-react';
 import { useShopStore } from '../store';
 import { useAuthStore } from '../auth-store';
-import { SHOP_MEGA, ABOUT_MENU } from '../nav-data';
+import { SHOP_MEGA } from '../nav-data';
 
 /* One plain stripe rather than a floating pill: the items sit as bare text on
    the white bar, each with a rule that grows from the left on hover. Written
@@ -14,7 +14,7 @@ import { SHOP_MEGA, ABOUT_MENU } from '../nav-data';
 const NAV_LINK =
   'relative text-sm font-medium text-[#1a1a1a] outline-none transition-colors hover:text-black focus-visible:text-black ' +
   'after:absolute after:-bottom-1.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 ' +
-  'after:bg-[#15803D] after:transition-transform after:duration-300 after:ease-out ' +
+  'after:bg-[#3D4FE0] after:transition-transform after:duration-300 after:ease-out ' +
   'hover:after:scale-x-100 focus-visible:after:scale-x-100';
 
 export default function Header() {
@@ -47,87 +47,26 @@ export default function Header() {
           <img src="/logica-logo-shine.png" alt="Logica Infoway" className="h-11 w-auto object-contain sm:h-12 md:h-14" />
         </Link>
 
-        <div className="mr-4 hidden items-center gap-6 lg:flex xl:mr-8 xl:gap-9">
+        {/* The links sit in the true centre of the bar from xl up, with the
+            logo on the left and the cart / account group on the right. Below
+            xl there is not room to centre them clear of that group, so they
+            sit just before it instead. */}
+        <div className="mr-4 hidden items-center gap-7 lg:flex xl:absolute xl:left-1/2 xl:mr-0 xl:-translate-x-1/2 xl:gap-9">
           <Link to="/" className={NAV_LINK}>
             Home
           </Link>
 
-          {/* Shop mega menu.
+          {/* Shop — a plain link, no dropdown. The categories and their
+              sub-category menus live on the shop page, under the search bar. */}
+          <Link to="/shop" className={NAV_LINK}>
+            Shop
+          </Link>
 
-              No `relative` on this wrapper, deliberately: that makes the panel
-              below position against the <nav> instead of against the Shop item
-              itself, so it spans the bar rather than hanging off one link. A
-              menu holding ten categories cannot be pinned to a single item
-              without running off one edge or the other — anchored left it
-              overflowed right, anchored right it overflowed left. */}
-          <div className="group">
-            <Link to="/shop" className={`${NAV_LINK} flex items-center gap-1`}>
-              Shop
-              <ChevronDown className="w-3.5 h-3.5" />
-            </Link>
-            {/* Sits flush under the bar rather than offset from it: a gap here
-                would break the hover as the pointer crossed it. */}
-            <div className="invisible absolute inset-x-0 top-full z-40 translate-y-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-              {/* Balanced columns rather than a grid. In a grid every row is as
-                  tall as its tallest cell, and Accessories carries twelve
-                  sub-items — that one category dragged the whole panel past the
-                  bottom of the screen. Flowing them into columns instead, each
-                  kept whole with break-inside-avoid, sizes the panel to its
-                  tallest single category. The max-height is only insurance for
-                  the day the catalogue grows again. */}
-              <div className="border-t border-black/10 bg-white shadow-xl">
-                <div className="max-h-[calc(100vh-8rem)] overflow-y-auto px-4 py-8 sm:px-6 md:px-10">
-                  <div className="mx-auto max-w-[80rem] columns-4 gap-x-8 xl:columns-5">
-                    {SHOP_MEGA.map((cat) => (
-                      <div key={cat.href} className="mb-6 break-inside-avoid">
-                        <Link
-                          to={cat.href}
-                          className="text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-70"
-                        >
-                          {cat.label}
-                        </Link>
-                        {cat.children && (
-                          <ul className="mt-2 space-y-1">
-                            {cat.children.map((child) => (
-                              <li key={child.href}>
-                                <Link
-                                  to={child.href}
-                                  className="text-xs leading-relaxed text-[#6b6b6b] transition-colors hover:text-[#000000]"
-                                >
-                                  {child.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* About dropdown */}
-          <div className="group relative">
-            <Link to="/about" className={`${NAV_LINK} flex items-center gap-1`}>
-              About
-              <ChevronDown className="w-3.5 h-3.5" />
-            </Link>
-            <div className="absolute left-0 top-full pt-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-40">
-              <div className="w-64 rounded-2xl bg-white shadow-xl border border-[#000000]/10 p-3">
-                {ABOUT_MENU.map((item) => (
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    className="block px-3 py-2.5 rounded-lg text-sm text-[#000000] hover:bg-[#ECEDEC] transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
+          {/* About — a plain link, no dropdown. Overview, Board and
+              Committees are tabs on the About page itself. */}
+          <Link to="/about" className={NAV_LINK}>
+            About
+          </Link>
 
           {/* Investor Relations — a plain link, no dropdown. The categories
               live on the hub page itself, as on a standard IR site. */}
@@ -135,9 +74,6 @@ export default function Header() {
             Investor Relations
           </Link>
 
-          <Link to="/media" className={NAV_LINK}>
-            Media
-          </Link>
           <Link to="/careers" className={NAV_LINK}>
             Careers
           </Link>
@@ -185,7 +121,7 @@ export default function Header() {
               className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold text-white shadow-sm transition-transform hover:scale-105 ${
                 accountMenuOpen ? 'ring-2 ring-black ring-offset-2' : ''
               }`}
-              style={{ background: 'linear-gradient(135deg, #15803D 0%, #000000 100%)' }}
+              style={{ background: 'linear-gradient(135deg, #3D4FE0 0%, #000000 100%)' }}
               aria-label="Account menu"
               aria-expanded={accountMenuOpen}
             >
@@ -198,7 +134,7 @@ export default function Header() {
                   <div className="flex items-center gap-3 bg-[#ECEDEC] px-4 py-4">
                     <span
                       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-semibold text-white"
-                      style={{ background: 'linear-gradient(135deg, #15803D 0%, #000000 100%)' }}
+                      style={{ background: 'linear-gradient(135deg, #3D4FE0 0%, #000000 100%)' }}
                     >
                       {(user.name || user.email || '?').slice(0, 1).toUpperCase()}
                     </span>
@@ -228,6 +164,19 @@ export default function Header() {
                       </span>
                       Orders
                     </Link>
+                    {/* Admins only — the SAP product sheet import. */}
+                    {user.role === 'ADMIN' && (
+                      <Link
+                        to="/admin/sap-import"
+                        onClick={() => setAccountMenuOpen(false)}
+                        className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-black transition-colors hover:bg-[#ECEDEC]"
+                      >
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black transition-colors group-hover:bg-white">
+                          <FileSpreadsheet className="h-4 w-4" />
+                        </span>
+                        SAP import
+                      </Link>
+                    )}
                     <div className="my-1.5 h-px bg-black/10" />
                     <button
                       type="button"
@@ -313,23 +262,14 @@ export default function Header() {
             </div>
           )}
 
-          {/* About accordion */}
-          <button
-            onClick={() => setMobileSection((s) => (s === 'about' ? null : 'about'))}
-            className="flex items-center justify-between text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10"
+          {/* About — a plain link, matching the desktop bar. */}
+          <Link
+            to="/about"
+            onClick={() => setMenuOpen(false)}
+            className="block text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10"
           >
             About
-            <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${mobileSection === 'about' ? 'rotate-180' : ''}`} />
-          </button>
-          {mobileSection === 'about' && (
-            <div className="py-2 pl-3 space-y-2">
-              {ABOUT_MENU.map((item) => (
-                <Link key={item.href} to={item.href} onClick={() => setMenuOpen(false)} className="block text-sm text-[#6b6b6b] py-1">
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          )}
+          </Link>
 
           {/* Investor Relations — a plain link on mobile too, matching the
               desktop bar. The categories are on the hub page. */}
@@ -341,9 +281,6 @@ export default function Header() {
             Investor Relations
           </Link>
 
-          <Link to="/media" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10">
-            Media
-          </Link>
           <Link to="/careers" onClick={() => setMenuOpen(false)} className="text-lg font-semibold text-[#000000] py-3 border-b border-[#000000]/10">
             Careers
           </Link>

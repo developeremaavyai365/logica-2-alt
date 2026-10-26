@@ -7,6 +7,9 @@ import { useAuthStore } from '../auth-store';
 import TextField from '../components/form/fields/TextField';
 import Select from '../components/form/fields/Select';
 import DateField from '../components/form/fields/DateField';
+import AccountHeaderCard from '../components/account/AccountHeaderCard';
+
+const ACCENT = '#3D4FE0';
 
 const GENDER_OPTIONS = [
   { value: '', label: 'Prefer not to say' },
@@ -49,30 +52,34 @@ function ProfileForm() {
   if (!user) return null;
 
   return (
-    <div className="w-full bg-[#ECEDEC]">
-      <Header />
+    <div className="w-full bg-shop-canvas">
+      <div className="bg-[#ECEDEC]">
+        <Header />
+      </div>
 
-      <section className="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20 md:px-10">
-        <div className="flex items-center gap-4">
-          <span
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-xl font-semibold text-white"
-            style={{ background: 'linear-gradient(135deg, #15803D 0%, #000000 100%)' }}
-          >
-            {(user.name || user.email || '?').slice(0, 1).toUpperCase()}
-          </span>
-          <div>
-            <h1 className="font-dm-sans text-2xl font-bold text-black sm:text-3xl" style={{ letterSpacing: '-0.02em' }}>
-              {user.name || 'My Profile'}
-            </h1>
-            <p className="text-sm text-[#6b6b6b]">{user.email}</p>
+      <section className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+        <AccountHeaderCard active="profile" />
+
+        {/* Personal details card. No overflow-hidden here: the date picker
+            and the gender menu open as popovers from inside it and would be
+            clipped at the card's edge. */}
+        <form onSubmit={handleSubmit} className="mt-5 rounded-2xl border border-shop-line bg-white">
+          {/* Module — header strip */}
+          <div className="flex items-center justify-between gap-3 border-b border-shop-line px-5 py-2.5">
+            <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-shop-ink">Personal details</h2>
+            <span className="font-mono text-[11px] tabular-nums text-shop-ink/45">04 fields</span>
           </div>
-        </div>
 
-        <form onSubmit={handleSubmit} className="mt-10 rounded-3xl bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#6b6b6b]">Personal details</h2>
-
-          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <TextField label="Full name" type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+          {/* Module — fields */}
+          <div className="grid grid-cols-1 gap-4 px-5 py-5 sm:grid-cols-2">
+            <TextField
+              label="Full name"
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              accent={ACCENT}
+            />
             <TextField
               label="Phone number"
               type="tel"
@@ -80,38 +87,47 @@ function ProfileForm() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+91 XXXXX XXXXX"
+              accent={ACCENT}
             />
-            <DateField label="Date of birth" id="dob" value={dateOfBirth} onChange={setDateOfBirth} max={TODAY_ISO} />
-            <Select
-              label="Gender"
-              value={gender}
-              onChange={setGender}
-              options={GENDER_OPTIONS}
+            <DateField
+              label="Date of birth"
+              id="dob"
+              value={dateOfBirth}
+              onChange={setDateOfBirth}
+              max={TODAY_ISO}
+              accent={ACCENT}
             />
+            <Select label="Gender" value={gender} onChange={setGender} options={GENDER_OPTIONS} accent={ACCENT} />
           </div>
 
-          <div className="mt-6 space-y-3 border-t border-black/10 pt-6">
-            <div className="flex items-center gap-3 text-sm text-[#6b6b6b]">
-              <Mail className="h-4 w-4 shrink-0" />
-              {user.email || 'No email on file'}
-              {user.emailVerified && (
-                <span className="ml-1 inline-flex items-center gap-1 text-xs font-medium text-[#15803D]">
-                  <CheckCircle2 className="h-3.5 w-3.5" /> Verified
-                </span>
-              )}
+          {/* Module — email on file */}
+          <div className="flex items-center gap-3.5 border-t border-shop-line px-5 py-3.5">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-shop-canvas text-shop-ink">
+              <Mail className="h-4 w-4" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <span className="block font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-shop-ink/45">Email</span>
+              <span className="block truncate text-sm font-medium text-shop-ink">{user.email || 'No email on file'}</span>
             </div>
+            {user.emailVerified && (
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#E8EBFD] px-2.5 py-1 text-[11px] font-semibold text-shop-accent">
+                <CheckCircle2 className="h-3.5 w-3.5" /> Verified
+              </span>
+            )}
           </div>
 
-          {error && <p className="mt-4 text-xs font-medium text-red-600">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={status === 'saving'}
-            className="mt-6 flex h-12 items-center justify-center gap-2 rounded-full bg-black px-8 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {status === 'saving' ? 'Saving…' : status === 'saved' ? 'Saved' : 'Save changes'}
-            {status === 'saved' && <CheckCircle2 className="h-4 w-4" />}
-          </button>
+          {/* Module — save row */}
+          <div className="flex flex-col gap-3 border-t border-shop-line p-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="min-h-[1rem] px-2 text-xs font-medium text-red-600">{error}</p>
+            <button
+              type="submit"
+              disabled={status === 'saving'}
+              className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-shop-ink px-8 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {status === 'saving' ? 'Saving…' : status === 'saved' ? 'Saved' : 'Save changes'}
+              {status === 'saved' && <CheckCircle2 className="h-4 w-4" />}
+            </button>
+          </div>
         </form>
       </section>
 

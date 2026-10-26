@@ -8,6 +8,8 @@ export default {
         body: ['Jost', 'sans-serif'],
         'dm-sans': ['DM Sans', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+        technical: ['"JetBrains Mono"', 'monospace'],
       },
       colors: {
         kaira: {
@@ -15,6 +17,12 @@ export default {
           sage: '#8c907e',
           'sage-dark': '#5e624e',
           line: '#f1f1f0',
+        },
+        shop: {
+          canvas: '#F4F3EF',
+          ink: '#0E0E0E',
+          line: '#E3E1DA',
+          accent: '#3D4FE0',
         },
       },
     },

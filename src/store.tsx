@@ -3,7 +3,14 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 export interface CartLine {
   id: string;
   qty: number;
+  /** The colour chosen on the product page (a key from product-colours),
+   *  for products that come in more than one. */
+  colour?: string;
 }
+
+/** What tells two cart lines apart: the product and, if chosen, its colour —
+ *  a blue and a black of the same phone are two lines. */
+export const lineKey = (line: { id: string; colour?: string }) => (line.colour ? `${line.id}#${line.colour}` : line.id);
 
 interface StoreState {
   cart: CartLine[];
@@ -12,12 +19,14 @@ interface StoreState {
 
 interface StoreApi extends StoreState {
   ready: boolean;
-  addToCart: (id: string, qty?: number) => void;
-  setQty: (id: string, qty: number) => void;
-  removeFromCart: (id: string) => void;
+  addToCart: (id: string, qty?: number, colour?: string) => void;
+  /** Takes a line's `lineKey`. */
+  setQty: (key: string, qty: number) => void;
+  /** Takes a line's `lineKey`. */
+  removeFromCart: (key: string) => void;
   clearCart: () => void;
   cartCount: number;
-  inCart: (id: string) => boolean;
+  inCart: (id: string, colour?: string) => boolean;
   toggleWishlist: (id: string) => void;
   inWishlist: (id: string) => boolean;
   removeFromWishlist: (id: string) => void;
@@ -57,22 +66,24 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
   }, [state, ready]);
 
   const api = useMemo<StoreApi>(() => {
-    const addToCart = (id: string, qty = 1) =>
+    const addToCart = (id: string, qty = 1, colour?: string) =>
       setState((s) => {
-        const found = s.cart.find((l) => l.id === id);
+        const key = lineKey({ id, colour });
+        const found = s.cart.find((l) => lineKey(l) === key);
         const cart = found
-          ? s.cart.map((l) => (l.id === id ? { ...l, qty: l.qty + qty } : l))
-          : [...s.cart, { id, qty }];
+          ? s.cart.map((l) => (lineKey(l) === key ? { ...l, qty: l.qty + qty } : l))
+          : [...s.cart, colour ? { id, qty, colour } : { id, qty }];
         return { ...s, cart };
       });
 
-    const setQty = (id: string, qty: number) =>
+    const setQty = (key: string, qty: number) =>
       setState((s) => ({
         ...s,
-        cart: qty <= 0 ? s.cart.filter((l) => l.id !== id) : s.cart.map((l) => (l.id === id ? { ...l, qty } : l)),
+        cart:
+          qty <= 0 ? s.cart.filter((l) => lineKey(l) !== key) : s.cart.map((l) => (lineKey(l) === key ? { ...l, qty } : l)),
       }));
 
-    const removeFromCart = (id: string) => setState((s) => ({ ...s, cart: s.cart.filter((l) => l.id !== id) }));
+    const removeFromCart = (key: string) => setState((s) => ({ ...s, cart: s.cart.filter((l) => lineKey(l) !== key) }));
     const clearCart = () => setState((s) => ({ ...s, cart: [] }));
 
     const toggleWishlist = (id: string) =>
@@ -91,7 +102,7 @@ export function ShopStoreProvider({ children }: { children: ReactNode }) {
       removeFromCart,
       clearCart,
       cartCount: state.cart.reduce((n, l) => n + l.qty, 0),
-      inCart: (id) => state.cart.some((l) => l.id === id),
+      inCart: (id, colour) => state.cart.some((l) => lineKey(l) === lineKey({ id, colour })),
       toggleWishlist,
       inWishlist: (id) => state.wishlist.includes(id),
       removeFromWishlist,

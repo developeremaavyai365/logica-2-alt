@@ -1,30 +1,13 @@
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import { ABOUT_CARD } from '../../components/about/AboutHero';
 
+/** The Grievance Redressal page's body, under the investor page's hero. The
+ *  details are published as an image. */
 export default function GrievanceRedressal() {
   return (
-    <div className="w-full bg-[#ECEDEC]">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-        <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 md:px-10 pt-10 pb-16">
-          <span className="text-black text-xs sm:text-sm font-semibold uppercase tracking-wide">Investor</span>
-          <h1 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000]" style={{ letterSpacing: '-0.03em' }}>
-            Grievance Redressal
-          </h1>
-        </div>
+    <section className="px-4 py-14 sm:px-6 md:px-10">
+      <div className={`mx-auto max-w-5xl p-4 sm:p-8 ${ABOUT_CARD}`}>
+        <img src="/images/investor/grievance-redressal.jpg" alt="Grievance Redressal" className="h-auto w-full rounded-xl" />
       </div>
-
-      <section className="px-4 sm:px-6 md:px-10 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl rounded-2xl border border-black/10 bg-white p-4 sm:p-8">
-          <img
-            src="/images/investor/grievance-redressal.jpg"
-            alt="Grievance Redressal"
-            className="w-full h-auto rounded-xl"
-          />
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+    </section>
   );
 }
