@@ -49,7 +49,8 @@ export interface BoardMember {
    that document, which corrected three the site had been carrying: Mr Gaurav
    Goel graduated in 1995, not 1992; Mr Rakesh Kumar Goel has over 61 years'
    experience, not 58; and Mr Sundeep Mishra has been Chief Operating Officer
-   since July 1, 2022, not May 6. */
+   since July 1, 2022, not May 6. Experience years were moved up by one in
+   November 2026, and Mrs Vinita Saraf's term set to 5 years. */
 export const BOARD_MEMBERS: BoardMember[] = [
   {
     name: 'Mr. Gaurav Goel',
@@ -77,7 +78,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     photo: '/about/board/rakesh-kumar-goel.png',
     details: [
       'Appointed July 14, 2014',
-      'Mechanical Engineer with over 61 years of experience',
+      'Mechanical Engineer with over 62 years of experience',
     ],
   },
   {
@@ -96,7 +97,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     photo: '/about/board/nil-kamal-samanta.png',
     details: [
       'Appointed August 26, 2022, for a 5-year term',
-      '39 years in banking; retired as Deputy Zonal Manager, Bank of India',
+      '40 years in banking; retired as Deputy Zonal Manager, Bank of India',
     ],
   },
   {
@@ -104,7 +105,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     designation: 'Independent Director',
     photo: '/about/board/vinita-saraf.png',
     details: [
-      'Appointed August 29, 2022, for an 8-year term',
+      'Appointed August 29, 2022, for a 5-year term',
       'Bachelor in Commerce (Honours); NISM Series VIII certified',
     ],
   },
@@ -114,7 +115,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     photo: '/about/board/sundeep-mishra.png',
     details: [
       'Appointed July 1, 2022',
-      '~49 years in sales, marketing and business development',
+      '~50 years in sales, marketing and business development',
     ],
   },
   {
@@ -123,7 +124,7 @@ export const BOARD_MEMBERS: BoardMember[] = [
     photo: '/about/board/deepak-kumar-jha.png',
     details: [
       'Appointed July 1, 2022',
-      '~22 years in Accounts & Finance; with the company since January 2012',
+      '~23 years in Accounts & Finance; with the company since January 2012',
     ],
   },
   {
