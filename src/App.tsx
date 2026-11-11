@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LayoutGroup } from 'framer-motion';
+import { useLiveCatalogueVersion } from './live-catalogue';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import CategoryPage from './pages/CategoryPage';
@@ -33,6 +34,8 @@ import ChatWidget from './components/ChatWidget';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
+  // Re-render everything when fresh SAP prices and stock arrive.
+  useLiveCatalogueVersion();
   return (
     <LayoutGroup>
       <ScrollToTop />

@@ -7,6 +7,7 @@ import PageHeaderCard from '../components/shop/PageHeaderCard';
 import { products, formatINR } from '../data';
 import { findColour, productTitle } from '../product-colours';
 import { lineKey, useShopStore } from '../store';
+import { livePriceOf } from '../live-catalogue';
 import { useAuthStore } from '../auth-store';
 
 const MICRO_LABEL = 'font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-shop-ink/45';
@@ -29,12 +30,23 @@ export default function Cart() {
   }
 
   const lines = cart
-    .map((line) => ({ line, product: products.find((p) => p.id === line.id), colour: findColour(line.id, line.colour) }))
+    .map((line) => {
+      const product = products.find((p) => p.id === line.id);
+      // A colour with its own SAP code is priced as that colour.
+      const live = livePriceOf(line.id, line.colour);
+      return {
+        line,
+        product,
+        colour: findColour(line.id, line.colour),
+        price: live?.price ?? product?.price ?? 0,
+        mrp: live?.mrp ?? product?.mrp,
+      };
+    })
     .filter((l): l is typeof l & { product: NonNullable<typeof l.product> } => !!l.product);
 
   const itemCount = lines.reduce((sum, { line }) => sum + line.qty, 0);
-  const subtotal = lines.reduce((sum, { line, product }) => sum + product.price * line.qty, 0);
-  const mrpTotal = lines.reduce((sum, { line, product }) => sum + (product.mrp ?? product.price) * line.qty, 0);
+  const subtotal = lines.reduce((sum, { line, price }) => sum + price * line.qty, 0);
+  const mrpTotal = lines.reduce((sum, { line, price, mrp }) => sum + (mrp ?? price) * line.qty, 0);
   const savings = mrpTotal - subtotal;
 
   if (!ready) return null;
@@ -68,7 +80,7 @@ export default function Cart() {
             {/* Line items — each one a card: image tile, details, and a
                 footer row holding the quantity stepper and Remove. */}
             <ul className="flex flex-col gap-4">
-              {lines.map(({ line, product, colour }) => {
+              {lines.map(({ line, product, colour, price }) => {
                 const key = lineKey(line);
                 const href = colour ? `/product/${product.id}?colour=${colour.key}` : `/product/${product.id}`;
                 return (
@@ -103,7 +115,7 @@ export default function Cart() {
                           </p>
                         )}
                         <p className="mt-1.5 font-mono text-[11px] tabular-nums text-shop-ink/55">
-                          {formatINR(product.price)} each
+                          {formatINR(price)} each
                         </p>
                       </div>
                       <div className="shrink-0 text-right">
@@ -112,7 +124,7 @@ export default function Cart() {
                           className="mt-0.5 block font-dm-sans text-lg font-semibold tabular-nums text-shop-ink"
                           style={{ letterSpacing: '-0.03em' }}
                         >
-                          {formatINR(product.price * line.qty)}
+                          {formatINR(price * line.qty)}
                         </span>
                       </div>
                     </div>

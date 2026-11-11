@@ -6,6 +6,7 @@ import Footer from '../../components/Footer';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { useAuthStore } from '../../auth-store';
 import { ApiError, apiFetch } from '../../lib/api-client';
+import SapLinker from '../../components/admin/SapLinker';
 
 /* The admin page for the SAP product sheet.
 
@@ -74,6 +75,8 @@ interface HistoryEntry {
 interface Catalogue {
   inFeed: number;
   inStock: number;
+  /** Codes linked to a website product — the ones whose prices reach the shop. */
+  linked: number;
 }
 
 const FIELD_LABELS: Record<Field, string> = {
@@ -268,7 +271,9 @@ function SapImportScreen() {
             <h1 className="mt-1 text-2xl font-semibold text-shop-ink sm:text-3xl" style={{ letterSpacing: '-0.03em' }}>
               SAP product sheet
             </h1>
-            <p className="mt-1 text-sm text-shop-ink/55">Upload the SAP export to update product codes, stock, MRP and MOP.</p>
+            <p className="mt-1 text-sm text-shop-ink/55">
+              Upload the SAP export to update stock, MRP and MOP, then link each SAP code to its product on the website.
+            </p>
           </div>
           {catalogue && (
             <>
@@ -282,6 +287,12 @@ function SapImportScreen() {
                 <span className={MICRO_LABEL}>In stock</span>
                 <span className="mt-0.5 font-mono text-xl font-bold tabular-nums leading-none text-shop-ink">
                   {catalogue.inStock.toLocaleString('en-IN')}
+                </span>
+              </div>
+              <div className="flex shrink-0 flex-col justify-center border-l border-shop-line px-4 sm:px-5">
+                <span className={MICRO_LABEL}>On website</span>
+                <span className="mt-0.5 font-mono text-xl font-bold tabular-nums leading-none text-shop-accent">
+                  {(catalogue.linked ?? 0).toLocaleString('en-IN')}
                 </span>
               </div>
             </>
@@ -671,6 +682,10 @@ function SapImportScreen() {
             </div>
           </>
         )}
+
+        {/* Linking codes to website products. Remounted after each applied
+            sheet so it lists the new codes. */}
+        <SapLinker key={applied?.importId ?? 'feed'} onChanged={refresh} />
 
         {/* History */}
         <Card

@@ -279,3 +279,71 @@ model AuditLog {
   @@index([actorId])
   @@index([targetType, targetId])
 }
+
+// ── SAP product feed ────────────────────────────────────────────────────
+// What the SAP sheet says, and nothing else. The sheet is the only thing
+// that writes to SapItem: code, names, stock, MRP and MOP are SAP's to own.
+// What the website adds on top (photo, category, description) is kept
+// elsewhere, so an import can never overwrite it.
+
+enum SapImportMode {
+  PARTIAL // the sheet lists some products; leave the rest untouched
+  FULL // the sheet is the whole catalogue; anything missing goes out of stock
+}
+
+model SapItem {
+  id           String     @id @default(uuid())
+  sapCode      String     @unique
+  sapName      String
+  // "Model name for website" in the sheet — the title customers see.
+  modelName    String
+  brand        String?
+  // Manufacturer part number / barcode: the keys a content service matches on.
+  partNumber   String?
+  ean          String?
+  itemGroup    String?
+  stock        Int        @default(0)
+  mrpInPaise   Int
+  // MOP — the price the customer pays.
+  mopInPaise   Int
+  // False once a FULL import no longer lists this code. The row is kept
+  // (with stock 0) rather than deleted, so its website content survives.
+  inLatestFeed Boolean    @default(true)
+  // The website product this code is sold as, and the colour when the code
+  // is one colour of it (the colour's key, e.g. "blue"). Set by an admin on
+  // the import page; an import never touches these.
+  websiteProductId String?
+  websiteColour    String?
+  lastImportId String?
+  lastImport   SapImport? @relation(fields: [lastImportId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([brand])
+  @@index([itemGroup])
+  @@index([lastImportId])
+  @@index([websiteProductId])
+}
+
+// One row per sheet that was applied — who, when, and what it changed.
+model SapImport {
+  id             String        @id @default(uuid())
+  fileName       String
+  mode           SapImportMode
+  // The admin who uploaded it. Kept as a plain id, not a relation, so this
+  // table stands alone and the log outlives the account.
+  uploadedById   String?
+  totalRows      Int
+  createdCount   Int
+  updatedCount   Int
+  unchangedCount Int
+  rejectedCount  Int
+  // Codes a FULL import marked out of stock because the sheet left them out.
+  missingCount   Int
+  // The rejected rows and warnings, as shown to the uploader.
+  issues         Json
+  createdAt      DateTime      @default(now())
+  items          SapItem[]
+
+  @@index([createdAt])
+}

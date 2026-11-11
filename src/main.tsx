@@ -5,6 +5,12 @@ import './index.css';
 import App from './App';
 import { ShopStoreProvider } from './store';
 import { AuthStoreProvider } from './auth-store';
+import { applyCachedLiveCatalogue, refreshLiveCatalogue } from './live-catalogue';
+
+// SAP prices and stock: the last list this browser saw at once, then the
+// current one as soon as it arrives.
+applyCachedLiveCatalogue();
+void refreshLiveCatalogue();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

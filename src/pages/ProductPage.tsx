@@ -14,6 +14,7 @@ import { categories, products, formatINR } from '../data';
 import { PRODUCT_DETAILS } from '../product-details-data';
 import { PRODUCT_GALLERY } from '../product-gallery-data';
 import { colourImages, coloursOf, findColour, productTitle } from '../product-colours';
+import { livePriceOf } from '../live-catalogue';
 import { extractSpecs, SPEC_LABELS, SPEC_ORDER } from '../product-specs';
 import { useShopStore } from '../store';
 
@@ -86,15 +87,17 @@ export default function ProductPage() {
     SPEC_ORDER.filter((key) => extracted[key]).map((key): [string, string] => [SPEC_LABELS[key], extracted[key] as string])
   ).filter(([label]) => !(hasColours && isColourSpec(label)));
 
-  const discount = product.mrp && product.mrp > product.price
-    ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
-    : 0;
   // Colours: the one named in the URL, else the first. The URL is the
   // source of truth so a shared link or a search for "blue iphone" opens
   // on that colour.
   const colours = coloursOf(product.id);
   const colour = findColour(product.id, searchParams.get('colour')) ?? colours[0];
   const inStock = colour?.inStock ?? product.inStock;
+  // A colour with its own SAP code has its own price; otherwise the product's.
+  const live = livePriceOf(product.id, colour?.key);
+  const price = live?.price ?? product.price;
+  const mrp = live?.mrp ?? product.mrp;
+  const discount = mrp && mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
   // "Apple iPhone 15 Plus – Green": the name follows the chosen colour.
   const title = productTitle(product, colour);
   const galleryImages = colour && colourImages(product.id, colour).length
@@ -112,7 +115,7 @@ export default function ProductPage() {
       { replace: true },
     );
   const hasDiscount = discount > 0;
-  const saving = hasDiscount ? product.mrp! - product.price : 0;
+  const saving = hasDiscount ? mrp! - price : 0;
   const wished = inWishlist(product.id);
   const overviewList = detail?.overview ? overviewItems(detail.overview) : null;
 
@@ -216,10 +219,10 @@ export default function ProductPage() {
                   <span className={MICRO_LABEL}>Price</span>
                   <div className="mt-1 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
                     <span className="font-dm-sans text-3xl font-semibold tabular-nums text-shop-ink" style={{ letterSpacing: '-0.03em' }}>
-                      {formatINR(product.price)}
+                      {formatINR(price)}
                     </span>
                     {hasDiscount && (
-                      <span className="font-inter text-sm tabular-nums text-shop-ink/40 line-through">{formatINR(product.mrp!)}</span>
+                      <span className="font-inter text-sm tabular-nums text-shop-ink/40 line-through">{formatINR(mrp!)}</span>
                     )}
                   </div>
                 </div>
@@ -237,15 +240,16 @@ export default function ProductPage() {
               <div className="flex items-stretch gap-2 border-t border-shop-line p-3">
                 <button
                   type="button"
+                  disabled={!inStock}
                   onClick={() => {
                     addToCart(product.id, 1, colour?.key);
                     setAdded(true);
                     setTimeout(() => setAdded(false), 1500);
                   }}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent disabled:cursor-not-allowed disabled:bg-shop-ink/25 disabled:hover:bg-shop-ink/25"
                 >
                   {added ? <Check className="h-4 w-4" /> : <ShoppingCart className="h-4 w-4" />}
-                  {added ? 'Added' : inCart(product.id, colour?.key) ? 'Add Another' : 'Add to Cart'}
+                  {!inStock ? 'Out of stock' : added ? 'Added' : inCart(product.id, colour?.key) ? 'Add Another' : 'Add to Cart'}
                 </button>
                 <button
                   type="button"

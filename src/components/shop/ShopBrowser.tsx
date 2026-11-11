@@ -19,6 +19,7 @@ import { parseShopParams, serializeShopParams } from '../../shop-filter-state';
 import { matchProduct } from '../../shop-search';
 import { categories, type Product } from '../../data';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { useLiveCatalogueVersion } from '../../live-catalogue';
 
 const PAGE_SIZE = 24;
 
@@ -43,8 +44,11 @@ export default function ShopBrowser({
   const [searchParams, setSearchParams] = useSearchParams();
   const parsed = useMemo(() => parseShopParams(searchParams), [searchParams]);
   const reducedMotion = usePrefersReducedMotion();
+  // Changes when fresh SAP prices and stock arrive: everything below that
+  // depends on a price or on stock is worked out again.
+  const live = useLiveCatalogueVersion();
 
-  const [priceMin, priceMax] = useMemo(() => getPriceBounds(products), [products]);
+  const [priceMin, priceMax] = useMemo(() => getPriceBounds(products), [products, live]);
 
   // Merchandising sections have no real slot/deal data behind them yet, so
   // every one is derived from the catalog that's already loaded, per a
@@ -117,7 +121,7 @@ export default function ShopBrowser({
     });
 
     return { dealProduct, promoProducts, gridProducts, topFive, brandSlides };
-  }, [products]);
+  }, [products, live]);
 
   const [queryInput, setQueryInput] = useState(parsed.q);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -189,7 +193,7 @@ export default function ShopBrowser({
       .sort((a, b) => a.localeCompare(b))
       .map((value) => ({ value, count: counts.get(value) ?? 0 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryScoped, q, price[0], price[1], parsed.disc]);
+  }, [categoryScoped, q, price[0], price[1], parsed.disc, live]);
 
   const discCounts = useMemo(() => {
     const scope = categoryScoped.filter((p) => matchesText(p) && matchesBrand(p) && matchesPrice(p));
@@ -203,7 +207,7 @@ export default function ShopBrowser({
     }
     return { counts, maxAvailable };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryScoped, q, brands.join(','), price[0], price[1]]);
+  }, [categoryScoped, q, brands.join(','), price[0], price[1], live]);
 
   const activeCount =
     brands.length + (priceNarrowed ? 1 : 0) + (parsed.disc !== undefined ? 1 : 0) + (!lockCategory && parsed.cat ? 1 : 0);
@@ -225,7 +229,7 @@ export default function ShopBrowser({
     }
     return list;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryScoped, q, brands.join(','), price[0], price[1], parsed.disc, parsed.sort]);
+  }, [categoryScoped, q, brands.join(','), price[0], price[1], parsed.disc, parsed.sort, live]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(Math.max(1, parsed.page), pageCount);
