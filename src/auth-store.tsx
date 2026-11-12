@@ -34,6 +34,8 @@ interface AuthApi {
   ready: boolean;
   signUp: (name: string, email: string, password: string) => Promise<AuthResult>;
   signIn: (identifier: string, password: string) => Promise<AuthResult>;
+  /** The /admin panel's sign-in: administrator accounts only. */
+  adminSignIn: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   verifyEmail: (token: string) => Promise<AuthResult>;
   resendVerification: (email: string) => Promise<AuthResult>;
@@ -117,6 +119,21 @@ export function AuthStoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const adminSignIn = useCallback(async (email: string, password: string): Promise<AuthResult> => {
+    try {
+      const data = await apiFetch<{ accessToken: string }>('/auth/admin/login', {
+        method: 'POST',
+        body: { identifier: email, password },
+      });
+      setAccessToken(data.accessToken);
+      const profile = await apiFetch<AuthUser>('/auth/me');
+      setUser(profile);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: messageFrom(err, 'Invalid email or password.') };
+    }
+  }, []);
+
   const signOut = useCallback(async () => {
     try {
       await apiFetch('/auth/logout', { method: 'POST' });
@@ -184,6 +201,7 @@ export function AuthStoreProvider({ children }: { children: ReactNode }) {
         ready,
         signUp,
         signIn,
+        adminSignIn,
         signOut,
         verifyEmail,
         resendVerification,

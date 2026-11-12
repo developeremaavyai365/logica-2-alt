@@ -26,7 +26,7 @@ const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 export class CsrfMiddleware implements NestMiddleware {
   static readonly COOKIE_NAME = 'logica_csrf';
   static readonly HEADER_NAME = 'x-csrf-token';
-  private static readonly EXEMPT_PATHS = new Set(['/auth/signup', '/auth/login']);
+  private static readonly EXEMPT_PATHS = new Set(['/auth/signup', '/auth/login', '/auth/admin/login']);
 
   constructor(private readonly config: ConfigService) {}
 

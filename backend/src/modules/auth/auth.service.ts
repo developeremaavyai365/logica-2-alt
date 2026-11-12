@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as argon2 from 'argon2';
+import { Role } from '@prisma/client';
 import { randomBytes, createHash } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { MailService } from '../../mail/mail.service';
@@ -97,7 +98,11 @@ export class AuthService {
     ]);
   }
 
-  async login(dto: LoginDto, meta: RequestMeta): Promise<IssuedTokens> {
+  /** Signs a user in through one of the two doors. The shop's sign-in is for
+   *  customers; the admin sign-in at /admin is for administrators only, and
+   *  each refuses the other's accounts — so the admin account has its own
+   *  credentials and is never used as a shopping account. */
+  async login(dto: LoginDto, meta: RequestMeta, door: 'shop' | 'admin' = 'shop'): Promise<IssuedTokens> {
     const user = await this.prisma.user.findFirst({
       where: { OR: [{ email: dto.identifier }, { phone: dto.identifier }] },
     });
@@ -130,6 +135,15 @@ export class AuthService {
 
     if (!user.emailVerifiedAt && user.email) {
       throw new UnauthorizedException('Please verify your email before logging in.');
+    }
+
+    // The admin door answers a customer exactly as it answers a wrong
+    // password, so it never confirms that an account exists. The shop door
+    // tells the administrator (who has just proved they know the password)
+    // where to sign in instead.
+    if (door === 'admin' && user.role !== Role.ADMIN) throw genericError();
+    if (door === 'shop' && user.role === Role.ADMIN) {
+      throw new UnauthorizedException('This is an administrator account. Sign in at /admin instead.');
     }
 
     await this.prisma.user.update({

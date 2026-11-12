@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, FileSpreadsheet, Heart, LogOut, Menu, Package, ShoppingCart, User, X } from 'lucide-react';
+import { ChevronDown, Heart, LayoutDashboard, LogOut, Menu, Package, ShoppingCart, User, X } from 'lucide-react';
 import { useShopStore } from '../store';
 import { useAuthStore } from '../auth-store';
 import { SHOP_MEGA } from '../nav-data';
@@ -164,17 +164,17 @@ export default function Header() {
                       </span>
                       Orders
                     </Link>
-                    {/* Admins only — the SAP product sheet import. */}
+                    {/* Admins only — the separate admin panel. */}
                     {user.role === 'ADMIN' && (
                       <Link
-                        to="/admin/sap-import"
+                        to="/admin"
                         onClick={() => setAccountMenuOpen(false)}
                         className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-black transition-colors hover:bg-[#ECEDEC]"
                       >
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black transition-colors group-hover:bg-white">
-                          <FileSpreadsheet className="h-4 w-4" />
+                          <LayoutDashboard className="h-4 w-4" />
                         </span>
-                        SAP import
+                        Admin panel
                       </Link>
                     )}
                     <div className="my-1.5 h-px bg-black/10" />

@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
-import { AlertTriangle, ArrowRight, Check, FileSpreadsheet, Loader2, ShieldAlert, Upload, X } from 'lucide-react';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import ProtectedRoute from '../../components/ProtectedRoute';
-import { useAuthStore } from '../../auth-store';
+import { AlertTriangle, ArrowRight, Check, FileSpreadsheet, Loader2, Upload, X } from 'lucide-react';
+import AdminShell from './AdminShell';
 import { ApiError, apiFetch } from '../../lib/api-client';
 import SapLinker from '../../components/admin/SapLinker';
 
@@ -252,11 +248,7 @@ function SapImportScreen() {
   const blocked = preview?.needsConfirmation ? !confirmed : false;
 
   return (
-    <div className="w-full bg-shop-canvas">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-      </div>
-
+    <div className="w-full">
       <div className="mx-auto flex max-w-5xl flex-col gap-5 px-4 py-8 sm:px-6">
         {/* Title */}
         <div className="flex items-stretch overflow-hidden rounded-2xl border border-shop-line bg-white">
@@ -732,51 +724,14 @@ function SapImportScreen() {
           )}
         </Card>
       </div>
-
-      <Footer />
     </div>
   );
 }
 
-/** Signed-in admins only. The backend enforces this on every request; this
- *  check just avoids showing a non-admin a page whose every button would
- *  be refused. */
-function AdminOnly({ children }: { children: ReactNode }) {
-  const { user } = useAuthStore();
-  if (user?.role !== 'ADMIN') {
-    return (
-      <div className="w-full bg-shop-canvas">
-        <div className="bg-[#ECEDEC]">
-          <Header />
-        </div>
-        <div className="mx-auto max-w-xl px-4 py-16 sm:px-6">
-          <div className="flex flex-col items-center rounded-2xl border border-dashed border-shop-ink/20 bg-white px-6 py-14 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-shop-canvas">
-              <ShieldAlert className="h-6 w-6 text-shop-ink/40" />
-            </span>
-            <p className="mt-4 text-base font-semibold text-shop-ink">This page is for administrators</p>
-            <p className="mt-1 text-sm text-shop-ink/55">Your account does not have access to the SAP import.</p>
-            <Link
-              to="/"
-              className="mt-6 flex h-12 items-center rounded-xl bg-shop-ink px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
-            >
-              Back to the site
-            </Link>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-  return <>{children}</>;
-}
-
 export default function SapImport() {
   return (
-    <ProtectedRoute>
-      <AdminOnly>
-        <SapImportScreen />
-      </AdminOnly>
-    </ProtectedRoute>
+    <AdminShell>
+      <SapImportScreen />
+    </AdminShell>
   );
 }

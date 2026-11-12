@@ -22,6 +22,7 @@ const MUTATING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 const NO_REFRESH_RETRY_PATHS = new Set([
   '/auth/signup',
   '/auth/login',
+  '/auth/admin/login',
   '/auth/refresh',
   '/auth/verify-email',
   '/auth/resend-verification',

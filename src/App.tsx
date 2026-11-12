@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { LayoutGroup } from 'framer-motion';
 import { useLiveCatalogueVersion } from './live-catalogue';
 import Home from './pages/Home';
@@ -20,7 +20,9 @@ import Wishlist from './pages/Wishlist';
 // Every investor address renders the one investor page, which swaps its
 // content in place under a shared hero.
 const InvestorPage = lazy(() => import('./pages/investor/InvestorPage'));
-// Admin-only, so it stays out of the bundle every visitor downloads.
+// The admin panel (its own sign-in and pages) stays out of the bundle every
+// visitor downloads.
+const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
 const SapImport = lazy(() => import('./pages/admin/SapImport'));
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
@@ -36,6 +38,8 @@ import ScrollToTop from './components/ScrollToTop';
 function App() {
   // Re-render everything when fresh SAP prices and stock arrive.
   useLiveCatalogueVersion();
+  // The admin panel is its own space: no shop feedback or chat widgets.
+  const inAdmin = useLocation().pathname.startsWith('/admin');
   return (
     <LayoutGroup>
       <ScrollToTop />
@@ -60,9 +64,17 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<Orders />} />
         <Route
+          path="/admin"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <AdminHome />
+            </Suspense>
+          }
+        />
+        <Route
           path="/admin/sap-import"
           element={
-            <Suspense fallback={<div className="min-h-screen bg-[#ECEDEC]" />}>
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
               <SapImport />
             </Suspense>
           }
@@ -87,8 +99,8 @@ function App() {
         )}
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <FeedbackWidget />
-      <ChatWidget />
+      {!inAdmin && <FeedbackWidget />}
+      {!inAdmin && <ChatWidget />}
     </LayoutGroup>
   );
 }

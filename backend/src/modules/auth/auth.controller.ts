@@ -80,6 +80,18 @@ export class AuthController {
     return { accessToken: tokens.accessToken };
   }
 
+  /** The admin panel's own sign-in: only administrator accounts get in.
+   *  Same lockout and a tighter throttle than the shop's. */
+  @Public()
+  @Throttle({ default: { limit: 5, ttl: 5 * 60_000 } })
+  @HttpCode(HttpStatus.OK)
+  @Post('admin/login')
+  async adminLogin(@Body() dto: LoginDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const tokens = await this.auth.login(dto, this.meta(req), 'admin');
+    this.setRefreshCookie(res, tokens);
+    return { accessToken: tokens.accessToken };
+  }
+
   @Public()
   @Throttle({ default: { limit: 20, ttl: 60_000 } })
   @HttpCode(HttpStatus.OK)
