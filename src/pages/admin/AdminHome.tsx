@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, FileSpreadsheet, Link2, Store } from 'lucide-react';
+import { ArrowRight, Download, FileSpreadsheet, Link2, Store } from 'lucide-react';
 import { apiFetch } from '../../lib/api-client';
 import { useAuthStore } from '../../auth-store';
 import AdminShell from './AdminShell';
@@ -35,11 +35,22 @@ function Dashboard() {
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6">
-      <div>
-        <h1 className="font-dm-sans text-3xl font-bold text-[#061A40]" style={{ letterSpacing: '-0.03em' }}>
-          Welcome{user?.name ? `, ${user.name}` : ''}
-        </h1>
-        <p className="mt-1 text-[#6B7280]">Manage the products, prices and stock shown on logicainfoway.com.</p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-dm-sans text-3xl font-bold text-[#061A40]" style={{ letterSpacing: '-0.03em' }}>
+            Welcome{user?.name ? `, ${user.name}` : ''}
+          </h1>
+          <p className="mt-1 text-[#6B7280]">Manage the products, prices and stock shown on logicainfoway.com.</p>
+        </div>
+        {/* The blank product sheet to send to whoever fills in the list. */}
+        <a
+          href="/admin/logica-product-update-template.xlsx"
+          download="Logica Product Update Template.xlsx"
+          className="flex items-center gap-2 rounded-xl bg-[#061A40] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[#3D4FE0]"
+        >
+          <Download className="h-4 w-4" />
+          Download template
+        </a>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

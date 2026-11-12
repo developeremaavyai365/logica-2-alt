@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { AlertTriangle, ArrowRight, Check, FileSpreadsheet, Loader2, Upload, X } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Check, Download, FileSpreadsheet, Loader2, Upload, X } from 'lucide-react';
 import AdminShell from './AdminShell';
 import { ApiError, apiFetch } from '../../lib/api-client';
 import SapLinker from '../../components/admin/SapLinker';
@@ -101,7 +101,11 @@ const CHANGE_LABELS: Record<string, string> = {
   itemGroup: 'Item group',
 };
 
-const MICRO_LABEL = 'font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-shop-ink/45';
+/** The blank product sheet (public/admin/), with the exact columns, checks
+ *  and dropdowns the import expects. */
+const TEMPLATE_URL = '/admin/logica-product-update-template.xlsx';
+
+const MICRO_LABEL ='font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-shop-ink/45';
 
 const rupees = (paise: number) => `₹${(paise / 100).toLocaleString('en-IN')}`;
 const changeValue = (field: string, value: string | number | null) =>
@@ -266,6 +270,16 @@ function SapImportScreen() {
             <p className="mt-1 text-sm text-shop-ink/55">
               Upload the SAP export to update stock, MRP and MOP, then link each SAP code to its product on the website.
             </p>
+            {/* The blank sheet with the exact columns this page reads — for
+                whoever fills in the product list. */}
+            <a
+              href={TEMPLATE_URL}
+              download="Logica Product Update Template.xlsx"
+              className="mt-3 inline-flex items-center gap-2 rounded-xl bg-shop-ink px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
+            >
+              <Download className="h-4 w-4" />
+              Download template
+            </a>
           </div>
           {catalogue && (
             <>
