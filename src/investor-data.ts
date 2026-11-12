@@ -1100,6 +1100,23 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  documents (Regulation 30/57/74 disclosures, trading-window closures,
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
+  /* Titled exactly as the files were supplied. `date` is the date on each
+     letter to BSE: the board meeting intimation (meeting of 14.11.2026 to
+     approve the half-year results to 30.09.2026) is dated 07.11.2026; the
+     Regulation 74(5) certificate (quarter ended 30.09.2026, from KFin
+     Technologies) is dated 09.10.2026. */
+  {
+    title: "Board Meeting Intimation- November 14th, 2026",
+    year: "2026-27",
+    date: "2026-11-07",
+    url: "/investor/compliance-disclosures/board-meeting-intimation-november-14th-2026.pdf",
+  },
+  {
+    title: "Compliances-Certificate under Reg. 74 (5) of SEBI (DP) Regulations, 2018",
+    year: "2026-27",
+    date: "2026-10-09",
+    url: "/investor/compliance-disclosures/compliances-certificate-under-reg-74-5-of-sebi-dp-regulations-2018-09-10-2026.pdf",
+  },
   /* Filings around the 31st AGM of 30.09.2026, titled from the subject line
      of each letter to BSE. The proceedings and the voting results are
      cross-listed under General Meeting; the trading-window closure is only
