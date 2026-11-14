@@ -1,4 +1,5 @@
 import ExcelJS from 'exceljs';
+import JSZip from 'jszip';
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { locateHeader, mapColumns } from './column-mapping';
 import { largeRemovalWarning, planImport } from './import-plan';
@@ -15,6 +16,43 @@ async function workbook(rows: unknown[][], sheetName = 'Sheet1'): Promise<Buffer
   const ws = wb.addWorksheet(sheetName);
   rows.forEach((row) => ws.addRow(row));
   return Buffer.from(await wb.xlsx.writeBuffer());
+}
+
+/** Adds a cell comment on A1 to the first sheet, laid out the way Python's
+ *  openpyxl saves one: the comment under xl/comments/, a VML drawing for it,
+ *  and relationship targets written as absolute paths. */
+async function withOpenpyxlComment(buffer: Buffer): Promise<Buffer> {
+  const zip = await JSZip.loadAsync(buffer);
+  zip.file(
+    'xl/comments/comment1.xml',
+    '<?xml version="1.0" encoding="UTF-8"?>' +
+      '<comments xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><authors><author>admin</author></authors>' +
+      '<commentList><comment ref="A1" authorId="0"><text><t>Codes come from SAP</t></text></comment></commentList></comments>',
+  );
+  zip.file(
+    'xl/drawings/commentsDrawing1.vml',
+    '<xml xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">' +
+      '<v:shape id="_x0000_s1025" type="#_x0000_t202"><x:ClientData ObjectType="Note"><x:Row>0</x:Row><x:Column>0</x:Column></x:ClientData></v:shape></xml>',
+  );
+  zip.file(
+    'xl/worksheets/_rels/sheet1.xml.rels',
+    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments" Target="/xl/comments/comment1.xml" Id="comments"/>' +
+      '<Relationship Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing" Target="/xl/drawings/commentsDrawing1.vml" Id="anysvml"/>' +
+      '</Relationships>',
+  );
+  const sheet = await zip.file('xl/worksheets/sheet1.xml')!.async('string');
+  zip.file('xl/worksheets/sheet1.xml', sheet.replace('</worksheet>', '<legacyDrawing r:id="anysvml"/></worksheet>'));
+  const types = await zip.file('[Content_Types].xml')!.async('string');
+  zip.file(
+    '[Content_Types].xml',
+    types.replace(
+      '</Types>',
+      '<Default Extension="vml" ContentType="application/vnd.openxmlformats-officedocument.vmlDrawing"/>' +
+        '<Override PartName="/xl/comments/comment1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml"/></Types>',
+    ),
+  );
+  return zip.generateAsync({ type: 'nodebuffer' });
 }
 
 const dataRows = (rows: unknown[][], firstRowNumber = 2): SheetRow[] =>
@@ -277,6 +315,36 @@ describe('reading the file', () => {
     wb.addWorksheet('Data').addRow(HEADINGS);
     const rows = await readSheet(Buffer.from(await wb.xlsx.writeBuffer()), 'stock.xlsx');
     expect(rows).toHaveLength(1);
+  });
+
+  it('reads a workbook with a comment on the heading row, as openpyxl writes it', async () => {
+    const buffer = await withOpenpyxlComment(
+      await workbook([HEADINGS, [100234, 'HP LAP', 'HP 15s', 14, 52990, 41990]]),
+    );
+    // The layout this test builds is the one exceljs itself cannot load.
+    await expect(new ExcelJS.Workbook().xlsx.load(buffer as unknown as ArrayBuffer)).rejects.toThrow(/comments/);
+
+    const rows = await readSheet(buffer, 'stock.xlsx');
+    expect(rows.map((r) => r.rowNumber)).toEqual([1, 2]);
+    expect(rows[0].cells.slice(0, 6)).toEqual(HEADINGS.slice(0, 6));
+    expect(rows[1].cells.slice(0, 6)).toEqual([100234, 'HP LAP', 'HP 15s', 14, 52990, 41990]);
+  });
+
+  it('reads a workbook with a comment written by exceljs', async () => {
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet('Stock');
+    ws.addRow(HEADINGS);
+    ws.addRow([100234, 'HP LAP', 'HP 15s', 14, 52990, 41990]);
+    ws.getCell('A1').note = 'Codes come from SAP';
+    const rows = await readSheet(Buffer.from(await wb.xlsx.writeBuffer()), 'stock.xlsx');
+    expect(rows[1].cells[0]).toBe(100234);
+  });
+
+  it('still refuses a damaged workbook that also has a comment', async () => {
+    const zip = await JSZip.loadAsync(await withOpenpyxlComment(await workbook([HEADINGS])));
+    zip.file('xl/worksheets/sheet1.xml', '<worksheet><sheetData><row r="1"><c r="A1"');
+    const buffer = await zip.generateAsync({ type: 'nodebuffer' });
+    await expect(readSheet(buffer, 'stock.xlsx')).rejects.toThrow(/could not be opened/);
   });
 
   it('reads a CSV with quoted fields, embedded commas and a semicolon separator', () => {

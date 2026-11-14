@@ -1,4 +1,5 @@
 import ExcelJS from 'exceljs';
+import JSZip from 'jszip';
 import { SheetRow } from './sap-import.types';
 
 /** Thrown for a file that cannot be read as a sheet at all — the wrong
@@ -29,15 +30,109 @@ function cellToPrimitive(value: unknown): unknown {
 
 const isBlank = (cell: unknown) => cell === '' || cell === null || cell === undefined || (typeof cell === 'string' && cell.trim() === '');
 
-async function readXlsx(buffer: Buffer): Promise<SheetRow[]> {
-  const workbook = new ExcelJS.Workbook();
-  try {
-    // exceljs' own typings predate Node's generic Buffer type; the value is
-    // an ordinary Buffer either way.
-    await workbook.xlsx.load(buffer as unknown as ArrayBuffer);
-  } catch {
-    throw new SheetReadError('This file could not be opened as an Excel workbook. It may be damaged or password-protected.');
+const COMMENT_REL_TYPES = [
+  'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments',
+  'http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing',
+];
+
+/** Turns a relationship target into a path inside the zip. Targets are
+ *  relative to the folder above the .rels file, or absolute from the root. */
+function resolvePartPath(relsPath: string, target: string): string {
+  if (target.startsWith('/')) return target.slice(1);
+  // xl/worksheets/_rels/sheet1.xml.rels → xl/worksheets
+  const parts = relsPath.split('/').slice(0, -2);
+  for (const segment of target.split('/')) {
+    if (segment === '..') parts.pop();
+    else if (segment !== '.' && segment !== '') parts.push(segment);
   }
+  return parts.join('/');
+}
+
+/** Removes cell comments and the VML drawings that show them from a
+ *  workbook. They carry no data, but exceljs fails on some layouts of them
+ *  — notably the absolute paths openpyxl writes. Returns null if the file
+ *  is not a zip at all. */
+async function withoutComments(buffer: Buffer): Promise<Buffer | null> {
+  let zip: JSZip;
+  try {
+    zip = await JSZip.loadAsync(buffer);
+  } catch {
+    return null;
+  }
+
+  const removed = new Set<string>();
+  for (const relsPath of Object.keys(zip.files).filter((p) => /^xl\/worksheets\/_rels\/[^/]+\.rels$/.test(p))) {
+    const xml = await zip.file(relsPath)!.async('string');
+    const kept = xml.replace(/<Relationship\b[^>]*?\/>/g, (rel) => {
+      const type = /\bType="([^"]*)"/.exec(rel)?.[1];
+      if (!type || !COMMENT_REL_TYPES.includes(type)) return rel;
+      const target = /\bTarget="([^"]*)"/.exec(rel)?.[1];
+      if (target) removed.add(resolvePartPath(relsPath, target));
+      return '';
+    });
+    if (kept === xml) continue;
+    zip.file(relsPath, kept);
+
+    // The sheet points at its comment drawing by relationship id; with the
+    // relationship gone, the reference has to go too.
+    const sheetPath = relsPath.replace('/_rels/', '/').replace(/\.rels$/, '');
+    const sheet = zip.file(sheetPath);
+    if (sheet) {
+      const sheetXml = await sheet.async('string');
+      zip.file(sheetPath, sheetXml.replace(/<legacyDrawing\b[^>]*?\/>/g, ''));
+    }
+  }
+
+  // Anything left that looks like a comment part, in case it was not
+  // reachable through a sheet's relationships.
+  for (const path of Object.keys(zip.files)) {
+    if (/^xl\/(.*\/)?comments?\d*\.xml$/.test(path) || /\.vml$/i.test(path)) removed.add(path);
+  }
+  removed.forEach((path) => zip.remove(path));
+
+  const contentTypes = zip.file('[Content_Types].xml');
+  if (contentTypes) {
+    const xml = await contentTypes.async('string');
+    zip.file(
+      '[Content_Types].xml',
+      xml.replace(/<Override\b[^>]*?\/>/g, (override) => {
+        const part = /\bPartName="\/?([^"]*)"/.exec(override)?.[1];
+        return part && removed.has(part) ? '' : override;
+      }),
+    );
+  }
+
+  return zip.generateAsync({ type: 'nodebuffer' });
+}
+
+async function loadWorkbook(buffer: Buffer): Promise<ExcelJS.Workbook> {
+  const unreadable = () =>
+    new SheetReadError('This file could not be opened as an Excel workbook. It may be damaged or password-protected.');
+  // exceljs' own typings predate Node's generic Buffer type; the value is
+  // an ordinary Buffer either way.
+  const load = async (data: Buffer) => {
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(data as unknown as ArrayBuffer);
+    return workbook;
+  };
+
+  try {
+    return await load(buffer);
+  } catch {
+    // Retry without comments, which people add to sheets but which exceljs
+    // cannot always read.
+    const stripped = await withoutComments(buffer);
+    if (!stripped) throw unreadable();
+    try {
+      return await load(stripped);
+    } catch {
+      throw unreadable();
+    }
+  }
+}
+
+async function readXlsx(buffer: Buffer): Promise<SheetRow[]> {
+  const workbook = await loadWorkbook(buffer);
 
   // The first sheet that has anything in it — exports sometimes lead with
   // an empty or cover sheet.
