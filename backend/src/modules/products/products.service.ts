@@ -17,6 +17,7 @@ export class ProductsService {
    *  straight away. */
   async publicCatalogue(): Promise<PublicCatalogue> {
     if (this.cached && Date.now() - this.cached.at < CACHE_MS) return this.cached.catalogue;
+    const formats = await this.prisma.titleFormat.findMany({ select: { brandKey: true, categorySlug: true, pattern: true } });
     const rows = await this.prisma.product.findMany({
       where: { status: ProductStatus.ACTIVE, deletedAt: null },
       orderBy: [{ position: 'asc' }, { slug: 'asc' }],
@@ -37,12 +38,28 @@ export class ProductsService {
         rating: true,
         reviewCount: true,
         updatedAt: true,
+        titleAuto: true,
+        modelName: true,
+        modelNumber: true,
+        variant: true,
+        inTheBox: true,
+        warranty: true,
+        warrantyPeriod: true,
+        warrantyServiceType: true,
+        warrantyCovered: true,
+        countryOfOrigin: true,
+        manufacturerDetails: true,
+        packerDetails: true,
+        importerDetails: true,
+        videoUrl: true,
         brand: { select: { name: true } },
         category: { select: { slug: true } },
         colours: { select: { key: true, name: true, hex: true, family: true, images: true, inStock: true, position: true } },
       },
     });
-    const catalogue = toPublicCatalogue(rows);
+    // Formats saved by admins, as the title rules take them ("*" = any).
+    const rules = formats.map((f) => ({ brand: f.brandKey === '*' ? null : f.brandKey, category: f.categorySlug === '*' ? null : f.categorySlug, pattern: f.pattern }));
+    const catalogue = toPublicCatalogue(rows, rules);
     this.cached = { at: Date.now(), catalogue };
     return catalogue;
   }

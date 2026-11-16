@@ -1,6 +1,8 @@
 import { toNumber } from '../sap-import/row-validator';
 import { SheetRow } from '../sap-import/sap-import.types';
+import { TitleFormatRule, buildTitle, pickTitleFormat } from './title-format';
 import {
+  EMPTY_LISTING,
   FieldChange,
   GST_RATES,
   Listing,
@@ -23,24 +25,38 @@ import {
 
 export type BulkField =
   | 'slug'
-  | 'name'
   | 'category'
   | 'brand'
-  | 'status'
-  | 'price'
-  | 'mrp'
-  | 'inStock'
+  | 'modelName'
   | 'modelNumber'
   | 'partNumber'
+  | 'variant'
+  | 'name'
+  | 'status'
+  | 'mrp'
+  | 'price'
+  | 'inStock'
   | 'ean'
-  | 'hsnCode'
   | 'gstRatePercent'
-  | 'warranty'
-  | 'inTheBox'
+  | 'hsnCode'
+  | 'photos'
   | 'highlights'
   | 'description'
-  | 'photos'
-  | 'otherSpecs';
+  | 'inTheBox'
+  | 'otherSpecs'
+  | 'warranty'
+  | 'warrantyPeriod'
+  | 'warrantyServiceType'
+  | 'warrantyCovered'
+  | 'countryOfOrigin'
+  | 'manufacturerDetails'
+  | 'packerDetails'
+  | 'importerDetails'
+  | 'packageLengthCm'
+  | 'packageBreadthCm'
+  | 'packageHeightCm'
+  | 'packageWeightKg'
+  | 'videoUrl';
 
 export interface BulkColumn {
   field: BulkField;
@@ -52,6 +68,9 @@ export interface BulkColumn {
   width: number;
 }
 
+/** The sheet's columns, in the order of the product page. The category's
+ *  variant specs (RAM, storage) follow Variant, and its other specs follow
+ *  "In the box", in the downloaded sheet. */
 export const BULK_COLUMNS: BulkColumn[] = [
   {
     field: 'slug',
@@ -60,9 +79,25 @@ export const BULK_COLUMNS: BulkColumn[] = [
     note: 'Leave blank to add a new product. For a product already on the site this is filled in: do not change it.',
     width: 30,
   },
-  { field: 'name', heading: 'Title *', aliases: ['producttitle', 'name', 'productname'], note: 'The product name shoppers see. Up to 200 characters.', width: 44 },
-  { field: 'category', heading: 'Category *', aliases: ['categoryname'], note: 'Pick from the list.', width: 18 },
+  { field: 'category', heading: 'Category *', aliases: ['categoryname'], note: 'Pick from the list. Decides the spec columns.', width: 18 },
   { field: 'brand', heading: 'Brand *', aliases: ['brandname', 'make'], note: 'A brand not used before is added.', width: 16 },
+  { field: 'modelName', heading: 'Model name *', aliases: ['modelname', 'model'], note: 'As the maker names it, e.g. "Galaxy S24 5G".', width: 22 },
+  { field: 'modelNumber', heading: 'Model number', aliases: ['modelno', 'modelid'], note: 'The maker\'s code, e.g. "SM-S921BZKCINS". Up to 60 characters.', width: 18 },
+  { field: 'partNumber', heading: 'Part number', aliases: ['partno', 'mpn', 'manufacturerpartnumber'], note: 'Up to 60 characters.', width: 16 },
+  {
+    field: 'variant',
+    heading: 'Variant',
+    aliases: ['variantname'],
+    note: 'For categories without RAM and storage columns: what sets this version apart, e.g. "650 VA".',
+    width: 16,
+  },
+  {
+    field: 'name',
+    heading: 'Title',
+    aliases: ['producttitle', 'name', 'productname'],
+    note: "Leave blank to build the title from the brand's title format. A title written here is kept as written.",
+    width: 44,
+  },
   {
     field: 'status',
     heading: 'Status',
@@ -70,14 +105,14 @@ export const BULK_COLUMNS: BulkColumn[] = [
     note: 'Draft: saved, not on the shop. Active: on the shop. Inactive: taken off the shop. Blank keeps it as it is (Draft for a new product).',
     width: 12,
   },
+  { field: 'mrp', heading: 'MRP (₹) *', aliases: ['mrp', 'maximumretailprice'], note: 'In rupees. Ignored for a product linked to a SAP code.', width: 14 },
   {
     field: 'price',
-    heading: 'Selling price (₹)',
-    aliases: ['sellingprice', 'price', 'mop', 'offerprice', 'saleprice'],
-    note: 'In rupees. Ignored for a product linked to a SAP code: the SAP sheet sets its price.',
+    heading: 'Selling price (₹) *',
+    aliases: ['sellingprice', 'price', 'mop', 'offerprice', 'saleprice', 'sp'],
+    note: 'In rupees. Ignored for a product linked to a SAP code: the SAP sheet sets its price. The discount is worked out from MRP and selling price.',
     width: 16,
   },
-  { field: 'mrp', heading: 'MRP (₹)', aliases: ['mrp', 'maximumretailprice'], note: 'In rupees. Ignored for a product linked to a SAP code.', width: 14 },
   {
     field: 'inStock',
     heading: 'In stock',
@@ -85,35 +120,45 @@ export const BULK_COLUMNS: BulkColumn[] = [
     note: 'Yes or No. Ignored for a product linked to a SAP code: the SAP sheet sets its stock.',
     width: 10,
   },
-  { field: 'modelNumber', heading: 'Model number', aliases: ['modelno', 'model'], note: 'Up to 60 characters.', width: 18 },
-  { field: 'partNumber', heading: 'Part number', aliases: ['partno', 'mpn', 'manufacturerpartnumber'], note: 'Up to 60 characters.', width: 18 },
-  { field: 'ean', heading: 'EAN / barcode', aliases: ['ean', 'barcode', 'gtin', 'upc', 'eancode'], note: 'The 8, 12, 13 or 14 digits under the barcode.', width: 18 },
-  { field: 'hsnCode', heading: 'HSN code', aliases: ['hsn', 'hsncode', 'hsnsac'], note: '4 to 8 digits.', width: 12 },
-  { field: 'gstRatePercent', heading: 'GST %', aliases: ['gst', 'gstrate', 'gstpercent', 'taxrate'], note: 'One of 0, 5, 12, 18 or 28.', width: 9 },
-  { field: 'warranty', heading: 'Warranty', aliases: ['warrantyperiod'], note: 'e.g. 1 year onsite warranty.', width: 24 },
-  { field: 'inTheBox', heading: 'In the box', aliases: ['whatsinthebox', 'boxcontents', 'inbox'], note: 'e.g. Laptop, charger, user guide.', width: 24 },
-  {
-    field: 'highlights',
-    heading: 'Key highlights',
-    aliases: ['highlights', 'keyfeatures', 'features'],
-    note: 'One per line (Alt+Enter starts a new line in a cell). At least 3 recommended.',
-    width: 40,
-  },
-  { field: 'description', heading: 'Description', aliases: ['overview', 'productdescription', 'about'], note: 'Up to 8,000 characters.', width: 40 },
+  { field: 'ean', heading: 'EAN / barcode *', aliases: ['ean', 'barcode', 'gtin', 'upc', 'eancode'], note: 'The 8, 12, 13 or 14 digits under the barcode. For colours, set on the product page.', width: 18 },
+  { field: 'gstRatePercent', heading: 'GST % *', aliases: ['gst', 'gstrate', 'gstpercent', 'taxrate', 'tax', 'taxpercent', 'taxcode'], note: 'One of 0, 5, 12, 18 or 28.', width: 9 },
+  { field: 'hsnCode', heading: 'HSN code *', aliases: ['hsn', 'hsncode', 'hsnsac'], note: '4 to 8 digits.', width: 12 },
   {
     field: 'photos',
-    heading: 'Photos',
-    aliases: ['photo', 'images', 'image', 'imageurls', 'photourls', 'photolinks'],
-    note: 'Web addresses of the photos, one per line, main photo first. Photos can also be uploaded on the product page.',
+    heading: 'Photos *',
+    aliases: ['photo', 'images', 'image', 'imageurls', 'photourls', 'photolinks', 'mainimageurl'],
+    note: 'Web addresses of the photos, one per line: main (front), back, side, diagonal, close-up. Photos can also be uploaded on the product page.',
     width: 40,
   },
+  {
+    field: 'highlights',
+    heading: 'Key highlights *',
+    aliases: ['highlights', 'keyfeatures', 'features'],
+    note: 'At least 4, one per line (Alt+Enter starts a new line in a cell): RAM and storage, battery, screen size, processor.',
+    width: 40,
+  },
+  { field: 'description', heading: 'Description *', aliases: ['overview', 'productdescription', 'about'], note: 'Up to 8,000 characters.', width: 40 },
+  { field: 'inTheBox', heading: "What's in the box *", aliases: ['inthebox', 'whatsinthebox', 'boxcontents', 'inbox'], note: 'e.g. Handset, USB Type-C cable, SIM ejector pin.', width: 24 },
   {
     field: 'otherSpecs',
     heading: 'Other specs',
     aliases: ['specs', 'specifications', 'otherspecifications', 'morespecs'],
-    note: 'Any other specs, one per line, as Label: value. For example "Item Weight: 1.6 kg".',
+    note: 'Any other specs, one per line, as Label: value. For example "Body Material: Glass".',
     width: 40,
   },
+  { field: 'warranty', heading: 'Warranty summary', aliases: ['warranty'], note: 'One line: the years covered, and domestic or international.', width: 30 },
+  { field: 'warrantyPeriod', heading: 'Warranty period', aliases: ['warrantyperiod'], note: 'e.g. 1 Year.', width: 14 },
+  { field: 'warrantyServiceType', heading: 'Warranty service type', aliases: ['warrantyservicetype', 'servicetype'], note: 'How the shopper claims it.', width: 24 },
+  { field: 'warrantyCovered', heading: 'Covered in warranty', aliases: ['coveredinwarranty', 'warrantycovers'], note: 'What the warranty covers.', width: 24 },
+  { field: 'countryOfOrigin', heading: 'Country of origin *', aliases: ['countryoforigin', 'origin', 'madein'], note: 'Where it was made, or assembled for an import.', width: 16 },
+  { field: 'manufacturerDetails', heading: 'Manufacturer details *', aliases: ['manufacturerdetails', 'manufacturer'], note: 'Name and address of the manufacturer.', width: 30 },
+  { field: 'packerDetails', heading: 'Packer details', aliases: ['packerdetails', 'packer'], note: 'Name and address, if not the manufacturer.', width: 26 },
+  { field: 'importerDetails', heading: 'Importer details', aliases: ['importerdetails', 'importer'], note: 'Name and address, for an imported product.', width: 26 },
+  { field: 'packageLengthCm', heading: 'Length (cm)', aliases: ['length', 'lengthcm', 'packagelength'], note: 'Of the box as shipped.', width: 11 },
+  { field: 'packageBreadthCm', heading: 'Breadth (cm)', aliases: ['breadth', 'breadthcm', 'width', 'packagebreadth'], note: 'Of the box as shipped.', width: 11 },
+  { field: 'packageHeightCm', heading: 'Height (cm)', aliases: ['height', 'heightcm', 'packageheight'], note: 'Of the box as shipped.', width: 11 },
+  { field: 'packageWeightKg', heading: 'Weight (kg)', aliases: ['weight', 'weightkg', 'packageweight'], note: 'Of the box as shipped.', width: 11 },
+  { field: 'videoUrl', heading: 'Video link', aliases: ['videourl', 'video', 'videolink'], note: 'A web address starting with https://, e.g. a YouTube link.', width: 30 },
 ];
 
 /** Spec columns are headed "Spec: <label>", with " *" on the required ones. */
@@ -165,14 +210,15 @@ function readHeadings(cells: unknown[]): Omit<BulkHeader, 'index'> {
   return { columns, specColumns, ignored };
 }
 
-/** The row of headings: the first of the opening rows with a Title or a
- *  Product ID column, and one more it knows. (Product ID and Selling price
- *  alone is a price update.) */
+/** The row of headings: the first of the opening rows with a Product ID,
+ *  Title or Model name column, and one more it knows. (Product ID and
+ *  Selling price alone is a price update.) */
 export function locateBulkHeader(rows: SheetRow[]): BulkHeader | null {
   for (let index = 0; index < Math.min(rows.length, 10); index++) {
     const found = readHeadings(rows[index].cells);
     const recognised = Object.keys(found.columns).length + found.specColumns.length;
-    if ((found.columns.name !== undefined || found.columns.slug !== undefined) && recognised >= 2) return { index, ...found };
+    const identifies = found.columns.name !== undefined || found.columns.slug !== undefined || found.columns.modelName !== undefined;
+    if (identifies && recognised >= 2) return { index, ...found };
   }
   return null;
 }
@@ -190,6 +236,8 @@ export interface BulkContext {
   existing: Map<string, ExistingProduct>;
   /** Barcodes in use, product's own or a colour's, and whose they are. */
   barcodeOwners: Map<string, { slug: string; name: string }>;
+  /** The admin's own title formats (the built-in ones are in title-format.ts). */
+  titleFormats: TitleFormatRule[];
 }
 
 export interface BulkIssue {
@@ -255,28 +303,7 @@ function cellString(value: unknown): string {
   return String(value).replace(/\r\n?/g, '\n');
 }
 
-const NEW_PRODUCT: Listing = {
-  name: '',
-  categorySlug: '',
-  brandName: '',
-  status: 'DRAFT',
-  priceInPaise: 0,
-  mrpInPaise: null,
-  inStock: true,
-  gallery: [],
-  sharedImages: [],
-  highlights: [],
-  specs: [],
-  description: '',
-  modelNumber: null,
-  partNumber: null,
-  ean: null,
-  hsnCode: null,
-  gstRatePercent: null,
-  warranty: null,
-  inTheBox: null,
-  colours: [],
-};
+const NEW_PRODUCT = EMPTY_LISTING;
 
 const STATUS_WORDS: Record<string, Listing['status']> = {
   draft: 'DRAFT',
@@ -321,7 +348,7 @@ export function planBulk(rows: SheetRow[], header: BulkHeader, ctx: BulkContext)
 
     const slug = single(cell('slug')).toLowerCase();
     const existing = slug ? ctx.existing.get(slug) : undefined;
-    const label = single(cell('name')) || existing?.listing.name || slug || null;
+    const label = single(cell('name')) || existing?.listing.name || [single(cell('brand')), single(cell('modelName'))].filter(Boolean).join(' ') || slug || null;
     const report = (severity: 'error' | 'warning', messages: string[]) =>
       messages.forEach((message) => plan.issues.push({ rowNumber: row.rowNumber, product: label, severity, message }));
 
@@ -340,10 +367,21 @@ export function planBulk(rows: SheetRow[], header: BulkHeader, ctx: BulkContext)
     const base = existing?.listing ?? NEW_PRODUCT;
     const next: Listing = { ...base, specs: base.specs.map((s) => ({ ...s })), colours: base.colours };
 
-    // Title, category and brand.
-    if (has('name')) next.name = single(cell('name'));
-    if (!next.name) errors.push(has('name') ? 'No title.' : 'No title: the sheet needs a Title column to add products.');
-    else if (next.name.length > 200) errors.push(`The title is ${next.name.length} characters; the most is 200.`);
+    // The title: a blank cell builds it from the brand's format (below, once
+    // the fields it uses are read); the product's own title, unchanged,
+    // keeps whichever it had; any other title is kept as written.
+    if (has('name')) {
+      const typed = single(cell('name'));
+      if (!typed) next.titleAuto = true;
+      else if (!existing || typed !== base.name) {
+        next.titleAuto = false;
+        next.name = typed;
+      }
+    } else if (!existing) {
+      next.titleAuto = true;
+    }
+
+    // Category and brand.
     if (has('category')) {
       const text = single(cell('category'));
       const found = categoryByKey.get(key(text));
@@ -405,16 +443,63 @@ export function planBulk(rows: SheetRow[], header: BulkHeader, ctx: BulkContext)
     }
 
     // Short text.
-    const text = (field: 'modelNumber' | 'partNumber' | 'warranty' | 'inTheBox', name: string, max: number) => {
+    type TextField =
+      | 'modelName'
+      | 'modelNumber'
+      | 'partNumber'
+      | 'variant'
+      | 'warranty'
+      | 'warrantyPeriod'
+      | 'warrantyServiceType'
+      | 'warrantyCovered'
+      | 'inTheBox'
+      | 'countryOfOrigin'
+      | 'manufacturerDetails'
+      | 'packerDetails'
+      | 'importerDetails';
+    const text = (field: TextField, name: string, max: number) => {
       if (!has(field)) return;
       const value = single(cell(field));
       if (value.length > max) errors.push(`${name} is longer than ${max} characters.`);
       next[field] = value || null;
     };
+    text('modelName', 'The model name', 120);
     text('modelNumber', 'The model number', 60);
     text('partNumber', 'The part number', 60);
-    text('warranty', 'The warranty', 300);
-    text('inTheBox', '"In the box"', 500);
+    text('variant', 'The variant', 80);
+    text('inTheBox', '"What\'s in the box"', 500);
+    text('warranty', 'The warranty summary', 300);
+    text('warrantyPeriod', 'The warranty period', 100);
+    text('warrantyServiceType', 'The warranty service type', 300);
+    text('warrantyCovered', '"Covered in warranty"', 1000);
+    text('countryOfOrigin', 'The country of origin', 60);
+    text('manufacturerDetails', 'The manufacturer details', 500);
+    text('packerDetails', 'The packer details', 500);
+    text('importerDetails', 'The importer details', 500);
+
+    // Package size and weight.
+    const measure = (field: 'packageLengthCm' | 'packageBreadthCm' | 'packageHeightCm' | 'packageWeightKg', name: string, max: number) => {
+      if (!has(field)) return;
+      const shown = single(cell(field));
+      if (!shown) {
+        next[field] = null;
+        return;
+      }
+      const value = toNumber(cell(field));
+      if (value === null || value < 0 || value > max) errors.push(`${name} "${shown}" should be a number from 0 to ${max}.`);
+      else next[field] = Math.round(value * 1000) / 1000;
+    };
+    measure('packageLengthCm', 'Length (cm)', 1000);
+    measure('packageBreadthCm', 'Breadth (cm)', 1000);
+    measure('packageHeightCm', 'Height (cm)', 1000);
+    measure('packageWeightKg', 'Weight (kg)', 500);
+
+    if (has('videoUrl')) {
+      const url = single(cell('videoUrl'));
+      if (!url) next.videoUrl = null;
+      else if (!/^https:\/\/[^\s"'<>]{4,500}$/.test(url)) errors.push(`Video link "${url.slice(0, 60)}" should be a web address starting with https://.`);
+      else next.videoUrl = url;
+    }
 
     // Barcode and tax.
     if (has('ean')) {
@@ -485,6 +570,19 @@ export function planBulk(rows: SheetRow[], header: BulkHeader, ctx: BulkContext)
     }
     if (next.specs.length > 60) errors.push(`${next.specs.length} specs; the most is 60.`);
     if (next.specs.some((s) => s.value.length > 3000)) errors.push('A spec value is longer than 3,000 characters.');
+
+    // The automatic title, from the brand's format and the fields just read.
+    if (next.titleAuto) {
+      const { pattern } = pickTitleFormat(next.brandName, next.categorySlug, ctx.titleFormats);
+      const built = buildTitle(
+        pattern,
+        { brand: next.brandName, modelName: next.modelName, modelNumber: next.modelNumber, variant: next.variant, specs: next.specs },
+        next.colours[0]?.name ?? null,
+      );
+      if (built.length >= 3) next.name = built;
+    }
+    if (next.name.trim().length < 3) errors.push('No title: fill in the brand and model name to build it, or write a title.');
+    else if (next.name.length > 200) errors.push(`The title is ${next.name.length} characters; the most is 200.`);
 
     // Barcodes: valid, not used twice here, not on another product.
     if (errors.length === 0) {

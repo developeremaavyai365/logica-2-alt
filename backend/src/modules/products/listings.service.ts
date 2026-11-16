@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { Prisma, ProductStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SaveListingDto } from './dto/listing.dto';
+import { TitleFormatRule, TitleInput, buildTitle, pickTitleFormat } from './title-format';
 import {
   GST_RATES,
   Listing,
@@ -10,6 +11,7 @@ import {
   bigPriceChange,
   checkListing,
   listingChanges,
+  tidyVariantSpecs,
   slugify,
   uniqueSlug,
 } from './listing-rules';
@@ -27,13 +29,28 @@ export const LISTING_SELECT = {
   sharedImages: true,
   highlights: true,
   specs: true,
+  titleAuto: true,
+  modelName: true,
   modelNumber: true,
   partNumber: true,
+  variant: true,
   ean: true,
   hsnCode: true,
   gstRatePercent: true,
   warranty: true,
+  warrantyPeriod: true,
+  warrantyServiceType: true,
+  warrantyCovered: true,
   inTheBox: true,
+  countryOfOrigin: true,
+  manufacturerDetails: true,
+  packerDetails: true,
+  importerDetails: true,
+  packageLengthCm: true,
+  packageBreadthCm: true,
+  packageHeightCm: true,
+  packageWeightKg: true,
+  videoUrl: true,
   updatedAt: true,
   brand: { select: { name: true } },
   category: { select: { slug: true } },
@@ -72,16 +89,57 @@ export function toListing(p: StoredListing): Listing {
     highlights: p.highlights,
     specs: specPairs(p.specs),
     description: p.description,
+    titleAuto: p.titleAuto,
+    modelName: p.modelName,
     modelNumber: p.modelNumber,
     partNumber: p.partNumber,
+    variant: p.variant,
     ean: p.ean,
     hsnCode: p.hsnCode,
     gstRatePercent: p.gstRatePercent,
     warranty: p.warranty,
+    warrantyPeriod: p.warrantyPeriod,
+    warrantyServiceType: p.warrantyServiceType,
+    warrantyCovered: p.warrantyCovered,
     inTheBox: p.inTheBox,
+    countryOfOrigin: p.countryOfOrigin,
+    manufacturerDetails: p.manufacturerDetails,
+    packerDetails: p.packerDetails,
+    importerDetails: p.importerDetails,
+    packageLengthCm: p.packageLengthCm,
+    packageBreadthCm: p.packageBreadthCm,
+    packageHeightCm: p.packageHeightCm,
+    packageWeightKg: p.packageWeightKg,
+    videoUrl: p.videoUrl,
     colours: p.colours.map((c) => ({ ...c })),
   };
 }
+
+/** What a title format reads from a listing. */
+export const titleInput = (l: Pick<Listing, 'brandName' | 'modelName' | 'modelNumber' | 'variant' | 'specs'>): TitleInput => ({
+  brand: l.brandName,
+  modelName: l.modelName,
+  modelNumber: l.modelNumber,
+  variant: l.variant,
+  specs: l.specs,
+});
+
+/** The listing's title from its brand's format, for its first colour, when
+ *  the title is automatic. A format that gives too short a title (no model
+ *  yet, say) keeps the title as typed. */
+export function withAutoTitle(listing: Listing, formats: TitleFormatRule[]): Listing {
+  if (!listing.titleAuto) return listing;
+  const { pattern } = pickTitleFormat(listing.brandName, listing.categorySlug, formats);
+  const built = buildTitle(pattern, titleInput(listing), listing.colours[0]?.name ?? null);
+  return built.length >= 3 ? { ...listing, name: built } : listing;
+}
+
+/** Saved title formats, in the shape the title rules take. */
+export const toTitleRule = (row: { brandKey: string; categorySlug: string; pattern: string }): TitleFormatRule => ({
+  brand: row.brandKey === '*' ? null : row.brandKey,
+  category: row.categorySlug === '*' ? null : row.categorySlug,
+  pattern: row.pattern,
+});
 
 /** The product's own columns for a listing (colours are stored apart). */
 export function listingData(listing: Listing, categoryId: string, brandId: string | null) {
@@ -99,13 +157,28 @@ export function listingData(listing: Listing, categoryId: string, brandId: strin
     sharedImages: listing.sharedImages,
     highlights: listing.highlights,
     specs: listing.specs.map((s) => [s.label, s.value]),
+    titleAuto: listing.titleAuto,
+    modelName: listing.modelName,
     modelNumber: listing.modelNumber,
     partNumber: listing.partNumber,
+    variant: listing.variant,
     ean: listing.ean,
     hsnCode: listing.hsnCode,
     gstRatePercent: listing.gstRatePercent,
     warranty: listing.warranty,
+    warrantyPeriod: listing.warrantyPeriod,
+    warrantyServiceType: listing.warrantyServiceType,
+    warrantyCovered: listing.warrantyCovered,
     inTheBox: listing.inTheBox,
+    countryOfOrigin: listing.countryOfOrigin,
+    manufacturerDetails: listing.manufacturerDetails,
+    packerDetails: listing.packerDetails,
+    importerDetails: listing.importerDetails,
+    packageLengthCm: listing.packageLengthCm,
+    packageBreadthCm: listing.packageBreadthCm,
+    packageHeightCm: listing.packageHeightCm,
+    packageWeightKg: listing.packageWeightKg,
+    videoUrl: listing.videoUrl,
   };
 }
 
@@ -123,15 +196,25 @@ export class ListingsService {
   /** What the listing form needs to offer: categories with their spec
    *  fields, the brands already in use, and the GST rates. */
   async formOptions() {
-    const [categories, brands] = await Promise.all([
+    const [categories, brands, titleFormats] = await Promise.all([
       this.prisma.category.findMany({ select: { slug: true, name: true }, orderBy: { name: 'asc' } }),
       this.prisma.brand.findMany({ select: { name: true }, orderBy: { name: 'asc' } }),
+      this.titleFormats(),
     ]);
     return {
       categories: categories.map((c) => ({ ...c, specFields: SPEC_TEMPLATES[c.slug] ?? [] })),
       brands: brands.map((b) => b.name),
       gstRates: GST_RATES,
+      // The admin's own formats; the built-in ones are in title-format.ts,
+      // which the form uses too.
+      titleFormats,
     };
+  }
+
+  /** The admin's own title formats. */
+  async titleFormats(): Promise<TitleFormatRule[]> {
+    const rows = await this.prisma.titleFormat.findMany({ select: { brandKey: true, categorySlug: true, pattern: true } });
+    return rows.map(toTitleRule);
   }
 
   /** One listing as the form edits it, with its linked SAP codes and what it
@@ -156,9 +239,14 @@ export class ListingsService {
       : null;
     if (slug && !existing) throw new NotFoundException('No product with this address.');
 
-    const listing = this.normalise(dto);
-    const category = await this.prisma.category.findUnique({ where: { slug: listing.categorySlug }, select: { id: true } });
+    const typed = this.normalise(dto);
+    const category = await this.prisma.category.findUnique({ where: { slug: typed.categorySlug }, select: { id: true } });
     if (!category) throw new BadRequestException('Choose one of the listed categories.');
+    // The brand as the site already spells it, then the title from its format.
+    const known = typed.brandName
+      ? await this.prisma.brand.findFirst({ where: { name: { equals: typed.brandName, mode: 'insensitive' } }, select: { name: true } })
+      : null;
+    const listing = withAutoTitle({ ...typed, brandName: known?.name ?? typed.brandName }, await this.titleFormats());
 
     this.checkBarcodes(listing);
     await this.checkBarcodesUnused(listing, existing?.id ?? null);
@@ -242,15 +330,33 @@ export class ListingsService {
       gallery: dto.gallery,
       sharedImages: dto.sharedImages,
       highlights: dto.highlights.map((h) => h.trim()).filter(Boolean),
-      specs: dto.specs.map((s) => ({ label: s.label.trim(), value: s.value.trim() })).filter((s) => s.label && s.value),
+      specs: tidyVariantSpecs(
+        dto.categorySlug,
+        dto.specs.map((s) => ({ label: s.label.trim(), value: s.value.trim() })).filter((s) => s.label && s.value),
+      ),
       description: dto.description.trim(),
+      titleAuto: dto.titleAuto ?? false,
+      modelName: clean(dto.modelName),
       modelNumber: clean(dto.modelNumber),
       partNumber: clean(dto.partNumber),
+      variant: clean(dto.variant),
       ean: clean(dto.ean),
       hsnCode: clean(dto.hsnCode),
       gstRatePercent: dto.gstRatePercent ?? null,
       warranty: clean(dto.warranty),
+      warrantyPeriod: clean(dto.warrantyPeriod),
+      warrantyServiceType: clean(dto.warrantyServiceType),
+      warrantyCovered: clean(dto.warrantyCovered),
       inTheBox: clean(dto.inTheBox),
+      countryOfOrigin: clean(dto.countryOfOrigin),
+      manufacturerDetails: clean(dto.manufacturerDetails),
+      packerDetails: clean(dto.packerDetails),
+      importerDetails: clean(dto.importerDetails),
+      packageLengthCm: dto.packageLengthCm ?? null,
+      packageBreadthCm: dto.packageBreadthCm ?? null,
+      packageHeightCm: dto.packageHeightCm ?? null,
+      packageWeightKg: dto.packageWeightKg ?? null,
+      videoUrl: clean(dto.videoUrl),
       colours: dto.colours.map((c) => ({
         key: c.key,
         name: c.name.trim(),

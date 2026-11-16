@@ -2,7 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { useParams, useSearchParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import {
   ArrowRight, Check, ChevronRight, Heart, ShoppingCart, Cpu, MemoryStick, HardDrive, Monitor, Laptop2, Zap,
-  BatteryFull, Camera, Smartphone, Layers, type LucideIcon,
+  BatteryFull, Camera, Smartphone, Layers, PlayCircle, type LucideIcon,
 } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -54,6 +54,22 @@ function SectionCard({ title, children }: { title: string; children: ReactNode }
       </div>
       {children}
     </div>
+  );
+}
+
+/** Label and value rows, leaving out the ones not filled in. */
+function InfoRows({ rows }: { rows: [string, string | undefined][] }) {
+  return (
+    <dl className="divide-y divide-shop-line">
+      {rows
+        .filter((row): row is [string, string] => !!row[1])
+        .map(([label, value]) => (
+          <div key={label} className="grid gap-1 px-5 py-3 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-4">
+            <dt className={MICRO_LABEL}>{label}</dt>
+            <dd className="break-words text-sm leading-relaxed text-shop-ink/80">{value}</dd>
+          </div>
+        ))}
+    </dl>
   );
 }
 
@@ -124,6 +140,7 @@ export default function ProductPage() {
   const saving = hasDiscount ? mrp! - price : 0;
   const wished = inWishlist(product.id);
   const overviewList = detail?.overview ? overviewItems(detail.overview) : null;
+  const info = detail?.info;
 
   return (
     <div className="w-full bg-shop-canvas">
@@ -369,6 +386,51 @@ export default function ProductPage() {
                   <p className="px-5 py-4 text-sm leading-relaxed text-shop-ink/75">{detail.overview}</p>
                 )}
               </SectionCard>
+            )}
+
+            {/* In the box, warranty, and the origin and maker details. */}
+            {info?.inTheBox && (
+              <SectionCard title="In the box">
+                <p className="px-5 py-4 text-sm leading-relaxed text-shop-ink/75">{info.inTheBox}</p>
+              </SectionCard>
+            )}
+            {info?.warranty && (
+              <SectionCard title="Warranty">
+                <InfoRows
+                  rows={[
+                    ['Summary', info.warranty.summary],
+                    ['Period', info.warranty.period],
+                    ['Service', info.warranty.serviceType],
+                    ['Covered', info.warranty.covered],
+                  ]}
+                />
+              </SectionCard>
+            )}
+            {(info?.countryOfOrigin || info?.manufacturer || info?.packer || info?.importer || info?.modelNumber) && (
+              <SectionCard title="Manufacturer & origin">
+                <InfoRows
+                  rows={[
+                    ['Model number', info.modelNumber],
+                    ['Country of origin', info.countryOfOrigin],
+                    ['Manufacturer', info.manufacturer],
+                    ['Packer', info.packer],
+                    ['Importer', info.importer],
+                  ]}
+                />
+              </SectionCard>
+            )}
+            {info?.videoUrl && /^https:\/\//.test(info.videoUrl) && (
+              <a
+                href={info.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between rounded-2xl border border-shop-line bg-white px-5 py-4 text-sm font-semibold text-shop-ink transition-colors duration-300 hover:bg-shop-canvas"
+              >
+                <span className="flex items-center gap-2">
+                  <PlayCircle className="h-5 w-5 text-shop-accent" /> Watch the product video
+                </span>
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
+              </a>
             )}
           </div>
         </div>

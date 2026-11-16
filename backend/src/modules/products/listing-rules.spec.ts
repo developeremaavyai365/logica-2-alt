@@ -1,4 +1,4 @@
-import { bigPriceChange, checkListing, isValidGtin, ListingForChecks, slugify, uniqueSlug } from './listing-rules';
+import { bigPriceChange, checkListing, isValidGtin, ListingForChecks, MIN_HIGHLIGHTS, slugify, suggestHighlights, uniqueSlug } from './listing-rules';
 
 describe('barcodes', () => {
   it.each(['8901234567890', '4006381333931', '96385074', '036000291452', '10012345678902'])('accepts the valid code %s', (code) =>
@@ -33,10 +33,11 @@ describe('the publish checklist', () => {
     name: 'HP 15s Core i5',
     categorySlug: 'laptops',
     brandName: 'HP',
+    modelName: '15s',
     priceInPaise: 52_990_00,
     mrpInPaise: 61_990_00,
     gallery: ['/products/hp.jpg'],
-    highlights: ['13th Gen Core i5', '16 GB RAM', '512 GB SSD'],
+    highlights: ['13th Gen Core i5', '16 GB RAM', '512 GB SSD', '15.6 inch display'],
     specs: [
       { label: 'Processor', value: 'Core i5-1335U' },
       { label: 'RAM', value: '16 GB' },
@@ -45,9 +46,26 @@ describe('the publish checklist', () => {
       { label: 'Operating System', value: 'Windows 11' },
     ],
     description: 'A thin and light laptop.',
-    ean: '8901234567890',
+    ean: null,
     hsnCode: '84713010',
     gstRatePercent: 18,
+    inTheBox: 'Laptop, charger',
+    countryOfOrigin: 'India',
+    manufacturerDetails: 'HP India, Bengaluru',
+    colours: [{ name: 'Natural Silver', ean: '8901234567890', images: ['/products/hp-silver.jpg'] }],
+  };
+  const empty: ListingForChecks = {
+    ...laptop,
+    modelName: null,
+    mrpInPaise: null,
+    highlights: [],
+    specs: [],
+    description: '',
+    hsnCode: null,
+    gstRatePercent: null,
+    inTheBox: null,
+    countryOfOrigin: null,
+    manufacturerDetails: null,
     colours: [],
   };
 
@@ -58,68 +76,89 @@ describe('the publish checklist', () => {
   it('can publish without a SAP code, but warns that it cannot be ordered until one is linked', () => {
     expect(checkListing(laptop, false)).toEqual({
       blocking: [],
-      warnings: ['Link a SAP code on the SAP import page: until then shoppers can see it but not order it.'],
+      warnings: ['Link a SAP code (the SKU): until then shoppers can see it but not order it.'],
     });
   });
 
-  it("blocks publishing without a title, photo, price or the category's required specs", () => {
-    const { blocking } = checkListing(
-      { ...laptop, name: '', gallery: [], priceInPaise: 0, specs: laptop.specs.filter((s) => s.label !== 'RAM') },
-      false,
-    );
-    expect(blocking).toEqual([
-      'Add a product title.',
-      'Add at least one photo.',
-      'Set a selling price, or link a SAP code on the SAP import page.',
-      'Fill in the spec "RAM".',
+  it('asks a new listing for everything a marketplace does, in the order of the form', () => {
+    expect(checkListing(empty, true).blocking).toEqual([
+      'Add the model name.',
+      'Fill in the RAM of the variant.',
+      'Fill in the Storage of the variant.',
+      'Add the colour.',
+      'Add the EAN / barcode.',
+      'Choose the GST rate.',
+      'Add the HSN code.',
+      `Add at least ${MIN_HIGHLIGHTS} key highlights.`,
+      'Add a description.',
+      'Add what is in the box.',
+      'Fill in the spec "Processor".',
+      'Fill in the spec "Screen Size".',
+      'Fill in the spec "Operating System".',
+      'Add the country of origin.',
+      "Add the manufacturer's name and address.",
     ]);
   });
 
-  it('asks for, without demanding, the required specs of a product published before', () => {
-    const result = checkListing({ ...laptop, specs: [] }, true, true);
-    expect(result.blocking).toEqual([]);
-    expect(result.warnings).toContain('Fill in the spec "Processor".');
-    // A missing photo still blocks, on the shop or not.
-    expect(checkListing({ ...laptop, gallery: [] }, true, true).blocking).toEqual(['Add at least one photo.']);
+  it('asks for the MRP and price unless a SAP code supplies them', () => {
+    expect(checkListing({ ...laptop, priceInPaise: 0, mrpInPaise: null }, false).blocking).toEqual([
+      'Add the MRP.',
+      'Set a selling price, or link a SAP code on the SAP import page.',
+    ]);
+    expect(checkListing({ ...laptop, priceInPaise: 0, mrpInPaise: null }, true).blocking).toEqual([]);
   });
 
-  it('lets a SAP-linked product publish without a catalogue price', () => {
-    expect(checkListing({ ...laptop, priceInPaise: 0, mrpInPaise: null }, true).blocking).toEqual([]);
+  it('only asks, without demanding, the same of a product published before, so older listings stay usable', () => {
+    const result = checkListing(empty, true, true);
+    expect(result.blocking).toEqual([]);
+    expect(result.warnings).toContain('Add the model name.');
+    expect(result.warnings).toContain("Add the manufacturer's name and address.");
+    // A title, a brand and a photo are needed on the shop all the same.
+    expect(checkListing({ ...empty, name: '', gallery: [] }, true, true).blocking).toEqual(['Add a product title.', 'Add at least one photo.']);
   });
 
   it('blocks a selling price above the MRP', () => {
     expect(checkListing({ ...laptop, priceInPaise: 70_000_00 }, false).blocking).toEqual(['The selling price cannot be above the MRP.']);
   });
 
-  it('warns, without blocking, about missing barcodes, highlights, description and tax details', () => {
-    const result = checkListing(
-      {
-        ...laptop,
-        ean: null,
-        highlights: ['One'],
-        description: '',
-        hsnCode: null,
-        gstRatePercent: null,
-        colours: [
-          { name: 'Silver', ean: '8901234567890', images: ['/a.jpg'] },
-          { name: 'Blue', ean: null, images: [] },
-        ],
-      },
-      true,
-    );
-    expect(result.blocking).toEqual([]);
-    expect(result.warnings).toEqual([
-      'Add the EAN for Blue.',
-      'Add photos of Blue.',
-      'Add at least 3 key highlights.',
-      'Add a description.',
-      'Add the HSN code.',
-      'Choose the GST rate.',
+  it('wants a barcode for each colour, and photos of each', () => {
+    const result = checkListing({ ...laptop, colours: [...laptop.colours, { name: 'Blue', ean: null, images: [] }] }, true);
+    expect(result.blocking).toEqual(['Add the EAN for Blue.']);
+    expect(result.warnings).toEqual(['Add photos of Blue.']);
+  });
+
+  it('needs no colour or particular specs in a category without them', () => {
+    const ups = { ...laptop, categorySlug: 'accessories', specs: [], colours: [], ean: '8901234567890' };
+    expect(checkListing(ups, true)).toEqual({ blocking: [], warnings: [] });
+  });
+});
+
+describe('highlights from the specs', () => {
+  it('writes the variant, screen, battery, processor and cameras of a phone', () => {
+    expect(
+      suggestHighlights('mobile-phones', [
+        { label: 'RAM', value: '8 GB' },
+        { label: 'Internal Storage', value: '256 GB' },
+        { label: 'Display Size', value: '6.7 inch' },
+        { label: 'Battery Capacity', value: '5000 mAh' },
+        { label: 'Processor', value: 'Snapdragon 8 Gen 3' },
+        { label: 'Primary Camera', value: '50 MP + 12 MP' },
+        { label: 'Secondary Camera', value: '12 MP' },
+      ]),
+    ).toEqual([
+      '8 GB RAM | 256 GB ROM',
+      '6.7 inch Display',
+      '5000 mAh Battery',
+      'Snapdragon 8 Gen 3 Processor',
+      '50 MP + 12 MP Rear Camera | 12 MP Front Camera',
     ]);
   });
 
-  it('asks for no particular specs in a category without a template', () => {
-    expect(checkListing({ ...laptop, categorySlug: 'accessories', specs: [] }, false).blocking).toEqual([]);
+  it('leaves out what is not filled in', () => {
+    expect(suggestHighlights('laptops', [{ label: 'RAM', value: '16 GB' }, { label: 'Operating System', value: 'Windows 11' }])).toEqual([
+      '16 GB RAM',
+      'Windows 11',
+    ]);
   });
 });
 

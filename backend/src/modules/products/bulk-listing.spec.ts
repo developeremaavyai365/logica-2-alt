@@ -4,7 +4,7 @@ import { readSheet } from '../sap-import/sheet-reader';
 import { SheetRow } from '../sap-import/sap-import.types';
 import { BulkContext, ExistingProduct, locateBulkHeader, planBulk } from './bulk-listing';
 import { buildTemplate } from './bulk-template';
-import { Listing, SPEC_TEMPLATES } from './listing-rules';
+import { EMPTY_LISTING, Listing, SPEC_TEMPLATES } from './listing-rules';
 
 interface SeedProduct {
   id: string;
@@ -25,6 +25,7 @@ const seed: { categories: { slug: string; name: string }[]; products: SeedProduc
 
 /** A seed product as it is stored once imported. */
 const asListing = (p: SeedProduct): Listing => ({
+  ...EMPTY_LISTING,
   name: p.name,
   categorySlug: p.category,
   brandName: p.brand,
@@ -52,6 +53,7 @@ const catalogue = (products: ExistingProduct[], barcodes: [string, string][] = [
   brands: [...new Set(seed.products.map((p) => p.brand))],
   existing: new Map(products.map((p) => [p.slug, p])),
   barcodeOwners: new Map(barcodes.map(([code, slug]) => [code, { slug, name: products.find((p) => p.slug === slug)!.listing.name }])),
+  titleFormats: [],
 });
 
 const laptop: ExistingProduct = {
@@ -110,7 +112,7 @@ describe('reading the headings', () => {
   it('updates prices from a sheet of just Product ID and price, and refuses a new row there for want of a title', () => {
     const result = plan(sheet(['Product ID', 'Selling price'], ['hp-15s', 50990], ['', 999]));
     expect(result.toUpdate[0].changes).toEqual([{ field: 'priceInPaise', from: 52_990_00, to: 50_990_00 }]);
-    expect(errorsOf(result)).toEqual(['No title: the sheet needs a Title column to add products.', 'No category: the sheet needs a Category column to add products.']);
+    expect(errorsOf(result)).toEqual(['No category: the sheet needs a Category column to add products.', 'No title: fill in the brand and model name to build it, or write a title.']);
   });
 });
 
@@ -146,10 +148,10 @@ describe('adding products', () => {
   it('only makes a product Active when it is ready, and says what is missing', () => {
     const result = plan(sheet(['Title', 'Category', 'Brand', 'Status', 'Selling price'], ['Dell Inspiron 15', 'Laptops', 'Dell', 'Active', 45990]));
     expect(result.rejected).toBe(1);
-    expect(errorsOf(result)[0]).toBe(
-      'Not ready to be Active: Add at least one photo. Fill in the spec "Processor". Fill in the spec "RAM". Fill in the spec "Storage". ' +
-        'Fill in the spec "Screen Size". Fill in the spec "Operating System". Set its Status to Draft to save it anyway.',
-    );
+    const message = errorsOf(result)[0];
+    expect(message).toMatch(/^Not ready to be Active: Add the model name\. Fill in the RAM of the variant\./);
+    expect(message).toContain('Add at least one photo.');
+    expect(message).toMatch(/Set its Status to Draft to save it anyway\.$/);
   });
 });
 
@@ -297,10 +299,68 @@ describe('the downloaded sheet', () => {
     expect(rows[0].cells).toContain('Spec: Processor *');
     expect(rows[0].cells).toContain('Spec: Graphics');
 
+    // In the product page's order: the variant's RAM and storage follow Variant.
     const headings = rows[0].cells as string[];
-    const row = headings.map((h) => ({ 'Title *': 'Acer Aspire 7', 'Category *': 'Laptops', 'Brand *': 'Acer', 'Spec: RAM *': '16 GB' })[h] ?? '');
-    const result = plan([...rows, { rowNumber: 2, cells: row }], catalogue([]));
+    expect(headings.slice(0, 10)).toEqual([
+      'Product ID',
+      'Category *',
+      'Brand *',
+      'Model name *',
+      'Model number',
+      'Part number',
+      'Variant',
+      'Spec: RAM *',
+      'Spec: Storage *',
+      'Title',
+    ]);
+
+    const typed = (values: Record<string, string>) => ({ rowNumber: 2, cells: headings.map((h) => values[h] ?? '') });
+    const newLaptop = { 'Category *': 'Laptops', 'Brand *': 'Acer', 'Model name *': 'Aspire 7', 'Spec: RAM *': '16gb', 'Spec: Storage *': '512 GB SSD' };
+    const result = plan([...rows, typed(newLaptop)], catalogue([]));
     expect(errorsOf(result)).toEqual([]);
-    expect(result.toCreate[0].listing).toMatchObject({ name: 'Acer Aspire 7', brandName: 'Acer', specs: [{ label: 'RAM', value: '16 GB' }] });
+    // No title written: built from the brand's format.
+    expect(result.toCreate[0].listing).toMatchObject({ name: 'Acer Aspire 7 (16 GB/512 GB SSD)', titleAuto: true, modelName: 'Aspire 7', brandName: 'Acer' });
+
+    const written = plan([...rows, typed({ ...newLaptop, Title: 'Acer Aspire 7 Gaming Laptop' })], catalogue([]));
+    expect(written.toCreate[0].listing).toMatchObject({ name: 'Acer Aspire 7 Gaming Laptop', titleAuto: false });
+  });
+});
+
+describe('titles in the sheet', () => {
+  const autoPhone: ExistingProduct = {
+    slug: 'galaxy-s24',
+    linkedToSap: false,
+    listing: {
+      ...EMPTY_LISTING,
+      name: 'Samsung Galaxy S24 5G (8 GB RAM, 256 GB Storage)',
+      titleAuto: true,
+      categorySlug: 'mobile-phones',
+      brandName: 'Samsung',
+      modelName: 'Galaxy S24 5G',
+      specs: [
+        { label: 'RAM', value: '8 GB' },
+        { label: 'Internal Storage', value: '256 GB' },
+      ],
+    },
+  };
+
+  it('rebuilds an automatic title when the fields it uses change, the title cell left as it was', () => {
+    const result = plan(
+      sheet(['Product ID', 'Title', 'Spec: Internal Storage'], ['galaxy-s24', autoPhone.listing.name, '512 GB']),
+      catalogue([autoPhone]),
+    );
+    expect(result.toUpdate[0].changes).toEqual([
+      { field: 'name', from: 'Samsung Galaxy S24 5G (8 GB RAM, 256 GB Storage)', to: 'Samsung Galaxy S24 5G (8 GB RAM, 512 GB Storage)' },
+      { field: 'spec:Internal Storage', from: '256 GB', to: '512 GB' },
+    ]);
+  });
+
+  it('keeps a title typed over an automatic one, and switches a written title to automatic when its cell is cleared', () => {
+    const typed = plan(sheet(['Product ID', 'Title'], ['galaxy-s24', 'Galaxy S24 Special Edition']), catalogue([autoPhone]));
+    expect(typed.toUpdate[0].listing).toMatchObject({ name: 'Galaxy S24 Special Edition', titleAuto: false });
+
+    const written = { ...autoPhone, listing: { ...autoPhone.listing, titleAuto: false, name: 'Old title' } };
+    const cleared = plan(sheet(['Product ID', 'Title'], ['galaxy-s24', '']), catalogue([written]));
+    expect(cleared.toUpdate[0].listing).toMatchObject({ name: 'Samsung Galaxy S24 5G (8 GB RAM, 256 GB Storage)', titleAuto: true });
   });
 });

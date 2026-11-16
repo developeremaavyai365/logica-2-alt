@@ -37,6 +37,9 @@ export interface ProductColour {
    *  only in the line-up photo. */
   images: string[];
   inStock?: boolean;
+  /** The product's title with this colour chosen, when the title is built
+   *  from the brand's format in the admin. */
+  title?: string;
 }
 
 interface ColourSet {
@@ -331,10 +334,13 @@ export function baseName(product: { id: string; name: string }): string {
  *  in by live-catalogue.ts. */
 export const colourTitles = new Map<string, string>();
 
-/** The name to show for a product: its base name, followed by the colour
- *  when one is chosen — "Apple iPhone 15 Plus – Green" — or, for a colour
- *  with its own name in the SAP sheet, that name exactly. */
+/** The name to show for a product: for a title built from the brand's
+ *  format, its title with the chosen colour; otherwise its base name,
+ *  followed by the colour when one is chosen — "Apple iPhone 15 Plus –
+ *  Green" — or, for a colour with its own name in the SAP sheet, that name
+ *  exactly. */
 export function productTitle(product: { id: string; name: string }, colour?: ProductColour): string {
+  if (colour?.title) return colour.title;
   if (colour) {
     const fromSheet = colourTitles.get(`${product.id}|${colour.key}`);
     if (fromSheet) return fromSheet;

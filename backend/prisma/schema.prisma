@@ -220,14 +220,45 @@ model Product {
   reviewCount  Int?
 
   // Listing details, as a marketplace asks for them.
+  /// The manufacturer's name for the model, e.g. "Galaxy S24".
+  modelName    String?
   modelNumber  String?
   partNumber   String?
+  /// The variant in words where the category has no RAM / storage fields,
+  /// e.g. "650 VA" or "1 Year, 1 User".
+  variant      String?
+  /// The title is built from the brand's title format (TitleFormat) and the
+  /// listing's fields; false for a title written by hand.
+  titleAuto    Boolean         @default(false)
   /// EAN / UPC barcode of the product (or of its only variant).
   ean          String?
   hsnCode      String?
   gstRatePercent Int?
+  /// The warranty in one line: years covered and domestic or international.
   warranty     String?
+  warrantyPeriod      String?
+  /// How a warranty claim is handled (onsite, at a service centre, …).
+  warrantyServiceType String?
+  /// What the warranty covers.
+  warrantyCovered     String?
   inTheBox     String?
+
+  // Shown to shoppers, as Indian e-commerce rules require.
+  countryOfOrigin     String?
+  /// Name and address of the manufacturer, the packer (if not the
+  /// manufacturer) and the importer (for an imported product).
+  manufacturerDetails String?
+  packerDetails       String?
+  importerDetails     String?
+
+  /// The shipped package, for courier rates.
+  packageLengthCm   Float?
+  packageBreadthCm  Float?
+  packageHeightCm   Float?
+  packageWeightKg   Float?
+
+  /// A product video (YouTube or similar).
+  videoUrl     String?
 
   colours     ProductColour[]
   variants    ProductVariant[]
@@ -258,6 +289,20 @@ model ProductColour {
   position  Int      @default(0)
 
   @@unique([productId, key])
+}
+
+/// An admin's own title format for a brand in a category, in place of the
+/// built-in one (title-format.ts). "*" as the brand is the category's
+/// general format; "*" as the category applies to every category.
+model TitleFormat {
+  id           String   @id @default(uuid())
+  /// The brand's name in lower case, or "*".
+  brandKey     String
+  categorySlug String
+  pattern      String
+  updatedAt    DateTime @updatedAt
+
+  @@unique([brandKey, categorySlug])
 }
 
 model ProductVariant {

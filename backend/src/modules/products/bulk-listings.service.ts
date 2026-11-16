@@ -5,7 +5,7 @@ import { readSheet, SheetReadError } from '../sap-import/sheet-reader';
 import { BulkContext, BulkPlan, ExistingProduct, MAX_BULK_ROWS, locateBulkHeader, planBulk } from './bulk-listing';
 import { buildTemplate } from './bulk-template';
 import { ChangeValue, SPEC_TEMPLATES, slugify, uniqueSlug } from './listing-rules';
-import { LISTING_SELECT, changesMetadata, listingData, toListing } from './listings.service';
+import { LISTING_SELECT, changesMetadata, listingData, toListing, toTitleRule } from './listings.service';
 import { ProductsService } from './products.service';
 
 /** How much of each list goes back in a response; the totals are always complete. */
@@ -76,10 +76,11 @@ export class BulkListingsService {
   }
 
   private async context(): Promise<BulkContext & { ids: Map<string, string> }> {
-    const [categories, brands, { existing, ids }] = await Promise.all([
+    const [categories, brands, { existing, ids }, formats] = await Promise.all([
       this.prisma.category.findMany({ select: { slug: true, name: true }, orderBy: { name: 'asc' } }),
       this.prisma.brand.findMany({ select: { name: true } }),
       this.products(),
+      this.prisma.titleFormat.findMany({ select: { brandKey: true, categorySlug: true, pattern: true } }),
     ]);
     const barcodeOwners = new Map<string, { slug: string; name: string }>();
     for (const p of existing.values()) {
@@ -87,7 +88,7 @@ export class BulkListingsService {
         if (code) barcodeOwners.set(code, { slug: p.slug, name: p.listing.name });
       }
     }
-    return { categories, brands: brands.map((b) => b.name), existing, barcodeOwners, ids };
+    return { categories, brands: brands.map((b) => b.name), existing, barcodeOwners, ids, titleFormats: formats.map(toTitleRule) };
   }
 
   /** Reads and checks the sheet. Throws a 400, worded for the uploader,

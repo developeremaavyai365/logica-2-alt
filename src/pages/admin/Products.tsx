@@ -14,6 +14,7 @@ import {
   Plus,
   RotateCcw,
   Search,
+  Type,
   X,
 } from 'lucide-react';
 import AdminShell from './AdminShell';
@@ -270,6 +271,13 @@ function ProductsPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <Link
+            to="/admin/title-formats"
+            className="flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#061A40] transition-colors duration-300 hover:border-[#3D4FE0] hover:text-[#3D4FE0]"
+          >
+            <Type className="h-4 w-4" />
+            Title formats
+          </Link>
           <Link
             to="/admin/products/bulk"
             className="flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#061A40] transition-colors duration-300 hover:border-[#3D4FE0] hover:text-[#3D4FE0]"

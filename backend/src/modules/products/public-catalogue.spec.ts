@@ -68,3 +68,65 @@ describe('the public catalogue', () => {
     expect(catalogueVersion(rows.slice(0, 2))).not.toBe(catalogueVersion(rows));
   });
 });
+
+describe('titles and details for the product page', () => {
+  const phone: CatalogueRow = {
+    slug: 'galaxy-s24',
+    name: 'Samsung Galaxy S24 5G (Onyx Black, 8 GB RAM, 256 GB Storage)',
+    description: '',
+    position: 0,
+    priceInPaise: 79_999_00,
+    mrpInPaise: 89_999_00,
+    inStock: true,
+    imageUrl: '/a.jpg',
+    gallery: ['/a.jpg'],
+    sharedImages: [],
+    highlights: [],
+    specs: [
+      ['RAM', '8 GB'],
+      ['Internal Storage', '256 GB'],
+    ],
+    attrs: null,
+    rating: null,
+    reviewCount: null,
+    updatedAt: new Date('2026-11-16T00:00:00Z'),
+    titleAuto: true,
+    modelName: 'Galaxy S24 5G',
+    inTheBox: 'Handset, cable',
+    warranty: '1 year manufacturer warranty',
+    warrantyPeriod: '1 Year',
+    countryOfOrigin: 'India',
+    manufacturerDetails: 'Samsung India Electronics, Noida',
+    packerDetails: '  ',
+    brand: { name: 'Samsung' },
+    category: { slug: 'mobile-phones' },
+    colours: [
+      { key: 'onyx-black', name: 'Onyx Black', hex: '#111111', family: ['black'], images: [], inStock: null, position: 0 },
+      { key: 'amber-yellow', name: 'Amber Yellow', hex: '#F2C94C', family: ['yellow'], images: [], inStock: null, position: 1 },
+    ],
+  };
+
+  it("gives each colour of an automatic title its own title, from the brand's format", () => {
+    const { colours } = toPublicCatalogue([phone]);
+    expect(colours['galaxy-s24'].colours.map((c) => c.title)).toEqual([
+      'Samsung Galaxy S24 5G (Onyx Black, 8 GB RAM, 256 GB Storage)',
+      'Samsung Galaxy S24 5G (Amber Yellow, 8 GB RAM, 256 GB Storage)',
+    ]);
+    // A title written by hand stays one title, whatever the colour.
+    expect(toPublicCatalogue([{ ...phone, titleAuto: false }]).colours['galaxy-s24'].colours.every((c) => c.title === undefined)).toBe(true);
+  });
+
+  it("uses an admin's own format", () => {
+    const { colours } = toPublicCatalogue([phone], [{ brand: 'samsung', category: 'mobile-phones', pattern: '{brand} {model} {storage} {colour}' }]);
+    expect(colours['galaxy-s24'].colours[1].title).toBe('Samsung Galaxy S24 5G 256 GB Amber Yellow');
+  });
+
+  it('sends the box, warranty, origin and maker details filled in, and nothing empty', () => {
+    expect(toPublicCatalogue([phone]).details['galaxy-s24'].info).toEqual({
+      inTheBox: 'Handset, cable',
+      warranty: { summary: '1 year manufacturer warranty', period: '1 Year' },
+      countryOfOrigin: 'India',
+      manufacturer: 'Samsung India Electronics, Noida',
+    });
+  });
+});

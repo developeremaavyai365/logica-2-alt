@@ -5,6 +5,7 @@ import {
   IsBoolean,
   IsIn,
   IsInt,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -123,6 +124,23 @@ export class SaveListingDto {
   @MaxLength(8000)
   description!: string;
 
+  /** Build the title from the brand's title format instead of `name`. */
+  @IsOptional()
+  @IsBoolean()
+  titleAuto?: boolean;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(120)
+  modelName?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(80)
+  variant?: string | null;
+
   @IsOptional()
   @ValidateIf(nullable)
   @IsString()
@@ -161,6 +179,82 @@ export class SaveListingDto {
   @IsString()
   @MaxLength(500)
   inTheBox?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(100)
+  warrantyPeriod?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(300)
+  warrantyServiceType?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(1000)
+  warrantyCovered?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(60)
+  countryOfOrigin?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(500)
+  manufacturerDetails?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(500)
+  packerDetails?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsString()
+  @MaxLength(500)
+  importerDetails?: string | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(1000)
+  packageLengthCm?: number | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(1000)
+  packageBreadthCm?: number | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(1000)
+  packageHeightCm?: number | null;
+
+  @IsOptional()
+  @ValidateIf(nullable)
+  @IsNumber({ maxDecimalPlaces: 3 })
+  @Min(0)
+  @Max(500)
+  packageWeightKg?: number | null;
+
+  /** A product video's web address (YouTube or similar). */
+  @IsOptional()
+  @ValidateIf(nullable)
+  @Matches(/^https:\/\/[^\s"'<>]{4,500}$/, { message: 'A video link is a web address starting with https://.' })
+  videoUrl?: string | null;
 
   @IsArray()
   @ArrayMaxSize(20)

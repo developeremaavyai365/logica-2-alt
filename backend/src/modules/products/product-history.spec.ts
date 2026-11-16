@@ -32,6 +32,10 @@ describe('a product history line', () => {
   it('says when a change came from a bulk sheet, and names a product added by one', () => {
     const edit = toHistoryEntry(row('PRODUCT_UPDATED', { via: 'bulk upload', fileName: 'prices.xlsx', changes: [] }), 'hp-15s');
     expect(edit).toMatchObject({ title: 'Saved with no changes', detail: 'From the bulk sheet “prices.xlsx”', actor: 'admin@logica.test' });
+    expect(toHistoryEntry(row('PRODUCT_UPDATED', { via: 'title format', changes: [{ field: 'name', from: 'A', to: 'B' }] }), 'hp-15s')).toMatchObject({
+      title: 'Edited',
+      detail: 'Rebuilt after its title format was changed',
+    });
     expect(toHistoryEntry(row('PRODUCT_CREATED', { status: 'DRAFT', via: 'bulk upload', fileName: 'new.csv' }), 'hp-15s')).toMatchObject({
       title: 'Added as a draft',
       detail: 'From the bulk sheet “new.csv”',

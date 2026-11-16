@@ -1,16 +1,80 @@
 /* The rules of a product listing, apart from the database so they can be
    tested on their own: the spec fields each category asks for, barcode
    checks, the web address made from a title, and what a listing needs
-   before it can go on the shop. */
+   before it can go on the shop. Shared with the admin pages, so it imports
+   nothing but the title rules, which are plain too. */
+
+import { tidySize } from './title-format';
+
+/** The variant's specs written one way: "8gb" as "8 GB". */
+export function tidyVariantSpecs(categorySlug: string, specs: { label: string; value: string }[]) {
+  const variant = new Set((SPEC_TEMPLATES[categorySlug] ?? []).filter((f) => f.variant).map((f) => f.label.toLowerCase()));
+  return specs.map((s) => (variant.has(s.label.toLowerCase()) ? { ...s, value: tidySize(s.value) } : s));
+}
 
 export interface SpecField {
   label: string;
   /** Needed before the product can be published. */
   required: boolean;
   placeholder: string;
+  /** Asked for with the variant, near the top of the form (RAM, storage). */
+  variant?: boolean;
+  /** The heading it is shown under in the form. */
+  group?: string;
+  /** Usual values, offered as suggestions; others can still be typed. */
+  options?: string[];
 }
 
-const f = (label: string, placeholder: string, required = false): SpecField => ({ label, placeholder, required });
+const f = (label: string, placeholder: string, required = false, more: Partial<SpecField> = {}): SpecField => ({
+  label,
+  placeholder,
+  required,
+  ...more,
+});
+const YES_NO = ['Yes', 'No'];
+
+/** Phone fields, after the marketplace listing sheet for mobiles: grouped
+ *  as the form shows them, with the usual values offered. Labels the
+ *  catalogue already uses are kept, so existing specs fill these fields. */
+const PHONE_FIELDS: SpecField[] = [
+  f('RAM', 'e.g. 8 GB', true, { variant: true }),
+  f('Internal Storage', 'e.g. 256 GB', true, { variant: true }),
+  ...[
+    f('Network Type', 'e.g. 5G', false, { options: ['5G', '4G VoLTE', '4G', '3G', '2G'] }),
+    f('Supported Network', 'e.g. 5G, 4G LTE, WCDMA, GSM'),
+    f('SIM Type', 'e.g. Dual Sim', false, { options: ['Dual Sim', 'Single Sim'] }),
+    f('SIM Size', 'e.g. Nano SIM', false, { options: ['Nano SIM', 'Nano SIM + eSIM', 'eSIM', 'Micro SIM', 'Full Size SIM'] }),
+    f('Hybrid Sim Slot', 'Yes or No', false, { options: YES_NO }),
+  ].map((x) => ({ ...x, group: 'Network & SIM' })),
+  ...[
+    f('Operating System', 'e.g. Android', true, { options: ['Android', 'iOS'] }),
+    f('Operating System Version Name', 'e.g. Android 15 or iOS 18'),
+    f('Operating System Version Number', 'e.g. 15'),
+    f('Processor Brand', 'e.g. Qualcomm', false, { options: ['Qualcomm', 'MediaTek', 'Apple', 'Samsung Exynos', 'Google Tensor', 'Unisoc'] }),
+    f('Processor', 'e.g. Snapdragon 8 Gen 3', true),
+    f('Number of Cores', 'e.g. Octa Core', false, { options: ['Octa Core', 'Hexa Core', 'Quad Core'] }),
+    f('Primary Clock Speed', 'e.g. 3.3 GHz'),
+  ].map((x) => ({ ...x, group: 'Software & processor' })),
+  ...[f('Display Size', 'e.g. 6.7 inch', true), f('Resolution', 'e.g. 2400 x 1080 pixels')].map((x) => ({ ...x, group: 'Display' })),
+  ...[
+    f('Primary Camera', 'e.g. 50 MP + 12 MP + 10 MP', true),
+    f('Primary Camera Features', 'e.g. Night Mode, Portrait, 4K video'),
+    f('Dual Camera Lens', 'Yes or No', false, { options: YES_NO }),
+    f('Secondary Camera', 'e.g. 12 MP'),
+    f('Secondary Camera Features', 'e.g. Fixed Focus, Portrait'),
+  ].map((x) => ({ ...x, group: 'Cameras' })),
+  ...[
+    f('Battery Capacity', 'e.g. 5000 mAh', true),
+    f('Memory Card Slot Type', 'e.g. Dedicated Slot', false, { options: ['Dedicated Slot', 'Hybrid Slot', 'No Slot'] }),
+    f('OTG Compatible', 'Yes or No', false, { options: YES_NO }),
+  ].map((x) => ({ ...x, group: 'Battery & memory' })),
+  ...[
+    f('Additional Content', 'Freebies in the box, e.g. Earphones'),
+    f('Other Features', 'e.g. IP68 water resistance, Wireless charging'),
+    f('Item Weight', 'e.g. 196 g'),
+    f('Product Dimensions', 'e.g. 16.3 x 7.6 x 0.8 cm'),
+  ].map((x) => ({ ...x, group: 'Other details' })),
+];
 
 /** The spec fields asked for per category, in the order the product page
  *  shows them. Labels follow the ones the catalogue already uses most.
@@ -18,8 +82,8 @@ const f = (label: string, placeholder: string, required = false): SpecField => (
 export const SPEC_TEMPLATES: Record<string, SpecField[]> = {
   laptops: [
     f('Processor', 'e.g. 13th Gen Intel Core i5-1335U', true),
-    f('RAM', 'e.g. 16 GB DDR4', true),
-    f('Storage', 'e.g. 512 GB SSD', true),
+    f('RAM', 'e.g. 16 GB DDR4', true, { variant: true }),
+    f('Storage', 'e.g. 512 GB SSD', true, { variant: true }),
     f('Screen Size', 'e.g. 39.6 cm (15.6 inch)', true),
     f('Screen Resolution', 'e.g. 1920 x 1080 (Full HD)'),
     f('Graphics', 'e.g. Intel Iris Xe'),
@@ -28,20 +92,7 @@ export const SPEC_TEMPLATES: Record<string, SpecField[]> = {
     f('Item Weight', 'e.g. 1.6 kg'),
     f('Colour', 'e.g. Natural Silver'),
   ],
-  'mobile-phones': [
-    f('Display Size', 'e.g. 17.02 cm (6.7 inch)', true),
-    f('Resolution', 'e.g. 2400 x 1080 pixels'),
-    f('Processor', 'e.g. Snapdragon 8 Gen 3'),
-    f('RAM', 'e.g. 8 GB', true),
-    f('Internal Storage', 'e.g. 256 GB', true),
-    f('Primary Camera', 'e.g. 50 MP + 12 MP + 10 MP', true),
-    f('Secondary Camera', 'e.g. 12 MP'),
-    f('Battery Capacity', 'e.g. 5000 mAh', true),
-    f('Operating System', 'e.g. Android 14', true),
-    f('Network Type', 'e.g. 5G, 4G LTE'),
-    f('Item Weight', 'e.g. 196 g'),
-    f('Product Dimensions', 'e.g. 16.3 x 7.6 x 0.8 cm'),
-  ],
+  'mobile-phones': PHONE_FIELDS,
   printers: [
     f('Printer Type', 'e.g. Ink tank / Laser / Inkjet', true),
     f('Functions', 'e.g. Print, Scan, Copy', true),
@@ -121,11 +172,22 @@ export interface ListingForChecks {
   highlights: string[];
   specs: { label: string; value: string }[];
   description: string;
+  modelName: string | null;
   ean: string | null;
   hsnCode: string | null;
   gstRatePercent: number | null;
+  inTheBox: string | null;
+  countryOfOrigin: string | null;
+  manufacturerDetails: string | null;
   colours: { name: string; ean: string | null; images: string[] }[];
 }
+
+/** Categories whose products always come in a colour, so a new listing
+ *  names at least one. */
+export const COLOUR_CATEGORIES = ['mobile-phones', 'laptops'];
+
+/** Key highlights a new listing needs. */
+export const MIN_HIGHLIGHTS = 4;
 
 export interface ListingColour {
   key: string;
@@ -142,30 +204,96 @@ export interface Listing extends ListingForChecks {
   status: 'DRAFT' | 'ACTIVE' | 'INACTIVE';
   inStock: boolean;
   sharedImages: string[];
+  /** The title is built from the brand's title format. */
+  titleAuto: boolean;
   modelNumber: string | null;
   partNumber: string | null;
+  variant: string | null;
   warranty: string | null;
-  inTheBox: string | null;
+  warrantyPeriod: string | null;
+  warrantyServiceType: string | null;
+  warrantyCovered: string | null;
+  packerDetails: string | null;
+  importerDetails: string | null;
+  packageLengthCm: number | null;
+  packageBreadthCm: number | null;
+  packageHeightCm: number | null;
+  packageWeightKg: number | null;
+  videoUrl: string | null;
   colours: ListingColour[];
 }
+
+/** A listing with nothing filled in yet. */
+export const EMPTY_LISTING: Listing = {
+  name: '',
+  categorySlug: '',
+  brandName: '',
+  status: 'DRAFT',
+  priceInPaise: 0,
+  mrpInPaise: null,
+  inStock: true,
+  gallery: [],
+  sharedImages: [],
+  highlights: [],
+  specs: [],
+  description: '',
+  titleAuto: false,
+  modelName: null,
+  modelNumber: null,
+  partNumber: null,
+  variant: null,
+  ean: null,
+  hsnCode: null,
+  gstRatePercent: null,
+  warranty: null,
+  warrantyPeriod: null,
+  warrantyServiceType: null,
+  warrantyCovered: null,
+  inTheBox: null,
+  countryOfOrigin: null,
+  manufacturerDetails: null,
+  packerDetails: null,
+  importerDetails: null,
+  packageLengthCm: null,
+  packageBreadthCm: null,
+  packageHeightCm: null,
+  packageWeightKg: null,
+  videoUrl: null,
+  colours: [],
+};
 
 /** The fields whose changes are listed by name, with their old and new values. */
 const COMPARED = [
   'name',
+  'titleAuto',
   'status',
   'categorySlug',
   'brandName',
+  'modelName',
+  'modelNumber',
+  'partNumber',
+  'variant',
   'priceInPaise',
   'mrpInPaise',
   'inStock',
-  'description',
-  'modelNumber',
-  'partNumber',
   'ean',
-  'hsnCode',
   'gstRatePercent',
-  'warranty',
+  'hsnCode',
+  'description',
   'inTheBox',
+  'warranty',
+  'warrantyPeriod',
+  'warrantyServiceType',
+  'warrantyCovered',
+  'countryOfOrigin',
+  'manufacturerDetails',
+  'packerDetails',
+  'importerDetails',
+  'packageLengthCm',
+  'packageBreadthCm',
+  'packageHeightCm',
+  'packageWeightKg',
+  'videoUrl',
 ] as const;
 
 export type ChangeValue = string | number | boolean | null;
@@ -227,43 +355,78 @@ export interface Checklist {
   warnings: string[];
 }
 
-/** What a listing still needs. `linkedToSap`: a SAP code supplies the price,
- *  so the catalogue price may be left at zero. `alreadyOnShop`: the product
- *  has been published (it is Active, or Inactive: taken off the shop), so
- *  the category's required specs are asked for rather than demanded:
- *  products listed before the spec fields existed stay editable (to add a
- *  barcode, say) and can go back on the shop without filling them all. */
+/** What a listing still needs, in the order of the form.
+ *
+ *  `linkedToSap`: a SAP code supplies the price and MRP, so the catalogue's
+ *  may be left empty. `alreadyOnShop`: the product has been published (it
+ *  is Active, or Inactive: taken off the shop). A new listing must have
+ *  everything a marketplace asks for before it goes on the shop; for one
+ *  published before, most of it is asked for rather than demanded, so the
+ *  products listed before these fields existed stay editable and can go
+ *  back on the shop without filling them all. */
 export function checkListing(listing: ListingForChecks, linkedToSap: boolean, alreadyOnShop = false): Checklist {
   const blocking: string[] = [];
   const warnings: string[] = [];
+  /** Demanded of a new listing, asked of a published one. */
+  const need = (message: string) => (alreadyOnShop ? warnings : blocking).push(message);
 
-  if (listing.name.trim().length < 3) blocking.push('Add a product title.');
+  const filled = new Set(listing.specs.filter((s) => s.value.trim()).map((s) => s.label.toLowerCase()));
+  const template = SPEC_TEMPLATES[listing.categorySlug] ?? [];
+  const missingSpec = (field: SpecField) => field.required && !filled.has(field.label.toLowerCase());
+
+  // 1-4: brand, model, variant, colour.
   if (!listing.categorySlug) blocking.push('Choose a category.');
   if (!listing.brandName.trim()) blocking.push('Choose a brand.');
-  if (listing.gallery.length === 0) blocking.push('Add at least one photo.');
+  if (!listing.modelName?.trim()) need('Add the model name.');
+  for (const field of template.filter((x) => x.variant && missingSpec(x))) need(`Fill in the ${field.label} of the variant.`);
+  if (COLOUR_CATEGORIES.includes(listing.categorySlug) && listing.colours.length === 0) need('Add the colour.');
+  if (listing.name.trim().length < 3) blocking.push('Add a product title.');
+
+  // 5-10: price, barcode and tax.
+  if (!linkedToSap && listing.mrpInPaise == null) need('Add the MRP.');
   if (!linkedToSap && listing.priceInPaise <= 0) blocking.push('Set a selling price, or link a SAP code on the SAP import page.');
   if (listing.mrpInPaise != null && listing.priceInPaise > listing.mrpInPaise) blocking.push('The selling price cannot be above the MRP.');
-
-  const filled = new Map(listing.specs.filter((s) => s.value.trim()).map((s) => [s.label.toLowerCase(), true]));
-  for (const field of SPEC_TEMPLATES[listing.categorySlug] ?? []) {
-    if (field.required && !filled.has(field.label.toLowerCase())) (alreadyOnShop ? warnings : blocking).push(`Fill in the spec "${field.label}".`);
-  }
-
-  if (!linkedToSap) warnings.push('Link a SAP code on the SAP import page: until then shoppers can see it but not order it.');
   if (listing.colours.length === 0) {
-    if (!listing.ean) warnings.push('Add the EAN / barcode.');
+    if (!listing.ean) need('Add the EAN / barcode.');
   } else {
     const without = listing.colours.filter((c) => !c.ean).map((c) => c.name);
-    if (without.length) warnings.push(`Add the EAN for ${without.join(', ')}.`);
-    const noPhotos = listing.colours.filter((c) => c.images.length === 0).map((c) => c.name);
-    if (noPhotos.length) warnings.push(`Add photos of ${noPhotos.join(', ')}.`);
+    if (without.length) need(`Add the EAN for ${without.join(', ')}.`);
   }
-  if (listing.highlights.filter((h) => h.trim()).length < 3) warnings.push('Add at least 3 key highlights.');
-  if (!listing.description.trim()) warnings.push('Add a description.');
-  if (!listing.hsnCode) warnings.push('Add the HSN code.');
-  if (listing.gstRatePercent == null) warnings.push('Choose the GST rate.');
+  if (listing.gstRatePercent == null) need('Choose the GST rate.');
+  if (!listing.hsnCode) need('Add the HSN code.');
 
+  // 11-14: photos, highlights, description, box.
+  if (listing.gallery.length === 0) blocking.push('Add at least one photo.');
+  const noPhotos = listing.colours.filter((c) => c.images.length === 0).map((c) => c.name);
+  if (noPhotos.length) warnings.push(`Add photos of ${noPhotos.join(', ')}.`);
+  if (listing.highlights.filter((h) => h.trim()).length < MIN_HIGHLIGHTS) need(`Add at least ${MIN_HIGHLIGHTS} key highlights.`);
+  if (!listing.description.trim()) need('Add a description.');
+  if (!listing.inTheBox?.trim()) need('Add what is in the box.');
+
+  // Then the category's specs and the legal details.
+  for (const field of template.filter((x) => !x.variant && missingSpec(x))) need(`Fill in the spec "${field.label}".`);
+  if (!listing.countryOfOrigin?.trim()) need('Add the country of origin.');
+  if (!listing.manufacturerDetails?.trim()) need("Add the manufacturer's name and address.");
+
+  if (!linkedToSap) warnings.push('Link a SAP code (the SKU): until then shoppers can see it but not order it.');
   return { blocking, warnings };
+}
+
+/** Key highlights from the specs that matter most to shoppers: the variant,
+ *  battery, screen and processor (and the camera, for a phone). */
+export function suggestHighlights(categorySlug: string, specs: { label: string; value: string }[]): string[] {
+  const spec = (...labels: string[]) => labels.map((l) => specs.find((s) => s.label.toLowerCase() === l.toLowerCase())?.value.trim()).find(Boolean) ?? '';
+  const ram = tidySize(spec('RAM'));
+  const storage = tidySize(spec('Internal Storage', 'Storage'));
+  const out = [
+    ram && storage ? `${ram} RAM | ${storage} ${categorySlug === 'mobile-phones' ? 'ROM' : 'Storage'}` : ram ? `${ram} RAM` : storage ? `${storage} Storage` : '',
+    spec('Display Size', 'Screen Size') && `${spec('Display Size', 'Screen Size')} Display`,
+    spec('Battery Capacity', 'Battery') && `${spec('Battery Capacity', 'Battery')} Battery`,
+    spec('Processor') && `${spec('Processor')} Processor`,
+    spec('Primary Camera') && `${spec('Primary Camera')} Rear Camera${spec('Secondary Camera') ? ` | ${spec('Secondary Camera')} Front Camera` : ''}`,
+    spec('Operating System') && categorySlug !== 'mobile-phones' ? spec('Operating System') : '',
+  ];
+  return out.filter(Boolean).map((h) => h.replace(/\s+/g, ' ').trim());
 }
 
 /** A selling-price change of 40% or more either way, as the SAP import

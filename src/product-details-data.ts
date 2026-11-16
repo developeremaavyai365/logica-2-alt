@@ -9,6 +9,20 @@ export interface ProductDetail {
   highlights: string[];
   specs: [string, string][];
   overview?: string;
+  /** From the admin listing: the box, the warranty, and the origin and maker
+   *  details Indian e-commerce rules require. Only the parts filled in. */
+  info?: ProductInfo;
+}
+
+export interface ProductInfo {
+  modelNumber?: string;
+  inTheBox?: string;
+  warranty?: { summary?: string; period?: string; serviceType?: string; covered?: string };
+  countryOfOrigin?: string;
+  manufacturer?: string;
+  packer?: string;
+  importer?: string;
+  videoUrl?: string;
 }
 
 const BUILT_IN: Record<string, ProductDetail> = {

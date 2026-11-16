@@ -27,6 +27,7 @@ const SapImport = lazy(() => import('./pages/admin/SapImport'));
 const AdminProducts = lazy(() => import('./pages/admin/Products'));
 const AdminProductForm = lazy(() => import('./pages/admin/ProductForm'));
 const AdminBulkUpload = lazy(() => import('./pages/admin/BulkUpload'));
+const AdminTitleFormats = lazy(() => import('./pages/admin/TitleFormats'));
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
@@ -105,6 +106,14 @@ function App() {
           element={
             <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
               <AdminProductForm />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/title-formats"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <AdminTitleFormats />
             </Suspense>
           }
         />

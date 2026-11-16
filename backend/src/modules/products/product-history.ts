@@ -43,7 +43,12 @@ function changesOf(metadata: Record<string, unknown>): HistoryEntry['changes'] {
 export function toHistoryEntry(row: AuditRow, slug: string): HistoryEntry {
   const meta = record(row.metadata);
   const file = text(meta.fileName);
-  const viaSheet = meta.via === 'bulk upload' ? `From the bulk sheet “${file ?? 'unnamed'}”` : null;
+  const viaSheet =
+    meta.via === 'bulk upload'
+      ? `From the bulk sheet “${file ?? 'unnamed'}”`
+      : meta.via === 'title format'
+        ? 'Rebuilt after its title format was changed'
+        : null;
   const entry = (title: string, detail: string | null = null, changes: HistoryEntry['changes'] = []): HistoryEntry => ({
     id: row.id,
     at: row.createdAt.toISOString(),

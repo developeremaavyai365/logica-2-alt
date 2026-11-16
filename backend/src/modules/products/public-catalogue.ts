@@ -6,6 +6,8 @@
    into exactly those four, letting the website swap its built-in files for
    the database without changing a page. */
 
+import { TitleFormatRule, buildTitle, pickTitleFormat } from './title-format';
+
 /** A product row with what the shop needs of its brand, category and colours. */
 export interface CatalogueRow {
   slug: string;
@@ -24,6 +26,21 @@ export interface CatalogueRow {
   rating: number | null;
   reviewCount: number | null;
   updatedAt: Date;
+  // The title's parts, and the listing details shoppers are shown.
+  titleAuto?: boolean;
+  modelName?: string | null;
+  modelNumber?: string | null;
+  variant?: string | null;
+  inTheBox?: string | null;
+  warranty?: string | null;
+  warrantyPeriod?: string | null;
+  warrantyServiceType?: string | null;
+  warrantyCovered?: string | null;
+  countryOfOrigin?: string | null;
+  manufacturerDetails?: string | null;
+  packerDetails?: string | null;
+  importerDetails?: string | null;
+  videoUrl?: string | null;
   brand: { name: string } | null;
   category: { slug: string };
   colours: {
@@ -58,6 +75,23 @@ export interface ShopColour {
   family: string[];
   images: string[];
   inStock?: boolean;
+  /** The product's title with this colour chosen, for a title built from
+   *  the brand's format. */
+  title?: string;
+}
+
+/** What a product page shows besides the specs: the box, the warranty, and
+ *  the origin and maker details Indian e-commerce rules require. Only the
+ *  parts filled in are sent. */
+export interface ShopInfo {
+  modelNumber?: string;
+  inTheBox?: string;
+  warranty?: { summary?: string; period?: string; serviceType?: string; covered?: string };
+  countryOfOrigin?: string;
+  manufacturer?: string;
+  packer?: string;
+  importer?: string;
+  videoUrl?: string;
 }
 
 export interface PublicCatalogue {
@@ -65,7 +99,7 @@ export interface PublicCatalogue {
    *  saved copy is still current. */
   version: string;
   products: ShopProduct[];
-  details: Record<string, { highlights: string[]; specs: [string, string][]; overview?: string }>;
+  details: Record<string, { highlights: string[]; specs: [string, string][]; overview?: string; info?: ShopInfo }>;
   gallery: Record<string, string[]>;
   colours: Record<string, { colours: ShopColour[]; shared: string[] }>;
 }
@@ -79,7 +113,35 @@ function specPairs(specs: unknown): [string, string][] {
   );
 }
 
-export function toPublicCatalogue(rows: CatalogueRow[]): PublicCatalogue {
+/** The filled-in parts of a product's details, or undefined if none is. */
+function infoOf(row: CatalogueRow): ShopInfo | undefined {
+  const t = (s: string | null | undefined) => (s && s.trim() ? s.trim() : undefined);
+  const warranty = {
+    summary: t(row.warranty),
+    period: t(row.warrantyPeriod),
+    serviceType: t(row.warrantyServiceType),
+    covered: t(row.warrantyCovered),
+  };
+  const info: ShopInfo = {
+    modelNumber: t(row.modelNumber),
+    inTheBox: t(row.inTheBox),
+    warranty: Object.values(warranty).some(Boolean) ? warranty : undefined,
+    countryOfOrigin: t(row.countryOfOrigin),
+    manufacturer: t(row.manufacturerDetails),
+    packer: t(row.packerDetails),
+    importer: t(row.importerDetails),
+    videoUrl: t(row.videoUrl),
+  };
+  // Leave out what is empty, so the catalogue stays small.
+  const filled = Object.fromEntries(
+    Object.entries(info)
+      .filter(([, v]) => v !== undefined)
+      .map(([k, v]) => [k, typeof v === 'object' ? Object.fromEntries(Object.entries(v).filter(([, x]) => x !== undefined)) : v]),
+  ) as ShopInfo;
+  return Object.keys(filled).length ? filled : undefined;
+}
+
+export function toPublicCatalogue(rows: CatalogueRow[], titleFormats: TitleFormatRule[] = []): PublicCatalogue {
   const sorted = [...rows].sort((a, b) => a.position - b.position || a.slug.localeCompare(b.slug));
   const catalogue: PublicCatalogue = { version: catalogueVersion(rows), products: [], details: {}, gallery: {}, colours: {} };
 
@@ -100,22 +162,38 @@ export function toPublicCatalogue(rows: CatalogueRow[]): PublicCatalogue {
     catalogue.products.push(product);
 
     const specs = specPairs(row.specs);
-    if (row.highlights.length > 0 || specs.length > 0 || row.description) {
-      catalogue.details[row.slug] = { highlights: row.highlights, specs, ...(row.description && { overview: row.description }) };
+    const info = infoOf(row);
+    if (row.highlights.length > 0 || specs.length > 0 || row.description || info) {
+      catalogue.details[row.slug] = {
+        highlights: row.highlights,
+        specs,
+        ...(row.description && { overview: row.description }),
+        ...(info && { info }),
+      };
     }
     if (row.gallery.length > 0) catalogue.gallery[row.slug] = row.gallery;
     if (row.colours.length > 0) {
+      // An automatic title is built again for each colour: "Samsung Galaxy
+      // S24 5G (Amber Yellow, 8 GB RAM, 256 GB Storage)" when Amber Yellow
+      // is chosen.
+      const brand = row.brand?.name ?? '';
+      const pattern = row.titleAuto ? pickTitleFormat(brand, row.category.slug, titleFormats).pattern : null;
+      const input = { brand, modelName: row.modelName ?? null, modelNumber: row.modelNumber ?? null, variant: row.variant ?? null, specs: specs.map(([label, value]) => ({ label, value })) };
       catalogue.colours[row.slug] = {
         colours: [...row.colours]
           .sort((a, b) => a.position - b.position)
-          .map((c) => ({
-            key: c.key,
-            name: c.name,
-            hex: c.hex,
-            family: c.family,
-            images: c.images,
-            ...(c.inStock != null && { inStock: c.inStock }),
-          })),
+          .map((c) => {
+            const title = pattern ? buildTitle(pattern, input, c.name) : '';
+            return {
+              key: c.key,
+              name: c.name,
+              hex: c.hex,
+              family: c.family,
+              images: c.images,
+              ...(c.inStock != null && { inStock: c.inStock }),
+              ...(title.length >= 3 && { title }),
+            };
+          }),
         shared: row.sharedImages,
       };
     }
