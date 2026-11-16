@@ -1,25 +1,9 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
 import './index.css';
-import App from './App';
-import { ShopStoreProvider } from './store';
-import { AuthStoreProvider } from './auth-store';
-import { applyCachedLiveCatalogue, refreshLiveCatalogue } from './live-catalogue';
+import { loadCatalogue } from './catalogue-source';
 
-// SAP prices and stock: the last list this browser saw at once, then the
-// current one as soon as it arrives.
-applyCachedLiveCatalogue();
-void refreshLiveCatalogue();
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <AuthStoreProvider>
-        <ShopStoreProvider>
-          <App />
-        </ShopStoreProvider>
-      </AuthStoreProvider>
-    </BrowserRouter>
-  </StrictMode>,
-);
+/* The product catalogue comes from the backend (managed in the admin panel).
+   It is settled first — a saved copy at once, or a short wait on a first
+   visit, or the built-in list — and only then is the site's code imported,
+   so every page and lookup is built from the same catalogue. Nothing that
+   reads product data may be imported here directly. */
+void loadCatalogue().then(() => import('./bootstrap'));

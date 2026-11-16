@@ -171,23 +171,93 @@ model Category {
   products Product[]
 }
 
+/// Whether shoppers see a product. A draft is being prepared in the admin
+/// panel; an inactive one is taken off the shop but kept.
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+}
+
+/// A product as the shop shows it: its listing content, photos and the
+/// catalogue price. Where a SAP code is linked to it (SapItem.websiteProductId
+/// = slug), the SAP sheet's MRP, selling price and stock are shown instead of
+/// the catalogue's own.
 model Product {
   id          String           @id @default(uuid())
-  name        String
+  /// The product's id on the website and in its URL (/product/<slug>).
+  /// Orders and SAP links refer to it, so it never changes once published.
   slug        String           @unique
-  description String
+  name        String
+  /// The long description ("overview") under the specs.
+  description String           @default("")
   brandId     String?
   brand       Brand?           @relation(fields: [brandId], references: [id])
   categoryId  String
   category    Category         @relation(fields: [categoryId], references: [id])
+  status      ProductStatus    @default(DRAFT)
+  /// Order in the shop's default listing.
+  position    Int              @default(0)
+
+  /// Catalogue price, used while no SAP code is linked.
+  priceInPaise Int
+  mrpInPaise   Int?
+  inStock      Boolean         @default(true)
+
+  /// The main photo, then the full gallery (main photo included), in order.
+  imageUrl     String
+  gallery      String[]        @default([])
+  /// Gallery photos not of one colour (line-ups, box contents), shown after a
+  /// chosen colour's own photos.
+  sharedImages String[]        @default([])
+
+  highlights   String[]        @default([])
+  /// The specification table, as [label, value] pairs in order.
+  specs        Json            @default("[]")
+  /// Facets for the shop's filters (e.g. { "ram": "8 GB" }).
+  attrs        Json?
+  rating       Float?
+  reviewCount  Int?
+
+  // Listing details, as a marketplace asks for them.
+  modelNumber  String?
+  partNumber   String?
+  /// EAN / UPC barcode of the product (or of its only variant).
+  ean          String?
+  hsnCode      String?
+  gstRatePercent Int?
+  warranty     String?
+  inTheBox     String?
+
+  colours     ProductColour[]
   variants    ProductVariant[]
-  isActive    Boolean          @default(true)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   deletedAt   DateTime?
 
   @@index([categoryId])
   @@index([brandId])
+  @@index([status, position])
+}
+
+/// One colour a product comes in: its swatch, the words shoppers use for it,
+/// its own photos, and its own barcode.
+model ProductColour {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  /// The colour's value in the URL (?colour=blue).
+  key       String
+  name      String
+  hex       String
+  family    String[] @default([])
+  images    String[] @default([])
+  /// Null means "same as the product".
+  inStock   Boolean?
+  ean       String?
+  position  Int      @default(0)
+
+  @@unique([productId, key])
 }
 
 model ProductVariant {

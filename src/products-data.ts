@@ -1,3 +1,5 @@
+import { serverCatalogue } from './catalogue-source';
+
 export type Product = {
   id: string;
   name: string;
@@ -13,7 +15,10 @@ export type Product = {
   attrs?: Partial<Record<string, string>>;
 };
 
-export const products: Product[] = [
+/** The catalogue built into the site: used when the backend's (managed in
+ *  the admin panel, see catalogue-source.ts) cannot be loaded, and the
+ *  source the database was first filled from. */
+const BUILT_IN: Product[] = [
   {
     "id": "hp-laptop14-ep0341tu-silver",
     "name": "HP Laptop14-ep0341TU, Silver",
@@ -2110,3 +2115,5 @@ export const products: Product[] = [
     "inStock": true
   }
 ];
+
+export const products: Product[] = serverCatalogue()?.products ?? BUILT_IN;

@@ -1,5 +1,9 @@
 /** Auto-generated from logicainfoway.com product pages.
- *  Real spec highlights + Technical Details table + overview per product. */
+ *  Real spec highlights + Technical Details table + overview per product.
+ *  Built-in copy: the backend's catalogue is used when it loads (see
+ *  catalogue-source.ts). */
+
+import { serverCatalogue } from './catalogue-source';
 
 export interface ProductDetail {
   highlights: string[];
@@ -7,7 +11,7 @@ export interface ProductDetail {
   overview?: string;
 }
 
-export const PRODUCT_DETAILS: Record<string, ProductDetail> = {
+const BUILT_IN: Record<string, ProductDetail> = {
   "hp-laptop14-ep0341tu-silver": { highlights: ["13th Generation Intel® Core™ i3 processor", "Windows 11 Home Single Language", "8 GB DDR4 RAM", "512 GB SSD Hard Drive", "35.6 cm (14) diagonal, FHD display", "Intel® UHD Graphics", "HP True Vision 1080p FHD camera, Full-size keyboard, Mic mute key, Camera privacy shutter"], specs: [["Processor", "13th Generation Intel® Core™ i3"], ["Operating System", "Windows 11 Home Single Language"], ["Ram", "8 GB DDR4"], ["SSD", "512 GB"], ["Display", "35.6 cm (14) diagonal, FHD"], ["Graphics", "Intel® UHD"]], overview: "1 USB Type-C® 5Gbps signaling rate (supports data transfer only and does not support charging or external monitors); 2 USB Type-A 5Gbps signaling rate; 1 AC smart pin; 1 HDMI 1.4b; 1 headphone/microphone combo" },
   "brother-dcp-t520w-all-in-one-ink-tank-refill-system-solid-ink-printers-with-built-in-wireless-technologyblack": { highlights: ["High-speed Printing", "With a print speed of up to 30/12 ppm, this printer helps you save time by letting you print multiple pages in no time.", "Print Efficiently", "For your printing tasks, this printer comes with a 150 sheets paper tray that can easily be adjusted as per different paper sizes. Also, there is an additional single-sheet manual feed slot for different paper types and a 20 sheets auto-document feeder for easy scanning and copying of multiple pages."], specs: [["Printing Method", "Inkjet"], ["Type", "Multi-function"], ["Model Name", "DCP-T520W"], ["Printing Output", "Color"], ["Functions", "Print, Copy, Scan"], ["Ideal Usage", "Home & Small Office"], ["USB support", "USB 2.0"], ["Compatible Operating System", "Windows, Mac, Linux"], ["Maximum Multicopy", "50 sheets"], ["Media size supported", "A4, Letter, Legal, Mexico Legal, India Legal, Folio, Executive, B5 (JIS), A5, B6 (JIS), A6, Envelopes (C5, Com-10, DL, Monarch), Photo (4&#8243; x 6&#8243;)/(10 x 15 cm), Photo 2L (5&#8243; x 7&#8243;)/(13 x 18 cm), Index card (5&#8243; x 8&#8243;)/(13 x 20 cm)"]] },
   "samsung-galaxy-s25-ultra-5g": { highlights: ["Bring your pics to life with your own personalized filters. Galaxy AI will analyze your favorite photo and create a filter that captures the scene. Use it instantly or customize further to suit your mood with tweaks to the saturation, brightness and more.", "17.53 cm (6.9 inch) Quad HD+ Display", "200MP + 50MP + 50MP + 10MP | 12MP Front Camera", "5000 mAh Battery", "8 Elite for Galaxy Process"], specs: [["Display Size", "17.53 cm (6.9 inch)"], ["Resolution", "3120 x 1440 Pixels"], ["Resolution Type", "Quad HD+"], ["Display Type", "Dynamic AMOLED 2X"], ["HD Game Support", "Yes"], ["Display Colors", "16 Million"], ["Other Display Features", "Aspect Ratio: 19.5:9, Refresh Rate: 120Hz"], ["Operating System", "Android 15"], ["Processor Brand", "Snapdragon"], ["Battery Capacity", "5000 mAh Lithium Ion"], ["Processor Core", "Octa Core"], ["Secondary Camera", "12MP Front Camera"], ["Primary Camera", "200MP + 50MP + 50MP + 10MP"]] },
@@ -221,6 +225,8 @@ export const PRODUCT_DETAILS: Record<string, ProductDetail> = {
   "canon-pixma-mg2577s-all-in-one-inkjet-colour-printer-blue-white": { highlights: ["Printer Type - Inkjet; Functionality - All-in-One (Print, Scan, Copy); Printer Output - Color. Selectable Resolution : 25 - 19200dpi", "Connectivity-USB; Compatibility: Windows 8 / Windows 7 / Window Vista / Windows XP, Mac OS X v10.6.8. Auto Power On", "No LCD display on printer; Ideal usage - Occasional Home Printing (less than 50 pages per month)", "Pages per minute - 8.0 ipm (Black), 4.0 ipm (Colour); Cost per page - Rs.7 (Black), Rs.9 (Color) - As per ISO standards (Cost per page will be higher for printing photos)", "Compatible Ink: Black-PG745s,PG745,PG745XL, Color-CL746s,CL746,CL746XL;1 set of PG745s &amp;amp; CL746s ink cartridges, inside the box", "Page Yield: PG745s-100pgs, CL746s-100pgs- As per ISO standards. (Page yield is based on the consumption data from the succeeding ink cartridge but not the first ink cartridge. Yield will be lesser while printing photos)", "Page size supported- A4, A5, B5, LTR, LGL, 4 x 6\", 5 x 7\", Envelopes (DL, COM10), Custom size (width 101.6 - 215.9mm, length 152.4 - 676mm). Duplex Print - No, Print resolution - 4800 x 600 dpi"], specs: [], overview: "Compact and Lightweight Allow the printer to easily fit into even the smaller spaces and shelves in a home." },
   "zebster-19-led-monitor-with-hdmi-zeb-v19hd-hdmivga-big-beat-fast-charge-data-cable-comboby-maxy": { highlights: ["Screen size: 46.9cm", "Native resolution: 1366 x 768", "Input: VGA / HDMI", "Max. brightness: 220cd/m²", "Pixel Pitch: 0.3 x 0.3 mm"], specs: [], overview: "HDMI/VGA input Glossy panel Slim design Wall mountable HD 1366 x 768 Built-in power supply" },
 };
+
+export const PRODUCT_DETAILS: Record<string, ProductDetail> = serverCatalogue()?.details ?? BUILT_IN;
 
 export function getProductDetail(id: string): ProductDetail | undefined {
   return PRODUCT_DETAILS[id];

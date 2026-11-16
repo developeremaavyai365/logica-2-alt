@@ -1,7 +1,11 @@
 /** Real multi-angle product photography, scraped from logicainfoway.com.
- *  Maps a product id to its local gallery image paths (served from /public). */
+ *  Maps a product id to its local gallery image paths (served from /public).
+ *  Built-in copy: the backend's catalogue is used when it loads (see
+ *  catalogue-source.ts). */
 
-export const PRODUCT_GALLERY: Record<string, string[]> = {
+import { serverCatalogue } from './catalogue-source';
+
+const BUILT_IN: Record<string, string[]> = {
   "hp-laptop14-ep0341tu-silver": ["/products-gallery/hp-laptop14-ep0341tu-silver/1.jpg", "/products-gallery/hp-laptop14-ep0341tu-silver/2.jpg", "/products-gallery/hp-laptop14-ep0341tu-silver/3.jpg", "/products-gallery/hp-laptop14-ep0341tu-silver/4.jpg"],
   "brother-dcp-t520w-all-in-one-ink-tank-refill-system-solid-ink-printers-with-built-in-wireless-technologyblack": ["/products-gallery/brother-dcp-t520w-all-in-one-ink-tank-refill-system-solid-ink-printers-with-built-in-wireless-technologyblack/1.jpg", "/products-gallery/brother-dcp-t520w-all-in-one-ink-tank-refill-system-solid-ink-printers-with-built-in-wireless-technologyblack/2.jpg", "/products-gallery/brother-dcp-t520w-all-in-one-ink-tank-refill-system-solid-ink-printers-with-built-in-wireless-technologyblack/3.jpg", "/products-gallery/brother-dcp-t520w-all-in-one-ink-tank-refill-system-solid-ink-printers-with-built-in-wireless-technologyblack/4.jpg"],
   "samsung-galaxy-s25-ultra-5g": ["/products-gallery/samsung-galaxy-s25-ultra-5g/1.jpg"],
@@ -217,6 +221,8 @@ export const PRODUCT_GALLERY: Record<string, string[]> = {
   "zebster-19-led-monitor-with-hdmi-zeb-v19hd-hdmivga-big-beat-fast-charge-data-cable-comboby-maxy": ["/products-gallery/zebster-19-led-monitor-with-hdmi-zeb-v19hd-hdmivga-big-beat-fast-charge-data-cable-comboby-maxy/1.jpg", "/products-gallery/zebster-19-led-monitor-with-hdmi-zeb-v19hd-hdmivga-big-beat-fast-charge-data-cable-comboby-maxy/2.jpg"],
   "canon-e560-multifunction-wireless-printer": ["/products-gallery/canon-e560-multifunction-wireless-printer/1.jpg", "/products-gallery/canon-e560-multifunction-wireless-printer/2.jpg", "/products-gallery/canon-e560-multifunction-wireless-printer/3.jpg"],
 };
+
+export const PRODUCT_GALLERY: Record<string, string[]> = serverCatalogue()?.gallery ?? BUILT_IN;
 
 export function getProductGallery(id: string): string[] {
   return PRODUCT_GALLERY[id] ?? [];

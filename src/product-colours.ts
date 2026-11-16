@@ -1,4 +1,5 @@
 import { PRODUCT_GALLERY } from './product-gallery-data';
+import { serverCatalogue } from './catalogue-source';
 
 /** The colours a product comes in, each with its own photos.
  *
@@ -276,7 +277,9 @@ const DEFS: Record<string, ColourSet> = {
   ),
 };
 
-export const PRODUCT_COLOURS: Record<string, ColourSet> = DEFS;
+/** The backend's colours when its catalogue loaded (see catalogue-source.ts),
+ *  otherwise the ones above. */
+export const PRODUCT_COLOURS: Record<string, ColourSet> = serverCatalogue()?.colours ?? DEFS;
 
 export function coloursOf(productId: string): ProductColour[] {
   return PRODUCT_COLOURS[productId]?.colours ?? [];

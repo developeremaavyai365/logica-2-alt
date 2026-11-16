@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import compression from 'compression';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -10,6 +11,9 @@ async function bootstrap() {
   const config = app.get(ConfigService);
 
   app.use(helmet());
+  // Gzip responses: the product catalogue the site loads on a first visit
+  // is ~400 kB of JSON, ~10x smaller compressed.
+  app.use(compression());
   app.use(cookieParser());
 
   // Never trust client input, even from our own frontend: strip unknown
