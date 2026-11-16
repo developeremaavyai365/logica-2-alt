@@ -53,6 +53,23 @@ export const envSchema = z.object({
   // Delivery charge per order. 0 = free delivery.
   SHIPPING_FEE_RUPEES: z.coerce.number().int().nonnegative().default(0),
 
+  // ── Product photos (admin listing form) ──────────────────────────────
+  // Where uploaded photos are kept. "local": the backend's own uploads/
+  // folder, served at LOCAL_UPLOADS_URL — for development, as a server's
+  // disk is usually wiped on redeploy. "s3": an S3-compatible bucket
+  // (Amazon S3 or Cloudflare R2). Unset in production: uploads are off.
+  PHOTO_STORAGE: z.enum(['local', 's3']).optional(),
+  LOCAL_UPLOADS_URL: z.string().url().default('http://localhost:4000/uploads'),
+  // For Cloudflare R2: https://<account id>.r2.cloudflarestorage.com, region "auto".
+  S3_ENDPOINT: z.string().url().optional(),
+  S3_REGION: z.string().default('auto'),
+  S3_BUCKET: z.string().optional(),
+  S3_ACCESS_KEY_ID: z.string().optional(),
+  S3_SECRET_ACCESS_KEY: z.string().optional(),
+  // The public address the bucket's files are read from (a custom domain or
+  // the bucket's public URL), without a trailing slash.
+  S3_PUBLIC_URL: z.string().url().optional(),
+
   ARGON2_MEMORY_COST: z.coerce.number().int().positive().default(19456),
   ARGON2_TIME_COST: z.coerce.number().int().positive().default(2),
   ARGON2_PARALLELISM: z.coerce.number().int().positive().default(1),
@@ -80,6 +97,14 @@ const envSchemaWithCrossFieldChecks = envSchema.superRefine((data, ctx) => {
       code: z.ZodIssueCode.custom,
       path: ['PAYMENT_MODE'],
       message: 'PAYMENT_MODE=test takes pretend payments and must never run in production.',
+    });
+  }
+
+  if (data.PHOTO_STORAGE === 's3' && !(data.S3_BUCKET && data.S3_ACCESS_KEY_ID && data.S3_SECRET_ACCESS_KEY && data.S3_PUBLIC_URL)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['S3_BUCKET'],
+      message: 'S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY and S3_PUBLIC_URL are required when PHOTO_STORAGE=s3.',
     });
   }
 

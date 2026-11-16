@@ -3,3 +3,6 @@ dist/
 .env
 *.pem
 keys/
+
+# Product photos uploaded in local development (PHOTO_STORAGE=local)
+uploads/

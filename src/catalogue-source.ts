@@ -92,6 +92,17 @@ export async function loadCatalogue(): Promise<void> {
   if (!API_URL) return;
 
   const cached = readCache();
+  // A link to a product the saved copy does not have yet (one published
+  // since this browser's last visit) waits for the current list, so the
+  // page opens on the product instead of "not found".
+  const opening = /^\/product\/([^/?#]+)/.exec(window.location.pathname)?.[1];
+  if (cached && opening && !cached.products.some((p) => p.id === decodeURIComponent(opening))) {
+    const fresh = await fetchCatalogue(FIRST_VISIT_WAIT_MS);
+    loaded = fresh ?? cached;
+    if (fresh) writeCache(fresh);
+    return;
+  }
+
   if (cached) {
     loaded = cached;
     // Fresh copy for next time.

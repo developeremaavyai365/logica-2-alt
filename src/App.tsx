@@ -25,6 +25,7 @@ const InvestorPage = lazy(() => import('./pages/investor/InvestorPage'));
 const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
 const SapImport = lazy(() => import('./pages/admin/SapImport'));
 const AdminProducts = lazy(() => import('./pages/admin/Products'));
+const AdminProductForm = lazy(() => import('./pages/admin/ProductForm'));
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
@@ -95,6 +96,22 @@ function App() {
           element={
             <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
               <AdminProducts />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/products/new"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <AdminProductForm />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/products/:slug"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <AdminProductForm />
             </Suspense>
           }
         />

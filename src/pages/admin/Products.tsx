@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   AlertTriangle,
   Barcode,
@@ -228,14 +228,13 @@ function ProductsPage() {
             Everything listed on the shop. Where a SAP code is linked, its price and stock come from the SAP sheet.
           </p>
         </div>
-        <span
-          className="flex cursor-not-allowed items-center gap-2 rounded-xl bg-[#061A40]/40 px-4 py-2.5 text-sm font-semibold text-white"
-          title="The listing form is the next step"
+        <Link
+          to="/admin/products/new"
+          className="flex items-center gap-2 rounded-xl bg-[#061A40] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(6,26,64,0.6)] transition-colors duration-300 hover:bg-[#3D4FE0]"
         >
           <Plus className="h-4 w-4" />
           Add product
-          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em]">Soon</span>
-        </span>
+        </Link>
       </div>
 
       {/* Status tabs */}
@@ -392,7 +391,12 @@ function ProductsPage() {
                             {row.imageUrl && <img src={row.imageUrl} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-contain p-1.5 mix-blend-multiply" />}
                           </span>
                           <span className="min-w-0">
-                            <span className="block max-w-[22rem] font-semibold leading-snug text-[#061A40] line-clamp-2">{row.name}</span>
+                            <Link
+                              to={`/admin/products/${row.slug}`}
+                              className="block max-w-[22rem] font-semibold leading-snug text-[#061A40] line-clamp-2 transition-colors hover:text-[#3D4FE0]"
+                            >
+                              {row.name}
+                            </Link>
                             <span className="mt-0.5 block text-xs text-[#6B7280]">
                               {row.brand || 'No brand'} · {row.category.name}
                               {row.colourCount > 0 && ` · ${row.colourCount} colours`}
@@ -447,6 +451,12 @@ function ProductsPage() {
                         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_PILL[row.status]}`}>{STATUS_LABEL[row.status]}</span>
                       </td>
                       <td className="py-3 pl-4 pr-5 text-right">
+                        <Link
+                          to={`/admin/products/${row.slug}`}
+                          className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#061A40] transition-colors hover:bg-[#F1F2F6]"
+                        >
+                          Edit
+                        </Link>
                         {row.status === 'ACTIVE' && (
                           <a
                             href={`/product/${row.slug}`}
