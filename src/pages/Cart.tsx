@@ -26,41 +26,10 @@ import { lineKey, useShopStore } from '../store';
 import { livePriceOf } from '../live-catalogue';
 import { useAuthStore } from '../auth-store';
 import { useCanOrder, useCheckoutConfig } from '../lib/checkout';
+import { CheckoutSteps, NAVY_BUTTON, SUPPORT_PHONE } from '../components/checkout/CheckoutShell';
 
 /** The most of one item allowed in one order (the checkout's own limit). */
 const MAX_QTY = 5;
-const SUPPORT_PHONE = '+91 7003999192';
-
-const NAVY_BUTTON =
-  'group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#061A40] text-[15px] font-semibold text-white shadow-[0_12px_24px_-12px_rgba(6,26,64,0.6)] transition-colors duration-300 hover:bg-[#3D4FE0]';
-
-/** The checkout journey, shown as three steps with the cart as the first. */
-function Steps() {
-  const steps = ['Cart', 'Address', 'Payment'];
-  return (
-    <ol className="flex items-center gap-1.5 sm:gap-3" aria-label="Checkout steps">
-      {steps.map((s, i) => (
-        <li key={s} className="flex items-center gap-1.5 sm:gap-3">
-          <span
-            className={`flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1.5 text-xs font-semibold sm:gap-2 sm:px-4 sm:py-2 sm:text-sm ${
-              i === 0 ? 'border-transparent bg-white text-[#061A40]' : 'border-white/15 bg-white/[0.06] text-white/70'
-            }`}
-          >
-            <span
-              className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${
-                i === 0 ? 'bg-[#3D4FE0] text-white' : 'bg-white/10 text-white/80'
-              }`}
-            >
-              {i + 1}
-            </span>
-            {s}
-          </span>
-          {i < steps.length - 1 && <span className="h-px w-2 bg-white/25 sm:w-8" aria-hidden="true" />}
-        </li>
-      ))}
-    </ol>
-  );
-}
 
 export default function Cart() {
   const { cart, setQty, removeFromCart, ready, wishlist, inWishlist, toggleWishlist } = useShopStore();
@@ -138,7 +107,7 @@ export default function Cart() {
                 {savings > 0 && <span className="ml-2 font-semibold text-[#C7D4FF]">You save {formatINR(savings)}</span>}
               </p>
             </div>
-            {lines.length > 0 && <Steps />}
+            {lines.length > 0 && <CheckoutSteps current={0} />}
           </div>
         </WavePanel>
       </div>

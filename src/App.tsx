@@ -31,7 +31,7 @@ import Orders from './pages/Orders';
 import Addresses from './pages/Addresses';
 import Security from './pages/Security';
 import Checkout from './pages/Checkout';
-import TestPayment from './pages/TestPayment';
+import Payment from './pages/Payment';
 import OrderDetails from './pages/OrderDetails';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -72,7 +72,7 @@ function App() {
         <Route path="/security" element={<Security />} />
         <Route path="/orders/:orderNumber" element={<OrderDetails />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/checkout/pay/:orderNumber" element={<TestPayment />} />
+        <Route path="/checkout/pay/:orderNumber" element={<Payment />} />
         <Route
           path="/admin"
           element={

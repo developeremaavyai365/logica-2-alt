@@ -79,7 +79,7 @@ function AddressBook() {
     <button
       type="button"
       onClick={() => setEditing('new')}
-      className="flex h-11 items-center gap-2 rounded-xl bg-[#061A40] px-5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
+      className="flex h-11 items-center gap-2 rounded-xl bg-[#061A40] px-5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[#3D4FE0]"
     >
       <Plus className="h-4 w-4" />
       Add a new address
@@ -127,24 +127,24 @@ function AddressBook() {
             ) : (
               <li key={a.id} className="overflow-hidden rounded-3xl border border-[#E7EAF3] bg-white shadow-[0_18px_40px_-24px_rgba(6,26,64,0.28)]">
                 <div className="flex flex-wrap items-center gap-2 border-b border-[#EEF0F6] px-5 py-2.5">
-                  <span className="rounded-md bg-shop-canvas px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-shop-ink/60">
+                  <span className="rounded-full bg-[#F5F8FC] px-2.5 py-0.5 text-[11px] font-semibold text-[#061A40]/60">
                     {a.label}
                   </span>
                   {a.isDefault && (
-                    <span className="rounded-md bg-[#E8EBFD] px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-shop-accent">
+                    <span className="rounded-full bg-[#F1F3FE] px-2.5 py-0.5 text-[11px] font-semibold text-[#3D4FE0]">
                       Default
                     </span>
                   )}
                 </div>
 
                 <div className="flex gap-3.5 px-5 py-4">
-                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-shop-canvas text-shop-ink/60">
+                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F5F8FC] text-[#061A40]/60">
                     <MapPin className="h-4 w-4" />
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[15px] font-semibold text-shop-ink">{a.fullName}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-shop-ink/70">{addressLine(a)}</p>
-                    <p className="mt-1.5 flex items-center gap-1.5 text-sm text-shop-ink/70">
+                    <p className="text-[15px] font-semibold text-[#061A40]">{a.fullName}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[#061A40]/70">{addressLine(a)}</p>
+                    <p className="mt-1.5 flex items-center gap-1.5 text-sm text-[#061A40]/70">
                       <Phone className="h-3.5 w-3.5" />
                       {a.phone}
                     </p>
@@ -154,7 +154,7 @@ function AddressBook() {
                 <div className="flex flex-wrap items-center gap-1 border-t border-[#EEF0F6] px-3 py-2">
                   {confirmRemove === a.id ? (
                     <>
-                      <span className="px-2 text-sm text-shop-ink/70">Remove this address?</span>
+                      <span className="px-2 text-sm text-[#061A40]/70">Remove this address?</span>
                       <button
                         type="button"
                         disabled={busy === a.id}
@@ -166,7 +166,7 @@ function AddressBook() {
                       <button
                         type="button"
                         onClick={() => setConfirmRemove(null)}
-                        className="rounded-lg px-3 py-2 text-sm font-semibold text-shop-ink/60 transition-colors hover:bg-shop-canvas"
+                        className="rounded-lg px-3 py-2 text-sm font-semibold text-[#061A40]/60 transition-colors hover:bg-[#F5F8FC]"
                       >
                         Keep it
                       </button>
@@ -179,7 +179,7 @@ function AddressBook() {
                           setEditing(a.id);
                           setConfirmRemove(null);
                         }}
-                        className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold text-shop-ink/70 transition-colors hover:bg-shop-canvas hover:text-shop-ink"
+                        className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold text-[#061A40]/70 transition-colors hover:bg-[#F5F8FC] hover:text-[#061A40]"
                       >
                         <Pencil className="h-3.5 w-3.5" />
                         Edit
@@ -187,7 +187,7 @@ function AddressBook() {
                       <button
                         type="button"
                         onClick={() => setConfirmRemove(a.id)}
-                        className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold text-shop-ink/70 transition-colors hover:bg-red-50 hover:text-red-600"
+                        className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold text-[#061A40]/70 transition-colors hover:bg-red-50 hover:text-red-600"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                         Remove
@@ -197,7 +197,7 @@ function AddressBook() {
                           type="button"
                           disabled={busy === a.id}
                           onClick={() => run(a.id, () => makeDefaultAddress(a.id))}
-                          className="ml-auto rounded-lg px-3 py-2 text-sm font-semibold text-shop-accent transition-colors hover:bg-[#E8EBFD] disabled:opacity-50"
+                          className="ml-auto rounded-lg px-3 py-2 text-sm font-semibold text-[#3D4FE0] transition-colors hover:bg-[#F1F3FE] disabled:opacity-50"
                         >
                           {busy === a.id ? 'Saving…' : 'Set as default'}
                         </button>

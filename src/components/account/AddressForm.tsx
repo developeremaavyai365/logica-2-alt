@@ -49,9 +49,16 @@ export default function AddressForm({
     shown[key] ? <p className="mt-1.5 text-xs font-medium text-red-600">{shown[key]}</p> : null;
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="rounded-2xl border border-shop-accent/40 bg-white shadow-[0_0_0_4px_rgba(61,79,224,0.06)]">
-      <div className="border-b border-shop-line px-5 py-2.5">
-        <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-shop-accent">{heading}</h2>
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="overflow-hidden rounded-3xl border border-[#C7D2FE] bg-white shadow-[0_0_0_4px_rgba(61,79,224,0.06),0_18px_40px_-24px_rgba(6,26,64,0.28)]"
+    >
+      <div className="flex items-center gap-2.5 border-b border-[#EEF0F6] bg-[#FAFBFE] px-5 py-3.5">
+        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#F1F3FE] text-[#3D4FE0]">
+          <MapPin className="h-4 w-4" />
+        </span>
+        <h2 className="font-dm-sans text-[15px] font-bold text-[#061A40]">{heading}</h2>
       </div>
 
       <div className="grid grid-cols-1 gap-4 px-5 py-5 sm:grid-cols-2">
@@ -149,7 +156,7 @@ export default function AddressForm({
                   aria-checked={on}
                   onClick={() => set('label', l)}
                   className={`flex h-[52px] flex-1 items-center justify-center gap-2 rounded-xl border-2 text-sm font-semibold transition-colors ${
-                    on ? 'border-shop-accent bg-[#E8EBFD] text-shop-accent' : 'border-black/10 text-shop-ink/70 hover:border-black/20'
+                    on ? 'border-[#3D4FE0] bg-[#F1F3FE] text-[#3D4FE0]' : 'border-black/10 text-[#061A40]/70 hover:border-[#C7D2FE]'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -162,7 +169,7 @@ export default function AddressForm({
       </div>
 
       {!isDefault && (
-        <label className="mx-5 mb-4 flex cursor-pointer items-center gap-2.5 text-sm text-shop-ink/75">
+        <label className="mx-5 mb-4 flex cursor-pointer items-center gap-2.5 text-sm text-[#061A40]/75">
           <input
             type="checkbox"
             checked={form.isDefault}
@@ -173,7 +180,7 @@ export default function AddressForm({
         </label>
       )}
 
-      <div className="flex flex-col gap-3 border-t border-shop-line p-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-t border-[#EEF0F6] bg-[#FAFBFE] p-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <p className="min-h-[1rem] px-2 text-xs font-medium text-red-600" role="alert">
           {serverError || (touched && Object.keys(errors).length > 0 ? 'Please fix the highlighted fields.' : '')}
         </p>
@@ -182,7 +189,7 @@ export default function AddressForm({
             <button
               type="button"
               onClick={onCancel}
-              className="h-12 rounded-xl border border-shop-line px-6 text-sm font-semibold text-shop-ink/70 transition-colors hover:bg-shop-canvas hover:text-shop-ink"
+              className="h-12 rounded-xl border border-[#E5E7EB] bg-white px-6 text-sm font-semibold text-[#061A40] transition-colors hover:border-[#C7D2FE] hover:text-[#3D4FE0]"
             >
               Cancel
             </button>
@@ -190,7 +197,7 @@ export default function AddressForm({
           <button
             type="submit"
             disabled={saving}
-            className="h-12 rounded-xl bg-shop-ink px-8 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-12 rounded-xl bg-[#061A40] px-8 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(6,26,64,0.6)] transition-colors duration-300 hover:bg-[#3D4FE0] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {saving ? 'Saving…' : 'Save address'}
           </button>

@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AlertCircle, ArrowRight, Banknote, CreditCard, Lock, MapPin, Minus, Plus, ShieldCheck, Trash2 } from 'lucide-react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { AlertCircle, ArrowRight, Banknote, Check, CreditCard, Lock, MapPin, Minus, Package, Phone, Plus, ShoppingBag, Trash2, Wallet } from 'lucide-react';
 import ProtectedRoute from '../components/ProtectedRoute';
 import AddressForm from '../components/account/AddressForm';
+import { ACCOUNT_CARD } from '../components/account/AccountShell';
+import { TitleGlow } from '../components/auth/AuthShell';
+import CheckoutShell, { NAVY_BUTTON, PriceDetails, ProductThumb, SectionCard, TrustList } from '../components/checkout/CheckoutShell';
 import { messageFrom } from '../auth-store';
 import { ApiError } from '../lib/api-client';
 import { lineKey, useShopStore } from '../store';
@@ -20,11 +21,6 @@ import {
 } from '../lib/checkout';
 import { lineVisual } from '../lib/order-lines';
 
-const STEP_HEAD = 'flex items-center gap-3 border-b border-shop-line px-5 py-3';
-const STEP_NUM =
-  'flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-shop-ink font-mono text-[11px] font-bold text-white';
-const STEP_TITLE = 'font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-shop-ink';
-
 /** A random v4 UUID (the site is always served over HTTPS or localhost,
  *  where the browser provides crypto). */
 function newKey(): string {
@@ -35,6 +31,12 @@ function newKey(): string {
   const h = Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('');
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
+
+const TITLE = (
+  <>
+    Secure <TitleGlow>checkout</TitleGlow>
+  </>
+);
 
 function CheckoutFlow() {
   const navigate = useNavigate();
@@ -125,60 +127,81 @@ function CheckoutFlow() {
 
   if (config && !config.enabled) {
     return (
-      <Shell>
+      <CheckoutShell eyebrow="Checkout" title={TITLE} step={1}>
         <Notice
+          icon={Lock}
           title="Online ordering opens soon"
           text="You can't place orders on the website just yet. To order now, call +91 7003999192."
           cta={{ to: '/cart', label: 'Back to cart' }}
         />
-      </Shell>
+      </CheckoutShell>
     );
   }
 
   if (cart.length === 0) {
     return (
-      <Shell>
-        <Notice title="Your cart is empty" text="Add something to your cart to check out." cta={{ to: '/shop', label: 'Continue shopping' }} />
-      </Shell>
+      <CheckoutShell eyebrow="Checkout" title={TITLE} step={1}>
+        <Notice icon={ShoppingBag} title="Your cart is empty" text="Add something to your cart to check out." cta={{ to: '/shop', label: 'Continue shopping' }} />
+      </CheckoutShell>
     );
   }
 
-  return (
-    <Shell>
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
-        <div className="flex min-w-0 flex-col gap-5">
-          {/* Step 1 — address */}
-          <section className="rounded-2xl border border-shop-line bg-white">
-            <div className={STEP_HEAD}>
-              <span className={STEP_NUM}>1</span>
-              <h2 className={STEP_TITLE}>Delivery address</h2>
-            </div>
+  const buttonLabel = placing ? 'Placing order…' : method === 'ONLINE' ? 'Continue to payment' : 'Place order';
+  const hint = placeError ? (
+    <p className="mb-3 rounded-xl bg-red-50 px-4 py-2.5 text-xs font-medium text-red-600" role="alert">
+      {placeError}
+    </p>
+  ) : quote && !quote.orderable ? (
+    <p className="mb-3 rounded-xl bg-red-50 px-4 py-2.5 text-xs font-medium text-red-600">Fix the items marked in red to continue.</p>
+  ) : !selected && addresses !== null ? (
+    <p className="mb-3 rounded-xl bg-[#F1F3FE] px-4 py-2.5 text-xs font-medium text-[#061A40]">Add a delivery address to continue.</p>
+  ) : null;
 
-            {addresses === null && <div className="m-5 h-20 animate-pulse rounded-xl bg-shop-canvas" />}
+  return (
+    <CheckoutShell
+      eyebrow="Checkout"
+      title={TITLE}
+      step={1}
+      subtitle={
+        quote && (
+          <>
+            {quote.itemCount} item{quote.itemCount === 1 ? '' : 's'} · {rupees(quote.totalPaise)}
+            {savings > 0 && <span className="ml-2 font-semibold text-[#C7D4FF]">You save {rupees(savings)}</span>}
+          </>
+        )
+      }
+    >
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+        <div className="flex min-w-0 flex-col gap-4">
+          {/* Delivery address */}
+          <SectionCard icon={MapPin} title="Delivery address">
+            {addresses === null && <div className="mx-5 mb-5 h-20 animate-pulse rounded-2xl bg-[#F5F8FC] sm:mx-6" />}
 
             {addresses && addresses.length > 0 && (
-              <ul className="divide-y divide-shop-line" role="radiogroup" aria-label="Delivery address">
+              <ul className="flex flex-col gap-2.5 px-5 pb-4 sm:px-6" role="radiogroup" aria-label="Delivery address">
                 {addresses.map((a) => {
                   const on = a.id === addressId;
                   return (
                     <li key={a.id}>
-                      <label className={`flex cursor-pointer gap-3.5 px-5 py-4 transition-colors ${on ? 'bg-[#F4F5FE]' : 'hover:bg-shop-canvas/60'}`}>
-                        <input
-                          type="radio"
-                          name="address"
-                          checked={on}
-                          onChange={() => setAddressId(a.id)}
-                          className="mt-1 h-4 w-4 shrink-0 accent-[#3D4FE0]"
-                        />
+                      <label
+                        className={`flex cursor-pointer gap-3.5 rounded-2xl border-2 px-4 py-3.5 transition-colors ${
+                          on ? 'border-[#3D4FE0] bg-[#F1F3FE]' : 'border-[#EEF0F6] hover:border-[#C7D2FE]'
+                        }`}
+                      >
+                        <input type="radio" name="address" checked={on} onChange={() => setAddressId(a.id)} className="sr-only" />
+                        <RadioDot on={on} />
                         <span className="min-w-0">
                           <span className="flex flex-wrap items-center gap-2">
-                            <span className="text-sm font-semibold text-shop-ink">{a.fullName}</span>
-                            <span className="rounded bg-shop-canvas px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-shop-ink/60">
+                            <span className="text-[15px] font-semibold text-[#061A40]">{a.fullName}</span>
+                            <span className="rounded-full bg-white px-2.5 py-0.5 text-[11px] font-semibold text-[#061A40]/60 ring-1 ring-[#E7EAF3]">
                               {a.label}
                             </span>
-                            <span className="text-sm text-shop-ink/70">{a.phone}</span>
                           </span>
-                          <span className="mt-1 block text-sm leading-relaxed text-shop-ink/70">{addressLine(a)}</span>
+                          <span className="mt-1 block text-sm leading-relaxed text-[#6B7280]">{addressLine(a)}</span>
+                          <span className="mt-1 flex items-center gap-1.5 text-sm text-[#6B7280]">
+                            <Phone className="h-3.5 w-3.5" />
+                            {a.phone}
+                          </span>
                         </span>
                       </label>
                     </li>
@@ -188,7 +211,7 @@ function CheckoutFlow() {
             )}
 
             {addingAddress ? (
-              <div className="border-t border-shop-line p-4">
+              <div className="px-5 pb-5 sm:px-6">
                 <AddressForm
                   heading="Add a delivery address"
                   initial={{ ...EMPTY_ADDRESS, isDefault: (addresses?.length ?? 0) === 0 }}
@@ -211,77 +234,85 @@ function CheckoutFlow() {
                 <button
                   type="button"
                   onClick={() => setAddingAddress(true)}
-                  className="flex w-full items-center gap-2 border-t border-shop-line px-5 py-3.5 text-sm font-semibold text-shop-accent transition-colors hover:bg-[#F4F5FE]"
+                  className="flex w-full items-center gap-2 border-t border-[#EEF0F6] bg-[#FAFBFE] px-5 py-3.5 text-sm font-semibold text-[#3D4FE0] transition-colors hover:bg-[#F1F3FE] sm:px-6"
                 >
                   <Plus className="h-4 w-4" />
                   Add a new address
                 </button>
               )
             )}
-          </section>
+          </SectionCard>
 
-          {/* Step 2 — items */}
-          <section className="rounded-2xl border border-shop-line bg-white">
-            <div className={STEP_HEAD}>
-              <span className={STEP_NUM}>2</span>
-              <h2 className={STEP_TITLE}>Review items</h2>
-            </div>
-
-            {quoteError && <p className="px-5 py-4 text-sm font-medium text-red-600">{quoteError}</p>}
-            {!quote && !quoteError && <div className="m-5 h-24 animate-pulse rounded-xl bg-shop-canvas" />}
+          {/* Items */}
+          <SectionCard icon={Package} title="Review items">
+            {quoteError && <p className="px-6 pb-5 text-sm font-medium text-red-600">{quoteError}</p>}
+            {!quote && !quoteError && <div className="mx-5 mb-5 h-24 animate-pulse rounded-2xl bg-[#F5F8FC] sm:mx-6" />}
 
             {quote && (
-              <ul className="divide-y divide-shop-line">
+              <ul className="divide-y divide-[#EEF0F6] border-t border-[#EEF0F6]">
                 {quote.lines.map((l) => {
                   const v = lineVisual(l.productId, l.colour);
                   const key = lineKey({ id: l.productId, colour: l.colour ?? undefined });
                   const cartLine = cart.find((c) => lineKey(c) === key);
                   const qty = cartLine?.qty ?? l.quantity;
+                  const off = !l.problem && l.mrpPaise > l.unitPaise ? Math.round(((l.mrpPaise - l.unitPaise) / l.mrpPaise) * 100) : 0;
                   return (
-                    <li key={key} className="flex gap-4 px-5 py-4">
-                      <Link to={v.href} className="relative h-20 w-20 shrink-0 rounded-xl bg-shop-canvas">
-                        {v.image && (
-                          <img src={v.image} alt="" className="absolute inset-0 h-full w-full object-contain p-2 mix-blend-multiply" />
-                        )}
+                    <li key={key} className="flex gap-4 px-5 py-4 sm:gap-5 sm:px-6">
+                      <Link to={v.href} className="transition-opacity hover:opacity-80">
+                        <ProductThumb src={v.image} />
                       </Link>
-                      <div className="min-w-0 flex-1">
-                        <Link to={v.href} className="block text-sm font-semibold leading-snug text-shop-ink line-clamp-2 hover:opacity-70">
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        {v.product?.brand && (
+                          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#3D4FE0]">{v.product.brand}</span>
+                        )}
+                        <Link
+                          to={v.href}
+                          className="mt-0.5 text-[15px] font-semibold leading-snug text-[#061A40] line-clamp-2 transition-colors hover:text-[#3D4FE0]"
+                        >
                           {l.name ?? v.title}
                         </Link>
-                        {v.colour && <p className="mt-0.5 text-xs text-shop-ink/60">Colour: {v.colour.name}</p>}
+                        {v.colour && (
+                          <p className="mt-1 flex items-center gap-1.5 text-xs text-[#6B7280]">
+                            <span className="h-3.5 w-3.5 rounded-full border border-black/10" style={{ backgroundColor: v.colour.hex }} aria-hidden="true" />
+                            {v.colour.name}
+                          </p>
+                        )}
                         {l.problem ? (
-                          <p className="mt-1.5 flex items-start gap-1.5 text-xs font-medium text-red-600">
+                          <p className="mt-2 flex items-start gap-1.5 text-xs font-medium text-red-600">
                             <AlertCircle className="mt-px h-3.5 w-3.5 shrink-0" />
                             {problemText(l)}
                           </p>
                         ) : (
-                          <p className="mt-1 flex items-baseline gap-2">
-                            <span className="font-dm-sans text-base font-semibold tabular-nums text-shop-ink">{rupees(l.unitPaise)}</span>
-                            {l.mrpPaise > l.unitPaise && (
-                              <span className="text-xs tabular-nums text-shop-ink/40 line-through">{rupees(l.mrpPaise)}</span>
-                            )}
+                          <p className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                            <span className="font-dm-sans text-lg font-bold tabular-nums text-[#061A40]" style={{ letterSpacing: '-0.02em' }}>
+                              {rupees(l.unitPaise)}
+                            </span>
+                            {l.mrpPaise > l.unitPaise && <span className="text-sm tabular-nums text-[#9CA3AF] line-through">{rupees(l.mrpPaise)}</span>}
+                            {off > 0 && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">{off}% off</span>}
                           </p>
                         )}
 
-                        <div className="mt-2.5 flex items-center gap-3">
+                        <div className="mt-3 flex flex-wrap items-center gap-2">
                           {l.maxQuantity > 0 && (
-                            <div className="flex items-center overflow-hidden rounded-lg border border-shop-line">
+                            <div className="flex items-center rounded-full border border-[#E5E7EB] bg-white p-1">
                               <button
                                 type="button"
-                                aria-label="Fewer"
+                                aria-label="Decrease quantity"
                                 disabled={qty <= 1}
                                 onClick={() => setQty(key, qty - 1)}
-                                className="flex h-8 w-8 items-center justify-center text-shop-ink hover:bg-shop-canvas disabled:opacity-30"
+                                className="flex h-8 w-8 items-center justify-center rounded-full text-[#061A40] transition-colors hover:bg-[#F1F3FE] hover:text-[#3D4FE0] disabled:opacity-30 disabled:hover:bg-transparent"
                               >
                                 <Minus className="h-3.5 w-3.5" />
                               </button>
-                              <span className="w-8 text-center font-mono text-xs tabular-nums">{qty}</span>
+                              <span className="w-9 text-center text-sm font-semibold tabular-nums text-[#061A40]" aria-label="Quantity">
+                                {qty}
+                              </span>
                               <button
                                 type="button"
-                                aria-label="More"
+                                aria-label="Increase quantity"
                                 disabled={qty >= l.maxQuantity}
                                 onClick={() => setQty(key, qty + 1)}
-                                className="flex h-8 w-8 items-center justify-center text-shop-ink hover:bg-shop-canvas disabled:opacity-30"
+                                className="flex h-8 w-8 items-center justify-center rounded-full text-[#061A40] transition-colors hover:bg-[#F1F3FE] hover:text-[#3D4FE0] disabled:opacity-30 disabled:hover:bg-transparent"
                               >
                                 <Plus className="h-3.5 w-3.5" />
                               </button>
@@ -291,7 +322,7 @@ function CheckoutFlow() {
                             <button
                               type="button"
                               onClick={() => setQty(key, l.maxQuantity)}
-                              className="text-xs font-semibold text-shop-accent hover:underline"
+                              className="rounded-full px-3.5 py-2 text-sm font-semibold text-[#3D4FE0] transition-colors hover:bg-[#F1F3FE]"
                             >
                               Change to {l.maxQuantity}
                             </button>
@@ -299,9 +330,9 @@ function CheckoutFlow() {
                           <button
                             type="button"
                             onClick={() => removeFromCart(key)}
-                            className="flex items-center gap-1 text-xs font-semibold text-shop-ink/60 hover:text-red-600"
+                            className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold text-[#061A40]/70 transition-colors hover:bg-red-50 hover:text-red-600"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash2 className="h-4 w-4" />
                             Remove
                           </button>
                         </div>
@@ -311,16 +342,12 @@ function CheckoutFlow() {
                 })}
               </ul>
             )}
-          </section>
+          </SectionCard>
 
-          {/* Step 3 — payment */}
-          <section className="rounded-2xl border border-shop-line bg-white">
-            <div className={STEP_HEAD}>
-              <span className={STEP_NUM}>3</span>
-              <h2 className={STEP_TITLE}>Payment</h2>
-            </div>
-            {quote && (
-              <div className="flex flex-col gap-2 p-4" role="radiogroup" aria-label="Payment method">
+          {/* Payment method */}
+          <SectionCard icon={Wallet} title="Payment method">
+            {quote ? (
+              <div className="flex flex-col gap-2.5 px-5 pb-5 sm:px-6" role="radiogroup" aria-label="Payment method">
                 <PaymentOption
                   icon={Banknote}
                   title="Cash on delivery"
@@ -331,10 +358,11 @@ function CheckoutFlow() {
                 />
                 <PaymentOption
                   icon={CreditCard}
-                  title={quote.online.mode === 'test' ? 'Pay online (test mode)' : 'Pay online'}
+                  title="Pay online"
+                  badge={quote.online.mode === 'test' ? 'Test mode' : undefined}
                   text={
                     quote.online.mode === 'test'
-                      ? 'UPI, cards, net banking. Test mode: no real money is taken.'
+                      ? 'UPI, cards, net banking and wallets. Test mode: no real money is taken.'
                       : 'UPI, cards and net banking are coming soon.'
                   }
                   checked={method === 'ONLINE'}
@@ -342,74 +370,72 @@ function CheckoutFlow() {
                   onSelect={() => setMethod('ONLINE')}
                 />
               </div>
+            ) : (
+              <div className="mx-5 mb-5 h-20 animate-pulse rounded-2xl bg-[#F5F8FC] sm:mx-6" />
             )}
-          </section>
+          </SectionCard>
         </div>
 
         {/* Price details + place order */}
-        <aside className="overflow-hidden rounded-2xl border border-shop-line bg-white lg:sticky lg:top-6">
-          <div className="border-b border-shop-line px-5 py-3">
-            <h2 className={STEP_TITLE}>Price details</h2>
-          </div>
+        <aside className="flex flex-col gap-4 lg:sticky lg:top-6">
           {quote ? (
-            <dl className="divide-y divide-shop-line text-sm">
-              <Row label={`Price (${quote.itemCount} item${quote.itemCount === 1 ? '' : 's'})`} value={rupees(quote.mrpTotalPaise)} />
-              {savings > 0 && <Row label="Discount" value={`−${rupees(savings)}`} accent />}
-              <Row label="Delivery" value={quote.shippingPaise === 0 ? 'Free' : rupees(quote.shippingPaise)} accent={quote.shippingPaise === 0} />
-              <div className="flex items-end justify-between gap-4 bg-shop-canvas px-5 py-4">
-                <dt className="text-sm font-semibold text-shop-ink">Total amount</dt>
-                <dd className="font-dm-sans text-2xl font-semibold tabular-nums leading-none text-shop-ink" style={{ letterSpacing: '-0.03em' }}>
-                  {rupees(quote.totalPaise)}
-                </dd>
-              </div>
-            </dl>
-          ) : (
-            <div className="m-5 h-28 animate-pulse rounded-xl bg-shop-canvas" />
-          )}
-          {savings > 0 && (
-            <p className="border-t border-shop-line px-5 py-2.5 text-xs font-semibold text-shop-accent">
-              You save {rupees(savings)} on this order
-            </p>
-          )}
-
-          <div className="border-t border-shop-line p-3">
-            {placeError && <p className="mb-2 px-1 text-xs font-medium text-red-600" role="alert">{placeError}</p>}
-            {quote && !quote.orderable && !placeError && (
-              <p className="mb-2 px-1 text-xs font-medium text-red-600">Fix the items marked in red to continue.</p>
-            )}
-            {!selected && addresses !== null && <p className="mb-2 px-1 text-xs font-medium text-shop-ink/60">Add a delivery address to continue.</p>}
-            <button
-              type="button"
-              onClick={handlePlace}
-              disabled={blocked}
-              className="group flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent disabled:cursor-not-allowed disabled:opacity-40"
+            <PriceDetails
+              itemCount={quote.itemCount}
+              mrpTotalPaise={quote.mrpTotalPaise}
+              subtotalPaise={quote.subtotalPaise}
+              shippingPaise={quote.shippingPaise}
+              totalPaise={quote.totalPaise}
             >
-              {placing ? 'Placing order…' : method === 'ONLINE' ? 'Continue to payment' : 'Place order'}
-              {!placing && <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />}
-            </button>
-            <p className="mt-2.5 flex items-center justify-center gap-1.5 text-[11px] text-shop-ink/50">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Prices include GST
-            </p>
-          </div>
+              {hint}
+              <button type="button" onClick={handlePlace} disabled={blocked} className={NAVY_BUTTON}>
+                <Lock className="h-4 w-4" />
+                {buttonLabel}
+                {!placing && <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />}
+              </button>
+            </PriceDetails>
+          ) : (
+            <div className={`${ACCOUNT_CARD} h-64 animate-pulse`} />
+          )}
+          <TrustList />
         </aside>
       </div>
-    </Shell>
+
+      {/* Phone: the total and the button stay in reach at the bottom */}
+      {quote && (
+        <div data-sticky-bar className="fixed inset-x-0 bottom-0 z-30 border-t border-[#E7EAF3] bg-white/95 px-4 py-3 shadow-[0_-12px_30px_-18px_rgba(6,26,64,0.35)] backdrop-blur lg:hidden">
+          <div className="mx-auto flex max-w-xl items-center gap-4">
+            <div className="min-w-0">
+              <span className="block font-dm-sans text-xl font-bold tabular-nums text-[#061A40]">{rupees(quote.totalPaise)}</span>
+              {savings > 0 && <span className="block text-xs font-semibold text-emerald-600">You save {rupees(savings)}</span>}
+            </div>
+            <button type="button" onClick={handlePlace} disabled={blocked} className={`${NAVY_BUTTON} ml-auto w-auto flex-1 px-5`}>
+              {buttonLabel}
+            </button>
+          </div>
+        </div>
+      )}
+    </CheckoutShell>
   );
 }
 
-function Row({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
+/** The round radio mark used on address and payment choices. */
+function RadioDot({ on }: { on: boolean }) {
   return (
-    <div className="flex items-center justify-between gap-4 px-5 py-3">
-      <dt className="text-shop-ink/65">{label}</dt>
-      <dd className={`font-mono tabular-nums ${accent ? 'font-semibold text-shop-accent' : 'text-shop-ink'}`}>{value}</dd>
-    </div>
+    <span
+      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+        on ? 'border-[#3D4FE0] bg-[#3D4FE0] text-white' : 'border-[#C9CEDC] bg-white'
+      }`}
+      aria-hidden="true"
+    >
+      {on && <Check className="h-3 w-3" strokeWidth={3} />}
+    </span>
   );
 }
 
 function PaymentOption({
   icon: Icon,
   title,
+  badge,
   text,
   checked,
   disabled,
@@ -417,6 +443,7 @@ function PaymentOption({
 }: {
   icon: typeof Banknote;
   title: string;
+  badge?: string;
   text: string;
   checked: boolean;
   disabled: boolean;
@@ -424,72 +451,52 @@ function PaymentOption({
 }) {
   return (
     <label
-      className={`flex items-start gap-3.5 rounded-xl border-2 px-4 py-3.5 transition-colors ${
+      className={`flex items-start gap-3.5 rounded-2xl border-2 px-4 py-3.5 transition-colors ${
         disabled
-          ? 'cursor-not-allowed border-shop-line opacity-55'
+          ? 'cursor-not-allowed border-[#EEF0F6] opacity-55'
           : checked
-            ? 'cursor-pointer border-shop-accent bg-[#F4F5FE]'
-            : 'cursor-pointer border-shop-line hover:border-shop-ink/25'
+            ? 'cursor-pointer border-[#3D4FE0] bg-[#F1F3FE]'
+            : 'cursor-pointer border-[#EEF0F6] hover:border-[#C7D2FE]'
       }`}
     >
-      <input
-        type="radio"
-        name="payment"
-        checked={checked}
-        disabled={disabled}
-        onChange={onSelect}
-        className="mt-1 h-4 w-4 shrink-0 accent-[#3D4FE0]"
-      />
-      <Icon className={`mt-0.5 h-5 w-5 shrink-0 ${checked ? 'text-shop-accent' : 'text-shop-ink/60'}`} />
+      <input type="radio" name="payment" checked={checked} disabled={disabled} onChange={onSelect} className="sr-only" />
+      <RadioDot on={checked} />
+      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${checked ? 'bg-white text-[#3D4FE0]' : 'bg-[#F5F8FC] text-[#061A40]/60'}`}>
+        <Icon className="h-[18px] w-[18px]" />
+      </span>
       <span className="min-w-0">
-        <span className="block text-sm font-semibold text-shop-ink">{title}</span>
-        <span className="mt-0.5 block text-xs leading-relaxed text-shop-ink/60">{text}</span>
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="text-[15px] font-semibold text-[#061A40]">{title}</span>
+          {badge && <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">{badge}</span>}
+        </span>
+        <span className="mt-0.5 block text-xs leading-relaxed text-[#6B7280]">{text}</span>
       </span>
     </label>
   );
 }
 
-function Notice({ title, text, cta }: { title: string; text: string; cta: { to: string; label: string } }) {
+function Notice({
+  icon: Icon,
+  title,
+  text,
+  cta,
+}: {
+  icon: typeof Lock;
+  title: string;
+  text: string;
+  cta: { to: string; label: string };
+}) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-shop-ink/20 bg-white px-6 py-14 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-shop-canvas">
-        <MapPin className="h-6 w-6 text-shop-ink/40" />
+    <div className={`${ACCOUNT_CARD} flex flex-col items-center px-6 py-16 text-center`}>
+      <span className="flex h-20 w-20 items-center justify-center rounded-full bg-[#F1F3FE] text-[#3D4FE0]">
+        <Icon className="h-9 w-9" />
       </span>
-      <h2 className="mt-4 text-base font-semibold text-shop-ink">{title}</h2>
-      <p className="mt-1 max-w-sm text-sm text-shop-ink/55">{text}</p>
-      <Link
-        to={cta.to}
-        className="mt-6 flex h-12 items-center gap-2 rounded-xl bg-shop-ink px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
-      >
+      <h2 className="mt-5 font-dm-sans text-2xl font-bold text-[#061A40]">{title}</h2>
+      <p className="mt-1.5 max-w-sm text-sm text-[#6B7280]">{text}</p>
+      <Link to={cta.to} className={`${NAVY_BUTTON} mt-7 w-auto px-7`}>
         {cta.label}
-        <ArrowRight className="h-4 w-4" />
+        <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
       </Link>
-    </div>
-  );
-}
-
-function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="w-full bg-shop-canvas">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-      </div>
-      <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-          <h1
-            className="font-dm-sans font-bold text-shop-ink"
-            style={{ fontSize: 'clamp(26px, 2.6vw, 36px)', letterSpacing: '-0.035em', lineHeight: 1.05 }}
-          >
-            Checkout
-          </h1>
-          <span className="flex items-center gap-1.5 text-xs font-medium text-shop-ink/55">
-            <Lock className="h-3.5 w-3.5" />
-            Secure checkout
-          </span>
-        </div>
-        {children}
-      </section>
-      <Footer />
     </div>
   );
 }
