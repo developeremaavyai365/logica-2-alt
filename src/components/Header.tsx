@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, Heart, LayoutDashboard, LogOut, Menu, Package, ShoppingCart, User, X } from 'lucide-react';
+import { ChevronDown, Heart, LayoutDashboard, LogOut, MapPin, Menu, Package, ShoppingCart, User, X } from 'lucide-react';
 import { useShopStore } from '../store';
 import { useAuthStore } from '../auth-store';
 import { SHOP_MEGA } from '../nav-data';
@@ -152,7 +152,7 @@ export default function Header() {
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black transition-colors group-hover:bg-white">
                         <User className="h-4 w-4" />
                       </span>
-                      Profile
+                      My profile
                     </Link>
                     <Link
                       to="/orders"
@@ -163,6 +163,26 @@ export default function Header() {
                         <Package className="h-4 w-4" />
                       </span>
                       Orders
+                    </Link>
+                    <Link
+                      to="/wishlist"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-black transition-colors hover:bg-[#ECEDEC]"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black transition-colors group-hover:bg-white">
+                        <Heart className="h-4 w-4" />
+                      </span>
+                      Wishlist
+                    </Link>
+                    <Link
+                      to="/addresses"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-black transition-colors hover:bg-[#ECEDEC]"
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECEDEC] text-black transition-colors group-hover:bg-white">
+                        <MapPin className="h-4 w-4" />
+                      </span>
+                      Saved addresses
                     </Link>
                     {/* Admins only — the separate admin panel. */}
                     {user.role === 'ADMIN' && (
@@ -308,6 +328,10 @@ export default function Header() {
                 <Link to="/orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-sm font-medium text-[#000000]">
                   <Package className="w-4 h-4" />
                   Orders
+                </Link>
+                <Link to="/addresses" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-sm font-medium text-[#000000]">
+                  <MapPin className="w-4 h-4" />
+                  Saved addresses
                 </Link>
                 <button
                   type="button"

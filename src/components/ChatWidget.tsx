@@ -139,7 +139,7 @@ export default function ChatWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div data-floating-widget className="fixed bottom-6 right-6 z-50">
       {/* Chat panel */}
       <div
         className={`absolute bottom-full right-0 mb-3 flex h-[70vh] max-h-[560px] w-[calc(100vw-3rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_25px_70px_-15px_rgba(0,0,0,0.4)] transition-all duration-300 ${

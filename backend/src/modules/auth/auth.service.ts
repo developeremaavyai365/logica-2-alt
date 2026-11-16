@@ -207,6 +207,24 @@ export class AuthService {
     };
   }
 
+  /** Changes the password of a signed-in user who knows the current one,
+   *  then signs out every other device: if the change was made because the
+   *  password leaked, that cuts off whoever else is using it. */
+  async changePassword(userId: string, sessionId: string, currentPassword: string, newPassword: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user || user.deletedAt) throw new UnauthorizedException('Account no longer active.');
+
+    const valid = await argon2.verify(user.passwordHash, currentPassword).catch(() => false);
+    if (!valid) throw new BadRequestException('Your current password is not correct.');
+    if (currentPassword === newPassword) {
+      throw new BadRequestException('The new password must be different from the current one.');
+    }
+
+    const passwordHash = await argon2.hash(newPassword, this.argonOptions());
+    await this.prisma.user.update({ where: { id: userId }, data: { passwordHash } });
+    await this.tokens.revokeOthersForUser(userId, sessionId);
+  }
+
   async logout(rawRefreshToken: string): Promise<void> {
     await this.tokens.revokeRefreshToken(rawRefreshToken);
   }

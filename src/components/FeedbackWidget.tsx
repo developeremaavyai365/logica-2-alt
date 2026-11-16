@@ -45,7 +45,7 @@ export default function FeedbackWidget() {
   }
 
   return (
-    <div className="fixed bottom-28 right-0 z-40 sm:bottom-32">
+    <div data-floating-widget className="fixed bottom-28 right-0 z-40 sm:bottom-32">
       {/* Popover panel */}
       <div
         className={`absolute bottom-full right-0 mb-3 w-[calc(100vw-2rem)] max-w-sm origin-bottom-right rounded-2xl border border-black/10 bg-white p-5 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.35)] transition-all duration-300 ${

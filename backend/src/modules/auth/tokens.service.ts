@@ -173,6 +173,15 @@ export class TokensService {
   }
 
   /** Revokes every session for a user — used on password reset/compromise. */
+  /** Signs the user out everywhere except the session (refresh-token
+   *  family) they are using right now. */
+  async revokeOthersForUser(userId: string, keepFamilyId: string): Promise<void> {
+    await this.prisma.refreshToken.updateMany({
+      where: { userId, revoked: false, NOT: { familyId: keepFamilyId } },
+      data: { revoked: true },
+    });
+  }
+
   async revokeAllForUser(userId: string): Promise<void> {
     await this.prisma.refreshToken.updateMany({
       where: { userId, revoked: false },

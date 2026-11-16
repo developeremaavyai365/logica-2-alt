@@ -1,34 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { CurrentUser, AuthenticatedUser } from '../../common/decorators/current-user.decorator';
+import { CheckoutService } from '../checkout/checkout.service';
 
-/** Real order history, not a placeholder — reads straight from the same
- *  Order table checkout will eventually write to. There's no live
- *  checkout flow wired up yet, so this legitimately returns an empty list
- *  for every account today; it isn't hiding fabricated data. */
+const ORDER_NUMBER = /^LG\d{6}-[A-Z2-9]{6}$/;
+
+/** The signed-in customer's own orders, newest first. */
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly checkout: CheckoutService) {}
 
   @Get()
-  async list(@CurrentUser() user: AuthenticatedUser) {
-    const orders = await this.prisma.order.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: 'desc' },
-      include: { items: { include: { variant: { include: { product: true } } } } },
-    });
+  list(@CurrentUser() user: AuthenticatedUser) {
+    return this.checkout.ordersFor(user.id);
+  }
 
-    return orders.map((order) => ({
-      id: order.id,
-      orderNumber: order.orderNumber,
-      status: order.status,
-      totalPaise: order.totalPaise,
-      createdAt: order.createdAt,
-      items: order.items.map((item) => ({
-        productName: item.variant.product.name,
-        quantity: item.quantity,
-        unitPricePaise: item.unitPricePaise,
-      })),
-    }));
+  @Get(':orderNumber')
+  async one(@CurrentUser() user: AuthenticatedUser, @Param('orderNumber') orderNumber: string) {
+    if (!ORDER_NUMBER.test(orderNumber)) throw new NotFoundException('Order not found.');
+    await this.checkout.expireUnpaid();
+    return this.checkout.orderFor(user.id, orderNumber);
   }
 }

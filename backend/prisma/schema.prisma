@@ -17,6 +17,9 @@ enum Role {
 }
 
 enum OrderStatus {
+  /// Paying online and not paid yet. Holds the stock for 30 minutes, then
+  /// is cancelled if still unpaid.
+  PAYMENT_PENDING
   PLACED
   CONFIRMED
   PROCESSING
@@ -26,6 +29,11 @@ enum OrderStatus {
   CANCELLED
   RETURNED
   REFUNDED
+}
+
+enum PaymentMethod {
+  COD
+  ONLINE
 }
 
 enum PaymentStatus {
@@ -54,6 +62,7 @@ model User {
   deletedAt        DateTime?
 
   addresses           Address[]
+  wishlist            WishlistItem[]
   refreshTokens       RefreshToken[]
   cart                Cart?
   orders              Order[]
@@ -107,23 +116,42 @@ model PasswordResetToken {
 }
 
 model Address {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   userId     String
-  user       User     @relation(fields: [userId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  /// Who receives the parcel — not always the account holder.
+  fullName   String
+  /// "Home", "Work" or "Other".
   label      String?
   line1      String
   line2      String?
+  landmark   String?
   city       String
   state      String
   postalCode String
-  country    String   @default("IN")
+  country    String    @default("IN")
   phone      String
-  isDefault  Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  isDefault  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  /// Removed by the customer. Kept, not deleted, because past orders
+  /// point at it.
+  deletedAt  DateTime?
 
   orders Order[]
 
   @@index([userId])
+}
+
+/// A product saved to a customer's wishlist. productId is the website
+/// catalogue's id (the catalogue lives in the website's code, not here).
+model WishlistItem {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
 }
 
 model Brand {
@@ -198,36 +226,57 @@ model CartItem {
 }
 
 model Order {
-  id            String      @id @default(uuid())
-  orderNumber   String      @unique
-  userId        String
-  user          User        @relation(fields: [userId], references: [id])
-  status        OrderStatus @default(PLACED)
-  addressId     String
-  address       Address     @relation(fields: [addressId], references: [id])
-  subtotalPaise Int
-  taxPaise      Int
-  shippingPaise Int
-  totalPaise    Int
-  items         OrderItem[]
-  statusHistory OrderStatusHistory[]
-  payment       Payment?
-  invoice       Invoice?
-  createdAt     DateTime    @default(now())
+  id              String        @id @default(uuid())
+  orderNumber     String        @unique
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  status          OrderStatus   @default(PLACED)
+  paymentMethod   PaymentMethod
+  addressId       String
+  address         Address       @relation(fields: [addressId], references: [id])
+  /// The delivery address as it was when the order was placed, so editing
+  /// or removing the saved address later never changes a past order.
+  shippingAddress Json
+  subtotalPaise   Int
+  /// GST included in the prices (prices are GST-inclusive). 0 until the
+  /// GST rate per product is known.
+  taxPaise        Int
+  shippingPaise   Int
+  totalPaise      Int
+  /// Sent by the checkout page with each attempt, so a double click or a
+  /// retried request never places the same order twice.
+  idempotencyKey  String?       @unique
+  items           OrderItem[]
+  statusHistory   OrderStatusHistory[]
+  payment         Payment?
+  invoice         Invoice?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
   @@index([userId])
+  @@index([status, createdAt])
 }
 
+/// One line of an order, with everything copied as it was at the time:
+/// later price, name or link changes never rewrite a past order.
 model OrderItem {
-  id             String         @id @default(uuid())
+  id             String          @id @default(uuid())
   orderId        String
-  order          Order          @relation(fields: [orderId], references: [id])
-  variantId      String
-  variant        ProductVariant @relation(fields: [variantId], references: [id])
+  order          Order           @relation(fields: [orderId], references: [id])
+  /// Unused: the old catalogue tables. Orders are made from SAP codes.
+  variantId      String?
+  variant        ProductVariant? @relation(fields: [variantId], references: [id])
+  sapCode        String
+  /// The website product and colour the customer chose.
+  productId      String
+  colour         String?
+  name           String
   quantity       Int
   unitPricePaise Int
+  mrpPaise       Int
 
   @@index([orderId])
+  @@index([sapCode])
 }
 
 model OrderStatusHistory {
@@ -314,6 +363,10 @@ model SapItem {
   // the import page; an import never touches these.
   websiteProductId String?
   websiteColour    String?
+  /// When the sheet last changed this code's stock. Website orders placed
+  /// after it are taken off the stock shown, until a sheet with a new
+  /// count arrives (which is assumed to include them).
+  stockUpdatedAt   DateTime   @default(now())
   lastImportId String?
   lastImport   SapImport? @relation(fields: [lastImportId], references: [id])
   createdAt    DateTime   @default(now())

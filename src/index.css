@@ -460,3 +460,15 @@ html, body, #root {
     transform: scale(1.08);
   }
 }
+
+/* On a phone, a page with a bar pinned to the bottom (the cart's total and
+   Checkout) lifts the chat and feedback buttons above it, so they never
+   cover the button that matters. */
+[data-floating-widget] {
+  transition: transform 0.3s ease;
+}
+@media (max-width: 1023px) {
+  body:has([data-sticky-bar]) [data-floating-widget] {
+    transform: translateY(-80px);
+  }
+}

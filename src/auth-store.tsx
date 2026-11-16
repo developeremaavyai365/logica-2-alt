@@ -42,6 +42,8 @@ interface AuthApi {
   forgotPassword: (email: string) => Promise<AuthResult>;
   resetPassword: (token: string, newPassword: string) => Promise<AuthResult>;
   updateProfile: (data: { name?: string; phone?: string; dateOfBirth?: string; gender?: string }) => Promise<AuthResult>;
+  /** Signs every other device out; this one stays signed in. */
+  changePassword: (currentPassword: string, newPassword: string) => Promise<AuthResult>;
 }
 
 const AuthContext = createContext<AuthApi | null>(null);
@@ -51,7 +53,7 @@ const AuthContext = createContext<AuthApi | null>(null);
  *  message the backend already chose (it's the one deliberately avoiding
  *  account-enumeration leaks); this just relays it rather than
  *  second-guessing it. */
-function messageFrom(err: unknown, fallback: string): string {
+export function messageFrom(err: unknown, fallback: string): string {
   if (err instanceof ApiError) {
     if (Array.isArray(err.body && (err.body as { message?: unknown }).message)) {
       return ((err.body as { message: string[] }).message)[0] ?? fallback;
@@ -59,7 +61,32 @@ function messageFrom(err: unknown, fallback: string): string {
     return err.message || fallback;
   }
   if (err instanceof SessionExpiredError) return err.message;
+  // fetch() itself failed: no answer from the server at all (offline, or
+  // the backend is down). Never report that as wrong credentials.
+  if (err instanceof TypeError) return "Can't reach Logica right now. Please check your internet connection and try again.";
   return fallback;
+}
+
+/** Restores a previous session from the httpOnly refresh cookie, once per
+ *  page load. Shared, because React runs start-up effects twice in
+ *  development: two refreshes at once would send the same refresh token
+ *  twice, the second would be refused as reused, and the visitor would
+ *  look signed out. */
+let sessionRestore: Promise<AuthUser | null> | null = null;
+function restoreSession(): Promise<AuthUser | null> {
+  sessionRestore ??= (async () => {
+    await bootstrapCsrf().catch(() => {
+      // Non-fatal — worst case the first mutating request sets the
+      // cookie instead. Don't block app startup on this.
+    });
+    try {
+      await apiFetch<{ accessToken: string }>('/auth/refresh', { method: 'POST' });
+      return await apiFetch<AuthUser>('/auth/me');
+    } catch {
+      return null;
+    }
+  })();
+  return sessionRestore;
 }
 
 export function AuthStoreProvider({ children }: { children: ReactNode }) {
@@ -68,28 +95,11 @@ export function AuthStoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
-
-    async function bootstrap() {
-      await bootstrapCsrf().catch(() => {
-        // Non-fatal — worst case the first mutating request sets the
-        // cookie instead. Don't block app startup on this.
-      });
-
-      try {
-        // Attempt a silent refresh: if the httpOnly refresh cookie from a
-        // previous session is still valid, this restores the session
-        // without the user re-entering credentials.
-        await apiFetch<{ accessToken: string }>('/auth/refresh', { method: 'POST' });
-        const profile = await apiFetch<AuthUser>('/auth/me');
-        if (!cancelled) setUser(profile);
-      } catch {
-        if (!cancelled) setUser(null);
-      } finally {
-        if (!cancelled) setReady(true);
-      }
-    }
-
-    bootstrap();
+    restoreSession().then((profile) => {
+      if (cancelled) return;
+      setUser(profile);
+      setReady(true);
+    });
     return () => {
       cancelled = true;
     };
@@ -194,6 +204,15 @@ export function AuthStoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const changePassword = useCallback(async (currentPassword: string, newPassword: string): Promise<AuthResult> => {
+    try {
+      await apiFetch('/auth/change-password', { method: 'POST', body: { currentPassword, newPassword } });
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: messageFrom(err, 'Could not change your password.') };
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -208,6 +227,7 @@ export function AuthStoreProvider({ children }: { children: ReactNode }) {
         forgotPassword,
         resetPassword,
         updateProfile,
+        changePassword,
       }}
     >
       {children}

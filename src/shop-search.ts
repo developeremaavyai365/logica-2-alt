@@ -2,6 +2,7 @@ import { categories, products } from './data';
 import { subCategoriesOf } from './nav-data';
 import type { Product } from './products-data';
 import { colourForWord, type ProductColour } from './product-colours';
+import { originalNameOf } from './live-catalogue';
 
 /* Suggestions for the shop search box, and the rule for when a search is
    really the name of a part of the shop ("iphone", "printers", "ssd") and
@@ -139,7 +140,20 @@ const BRANDS: BrandSuggestion[] = Array.from(
   .map(([brand, count]) => ({ brand, count, href: `/shop?brand=${encodeURIComponent(brand)}` }))
   .sort((a, b) => b.count - a.count);
 
-const PRODUCT_TEXT = new Map(products.map((p) => [p.id, normalise(`${p.brand} ${p.name}`)]));
+/** A product's searchable text, worked out once per name. Keyed by the name
+ *  itself rather than the product, so a name that changes (from the SAP
+ *  sheet) is searched under the new name — and under the old one too, so a
+ *  model number that was only in the old name still finds it. */
+const PRODUCT_TEXT = new Map<string, string>();
+function searchTextOf(product: Product): string {
+  const raw = `${product.brand} ${product.name} ${originalNameOf(product.id) ?? ''}`;
+  let text = PRODUCT_TEXT.get(raw);
+  if (text === undefined) {
+    text = normalise(raw);
+    PRODUCT_TEXT.set(raw, text);
+  }
+  return text;
+}
 
 /** Whether a product answers to a search, and in which colour. Every word
  *  must be found in the brand and name — a plural finds the singular too
@@ -149,7 +163,7 @@ const PRODUCT_TEXT = new Map(products.map((p) => [p.id, normalise(`${p.brand} ${
 export function matchProduct(product: Product, query: string): ProductMatch | null {
   const q = normalise(query);
   if (!q) return { product };
-  const text = PRODUCT_TEXT.get(product.id) ?? normalise(`${product.brand} ${product.name}`);
+  const text = searchTextOf(product);
   let colour: ProductColour | undefined;
   for (const t of q.split(' ')) {
     if (text.includes(t) || (t.length > 3 && t.endsWith('s') && text.includes(t.slice(0, -1)))) continue;

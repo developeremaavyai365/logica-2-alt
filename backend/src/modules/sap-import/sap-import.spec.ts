@@ -498,15 +498,15 @@ describe('linking SAP codes to the shop', () => {
   const linkedStored = (sapCode: string, productId: string, colour: string | null, overrides: Partial<StoredItem> = {}) =>
     ({ ...stored({ sapCode, ...overrides }), websiteProductId: productId, websiteColour: colour }) as StoredItem;
 
-  it('tells the shop price, MRP and availability in rupees, never the stock count', () => {
+  it('tells the shop the website name, price, MRP and availability in rupees, never the stock count', () => {
     const entries = toLiveEntries([
-      { websiteProductId: 'iphone-16', websiteColour: 'blue', stock: 0, mrpInPaise: 79_900_00, mopInPaise: 74_900_00 },
-      { websiteProductId: 'hp-laptop', websiteColour: null, stock: 14, mrpInPaise: 61_990_00, mopInPaise: 54_990_00 },
-      { websiteProductId: null, websiteColour: null, stock: 3, mrpInPaise: 100_00, mopInPaise: 90_00 },
+      { websiteProductId: 'iphone-16', websiteColour: 'blue', modelName: 'Apple iPhone 16 128GB, Blue', stock: 0, mrpInPaise: 79_900_00, mopInPaise: 74_900_00 },
+      { websiteProductId: 'hp-laptop', websiteColour: null, modelName: 'HP Laptop 14', stock: 14, mrpInPaise: 61_990_00, mopInPaise: 54_990_00 },
+      { websiteProductId: null, websiteColour: null, modelName: 'Unlinked', stock: 3, mrpInPaise: 100_00, mopInPaise: 90_00 },
     ]);
     expect(entries).toEqual([
-      { productId: 'hp-laptop', colour: null, price: 54_990, mrp: 61_990, inStock: true },
-      { productId: 'iphone-16', colour: 'blue', price: 74_900, mrp: 79_900, inStock: false },
+      { productId: 'hp-laptop', colour: null, name: 'HP Laptop 14', price: 54_990, mrp: 61_990, inStock: true },
+      { productId: 'iphone-16', colour: 'blue', name: 'Apple iPhone 16 128GB, Blue', price: 74_900, mrp: 79_900, inStock: false },
     ]);
     expect(JSON.stringify(entries)).not.toContain('stock');
   });

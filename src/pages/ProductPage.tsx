@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { useParams, useSearchParams, Link, Navigate } from 'react-router-dom';
+import { useParams, useSearchParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import {
   ArrowRight, Check, ChevronRight, Heart, ShoppingCart, Cpu, MemoryStick, HardDrive, Monitor, Laptop2, Zap,
   BatteryFull, Camera, Smartphone, Layers, type LucideIcon,
@@ -17,6 +17,7 @@ import { colourImages, coloursOf, findColour, productTitle } from '../product-co
 import { livePriceOf } from '../live-catalogue';
 import { extractSpecs, SPEC_LABELS, SPEC_ORDER } from '../product-specs';
 import { useShopStore } from '../store';
+import { useCanOrder, useCheckoutConfig } from '../lib/checkout';
 
 /** Best-effort icon for a spec label, purely for visual scanning. */
 function iconForSpec(label: string): LucideIcon {
@@ -60,6 +61,9 @@ export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
   const product = products.find((p) => p.id === id);
   const { addToCart, inCart, toggleWishlist, inWishlist } = useShopStore();
+  const canOrder = useCanOrder();
+  const checkout = useCheckoutConfig();
+  const navigate = useNavigate();
   const [added, setAdded] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -93,6 +97,8 @@ export default function ProductPage() {
   const colours = coloursOf(product.id);
   const colour = findColour(product.id, searchParams.get('colour')) ?? colours[0];
   const inStock = colour?.inStock ?? product.inStock;
+  // Ordering open, but no SAP code linked: shown, not sold.
+  const orderable = canOrder(product.id, colour?.key);
   // A colour with its own SAP code has its own price; otherwise the product's.
   const live = livePriceOf(product.id, colour?.key);
   const price = live?.price ?? product.price;
@@ -210,7 +216,11 @@ export default function ProductPage() {
                   {title}
                 </h1>
                 {/* Only said when it matters: a product that cannot be bought. */}
-                {!inStock && <p className="mt-2 text-sm font-medium text-red-600">Currently out of stock</p>}
+                {!orderable ? (
+                  <p className="mt-2 text-sm font-medium text-shop-ink/60">Currently unavailable to order online</p>
+                ) : (
+                  !inStock && <p className="mt-2 text-sm font-medium text-red-600">Currently out of stock</p>
+                )}
               </div>
 
               {/* Module — price */}
@@ -240,17 +250,40 @@ export default function ProductPage() {
               <div className="flex items-stretch gap-2 border-t border-shop-line p-3">
                 <button
                   type="button"
-                  disabled={!inStock}
+                  disabled={!inStock || !orderable}
                   onClick={() => {
                     addToCart(product.id, 1, colour?.key);
                     setAdded(true);
                     setTimeout(() => setAdded(false), 1500);
                   }}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent disabled:cursor-not-allowed disabled:bg-shop-ink/25 disabled:hover:bg-shop-ink/25"
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-shop-ink bg-white text-sm font-semibold text-shop-ink transition-colors duration-300 hover:bg-shop-ink hover:text-white disabled:cursor-not-allowed disabled:border-shop-line disabled:bg-shop-canvas disabled:text-shop-ink/40"
                 >
                   {added ? <Check className="h-4 w-4" /> : <ShoppingCart className="h-4 w-4" />}
-                  {!inStock ? 'Out of stock' : added ? 'Added' : inCart(product.id, colour?.key) ? 'Add Another' : 'Add to Cart'}
+                  {!orderable
+                    ? 'Currently unavailable'
+                    : !inStock
+                      ? 'Out of stock'
+                      : added
+                        ? 'Added'
+                        : inCart(product.id, colour?.key)
+                          ? 'Add Another'
+                          : 'Add to Cart'}
                 </button>
+                {/* Buy now: into the cart and straight to checkout. Only once
+                    ordering is open. */}
+                {checkout?.enabled && inStock && orderable && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!inCart(product.id, colour?.key)) addToCart(product.id, 1, colour?.key);
+                      navigate('/checkout');
+                    }}
+                    className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
+                  >
+                    <Zap className="h-4 w-4" />
+                    Buy now
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => toggleWishlist(product.id)}

@@ -1,14 +1,14 @@
 import { useSyncExternalStore } from 'react';
 import { products, type Product } from './data';
-import { coloursOf } from './product-colours';
+import { colourTitles, coloursOf } from './product-colours';
 
 /* Live prices and stock from the SAP feed, laid over the built-in catalogue.
 
    The catalogue in the code holds every product's name, photos and details.
    For each product an admin has linked to a SAP code, the backend's
-   /catalogue/live list carries the current selling price (MOP), MRP and
-   whether it is in stock — one entry for the whole product, or one per
-   colour. Those values are written onto the catalogue's own product and
+   /catalogue/live list carries the name for the website ("Model Name for
+   Website" in the sheet), the current selling price (MOP), MRP and whether
+   it is in stock — one entry for the whole product, or one per colour. Those values are written onto the catalogue's own product and
    colour objects, so every card, filter, product page and the cart show
    them without each having to look them up.
 
@@ -20,6 +20,9 @@ export interface LiveEntry {
   productId: string;
   /** The colour's key, or null when the SAP code is the whole product. */
   colour: string | null;
+  /** The sheet's "Model Name for Website". Missing from lists cached before
+   *  names were sent. */
+  name?: string;
   price: number;
   mrp: number;
   inStock: boolean;
@@ -32,10 +35,13 @@ const byId = new Map(products.map((p) => [p.id, p]));
 
 /** The catalogue's own values, saved before the first change so a later
  *  list can start from them again (a product unlinked since goes back). */
-const originalProduct = new Map<string, Pick<Product, 'price' | 'mrp' | 'inStock'>>();
+const originalProduct = new Map<string, Pick<Product, 'name' | 'price' | 'mrp' | 'inStock'>>();
 const originalColourStock = new Map<string, boolean | undefined>();
 /** Live entries per product colour, `${productId}|${colourKey}`. */
 const colourEntries = new Map<string, LiveEntry>();
+/** What has a SAP code and so can be ordered: per product, whether the
+ *  whole product does and which colours do. */
+const linked = new Map<string, { whole: boolean; colours: Set<string> }>();
 
 let applied = '';
 let version = 0;
@@ -51,6 +57,8 @@ function restoreOriginals() {
     if (c) c.inStock = inStock;
   }
   colourEntries.clear();
+  colourTitles.clear();
+  linked.clear();
 }
 
 function isEntry(value: unknown): value is LiveEntry {
@@ -59,6 +67,7 @@ function isEntry(value: unknown): value is LiveEntry {
     !!e &&
     typeof e.productId === 'string' &&
     (e.colour === null || typeof e.colour === 'string') &&
+    (e.name === undefined || typeof e.name === 'string') &&
     typeof e.price === 'number' &&
     e.price > 0 &&
     typeof e.mrp === 'number' &&
@@ -82,11 +91,14 @@ export function applyLiveCatalogue(entries: LiveEntry[]): boolean {
 
   for (const [id, list] of grouped) {
     const product = byId.get(id)!;
-    if (!originalProduct.has(id)) originalProduct.set(id, { price: product.price, mrp: product.mrp, inStock: product.inStock });
+    if (!originalProduct.has(id)) {
+      originalProduct.set(id, { name: product.name, price: product.price, mrp: product.mrp, inStock: product.inStock });
+    }
 
     const colours = coloursOf(id);
     const whole = list.find((e) => e.colour === null);
     const perColour = list.filter((e) => e.colour !== null && colours.some((c) => c.key === e.colour));
+    linked.set(id, { whole: !!whole, colours: new Set(perColour.map((e) => e.colour!)) });
 
     // A product sold colour by colour: each linked colour takes its own
     // stock, and a colour with no SAP code cannot be bought.
@@ -97,6 +109,9 @@ export function applyLiveCatalogue(entries: LiveEntry[]): boolean {
         const entry = perColour.find((e) => e.colour === c.key);
         c.inStock = entry ? entry.inStock : false;
         if (entry) colourEntries.set(key, entry);
+        // That colour's own name from the sheet, shown when it is chosen.
+        const colourName = entry?.name?.trim();
+        if (colourName) colourTitles.set(key, colourName);
       }
     }
 
@@ -109,6 +124,11 @@ export function applyLiveCatalogue(entries: LiveEntry[]): boolean {
     if (!lead) continue;
     product.price = lead.price;
     product.mrp = lead.mrp;
+    // The name on cards and listings. For a product sold colour by colour
+    // this is the lead colour's name; the colour words in it are dropped
+    // wherever the colour is shown separately.
+    const leadName = lead.name?.trim();
+    if (leadName) product.name = leadName;
     product.inStock = whole ? whole.inStock : perColour.some((e) => e.inStock);
   }
 
@@ -116,6 +136,27 @@ export function applyLiveCatalogue(entries: LiveEntry[]): boolean {
   version++;
   listeners.forEach((listener) => listener());
   return true;
+}
+
+/** Whether a live list has been applied (fresh or cached). Until then it
+ *  is not known what can be ordered. */
+export const liveCatalogueLoaded = () => applied !== '';
+
+/** Whether a product (in a colour, for one sold colour by colour) has a SAP
+ *  code, and so can be ordered online. Matches the server's rule: the
+ *  colour's own code, else the whole product's. */
+export function isOrderable(productId: string, colour?: string | null): boolean {
+  const l = linked.get(productId);
+  if (!l) return false;
+  if (l.whole) return true;
+  return colour ? l.colours.has(colour) : l.colours.size > 0;
+}
+
+/** A product's name before the sheet renamed it, if it did — so search
+ *  still finds it by the old name and model number too. */
+export function originalNameOf(productId: string): string | undefined {
+  const original = originalProduct.get(productId)?.name;
+  return original !== byId.get(productId)?.name ? original : undefined;
 }
 
 /** The live price of one colour of a product, where it has its own SAP code. */

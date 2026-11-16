@@ -33,6 +33,7 @@ export default function DateField({
   accent = '#000000',
   max,
   className,
+  soft,
 }: {
   label: string;
   id?: string;
@@ -42,6 +43,9 @@ export default function DateField({
   /** ISO date string; days after this are disabled. */
   max?: string;
   className?: string;
+  /** The account pages' look: a quiet label and a 1px border with a soft
+   *  blue glow when open. */
+  soft?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [viewDate, setViewDate] = useState(() => (value ? new Date(value) : new Date()));
@@ -68,6 +72,10 @@ export default function DateField({
   const firstWeekday = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const maxDate = max ? new Date(max) : null;
+  // Newest first: the latest year allowed, back 100 years.
+  const lastYear = maxDate ? maxDate.getFullYear() : new Date().getFullYear() + 5;
+  const years = Array.from({ length: 101 }, (_, i) => lastYear - i);
+  if (!years.includes(year)) years.push(year);
 
   const cells: (number | null)[] = [
     ...Array.from({ length: firstWeekday }, () => null),
@@ -77,7 +85,10 @@ export default function DateField({
   return (
     <div ref={rootRef} className={`relative ${className ?? ''}`} style={{ '--accent': accent } as CSSProperties}>
       {label && (
-        <label htmlFor={id} className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]">
+        <label
+          htmlFor={id}
+          className={soft ? 'mb-1.5 block text-xs font-medium text-[#6B7280]' : 'mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6b6b6b]'}
+        >
           {label}
         </label>
       )}
@@ -85,8 +96,10 @@ export default function DateField({
         type="button"
         id={id}
         onClick={() => setOpen((o) => !o)}
-        className={`flex h-[52px] w-full items-center gap-2.5 rounded-xl border-2 bg-white px-4 text-left text-sm outline-none transition-colors ${
-          open ? 'border-[var(--accent)]' : 'border-[#000000]/10 hover:border-[#000000]/20'
+        className={`flex w-full items-center gap-2.5 rounded-xl bg-white px-4 text-left text-sm outline-none transition-all ${
+          soft
+            ? `h-12 border ${open ? 'border-[var(--accent)] shadow-[0_0_0_4px_rgba(61,79,224,0.12)]' : 'border-[#E5E7EB] hover:border-[#C7D2FE]'}`
+            : `h-[52px] border-2 ${open ? 'border-[var(--accent)]' : 'border-[#000000]/10 hover:border-[#000000]/20'}`
         } ${value ? 'text-black' : 'text-[#9a9a9a]'}`}
       >
         <Calendar className="h-4 w-4 shrink-0 text-[#9a9a9a]" />
@@ -104,8 +117,31 @@ export default function DateField({
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <span className="text-sm font-semibold text-black">
-              {MONTHS[month]} {year}
+            <span className="flex items-center gap-1">
+              <select
+                aria-label="Month"
+                value={month}
+                onChange={(e) => setViewDate(new Date(year, Number(e.target.value), 1))}
+                className="cursor-pointer rounded-lg bg-transparent px-1.5 py-1 text-sm font-semibold text-black outline-none hover:bg-[#ECEDEC]"
+              >
+                {MONTHS.map((m, i) => (
+                  <option key={m} value={i}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+              <select
+                aria-label="Year"
+                value={year}
+                onChange={(e) => setViewDate(new Date(Number(e.target.value), month, 1))}
+                className="cursor-pointer rounded-lg bg-transparent px-1.5 py-1 text-sm font-semibold text-black outline-none hover:bg-[#ECEDEC]"
+              >
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
             </span>
             <button
               type="button"

@@ -323,9 +323,19 @@ export function baseName(product: { id: string; name: string }): string {
     .trim();
 }
 
+/** A colour's own name for the website, where the SAP sheet gives one
+ *  ("Apple iPhone 16 128GB, Teal"), by `${productId}|${colourKey}`. Filled
+ *  in by live-catalogue.ts. */
+export const colourTitles = new Map<string, string>();
+
 /** The name to show for a product: its base name, followed by the colour
- *  when one is chosen — "Apple iPhone 15 Plus – Green". */
+ *  when one is chosen — "Apple iPhone 15 Plus – Green" — or, for a colour
+ *  with its own name in the SAP sheet, that name exactly. */
 export function productTitle(product: { id: string; name: string }, colour?: ProductColour): string {
+  if (colour) {
+    const fromSheet = colourTitles.get(`${product.id}|${colour.key}`);
+    if (fromSheet) return fromSheet;
+  }
   const base = baseName(product);
   return colour ? `${base} – ${colour.name}` : base;
 }

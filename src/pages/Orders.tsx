@@ -1,40 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Package } from 'lucide-react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { ArrowRight, ChevronRight, Package } from 'lucide-react';
 import ProtectedRoute from '../components/ProtectedRoute';
-import AccountHeaderCard from '../components/account/AccountHeaderCard';
-import SectionLabel from '../components/shop/SectionLabel';
-import { apiFetch } from '../lib/api-client';
+import AccountShell from '../components/account/AccountShell';
+import { listOrders, rupees as formatRupees, type OrderView as Order } from '../lib/checkout';
 
 const MICRO_LABEL = 'block font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-shop-ink/45';
 
-interface OrderItem {
-  productName: string;
-  quantity: number;
-  unitPricePaise: number;
-}
-
-interface Order {
-  id: string;
-  orderNumber: string;
-  status: string;
-  totalPaise: number;
-  createdAt: string;
-  items: OrderItem[];
-}
-
 const STATUS_STYLE: Record<string, string> = {
   DELIVERED: 'bg-[#E8EBFD] text-[#3D4FE0]',
+  PAYMENT_PENDING: 'bg-amber-50 text-amber-700',
   CANCELLED: 'bg-red-50 text-red-600',
   RETURNED: 'bg-red-50 text-red-600',
   REFUNDED: 'bg-red-50 text-red-600',
 };
 
-function formatRupees(paise: number): string {
-  return `₹${(paise / 100).toLocaleString('en-IN')}`;
-}
+const STATUS_LABEL: Record<string, string> = {
+  PAYMENT_PENDING: 'Payment pending',
+  PLACED: 'Ordered',
+};
 
 function OrdersList() {
   const [orders, setOrders] = useState<Order[] | null>(null);
@@ -42,7 +26,7 @@ function OrdersList() {
 
   useEffect(() => {
     let cancelled = false;
-    apiFetch<Order[]>('/orders')
+    listOrders()
       .then((data) => {
         if (!cancelled) setOrders(data);
       })
@@ -55,33 +39,18 @@ function OrdersList() {
   }, []);
 
   return (
-    <div className="w-full bg-shop-canvas">
-      <div className="bg-[#ECEDEC]">
-        <Header />
-      </div>
-
-      <section className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-        <AccountHeaderCard active="orders" />
-
-        <div className="mt-8 flex items-center gap-3">
-          <SectionLabel className="flex-1">Your orders</SectionLabel>
-          {orders !== null && orders.length > 0 && (
-            <span className="shrink-0 font-mono text-[11px] tabular-nums text-shop-ink/45">
-              {String(orders.length).padStart(2, '0')}
-            </span>
-          )}
-        </div>
+    <AccountShell active="orders" eyebrow="Shopping" title="My orders">
 
         {error && (
-          <div className="mt-4 rounded-2xl border border-red-200 bg-white px-5 py-4 text-sm font-medium text-red-600">
+          <div className="rounded-2xl border border-red-200 bg-white px-5 py-4 text-sm font-medium text-red-600">
             {error}
           </div>
         )}
 
         {/* Loading — a placeholder in the shape of an order card */}
         {!error && orders === null && (
-          <div className="mt-4 overflow-hidden rounded-2xl border border-shop-line bg-white" aria-busy="true" aria-label="Loading your orders">
-            <div className="border-b border-shop-line px-5 py-3.5">
+          <div className="overflow-hidden rounded-3xl border border-[#E7EAF3] bg-white shadow-[0_18px_40px_-24px_rgba(6,26,64,0.28)]" aria-busy="true" aria-label="Loading your orders">
+            <div className="border-b border-[#EEF0F6] px-5 py-3.5">
               <div className="h-3 w-32 animate-pulse rounded bg-shop-canvas" />
             </div>
             <div className="grid grid-cols-3 gap-px bg-shop-line">
@@ -96,7 +65,7 @@ function OrdersList() {
         )}
 
         {orders !== null && orders.length === 0 && (
-          <div className="mt-4 flex flex-col items-center rounded-2xl border border-dashed border-shop-ink/20 bg-white px-6 py-14 text-center">
+          <div className="flex flex-col items-center rounded-3xl border border-dashed border-[#C7D2FE] bg-white px-6 py-14 text-center">
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-shop-canvas">
               <Package className="h-6 w-6 text-shop-ink/40" />
             </span>
@@ -106,7 +75,7 @@ function OrdersList() {
             </p>
             <Link
               to="/shop"
-              className="group mt-6 flex h-12 items-center gap-2 rounded-xl bg-shop-ink px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
+              className="group mt-6 flex h-12 items-center gap-2 rounded-xl bg-[#061A40] px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
             >
               Start Shopping
               <ArrowRight className="h-4 w-4 transition-transform duration-300 motion-safe:group-hover:translate-x-1" />
@@ -115,23 +84,23 @@ function OrdersList() {
         )}
 
         {orders !== null && orders.length > 0 && (
-          <ul className="mt-4 flex flex-col gap-4">
+          <ul className="flex flex-col gap-4">
             {orders.map((order) => {
               const units = order.items.reduce((sum, item) => sum + item.quantity, 0);
               return (
-                <li key={order.id} className="overflow-hidden rounded-2xl border border-shop-line bg-white">
+                <li key={order.id} className="overflow-hidden rounded-3xl border border-[#E7EAF3] bg-white shadow-[0_18px_40px_-24px_rgba(6,26,64,0.28)]">
                   {/* Module — header strip: order number + status */}
-                  <div className="flex items-center justify-between gap-3 border-b border-shop-line px-5 py-3">
-                    <span className="flex min-w-0 items-center gap-2.5">
+                  <div className="flex items-center justify-between gap-3 border-b border-[#EEF0F6] px-5 py-3">
+                    <Link to={`/orders/${order.orderNumber}`} className="flex min-w-0 items-center gap-2.5 hover:opacity-70">
                       <Package className="h-4 w-4 shrink-0 text-shop-ink/45" />
                       <span className="truncate font-mono text-sm font-bold text-shop-ink">#{order.orderNumber}</span>
-                    </span>
+                    </Link>
                     <span
                       className={`shrink-0 rounded-full px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] ${
                         STATUS_STYLE[order.status] ?? 'bg-shop-canvas text-shop-ink/60'
                       }`}
                     >
-                      {order.status.replace(/_/g, ' ')}
+                      {STATUS_LABEL[order.status] ?? order.status.replace(/_/g, ' ')}
                     </span>
                   </div>
 
@@ -166,14 +135,14 @@ function OrdersList() {
 
                   {/* Module — what was ordered */}
                   {order.items.length > 0 && (
-                    <ul className="divide-y divide-shop-line border-t border-shop-line">
+                    <ul className="divide-y divide-[#EEF0F6] border-t border-[#EEF0F6]">
                       {order.items.map((item, i) => (
                         <li key={i} className="flex items-center justify-between gap-4 px-5 py-3 text-sm">
                           <span className="flex min-w-0 items-center gap-2.5">
                             <span className="shrink-0 font-mono text-[11px] tabular-nums text-shop-ink/40">
                               {item.quantity}×
                             </span>
-                            <span className="truncate text-shop-ink/75">{item.productName}</span>
+                            <span className="truncate text-shop-ink/75">{item.name}</span>
                           </span>
                           <span className="shrink-0 font-mono text-xs tabular-nums text-shop-ink/55">
                             {formatRupees(item.unitPricePaise)}
@@ -182,15 +151,20 @@ function OrdersList() {
                       ))}
                     </ul>
                   )}
+
+                  <Link
+                    to={`/orders/${order.orderNumber}`}
+                    className="flex items-center justify-between gap-3 border-t border-[#EEF0F6] px-5 py-3 text-sm font-semibold text-shop-ink/70 transition-colors hover:bg-shop-canvas hover:text-shop-ink"
+                  >
+                    {order.status === 'PAYMENT_PENDING' ? 'Complete payment' : 'View order details'}
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
                 </li>
               );
             })}
           </ul>
         )}
-      </section>
-
-      <Footer />
-    </div>
+    </AccountShell>
   );
 }
 

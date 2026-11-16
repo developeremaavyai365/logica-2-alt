@@ -12,6 +12,7 @@ import { ResendVerificationDto } from './dto/resend-verification.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { IssuedTokens } from './tokens.service';
 
 /** Auth endpoints are the most attacked surface on any e-commerce backend
@@ -114,6 +115,14 @@ export class AuthController {
   @Patch('me')
   async updateMe(@CurrentUser() user: AuthenticatedUser, @Body() dto: UpdateProfileDto) {
     return this.auth.updateProfile(user.id, dto);
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 15 * 60_000 } })
+  @HttpCode(HttpStatus.OK)
+  @Post('change-password')
+  async changePassword(@CurrentUser() user: AuthenticatedUser, @Body() dto: ChangePasswordDto) {
+    await this.auth.changePassword(user.id, user.sessionId, dto.currentPassword, dto.newPassword);
+    return { message: 'Password changed. Other devices have been signed out.' };
   }
 
   @HttpCode(HttpStatus.OK)

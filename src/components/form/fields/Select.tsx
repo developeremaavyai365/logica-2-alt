@@ -66,7 +66,7 @@ export default function Select({
       {open && (
         <ul
           role="listbox"
-          className="absolute z-20 mt-2 w-full overflow-hidden rounded-xl border border-[#000000]/10 bg-white py-1.5 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.25)]"
+          className="absolute z-20 mt-2 max-h-72 w-full overflow-y-auto rounded-xl border border-[#000000]/10 bg-white py-1.5 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.25)]"
         >
           {options.map((opt) => {
             const selected = opt.value === value;

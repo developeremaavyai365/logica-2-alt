@@ -28,6 +28,11 @@ import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
 import Orders from './pages/Orders';
+import Addresses from './pages/Addresses';
+import Security from './pages/Security';
+import Checkout from './pages/Checkout';
+import TestPayment from './pages/TestPayment';
+import OrderDetails from './pages/OrderDetails';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
@@ -63,6 +68,11 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/addresses" element={<Addresses />} />
+        <Route path="/security" element={<Security />} />
+        <Route path="/orders/:orderNumber" element={<OrderDetails />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout/pay/:orderNumber" element={<TestPayment />} />
         <Route
           path="/admin"
           element={

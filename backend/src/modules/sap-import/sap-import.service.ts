@@ -250,14 +250,21 @@ export class SapImportService {
           await tx.sapItem.createMany({ data: batch.map((item) => ({ sapCode: item.sapCode, ...row(item) })) });
         }
 
+        // A new stock count is taken to include every website order placed
+        // before it, so checkout stops holding those units back.
+        const now = new Date();
         for (const update of plan.toUpdate) {
-          await tx.sapItem.update({ where: { sapCode: update.item.sapCode }, data: row(update.item) });
+          const stockChanged = update.changes.some((change) => change.field === 'stock');
+          await tx.sapItem.update({
+            where: { sapCode: update.item.sapCode },
+            data: { ...row(update.item), ...(stockChanged && { stockUpdatedAt: now }) },
+          });
         }
 
         for (const batch of chunks(plan.missing, CHUNK)) {
           await tx.sapItem.updateMany({
             where: { sapCode: { in: batch.map((item) => item.sapCode) } },
-            data: { stock: 0, inLatestFeed: false, lastImportId: created.id },
+            data: { stock: 0, inLatestFeed: false, lastImportId: created.id, stockUpdatedAt: now },
           });
         }
 
@@ -389,11 +396,11 @@ export class SapImportService {
     return updated;
   }
 
-  /** Price, MRP and availability of every linked code, for the shop. */
+  /** Name, price, MRP and availability of every linked code, for the shop. */
   async live(): Promise<LiveEntry[]> {
     const rows = await this.prisma.sapItem.findMany({
       where: { websiteProductId: { not: null } },
-      select: { websiteProductId: true, websiteColour: true, stock: true, mrpInPaise: true, mopInPaise: true },
+      select: { websiteProductId: true, websiteColour: true, modelName: true, stock: true, mrpInPaise: true, mopInPaise: true },
     });
     return toLiveEntries(rows);
   }

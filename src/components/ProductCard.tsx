@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { Heart, ShoppingCart, Check } from 'lucide-react';
 import { formatINR, type Product } from '../data';
 import { useShopStore } from '../store';
-import { baseName } from '../product-colours';
+import { baseName, coloursOf } from '../product-colours';
+import { useCanOrder } from '../lib/checkout';
 
 type Props = {
   product: Product;
@@ -17,7 +18,13 @@ type Props = {
  *  the same on touch and needs no separate mobile button. */
 export default function ProductCard({ product }: Props) {
   const { toggleWishlist, inWishlist, addToCart } = useShopStore();
+  const canOrder = useCanOrder();
   const [added, setAdded] = useState(false);
+  // A product sold in colours goes into the cart in one: the first that is
+  // in stock and can be ordered, as its page would open on.
+  const colours = coloursOf(product.id);
+  const colour = colours.find((c) => c.inStock !== false && canOrder(product.id, c.key)) ?? colours[0];
+  const orderable = canOrder(product.id, colour?.key);
   const wished = inWishlist(product.id);
   const hasDiscount = Boolean(product.mrp && product.mrp > product.price);
   const discount = hasDiscount ? Math.round(((product.mrp! - product.price) / product.mrp!) * 100) : 0;
@@ -80,14 +87,16 @@ export default function ProductCard({ product }: Props) {
       <button
         type="button"
         onClick={() => {
-          addToCart(product.id);
+          addToCart(product.id, 1, colour?.key);
           setAdded(true);
           setTimeout(() => setAdded(false), 1500);
         }}
-        disabled={!product.inStock}
+        disabled={!product.inStock || !orderable}
         className="flex items-center justify-center gap-1.5 border-t border-shop-line px-3.5 py-2.5 text-xs font-semibold text-shop-ink transition-colors duration-300 hover:bg-shop-ink hover:text-white disabled:cursor-not-allowed disabled:bg-shop-canvas disabled:text-shop-ink/40"
       >
-        {product.inStock ? (
+        {!orderable ? (
+          'Currently unavailable'
+        ) : product.inStock ? (
           <>
             {added ? <Check className="h-3.5 w-3.5" /> : <ShoppingCart className="h-3.5 w-3.5" />}
             {added ? 'Added' : 'Add to cart'}

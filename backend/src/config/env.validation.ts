@@ -39,6 +39,20 @@ export const envSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASSWORD: z.string().optional(),
 
+  // ── Checkout ──────────────────────────────────────────────────────────
+  // Off until the business is ready to take orders: the shop works as a
+  // catalogue and the checkout page says ordering opens soon.
+  CHECKOUT_ENABLED: z.enum(['true', 'false']).default('false'),
+  // How online payment works. "off": cash on delivery only. "test": a
+  // pretend payment page with no real money (refused in production).
+  // A real payment company is added here once Logica has an account.
+  PAYMENT_MODE: z.enum(['off', 'test']).default('off'),
+  COD_ENABLED: z.enum(['true', 'false']).default('true'),
+  // Orders above this total cannot be paid cash on delivery.
+  COD_MAX_RUPEES: z.coerce.number().int().nonnegative().default(50_000),
+  // Delivery charge per order. 0 = free delivery.
+  SHIPPING_FEE_RUPEES: z.coerce.number().int().nonnegative().default(0),
+
   ARGON2_MEMORY_COST: z.coerce.number().int().positive().default(19456),
   ARGON2_TIME_COST: z.coerce.number().int().positive().default(2),
   ARGON2_PARALLELISM: z.coerce.number().int().positive().default(1),
@@ -58,6 +72,14 @@ const envSchemaWithCrossFieldChecks = envSchema.superRefine((data, ctx) => {
       code: z.ZodIssueCode.custom,
       path: ['SMTP_HOST'],
       message: 'SMTP_HOST, SMTP_USER, and SMTP_PASSWORD are required when MAIL_PROVIDER=smtp.',
+    });
+  }
+
+  if (data.NODE_ENV === 'production' && data.PAYMENT_MODE === 'test') {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['PAYMENT_MODE'],
+      message: 'PAYMENT_MODE=test takes pretend payments and must never run in production.',
     });
   }
 
