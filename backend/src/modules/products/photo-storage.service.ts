@@ -19,10 +19,26 @@ export type PhotoStorageMode = 'local' | 's3';
 
 /** Which storage the environment asks for: PHOTO_STORAGE when set, the
  *  local folder in development, and nothing (uploads off) in production. */
-export function photoStorageMode(config: ConfigService): PhotoStorageMode | null {
+export function photoStorageMode(config: Pick<ConfigService, 'get'>): PhotoStorageMode | null {
   const set = config.get<string>('PHOTO_STORAGE');
   if (set === 'local' || set === 's3') return set;
   return config.get('NODE_ENV') === 'production' ? null : 'local';
+}
+
+type Settings = Pick<ConfigService, 'get'>;
+
+/** The S3 client for the bucket: Cloudflare R2, or Amazon S3 when no
+ *  endpoint is given. Checksums are sent only where the API requires them:
+ *  the SDK's default since 3.729 adds them to every upload, which R2 does
+ *  not accept (developers.cloudflare.com/r2/examples/aws/aws-sdk-js-v3). */
+export function s3ClientFor(config: Settings): S3Client {
+  return new S3Client({
+    region: config.get<string>('S3_REGION') || 'auto',
+    endpoint: config.get<string>('S3_ENDPOINT') || undefined,
+    credentials: { accessKeyId: config.get<string>('S3_ACCESS_KEY_ID')!, secretAccessKey: config.get<string>('S3_SECRET_ACCESS_KEY')! },
+    requestChecksumCalculation: 'WHEN_REQUIRED',
+    responseChecksumValidation: 'WHEN_REQUIRED',
+  });
 }
 
 /** Checks, resizes and stores uploaded product photos. Every photo is
@@ -35,14 +51,7 @@ export class PhotoStorageService {
 
   constructor(private readonly config: ConfigService) {
     this.mode = photoStorageMode(config);
-    this.s3 =
-      this.mode === 's3'
-        ? new S3Client({
-            region: config.get('S3_REGION'),
-            endpoint: config.get('S3_ENDPOINT') || undefined,
-            credentials: { accessKeyId: config.get('S3_ACCESS_KEY_ID')!, secretAccessKey: config.get('S3_SECRET_ACCESS_KEY')! },
-          })
-        : null;
+    this.s3 = this.mode === 's3' ? s3ClientFor(config) : null;
   }
 
   async save(file: Buffer): Promise<{ url: string; width: number; height: number }> {
