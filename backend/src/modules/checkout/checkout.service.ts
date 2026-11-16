@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { OrderStatus, PaymentMethod, PaymentStatus, Prisma } from '@prisma/client';
+import { OrderStatus, PaymentMethod, PaymentStatus, Prisma, ProductStatus } from '@prisma/client';
 import { randomBytes, randomInt } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AddressesService } from '../account/addresses.service';
@@ -321,10 +321,22 @@ export class CheckoutService {
       // Always in the same order, so two checkouts never wait on each other.
       await tx.$queryRaw`SELECT "sapCode" FROM "SapItem" WHERE "websiteProductId" IN (${Prisma.join(productIds)}) ORDER BY "sapCode" FOR UPDATE`;
     }
-    const items: SellableItem[] = await tx.sapItem.findMany({
+    const linkedItems: SellableItem[] = await tx.sapItem.findMany({
       where: { websiteProductId: { in: productIds } },
       select: SELLABLE_FIELDS,
     });
+    // A product an admin has taken off the shop (or not published yet) is
+    // not sold, even from a cart filled before. Products not in the
+    // catalogue table at all are left to their SAP links, as before.
+    const withdrawn = new Set(
+      (
+        await tx.product.findMany({
+          where: { slug: { in: productIds }, OR: [{ status: { not: ProductStatus.ACTIVE } }, { deletedAt: { not: null } }] },
+          select: { slug: true },
+        })
+      ).map((p) => p.slug),
+    );
+    const items = linkedItems.filter((i) => !i.websiteProductId || !withdrawn.has(i.websiteProductId));
     const reservations = await this.reservations(tx, items.map((i) => i.sapCode));
     const priced = priceLines(lines, items, reservations);
     const sums = totals(priced, settings.shippingPaise);

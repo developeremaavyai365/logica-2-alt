@@ -24,6 +24,7 @@ const InvestorPage = lazy(() => import('./pages/investor/InvestorPage'));
 // visitor downloads.
 const AdminHome = lazy(() => import('./pages/admin/AdminHome'));
 const SapImport = lazy(() => import('./pages/admin/SapImport'));
+const AdminProducts = lazy(() => import('./pages/admin/Products'));
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
@@ -86,6 +87,14 @@ function App() {
           element={
             <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
               <SapImport />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/products"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <AdminProducts />
             </Suspense>
           }
         />

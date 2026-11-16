@@ -13,6 +13,7 @@ const NAVY = '#061A40';
 
 const NAV = [
   { to: '/admin', label: 'Dashboard', end: true },
+  { to: '/admin/products', label: 'Products', end: false },
   { to: '/admin/sap-import', label: 'SAP product import', end: false },
 ];
 
