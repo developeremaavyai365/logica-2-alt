@@ -48,6 +48,8 @@ export class SessionExpiredError extends Error {}
 
 interface RequestOptions extends Omit<RequestInit, 'body'> {
   body?: unknown;
+  /** 'blob' for a file download; JSON otherwise. */
+  as?: 'json' | 'blob';
   /** Internal — prevents the refresh-and-retry logic from recursing. */
   _isRetry?: boolean;
 }
@@ -83,7 +85,7 @@ function refreshOnce(): Promise<string> {
 }
 
 export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { body, _isRetry, headers, ...rest } = options;
+  const { body, _isRetry, headers, as, ...rest } = options;
   const method = (options.method ?? 'GET').toUpperCase();
 
   // A FormData body (a file upload) is sent as it is: the browser sets the
@@ -131,6 +133,7 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   }
 
   if (res.status === 204) return undefined as T;
+  if (as === 'blob') return res.blob() as Promise<T>;
   return res.json() as Promise<T>;
 }
 

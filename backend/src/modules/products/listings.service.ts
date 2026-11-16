@@ -2,10 +2,20 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { Prisma, ProductStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SaveListingDto } from './dto/listing.dto';
-import { GST_RATES, SPEC_TEMPLATES, bigPriceChange, checkListing, isValidGtin, slugify, uniqueSlug } from './listing-rules';
+import {
+  GST_RATES,
+  Listing,
+  SPEC_TEMPLATES,
+  barcodeProblem,
+  bigPriceChange,
+  checkListing,
+  listingChanges,
+  slugify,
+  uniqueSlug,
+} from './listing-rules';
 import { ProductsService } from './products.service';
 
-const LISTING_SELECT = {
+export const LISTING_SELECT = {
   slug: true,
   name: true,
   status: true,
@@ -33,26 +43,7 @@ const LISTING_SELECT = {
   },
 } satisfies Prisma.ProductSelect;
 
-type StoredListing = Prisma.ProductGetPayload<{ select: typeof LISTING_SELECT }>;
-
-/** The fields whose changes are written to the audit log, by name. */
-const AUDITED = [
-  'name',
-  'status',
-  'categorySlug',
-  'brandName',
-  'priceInPaise',
-  'mrpInPaise',
-  'inStock',
-  'description',
-  'modelNumber',
-  'partNumber',
-  'ean',
-  'hsnCode',
-  'gstRatePercent',
-  'warranty',
-  'inTheBox',
-] as const;
+export type StoredListing = Prisma.ProductGetPayload<{ select: typeof LISTING_SELECT }>;
 
 const specPairs = (specs: unknown): { label: string; value: string }[] =>
   Array.isArray(specs)
@@ -65,6 +56,62 @@ const clean = (text: string | null | undefined) => {
   const t = text?.trim();
   return t ? t : null;
 };
+
+/** A stored product in the listing form's shape. */
+export function toListing(p: StoredListing): Listing {
+  return {
+    name: p.name,
+    categorySlug: p.category.slug,
+    brandName: p.brand?.name ?? '',
+    status: p.status,
+    priceInPaise: p.priceInPaise,
+    mrpInPaise: p.mrpInPaise,
+    inStock: p.inStock,
+    gallery: p.gallery,
+    sharedImages: p.sharedImages,
+    highlights: p.highlights,
+    specs: specPairs(p.specs),
+    description: p.description,
+    modelNumber: p.modelNumber,
+    partNumber: p.partNumber,
+    ean: p.ean,
+    hsnCode: p.hsnCode,
+    gstRatePercent: p.gstRatePercent,
+    warranty: p.warranty,
+    inTheBox: p.inTheBox,
+    colours: p.colours.map((c) => ({ ...c })),
+  };
+}
+
+/** The product's own columns for a listing (colours are stored apart). */
+export function listingData(listing: Listing, categoryId: string, brandId: string | null) {
+  return {
+    name: listing.name,
+    description: listing.description,
+    categoryId,
+    brandId,
+    status: ProductStatus[listing.status],
+    priceInPaise: listing.priceInPaise,
+    mrpInPaise: listing.mrpInPaise,
+    inStock: listing.inStock,
+    imageUrl: listing.gallery[0] ?? '',
+    gallery: listing.gallery,
+    sharedImages: listing.sharedImages,
+    highlights: listing.highlights,
+    specs: listing.specs.map((s) => [s.label, s.value]),
+    modelNumber: listing.modelNumber,
+    partNumber: listing.partNumber,
+    ean: listing.ean,
+    hsnCode: listing.hsnCode,
+    gstRatePercent: listing.gstRatePercent,
+    warranty: listing.warranty,
+    inTheBox: listing.inTheBox,
+  };
+}
+
+/** Audit-log metadata listing what changed. */
+export const changesMetadata = (before: Listing, after: Listing, extra: Record<string, string> = {}) =>
+  ({ ...extra, changes: listingChanges(before, after) }) as unknown as Prisma.InputJsonObject;
 
 @Injectable()
 export class ListingsService {
@@ -97,7 +144,7 @@ export class ListingsService {
       select: { sapCode: true, modelName: true, websiteColour: true, mopInPaise: true, mrpInPaise: true, stock: true, ean: true },
       orderBy: { sapCode: 'asc' },
     });
-    const listing = this.toForm(product);
+    const listing = toListing(product);
     const checklist = checkListing(listing, sapCodes.length > 0, product.status === ProductStatus.ACTIVE);
     return { ...listing, slug, updatedAt: product.updatedAt, sapCodes, checklist };
   }
@@ -147,28 +194,7 @@ export class ListingsService {
     }
 
     const brandId = await this.brandId(listing.brandName);
-    const data = {
-      name: listing.name,
-      description: listing.description,
-      categoryId: category.id,
-      brandId,
-      status: ProductStatus[listing.status],
-      priceInPaise: listing.priceInPaise,
-      mrpInPaise: listing.mrpInPaise,
-      inStock: listing.inStock,
-      imageUrl: listing.gallery[0] ?? '',
-      gallery: listing.gallery,
-      sharedImages: listing.sharedImages,
-      highlights: listing.highlights,
-      specs: listing.specs.map((s) => [s.label, s.value]),
-      modelNumber: listing.modelNumber,
-      partNumber: listing.partNumber,
-      ean: listing.ean,
-      hsnCode: listing.hsnCode,
-      gstRatePercent: listing.gstRatePercent,
-      warranty: listing.warranty,
-      inTheBox: listing.inTheBox,
-    };
+    const data = listingData(listing, category.id, brandId);
     const colours = listing.colours.map((c, position) => ({ ...c, position }));
 
     const finalSlug = await this.prisma.$transaction(async (tx) => {
@@ -177,7 +203,7 @@ export class ListingsService {
         await tx.productColour.deleteMany({ where: { productId: existing.id } });
         if (colours.length) await tx.productColour.createMany({ data: colours.map((c) => ({ ...c, productId: existing.id })) });
         await tx.auditLog.create({
-          data: { actorId, action: 'PRODUCT_UPDATED', targetType: 'Product', targetId: existing.slug, metadata: { changes: this.changes(this.toForm(existing), listing) } as Prisma.InputJsonObject },
+          data: { actorId, action: 'PRODUCT_UPDATED', targetType: 'Product', targetId: existing.slug, metadata: changesMetadata(toListing(existing), listing) },
         });
         return existing.slug;
       }
@@ -198,34 +224,8 @@ export class ListingsService {
     return this.get(finalSlug);
   }
 
-  /** The listing in the form's own shape. */
-  private toForm(p: StoredListing) {
-    return {
-      name: p.name,
-      categorySlug: p.category.slug,
-      brandName: p.brand?.name ?? '',
-      status: p.status,
-      priceInPaise: p.priceInPaise,
-      mrpInPaise: p.mrpInPaise,
-      inStock: p.inStock,
-      gallery: p.gallery,
-      sharedImages: p.sharedImages,
-      highlights: p.highlights,
-      specs: specPairs(p.specs),
-      description: p.description,
-      modelNumber: p.modelNumber,
-      partNumber: p.partNumber,
-      ean: p.ean,
-      hsnCode: p.hsnCode,
-      gstRatePercent: p.gstRatePercent,
-      warranty: p.warranty,
-      inTheBox: p.inTheBox,
-      colours: p.colours.map((c) => ({ ...c, inStock: c.inStock })),
-    };
-  }
-
   /** Trims text, drops empty highlights and specs, and turns blanks into null. */
-  private normalise(dto: SaveListingDto) {
+  private normalise(dto: SaveListingDto): Listing {
     const keys = new Set<string>();
     for (const c of dto.colours) {
       if (keys.has(c.key)) throw new BadRequestException(`Two colours share the key "${c.key}".`);
@@ -263,23 +263,13 @@ export class ListingsService {
     };
   }
 
-  private checkBarcodes(listing: ReturnType<ListingsService['normalise']>) {
-    const all = [
-      ...(listing.ean ? [{ code: listing.ean, where: 'The product' }] : []),
-      ...listing.colours.filter((c) => c.ean).map((c) => ({ code: c.ean!, where: `${c.name}` })),
-    ];
-    for (const { code, where } of all) {
-      if (!isValidGtin(code)) throw new BadRequestException(`${where}'s EAN ${code} is not a valid barcode: check the digits.`);
-    }
-    const seen = new Set<string>();
-    for (const { code } of all) {
-      if (seen.has(code)) throw new BadRequestException(`The EAN ${code} is used twice in this listing.`);
-      seen.add(code);
-    }
+  private checkBarcodes(listing: Listing) {
+    const problem = barcodeProblem(listing);
+    if (problem) throw new BadRequestException(problem);
   }
 
   /** A barcode identifies one item: refuse one already on another product. */
-  private async checkBarcodesUnused(listing: ReturnType<ListingsService['normalise']>, productId: string | null) {
+  private async checkBarcodesUnused(listing: Listing, productId: string | null) {
     const codes = [listing.ean, ...listing.colours.map((c) => c.ean)].filter((c): c is string => !!c);
     if (codes.length === 0) return;
     const notThis = productId ? { not: productId } : undefined;
@@ -303,29 +293,5 @@ export class ListingsService {
     const taken = new Set((await this.prisma.brand.findMany({ select: { slug: true } })).map((b) => b.slug));
     const created = await this.prisma.brand.create({ data: { name, slug: uniqueSlug(slugify(name), taken) }, select: { id: true } });
     return created.id;
-  }
-
-  /** What changed, field by field, for the audit log. Lists are summarised. */
-  private changes(before: ReturnType<ListingsService['toForm']>, after: ReturnType<ListingsService['normalise']>) {
-    const out: { field: string; from: Prisma.InputJsonValue | null; to: Prisma.InputJsonValue | null }[] = [];
-    for (const field of AUDITED) {
-      const from = before[field] ?? null;
-      const to = after[field] ?? null;
-      if (from !== to) out.push({ field, from, to });
-    }
-    const listChange = (field: string, a: unknown, b: unknown, show: (x: unknown) => Prisma.InputJsonValue) => {
-      if (JSON.stringify(a) !== JSON.stringify(b)) out.push({ field, from: show(a), to: show(b) });
-    };
-    const count = (x: unknown) => (Array.isArray(x) ? `${x.length} item(s)` : String(x));
-    listChange('photos', before.gallery, after.gallery, count);
-    listChange('highlights', before.highlights, after.highlights, count);
-    listChange('specs', before.specs, after.specs, count);
-    listChange(
-      'colours',
-      before.colours.map((c) => [c.key, c.ean, c.images.length]),
-      after.colours.map((c) => [c.key, c.ean, c.images.length]),
-      (x) => (Array.isArray(x) ? x.map((c) => (c as unknown[])[0]).join(', ') || 'none' : String(x)),
-    );
-    return out;
   }
 }

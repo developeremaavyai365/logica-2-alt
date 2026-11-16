@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
+  FileSpreadsheet,
   Link2Off,
   Loader2,
   PackageX,
@@ -228,13 +229,22 @@ function ProductsPage() {
             Everything listed on the shop. Where a SAP code is linked, its price and stock come from the SAP sheet.
           </p>
         </div>
-        <Link
-          to="/admin/products/new"
-          className="flex items-center gap-2 rounded-xl bg-[#061A40] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(6,26,64,0.6)] transition-colors duration-300 hover:bg-[#3D4FE0]"
-        >
-          <Plus className="h-4 w-4" />
-          Add product
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            to="/admin/products/bulk"
+            className="flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#061A40] transition-colors duration-300 hover:border-[#3D4FE0] hover:text-[#3D4FE0]"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Bulk upload
+          </Link>
+          <Link
+            to="/admin/products/new"
+            className="flex items-center gap-2 rounded-xl bg-[#061A40] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(6,26,64,0.6)] transition-colors duration-300 hover:bg-[#3D4FE0]"
+          >
+            <Plus className="h-4 w-4" />
+            Add product
+          </Link>
+        </div>
       </div>
 
       {/* Status tabs */}

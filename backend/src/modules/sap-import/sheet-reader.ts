@@ -154,7 +154,8 @@ async function readXlsx(buffer: Buffer): Promise<SheetRow[]> {
 
 /** A small CSV reader: quoted fields, doubled quotes inside them, line
  *  breaks inside quotes, and whichever of comma, semicolon or tab the file
- *  uses as its separator. */
+ *  uses as its separator. Rows are numbered as Excel shows the file: one
+ *  row per record, however many line breaks its cells hold. */
 export function parseCsv(text: string): SheetRow[] {
   const source = text.replace(/^﻿/, '');
   const firstLine = source.split(/\r?\n/, 1)[0] ?? '';
@@ -166,11 +167,10 @@ export function parseCsv(text: string): SheetRow[] {
   let field = '';
   let quoted = false;
   let rowNumber = 1;
-  let rowStartLine = 1;
 
   const endRow = () => {
     cells.push(field);
-    rows.push({ rowNumber: rowStartLine, cells });
+    rows.push({ rowNumber, cells });
     cells = [];
     field = '';
   };
@@ -186,7 +186,6 @@ export function parseCsv(text: string): SheetRow[] {
           quoted = false;
         }
       } else {
-        if (ch === '\n') rowNumber++;
         field += ch;
       }
       continue;
@@ -200,7 +199,6 @@ export function parseCsv(text: string): SheetRow[] {
       if (ch === '\r' && source[i + 1] === '\n') i++;
       endRow();
       rowNumber++;
-      rowStartLine = rowNumber;
     } else {
       field += ch;
     }

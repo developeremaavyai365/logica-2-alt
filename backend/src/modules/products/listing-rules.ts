@@ -70,6 +70,24 @@ export function isValidGtin(code: string): boolean {
   return (10 - (sum % 10)) % 10 === check;
 }
 
+/** The first problem with a listing's own barcodes: one that is not a valid
+ *  barcode, or one used twice (on the product and a colour, say). */
+export function barcodeProblem(listing: Pick<ListingForChecks, 'ean' | 'colours'>): string | null {
+  const all = [
+    ...(listing.ean ? [{ code: listing.ean, where: 'The product' }] : []),
+    ...listing.colours.filter((c) => c.ean).map((c) => ({ code: c.ean!, where: c.name })),
+  ];
+  for (const { code, where } of all) {
+    if (!isValidGtin(code)) return `${where}'s EAN ${code} is not a valid barcode: check the digits.`;
+  }
+  const seen = new Set<string>();
+  for (const { code } of all) {
+    if (seen.has(code)) return `The EAN ${code} is used twice in this listing.`;
+    seen.add(code);
+  }
+  return null;
+}
+
 /** A web address from a title: "HP 15s (Core i5, 16GB)" → "hp-15s-core-i5-16gb". */
 export function slugify(text: string): string {
   return text
@@ -107,6 +125,99 @@ export interface ListingForChecks {
   hsnCode: string | null;
   gstRatePercent: number | null;
   colours: { name: string; ean: string | null; images: string[] }[];
+}
+
+export interface ListingColour {
+  key: string;
+  name: string;
+  hex: string;
+  family: string[];
+  images: string[];
+  inStock: boolean | null;
+  ean: string | null;
+}
+
+/** A whole listing, as the form edits it and the bulk sheet fills it. */
+export interface Listing extends ListingForChecks {
+  status: 'DRAFT' | 'ACTIVE' | 'INACTIVE';
+  inStock: boolean;
+  sharedImages: string[];
+  modelNumber: string | null;
+  partNumber: string | null;
+  warranty: string | null;
+  inTheBox: string | null;
+  colours: ListingColour[];
+}
+
+/** The fields whose changes are listed by name, with their old and new values. */
+const COMPARED = [
+  'name',
+  'status',
+  'categorySlug',
+  'brandName',
+  'priceInPaise',
+  'mrpInPaise',
+  'inStock',
+  'description',
+  'modelNumber',
+  'partNumber',
+  'ean',
+  'hsnCode',
+  'gstRatePercent',
+  'warranty',
+  'inTheBox',
+] as const;
+
+export type ChangeValue = string | number | boolean | null;
+export interface FieldChange {
+  field: string;
+  from: ChangeValue;
+  to: ChangeValue;
+}
+
+/** What changed between two versions of a listing, field by field, for the
+ *  audit log and the bulk upload's preview. A spec is listed by its label;
+ *  lists of photos and highlights by their length. */
+export function listingChanges(before: Listing, after: Listing): FieldChange[] {
+  const out: FieldChange[] = [];
+  for (const field of COMPARED) {
+    const from = before[field] ?? null;
+    const to = after[field] ?? null;
+    if (from !== to) out.push({ field, from, to });
+  }
+
+  const items = (list: unknown[]) => `${list.length} item${list.length === 1 ? '' : 's'}`;
+  const listChange = (field: string, a: string[], b: string[]) => {
+    if (JSON.stringify(a) === JSON.stringify(b)) return;
+    out.push({ field, from: items(a), to: a.length === b.length ? `${items(b)}, edited` : items(b) });
+  };
+  listChange('photos', before.gallery, after.gallery);
+  listChange('highlights', before.highlights, after.highlights);
+
+  const oldSpecs = new Map(before.specs.map((s) => [s.label, s.value]));
+  const newSpecs = new Map(after.specs.map((s) => [s.label, s.value]));
+  for (const label of new Set([...oldSpecs.keys(), ...newSpecs.keys()])) {
+    const from = oldSpecs.get(label) ?? null;
+    const to = newSpecs.get(label) ?? null;
+    if (from !== to) out.push({ field: `spec:${label}`, from, to });
+  }
+  if (
+    oldSpecs.size === newSpecs.size &&
+    [...oldSpecs].every(([label, value]) => newSpecs.get(label) === value) &&
+    JSON.stringify(before.specs) !== JSON.stringify(after.specs)
+  ) {
+    out.push({ field: 'specs', from: 'previous order', to: 'new order' });
+  }
+
+  const colourSummary = (list: ListingColour[]) => list.map((c) => c.key).join(', ') || 'none';
+  const colourShape = (list: ListingColour[]) => JSON.stringify(list.map((c) => [c.key, c.name, c.hex, c.ean, c.images, c.inStock, c.family]));
+  if (colourShape(before.colours) !== colourShape(after.colours)) {
+    out.push({ field: 'colours', from: colourSummary(before.colours), to: colourSummary(after.colours) });
+  }
+  if (JSON.stringify(before.sharedImages) !== JSON.stringify(after.sharedImages)) {
+    out.push({ field: 'sharedPhotos', from: items(before.sharedImages), to: items(after.sharedImages) });
+  }
+  return out;
 }
 
 export interface Checklist {
