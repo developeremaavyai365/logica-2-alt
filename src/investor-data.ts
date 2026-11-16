@@ -135,6 +135,18 @@ export interface FiscalYearFolder {
  *  have the actual filed documents. */
 export const BOARD_MEETING_NOTICES: AnnualReport[] = [
   {
+    // Regulation 30/33 outcome of the 14.11.2026 meeting: approved the
+    // unaudited results for the half year ended 30.09.2026 (with the limited
+    // review report), the statement of deviation, the RPT statement, the
+    // integrated filing, the MD&A for H1 FY27, the CEO/CFO certificate, and
+    // the proposal to migrate the shares from the SME platform to the Main
+    // Board. The same file is listed under Financial Results.
+    title: "Outcome of Board Meeting — November 14, 2026",
+    year: "2026-27",
+    date: "2026-11-14",
+    url: "/investor/board-meetings/outcome-of-board-meeting-14-11-2026.pdf",
+  },
+  {
     // Regulation 30 outcome of the 01.09.2026 meeting: took note of the
     // Secretarial Audit Report for FY26, reappointment of Mrs. Shweta Goel as
     // Whole-time Director, revised remuneration for the MD and WTD, CSR
@@ -555,6 +567,15 @@ export const GENERAL_MEETING_NOTICES: AnnualReport[] = [
 
 /** Real financial results, mirrored from logicainfoway.com/financial-results. */
 export const FINANCIAL_RESULTS: AnnualReport[] = [
+  {
+    // The results are enclosed in the 14.11.2026 board outcome (Annexure I,
+    // with the auditors' limited review report), so that one file is listed
+    // here and under Board Meeting.
+    title: "Unaudited Financial Results for the Half Year Ended 30-09-2026",
+    year: "2026-27",
+    date: "2026-11-14",
+    url: "/investor/board-meetings/outcome-of-board-meeting-14-11-2026.pdf",
+  },
   {
     title: "Board Meeting Outcome — Financial Results for Half Year and Year Ended 31-03-2026",
     year: "2025-26",
@@ -1100,6 +1121,15 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  documents (Regulation 30/57/74 disclosures, trading-window closures,
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
+  /* Regulation 32 statement of NIL deviation in the use of the funds from the
+     preferential allotment of 01.03.2025, for the half year ended
+     30.09.2026; letter to BSE dated 14.11.2026. */
+  {
+    title: "Statement of Deviation or Variation in Utilization of Funds — Half Year Ended September 30, 2026",
+    year: "2026-27",
+    date: "2026-11-14",
+    url: "/investor/compliance-disclosures/statement-of-deviation-utilization-of-funds-hy-september-2026.pdf",
+  },
   /* Titled exactly as the files were supplied. `date` is the date on each
      letter to BSE: the board meeting intimation (meeting of 14.11.2026 to
      approve the half-year results to 30.09.2026) is dated 07.11.2026; the
