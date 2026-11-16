@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import { AlertTriangle, ArrowLeft, ArrowRight, Check, Download, FileSpreadsheet, Loader2, Upload, X } from 'lucide-react';
 import AdminShell from './AdminShell';
 import { ApiError, apiFetch } from '../../lib/api-client';
+import { type ChangeValue as Value, fieldLabel, rupees, shownValue as shown } from './change-format';
 
 /* Adding and editing products in bulk, the way a marketplace seller account
    does it: download a sheet (blank, or with the products already listed),
    fill it in, upload it, see exactly what it would change, then apply. */
 
 type Status = 'DRAFT' | 'ACTIVE' | 'INACTIVE';
-type Value = string | number | boolean | null;
 
 interface Issue {
   rowNumber: number;
@@ -45,37 +45,6 @@ const TH = 'px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide 
 const TD = 'px-4 py-3 align-top text-sm text-[#061A40]';
 
 const STATUS_LABEL: Record<Status, string> = { ACTIVE: 'Active', DRAFT: 'Draft', INACTIVE: 'Inactive' };
-const FIELD_LABELS: Record<string, string> = {
-  name: 'Title',
-  status: 'Status',
-  categorySlug: 'Category',
-  brandName: 'Brand',
-  priceInPaise: 'Selling price',
-  mrpInPaise: 'MRP',
-  inStock: 'In stock',
-  description: 'Description',
-  modelNumber: 'Model number',
-  partNumber: 'Part number',
-  ean: 'EAN',
-  hsnCode: 'HSN code',
-  gstRatePercent: 'GST',
-  warranty: 'Warranty',
-  inTheBox: 'In the box',
-  photos: 'Photos',
-  highlights: 'Key highlights',
-  specs: 'Spec order',
-};
-
-const rupees = (paise: number) => `₹${(paise / 100).toLocaleString('en-IN')}`;
-const fieldLabel = (field: string) => (field.startsWith('spec:') ? field.slice(5) : (FIELD_LABELS[field] ?? field));
-function shown(field: string, value: Value): string {
-  if (value === null || value === '') return '—';
-  if (field.endsWith('InPaise')) return value === 0 ? '—' : rupees(Number(value));
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
-  if (field === 'status') return STATUS_LABEL[value as Status] ?? String(value);
-  if (field === 'gstRatePercent') return `${value}%`;
-  return String(value);
-}
 const fileSize = (bytes: number) => (bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`);
 
 function Section({ step, title, aside, children }: { step: string; title: string; aside?: ReactNode; children: ReactNode }) {

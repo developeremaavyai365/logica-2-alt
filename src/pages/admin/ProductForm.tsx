@@ -25,6 +25,7 @@ import {
   X,
 } from 'lucide-react';
 import AdminShell from './AdminShell';
+import ProductHistory from './ProductHistory';
 import { ApiError, apiFetch } from '../../lib/api-client';
 
 /* The product listing form, for a new product (/admin/products/new) or an
@@ -90,6 +91,7 @@ interface SapCode {
 interface Loaded extends Listing {
   slug: string;
   sapCodes: SapCode[];
+  updatedAt?: string;
 }
 
 const EMPTY: Listing = {
@@ -395,6 +397,7 @@ function ProductFormPage() {
   const [confirm, setConfirm] = useState<{ message: string; status: Status } | null>(null);
   const [saved, setSaved] = useState('');
   const [photoErrors, setPhotoErrors] = useState<string[]>([]);
+  const [deleting, setDeleting] = useState<'ask' | 'busy' | null>(null);
   // Specs the category does not ask for, edited as free rows.
   const [extraSpecs, setExtraSpecs] = useState<{ label: string; value: string }[]>([]);
 
@@ -459,7 +462,9 @@ function ProductFormPage() {
   const sapCodes = loaded?.sapCodes ?? [];
   const linked = sapCodes.length > 0;
   const status = loaded?.status ?? 'DRAFT';
-  const checks = checklist({ ...form, specs: orderedSpecs }, specFields, linked, status === 'ACTIVE');
+  // Published before (on or taken off the shop): the category's required
+  // specs are asked for, not demanded, as the server does.
+  const checks = checklist({ ...form, specs: orderedSpecs }, specFields, linked, !isNew && status !== 'DRAFT');
   const ready = checks.blocking.length === 0;
 
   useEffect(() => {
@@ -501,6 +506,20 @@ function ProductFormPage() {
       else setProblems([err instanceof ApiError ? err.message : 'Could not save. Please try again.']);
     } finally {
       setSaving(null);
+    }
+  }
+
+  async function remove() {
+    if (!loaded) return;
+    setDeleting('busy');
+    setProblems([]);
+    try {
+      await apiFetch(`/admin/products/${loaded.slug}`, { method: 'DELETE' });
+      setDirty(false);
+      navigate(`/admin/products?status=deleted&done=${encodeURIComponent(form.name || loaded.slug)}`);
+    } catch (err) {
+      setDeleting(null);
+      setProblems([err instanceof ApiError ? err.message : 'Could not delete. Please try again.']);
     }
   }
 
@@ -838,6 +857,8 @@ function ProductFormPage() {
               </button>
             </div>
           </Section>
+
+          {!isNew && loaded && <ProductHistory slug={loaded.slug} refreshKey={loaded.updatedAt ?? ''} />}
         </div>
 
         {/* Right: checklist, preview, actions */}
@@ -919,6 +940,37 @@ function ProductFormPage() {
               )}
               {dirty && <p className="text-center text-[11px] text-[#6B7280]">You have unsaved changes.</p>}
             </div>
+
+            {!isNew && loaded && (
+              <div className="border-t border-[#EEF0F6] px-4 py-3">
+                {deleting === 'ask' ? (
+                  <div className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-xs text-red-800" role="alert">
+                    <p className="font-semibold">Delete this product?</p>
+                    <p className="mt-1">
+                      It comes off the shop and out of the products list. Its history is kept, and it can be restored from the Deleted tab.
+                    </p>
+                    <div className="mt-2 flex gap-2">
+                      <button type="button" onClick={() => void remove()} className="rounded-lg bg-red-600 px-3 py-1.5 font-semibold text-white hover:bg-red-700">
+                        Delete
+                      </button>
+                      <button type="button" onClick={() => setDeleting(null)} className="rounded-lg px-3 py-1.5 font-semibold text-red-800 hover:bg-red-100">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setDeleting('ask')}
+                    disabled={deleting === 'busy' || !!saving}
+                    className="flex w-full items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold text-[#6B7280] transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                  >
+                    {deleting === 'busy' ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                    Delete product
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Preview */}

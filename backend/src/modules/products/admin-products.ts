@@ -15,6 +15,7 @@ export interface ProductRowInput {
   inStock: boolean;
   ean: string | null;
   updatedAt: Date;
+  deletedAt?: Date | null;
   brand: { name: string } | null;
   category: { slug: string; name: string };
   colours: { key: string; name: string; ean: string | null }[];
@@ -43,6 +44,8 @@ export interface AdminProductRow {
   imageUrl: string;
   position: number;
   updatedAt: string;
+  /** When it was deleted; null for a product not deleted. */
+  deletedAt: string | null;
   /** Where the shop's price and stock come from: the linked SAP codes, or
    *  the catalogue's own values while none is linked. */
   source: 'sap' | 'catalogue';
@@ -106,6 +109,7 @@ export function summariseProduct(product: ProductRowInput, linked: LinkedSapInpu
     imageUrl: product.imageUrl,
     position: product.position,
     updatedAt: product.updatedAt.toISOString(),
+    deletedAt: product.deletedAt ? product.deletedAt.toISOString() : null,
     source,
     pricePaise,
     mrpPaise,

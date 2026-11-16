@@ -206,7 +206,7 @@ export function listingChanges(before: Listing, after: Listing): FieldChange[] {
     [...oldSpecs].every(([label, value]) => newSpecs.get(label) === value) &&
     JSON.stringify(before.specs) !== JSON.stringify(after.specs)
   ) {
-    out.push({ field: 'specs', from: 'previous order', to: 'new order' });
+    out.push({ field: 'specs', from: 'original order', to: 'reordered' });
   }
 
   const colourSummary = (list: ListingColour[]) => list.map((c) => c.key).join(', ') || 'none';
@@ -229,9 +229,10 @@ export interface Checklist {
 
 /** What a listing still needs. `linkedToSap`: a SAP code supplies the price,
  *  so the catalogue price may be left at zero. `alreadyOnShop`: the product
- *  is published already, so the category's required specs are asked for
- *  rather than demanded: products listed before the spec fields existed
- *  stay editable (to add a barcode, say) without filling them all first. */
+ *  has been published (it is Active, or Inactive: taken off the shop), so
+ *  the category's required specs are asked for rather than demanded:
+ *  products listed before the spec fields existed stay editable (to add a
+ *  barcode, say) and can go back on the shop without filling them all. */
 export function checkListing(listing: ListingForChecks, linkedToSap: boolean, alreadyOnShop = false): Checklist {
   const blocking: string[] = [];
   const warnings: string[] = [];

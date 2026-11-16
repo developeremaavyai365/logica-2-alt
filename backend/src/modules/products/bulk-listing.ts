@@ -500,7 +500,7 @@ export function planBulk(rows: SheetRow[], header: BulkHeader, ctx: BulkContext)
 
     // On the shop only when it is ready, as the product page requires.
     if (errors.length === 0 && next.status === 'ACTIVE') {
-      const { blocking } = checkListing(next, existing?.linkedToSap ?? false, base.status === 'ACTIVE' && !!existing);
+      const { blocking } = checkListing(next, existing?.linkedToSap ?? false, base.status !== 'DRAFT' && !!existing);
       if (blocking.length) errors.push(`Not ready to be Active: ${blocking.join(' ')} Set its Status to Draft to save it anyway.`);
     }
 

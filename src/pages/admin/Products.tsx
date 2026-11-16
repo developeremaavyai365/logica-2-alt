@@ -12,6 +12,7 @@ import {
   Loader2,
   PackageX,
   Plus,
+  RotateCcw,
   Search,
   X,
 } from 'lucide-react';
@@ -37,6 +38,7 @@ interface Row {
   status: Status;
   imageUrl: string;
   updatedAt: string;
+  deletedAt: string | null;
   source: 'sap' | 'catalogue';
   pricePaise: number;
   mrpPaise: number | null;
@@ -52,19 +54,25 @@ interface ListResponse {
   total: number;
   page: number;
   pageSize: number;
-  counts: Record<'all' | Status | Issue, number>;
+  counts: Record<'all' | 'deleted' | Status | Issue, number>;
   items: Row[];
   filters: { categories: { slug: string; name: string }[]; brands: string[] };
 }
 
 const PAGE_SIZE = 25;
 
-const STATUS_TABS: { key: Status | null; label: string }[] = [
+/** "deleted" lists the deleted products, to restore them. */
+type Tab = Status | 'deleted';
+
+const STATUS_TABS: { key: Tab | null; label: string }[] = [
   { key: null, label: 'All' },
   { key: 'ACTIVE', label: 'Active' },
   { key: 'DRAFT', label: 'Draft' },
   { key: 'INACTIVE', label: 'Inactive' },
+  { key: 'deleted', label: 'Deleted' },
 ];
+
+const when = (iso: string) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
 const ISSUES: { key: Issue; label: string; icon: typeof Barcode }[] = [
   { key: 'missing-ean', label: 'Missing EAN', icon: Barcode },
@@ -96,8 +104,12 @@ function useDebounced<T>(value: T, ms: number): T {
 
 function ProductsPage() {
   const [params, setParams] = useSearchParams();
-  const status = (params.get('status') as Status | null) ?? null;
-  const issue = (params.get('issue') as Issue | null) ?? null;
+  const tab = (params.get('status') as Tab | null) ?? null;
+  const deletedView = tab === 'deleted';
+  const status = deletedView ? null : (tab as Status | null);
+  const issue = deletedView ? null : ((params.get('issue') as Issue | null) ?? null);
+  // Set by the product page after deleting, to say so here.
+  const justDeleted = params.get('done');
   const category = params.get('category') ?? '';
   const brand = params.get('brand') ?? '';
   const sort = (params.get('sort') as Sort | null) ?? 'shop';
@@ -141,11 +153,12 @@ function ProductsPage() {
     const q = new URLSearchParams({ page: String(page), pageSize: String(PAGE_SIZE), sort });
     if (search) q.set('search', search);
     if (status) q.set('status', status);
+    if (deletedView) q.set('deleted', 'true');
     if (issue) q.set('issue', issue);
     if (category) q.set('category', category);
     if (brand) q.set('brand', brand);
     return q.toString();
-  }, [page, sort, search, status, issue, category, brand]);
+  }, [page, sort, search, status, deletedView, issue, category, brand]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -167,7 +180,34 @@ function ProductsPage() {
   useEffect(() => {
     setSelected(new Set());
     setConfirmOff(false);
-  }, [search, status, issue, category, brand]);
+  }, [search, tab, issue, category, brand]);
+
+  useEffect(() => {
+    if (!justDeleted) return;
+    setNotice({ ok: true, text: `“${justDeleted}” was deleted: it is off the shop. It can be restored from this list.` });
+    update({ done: null });
+  }, [justDeleted, update]);
+
+  async function restore(row: Row) {
+    setBusy(true);
+    setNotice(null);
+    try {
+      const { status: now, clearedBarcodes } = await apiFetch<{ status: Status; clearedBarcodes: string[] }>(`/admin/products/${row.slug}/restore`, {
+        method: 'POST',
+      });
+      setNotice({
+        ok: true,
+        text:
+          `“${row.name}” was restored ${now === 'DRAFT' ? 'as a draft' : 'and is off the shop'}. ${now === 'DRAFT' ? 'Publish it' : 'Put it back on the shop'} from its page when it is ready.` +
+          (clearedBarcodes.length ? ` Its EAN ${clearedBarcodes.join(', ')} had been given to another product since, so it was removed from this one.` : ''),
+      });
+      await load();
+    } catch (err) {
+      setNotice({ ok: false, text: err instanceof ApiError ? err.message : 'Could not restore the product. Please try again.' });
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const items = data?.items ?? [];
   const allOnPage = items.length > 0 && items.every((r) => selected.has(r.slug));
@@ -249,21 +289,21 @@ function ProductsPage() {
 
       {/* Status tabs */}
       <div className="flex gap-1 overflow-x-auto shadow-[inset_0_-1px_0_#E5E7EB] [scrollbar-width:none]" role="tablist" aria-label="Product status">
-        {STATUS_TABS.map((tab) => {
-          const on = tab.key === status;
-          const count = data ? data.counts[tab.key ?? 'all'] : null;
+        {STATUS_TABS.map((t) => {
+          const on = t.key === tab;
+          const count = data ? data.counts[t.key ?? 'all'] : null;
           return (
             <button
-              key={tab.label}
+              key={t.label}
               type="button"
               role="tab"
               aria-selected={on}
-              onClick={() => update({ status: tab.key })}
+              onClick={() => update({ status: t.key, ...(t.key === 'deleted' && { issue: null }) })}
               className={`flex shrink-0 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors ${
                 on ? 'border-[#3D4FE0] text-[#061A40]' : 'border-transparent text-[#6B7280] hover:text-[#061A40]'
               }`}
             >
-              {tab.label}
+              {t.label}
               {count !== null && (
                 <span className={`rounded-full px-2 py-0.5 text-xs tabular-nums ${on ? 'bg-[#EEF1FF] text-[#3D4FE0]' : 'bg-[#F1F2F6] text-[#6B7280]'}`}>
                   {count}
@@ -314,7 +354,7 @@ function ProductsPage() {
       </div>
 
       {/* Needs attention */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className={`flex flex-wrap items-center gap-2 ${deletedView ? 'hidden' : ''}`}>
         <span className="mr-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#6B7280]">Needs attention</span>
         {ISSUES.map(({ key, label, icon: Icon }) => {
           const on = issue === key;
@@ -366,8 +406,10 @@ function ProductsPage() {
           </div>
         ) : items.length === 0 ? (
           <div className="px-5 py-16 text-center">
-            <p className="font-dm-sans text-lg font-bold text-[#061A40]">No products match</p>
-            <p className="mt-1 text-sm text-[#6B7280]">Try another search, or clear a filter.</p>
+            <p className="font-dm-sans text-lg font-bold text-[#061A40]">{deletedView && !search ? 'No deleted products' : 'No products match'}</p>
+            <p className="mt-1 text-sm text-[#6B7280]">
+              {deletedView && !search ? 'A product deleted from its page shows here, ready to restore.' : 'Try another search, or clear a filter.'}
+            </p>
           </div>
         ) : (
           <div className={`overflow-x-auto transition-opacity ${loading ? 'opacity-60' : ''}`}>
@@ -375,7 +417,9 @@ function ProductsPage() {
               <thead>
                 <tr className="border-b border-[#EEF0F6] bg-[#FAFBFE] text-left text-xs font-semibold uppercase tracking-[0.08em] text-[#6B7280]">
                   <th className="w-10 py-3 pl-5">
-                    <input type="checkbox" checked={allOnPage} onChange={toggleAll} aria-label="Select every product on this page" className="h-4 w-4 accent-[#3D4FE0]" />
+                    {!deletedView && (
+                      <input type="checkbox" checked={allOnPage} onChange={toggleAll} aria-label="Select every product on this page" className="h-4 w-4 accent-[#3D4FE0]" />
+                    )}
                   </th>
                   <th className="py-3 pl-2 pr-4">Product</th>
                   <th className="px-4 py-3">Price</th>
@@ -393,7 +437,9 @@ function ProductsPage() {
                   return (
                     <tr key={row.slug} className={`align-middle transition-colors ${on ? 'bg-[#F5F7FF]' : 'hover:bg-[#FAFBFE]'}`}>
                       <td className="py-3 pl-5">
-                        <input type="checkbox" checked={on} onChange={() => toggle(row.slug)} aria-label={`Select ${row.name}`} className="h-4 w-4 accent-[#3D4FE0]" />
+                        {!row.deletedAt && (
+                          <input type="checkbox" checked={on} onChange={() => toggle(row.slug)} aria-label={`Select ${row.name}`} className="h-4 w-4 accent-[#3D4FE0]" />
+                        )}
                       </td>
                       <td className="py-3 pl-2 pr-4">
                         <div className="flex items-center gap-3">
@@ -401,12 +447,16 @@ function ProductsPage() {
                             {row.imageUrl && <img src={row.imageUrl} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-contain p-1.5 mix-blend-multiply" />}
                           </span>
                           <span className="min-w-0">
-                            <Link
-                              to={`/admin/products/${row.slug}`}
-                              className="block max-w-[22rem] font-semibold leading-snug text-[#061A40] line-clamp-2 transition-colors hover:text-[#3D4FE0]"
-                            >
-                              {row.name}
-                            </Link>
+                            {row.deletedAt ? (
+                              <span className="block max-w-[22rem] font-semibold leading-snug text-[#6B7280] line-clamp-2">{row.name}</span>
+                            ) : (
+                              <Link
+                                to={`/admin/products/${row.slug}`}
+                                className="block max-w-[22rem] font-semibold leading-snug text-[#061A40] line-clamp-2 transition-colors hover:text-[#3D4FE0]"
+                              >
+                                {row.name}
+                              </Link>
+                            )}
                             <span className="mt-0.5 block text-xs text-[#6B7280]">
                               {row.brand || 'No brand'} · {row.category.name}
                               {row.colourCount > 0 && ` · ${row.colourCount} colours`}
@@ -458,16 +508,31 @@ function ProductsPage() {
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_PILL[row.status]}`}>{STATUS_LABEL[row.status]}</span>
+                        {row.deletedAt ? (
+                          <span className="whitespace-nowrap rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">Deleted {when(row.deletedAt)}</span>
+                        ) : (
+                          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_PILL[row.status]}`}>{STATUS_LABEL[row.status]}</span>
+                        )}
                       </td>
                       <td className="py-3 pl-4 pr-5 text-right">
-                        <Link
-                          to={`/admin/products/${row.slug}`}
-                          className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#061A40] transition-colors hover:bg-[#F1F2F6]"
-                        >
-                          Edit
-                        </Link>
-                        {row.status === 'ACTIVE' && (
+                        {row.deletedAt ? (
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => void restore(row)}
+                            className="inline-flex items-center gap-1 rounded-lg border border-[#E5E7EB] px-2.5 py-1.5 text-xs font-semibold text-[#061A40] transition-colors hover:border-[#3D4FE0] hover:text-[#3D4FE0] disabled:opacity-50"
+                          >
+                            <RotateCcw className="h-3.5 w-3.5" /> Restore
+                          </button>
+                        ) : (
+                          <Link
+                            to={`/admin/products/${row.slug}`}
+                            className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#061A40] transition-colors hover:bg-[#F1F2F6]"
+                          >
+                            Edit
+                          </Link>
+                        )}
+                        {row.status === 'ACTIVE' && !row.deletedAt && (
                           <a
                             href={`/product/${row.slug}`}
                             target="_blank"

@@ -544,7 +544,11 @@ describe('linking SAP codes to the shop', () => {
 
     await service.link('100', null, 'blue', 'admin-1');
     expect(db.items.get('100')).toMatchObject({ websiteProductId: null, websiteColour: null });
-    expect(db.audit[0]).toMatchObject({ action: 'SAP_ITEM_UNLINKED' });
+    // The product it left is recorded, for that product's history.
+    expect(db.audit[0]).toMatchObject({
+      action: 'SAP_ITEM_UNLINKED',
+      metadata: { productId: null, colour: null, previousProductId: 'iphone-16', previousColour: 'blue' },
+    });
   });
 
   it('reports a code that is not in the feed', async () => {

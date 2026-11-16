@@ -361,7 +361,10 @@ export class SapImportService {
    *  One code per product-and-colour: linking a second code to the same
    *  place is refused, naming the code already there. */
   async link(sapCode: string, productId: string | null, colour: string | null, userId: string) {
-    const item = await this.prisma.sapItem.findUnique({ where: { sapCode }, select: { sapCode: true } });
+    const item = await this.prisma.sapItem.findUnique({
+      where: { sapCode },
+      select: { sapCode: true, websiteProductId: true, websiteColour: true },
+    });
     if (!item) throw new NotFoundException(`No SAP code "${sapCode}" in the feed.`);
 
     const websiteColour = productId ? colour : null;
@@ -389,7 +392,9 @@ export class SapImportService {
         action: productId ? 'SAP_ITEM_LINKED' : 'SAP_ITEM_UNLINKED',
         targetType: 'SapItem',
         targetId: sapCode,
-        metadata: { productId, colour: websiteColour },
+        // The product it was on before, so that product's history shows the
+        // code leaving it.
+        metadata: { productId, colour: websiteColour, previousProductId: item.websiteProductId, previousColour: item.websiteColour },
       },
     });
 

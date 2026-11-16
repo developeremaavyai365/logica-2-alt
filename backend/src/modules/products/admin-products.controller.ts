@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -22,7 +23,7 @@ import { Role } from '@prisma/client';
 import { AuthenticatedUser, CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
-import { ListProductsDto, SetProductStatusDto } from './dto/admin-products.dto';
+import { HistoryPageDto, ListProductsDto, SetProductStatusDto } from './dto/admin-products.dto';
 import { SaveListingDto } from './dto/listing.dto';
 import { AdminProductsService } from './admin-products.service';
 import { BulkListingsService } from './bulk-listings.service';
@@ -63,6 +64,7 @@ export class AdminProductsController {
       status: query.status,
       issue: query.issue,
       sort: query.sort,
+      deleted: query.deleted === 'true',
       page: query.page ?? 1,
       pageSize: query.pageSize ?? 25,
     });
@@ -146,5 +148,23 @@ export class AdminProductsController {
   @Put(':slug')
   save(@Param('slug') slug: string, @Body() body: SaveListingDto, @CurrentUser() user: AuthenticatedUser) {
     return this.listings.save(slugParam(slug), body, user.id);
+  }
+
+  /** Who changed what on this product, newest first. */
+  @Get(':slug/history')
+  history(@Param('slug') slug: string, @Query() query: HistoryPageDto) {
+    return this.products.history(slugParam(slug), query.before);
+  }
+
+  /** Hides the product: it can be restored. */
+  @Delete(':slug')
+  remove(@Param('slug') slug: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.products.remove(slugParam(slug), user.id);
+  }
+
+  @Post(':slug/restore')
+  @HttpCode(HttpStatus.OK)
+  restore(@Param('slug') slug: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.products.restore(slugParam(slug), user.id);
   }
 }

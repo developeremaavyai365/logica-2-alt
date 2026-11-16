@@ -30,6 +30,11 @@ export class ListProductsDto {
   @IsIn(['shop', 'name', 'recent', 'price'])
   sort?: 'shop' | 'name' | 'recent' | 'price';
 
+  /** "true" lists the deleted products instead, to restore them. */
+  @IsOptional()
+  @IsIn(['true', 'false'])
+  deleted?: 'true' | 'false';
+
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -42,6 +47,13 @@ export class ListProductsDto {
   @Min(1)
   @Max(100)
   pageSize?: number;
+}
+
+export class HistoryPageDto {
+  /** The `next` of the previous page: a time and an id. */
+  @IsOptional()
+  @Matches(/^\d{4}-\d{2}-\d{2}T[\d:.]+Z\|[\w-]{1,64}$/)
+  before?: string;
 }
 
 /** Puts products on the shop or takes them off. Drafts are published from

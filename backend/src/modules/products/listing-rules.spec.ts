@@ -75,7 +75,7 @@ describe('the publish checklist', () => {
     ]);
   });
 
-  it('asks for, without demanding, the required specs of a product already on the shop', () => {
+  it('asks for, without demanding, the required specs of a product published before', () => {
     const result = checkListing({ ...laptop, specs: [] }, true, true);
     expect(result.blocking).toEqual([]);
     expect(result.warnings).toContain('Fill in the spec "Processor".');

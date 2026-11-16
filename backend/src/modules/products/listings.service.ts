@@ -145,7 +145,7 @@ export class ListingsService {
       orderBy: { sapCode: 'asc' },
     });
     const listing = toListing(product);
-    const checklist = checkListing(listing, sapCodes.length > 0, product.status === ProductStatus.ACTIVE);
+    const checklist = checkListing(listing, sapCodes.length > 0, product.status !== ProductStatus.DRAFT);
     return { ...listing, slug, updatedAt: product.updatedAt, sapCodes, checklist };
   }
 
@@ -178,7 +178,7 @@ export class ListingsService {
     }
 
     if (listing.status === 'ACTIVE') {
-      const { blocking } = checkListing(listing, sapCodes.length > 0, existing?.status === ProductStatus.ACTIVE);
+      const { blocking } = checkListing(listing, sapCodes.length > 0, !!existing && existing.status !== ProductStatus.DRAFT);
       if (blocking.length) throw new BadRequestException({ message: 'This product is not ready to publish.', problems: blocking });
     }
 
