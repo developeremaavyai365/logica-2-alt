@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check, Loader2, Plus, RotateCcw, Type } from 'lucide-react';
+import { ArrowLeft, Check, Loader2, Plus, RotateCcw } from 'lucide-react';
 import AdminShell from './AdminShell';
 import { ApiError, apiFetch } from '../../lib/api-client';
 import { buildTitle, pickTitleFormat, type TitleInput } from '../../lib/listing-shared';
@@ -103,18 +103,35 @@ function sample(category: string | null, brand: string | null): { input: TitleIn
   return { input: { brand: brand ?? 'Microtek', modelName: 'Legend UPS', modelNumber: null, variant: '650 VA', specs: [] }, colour: 'Black' };
 }
 
-function FormatEditor({ row, categoryName, onSave, onReset, busy }: {
+function FormatEditor({ row, categoryName, fields, onSave, onReset, busy }: {
   row: FormatRow;
   categoryName: string;
+  fields: { key: string; label: string }[];
   onSave: (pattern: string) => void;
   onReset: () => void;
   busy: boolean;
 }) {
   const [pattern, setPattern] = useState(row.pattern);
+  const [editing, setEditing] = useState(false);
+  const box = useRef<HTMLInputElement>(null);
   useEffect(() => setPattern(row.pattern), [row.pattern]);
   const { input, colour } = sample(row.category, row.brand);
   const example = buildTitle(pattern, input, colour || null);
   const changed = pattern.trim() !== row.pattern;
+
+  /** Puts a field where the cursor is (or at the end), with a space. */
+  const insert = (key: string) => {
+    const el = box.current;
+    const at = el?.selectionStart ?? pattern.length;
+    const before = pattern.slice(0, at);
+    const piece = `${before && !/\s$/.test(before) ? ' ' : ''}{${key}}`;
+    const next = before + piece + pattern.slice(el?.selectionEnd ?? at);
+    setPattern(next);
+    requestAnimationFrame(() => {
+      el?.focus();
+      el?.setSelectionRange(at + piece.length, at + piece.length);
+    });
+  };
 
   return (
     <li className="grid gap-2 px-5 py-4 lg:grid-cols-[180px_minmax(0,1fr)_auto] lg:items-start">
@@ -126,10 +143,38 @@ function FormatEditor({ row, categoryName, onSave, onReset, busy }: {
         </p>
       </div>
       <div className="min-w-0">
-        <input value={pattern} onChange={(e) => setPattern(e.target.value)} maxLength={300} aria-label={`Title format for ${row.brand ?? 'other brands'}`} className={`${INPUT} font-mono text-[13px]`} />
-        <p className="mt-1.5 text-xs text-[#6B7280]">
-          e.g. <span className="font-semibold text-[#061A40]">{example || '—'}</span>
-        </p>
+        {/* What the title looks like comes first; the pattern itself only
+            when changing it. */}
+        <p className="rounded-xl border border-[#E5E7EB] bg-[#FAFBFE] px-3.5 py-2.5 text-sm font-semibold leading-snug text-[#061A40]">{example || '—'}</p>
+        {editing ? (
+          <div className="mt-2">
+            <input
+              ref={box}
+              value={pattern}
+              onChange={(e) => setPattern(e.target.value)}
+              maxLength={300}
+              aria-label={`Title format for ${row.brand ?? 'other brands'}`}
+              className={`${INPUT} font-mono text-[13px]`}
+            />
+            <p className="mt-2 text-xs text-[#6B7280]">Press a button to add it where the cursor is. Brackets and commas are kept as typed.</p>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {fields.map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  onClick={() => insert(f.key)}
+                  className="rounded-lg border border-[#C7D2FE] bg-[#EEF1FF] px-2 py-1 text-xs font-semibold text-[#3D4FE0] transition-colors hover:bg-[#3D4FE0] hover:text-white"
+                >
+                  + {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <button type="button" onClick={() => setEditing(true)} className="mt-1.5 text-xs font-semibold text-[#3D4FE0] hover:underline">
+            Change how this title is written
+          </button>
+        )}
       </div>
       <div className="flex gap-2 lg:pt-0.5">
         <button
@@ -208,35 +253,17 @@ function TitleFormatsPage() {
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-8 pb-24 sm:px-6">
       <div>
-        <Link to="/admin/products" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B7280] hover:text-[#061A40]">
-          <ArrowLeft className="h-4 w-4" /> Products
+        <Link to="/admin/tools" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6B7280] hover:text-[#061A40]">
+          <ArrowLeft className="h-4 w-4" /> More tools
         </Link>
         <h1 className="mt-2 font-dm-sans text-3xl font-bold text-[#061A40]" style={{ letterSpacing: '-0.03em' }}>
-          Title formats
+          How product titles are written
         </h1>
         <p className="mt-1 max-w-3xl text-[#6B7280]">
-          How product titles are written for each brand. A product with an automatic title is built from its brand's format; saving a format here
-          updates those titles on the shop. A part whose field is empty is left out cleanly.
+          Each brand's products get titles in its own style. Titles are written for you from the product's details; change a style here and
+          every title written that way is updated on the website.
         </p>
       </div>
-
-      {data && (
-        <section className={`${CARD} p-5`}>
-          <p className="flex items-center gap-2 text-sm font-semibold text-[#061A40]">
-            <Type className="h-4 w-4 text-[#3D4FE0]" /> Fields you can use
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {data.fields.map((f) => (
-              <span key={f.key} className="rounded-lg border border-[#E5E7EB] bg-[#F5F8FC] px-2 py-1 text-xs text-[#061A40]">
-                <code className="font-semibold">{`{${f.key}}`}</code> <span className="text-[#6B7280]">{f.label}</span>
-              </span>
-            ))}
-            <span className="rounded-lg border border-dashed border-[#C7D2FE] px-2 py-1 text-xs text-[#6B7280]">
-              or any spec by its label, e.g. <code className="font-semibold text-[#061A40]">{'{Printer Type}'}</code>
-            </span>
-          </div>
-        </section>
-      )}
 
       {notice && <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">{notice}</p>}
       {error && <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</p>}
@@ -255,6 +282,7 @@ function TitleFormatsPage() {
                 key={`${row.category}|${row.brand}`}
                 row={row}
                 categoryName={g.name}
+                fields={data!.fields}
                 busy={busy}
                 onSave={(pattern) => void send('/admin/title-formats', 'PUT', { brand: row.brand, category: row.category, pattern }, 'Format saved.')}
                 onReset={() => void send('/admin/title-formats/reset', 'POST', { brand: row.brand, category: row.category }, row.builtIn ? 'Back to the built-in format.' : 'Format removed.')}

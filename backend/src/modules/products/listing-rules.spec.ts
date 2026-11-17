@@ -76,25 +76,25 @@ describe('the publish checklist', () => {
   it('can publish without a SAP code, but warns that it cannot be ordered until one is linked', () => {
     expect(checkListing(laptop, false)).toEqual({
       blocking: [],
-      warnings: ['Link a SAP code (the SKU): until then shoppers can see it but not order it.'],
+      warnings: ['Link the item code (SAP), so shoppers can order it.'],
     });
   });
 
   it('asks a new listing for everything a marketplace does, in the order of the form', () => {
     expect(checkListing(empty, true).blocking).toEqual([
       'Add the model name.',
-      'Fill in the RAM of the variant.',
-      'Fill in the Storage of the variant.',
+      'Fill in the RAM.',
+      'Fill in the Storage.',
       'Add the colour.',
-      'Add the EAN / barcode.',
-      'Choose the GST rate.',
-      'Add the HSN code.',
+      'Add the barcode number.',
+      'Choose the GST %.',
+      'Add the tax code (HSN).',
       `Add at least ${MIN_HIGHLIGHTS} key highlights.`,
       'Add a description.',
       'Add what is in the box.',
-      'Fill in the spec "Processor".',
-      'Fill in the spec "Screen Size".',
-      'Fill in the spec "Operating System".',
+      'Fill in "Processor".',
+      'Fill in "Screen Size".',
+      'Fill in "Operating System".',
       'Add the country of origin.',
       "Add the manufacturer's name and address.",
     ]);
@@ -103,7 +103,7 @@ describe('the publish checklist', () => {
   it('asks for the MRP and price unless a SAP code supplies them', () => {
     expect(checkListing({ ...laptop, priceInPaise: 0, mrpInPaise: null }, false).blocking).toEqual([
       'Add the MRP.',
-      'Set a selling price, or link a SAP code on the SAP import page.',
+      'Add the selling price, or link the item code (SAP).',
     ]);
     expect(checkListing({ ...laptop, priceInPaise: 0, mrpInPaise: null }, true).blocking).toEqual([]);
   });
@@ -123,7 +123,7 @@ describe('the publish checklist', () => {
 
   it('wants a barcode for each colour, and photos of each', () => {
     const result = checkListing({ ...laptop, colours: [...laptop.colours, { name: 'Blue', ean: null, images: [] }] }, true);
-    expect(result.blocking).toEqual(['Add the EAN for Blue.']);
+    expect(result.blocking).toEqual(['Add the barcode number for Blue.']);
     expect(result.warnings).toEqual(['Add photos of Blue.']);
   });
 

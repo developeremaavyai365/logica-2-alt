@@ -181,7 +181,10 @@ export function applyCachedLiveCatalogue() {
 export async function refreshLiveCatalogue() {
   if (!API_URL) return;
   try {
-    const res = await fetch(`${API_URL}/catalogue/live`, { credentials: 'omit' });
+    // Always check with the server: a reused copy can be up to a minute old,
+    // which shows the previous price just after a SAP sheet is applied. An
+    // unchanged list comes back as a short "not modified".
+    const res = await fetch(`${API_URL}/catalogue/live`, { credentials: 'omit', cache: 'no-cache' });
     if (!res.ok) return;
     const data = await res.json();
     if (!Array.isArray(data?.items)) return;

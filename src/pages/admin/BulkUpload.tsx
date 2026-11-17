@@ -244,12 +244,12 @@ function BulkUploadPage() {
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-8 pb-28 sm:px-6">
       <div>
-        <Link to="/admin/products" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#6B7280] transition-colors hover:text-[#3D4FE0]">
+        <Link to="/admin/tools" className="inline-flex items-center gap-1.5 text-sm font-medium text-[#6B7280] transition-colors hover:text-[#3D4FE0]">
           <ArrowLeft className="h-4 w-4" />
-          Products
+          More tools
         </Link>
         <h1 className="mt-2 font-dm-sans text-3xl font-bold text-[#061A40]" style={{ letterSpacing: '-0.03em' }}>
-          Bulk upload
+          Add or change many products from Excel
         </h1>
         <p className="mt-1 max-w-2xl text-[#6B7280]">
           Add or edit many products at once from an Excel sheet. You see everything it would change before anything is saved.

@@ -68,6 +68,12 @@ export class SapImportController {
     return this.imports.history();
   }
 
+  /** Likely shop products for the codes not linked yet, to confirm. */
+  @Get('suggestions')
+  suggestions() {
+    return this.imports.suggestions();
+  }
+
   @Get('items')
   items(@Query() query: ListItemsDto) {
     return this.imports.items(query.search, query.page ?? 1, query.pageSize ?? 50, query.linked);

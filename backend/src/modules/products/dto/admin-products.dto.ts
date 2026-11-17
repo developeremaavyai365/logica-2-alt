@@ -23,8 +23,8 @@ export class ListProductsDto {
   status?: 'ACTIVE' | 'DRAFT' | 'INACTIVE';
 
   @IsOptional()
-  @IsIn(['missing-ean', 'not-linked', 'out-of-stock'])
-  issue?: 'missing-ean' | 'not-linked' | 'out-of-stock';
+  @IsIn(['missing-ean', 'not-linked', 'out-of-stock', 'no-photo'])
+  issue?: 'missing-ean' | 'not-linked' | 'out-of-stock' | 'no-photo';
 
   @IsOptional()
   @IsIn(['shop', 'name', 'recent', 'price'])

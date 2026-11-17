@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   AlertTriangle,
   ArrowLeft,
@@ -34,6 +34,7 @@ import {
 import AdminShell from './AdminShell';
 import ProductHistory from './ProductHistory';
 import SkuLinker, { type LinkedCode } from './SkuLinker';
+import { HELP, HelpTip, StatusBadge } from './admin-ui';
 import { ApiError, apiFetch } from '../../lib/api-client';
 import { buildTitle, checkListing, isValidGtin, MIN_HIGHLIGHTS, pickTitleFormat, suggestHighlights, type TitleFormatRule } from '../../lib/listing-shared';
 
@@ -210,6 +211,25 @@ function NumberInput({ value, onChange, placeholder, step = 'any' }: { value: nu
   );
 }
 
+/** The steps of adding a product. An existing product opens on step 1 too,
+ *  and any step can be opened from the bar at the top. */
+const STEPS = [
+  { title: 'What is it?', hint: 'Brand, model, colour' },
+  { title: 'Price & codes', hint: 'Price, barcode, GST' },
+  { title: 'Photos', hint: 'Front, back, sides' },
+  { title: 'Details', hint: 'Highlights, specs' },
+  { title: 'Check & go live', hint: 'Review and save' },
+];
+
+/** The step where a checklist item is fixed. */
+function stepOf(message: string): number {
+  if (/photo/i.test(message)) return 2;
+  if (/MRP|selling price|barcode|EAN|GST|tax code|item code/i.test(message)) return 1;
+  if (/^Fill in "/.test(message)) return 3;
+  if (/category|brand|model name|title|colour|^Fill in the /i.test(message)) return 0;
+  return 3;
+}
+
 /** The photo positions shoppers expect, as marketplaces ask for them. */
 const PHOTO_VIEWS = ['Main (front)', 'Back', 'Side', 'Diagonal', 'Close-up'];
 
@@ -232,12 +252,28 @@ function Section({ id, icon: Icon, title, hint, children }: { id: string; icon: 
   );
 }
 
-function Field({ label, required, hint, error, children }: { label: string; required?: boolean; hint?: string; error?: string | null; children: ReactNode }) {
+function Field({
+  label,
+  required,
+  hint,
+  help,
+  error,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  hint?: string;
+  /** A plain explanation with an example, behind a small "?". */
+  help?: string;
+  error?: string | null;
+  children: ReactNode;
+}) {
   return (
     <label className="block min-w-0">
-      <span className="mb-1.5 block text-xs font-semibold text-[#374151]">
+      <span className="mb-1.5 flex items-center text-xs font-semibold text-[#374151]">
         {label}
         {required && <span className="ml-0.5 text-red-500">*</span>}
+        {help && <HelpTip text={help} />}
       </span>
       {children}
       {error ? (
@@ -424,6 +460,22 @@ function ProductFormPage() {
   const [saved, setSaved] = useState('');
   const [photoErrors, setPhotoErrors] = useState<string[]>([]);
   const [deleting, setDeleting] = useState<'ask' | 'busy' | null>(null);
+  // The step shown, kept in the address (?step=2) so a reload stays on it.
+  const [params, setParams] = useSearchParams();
+  const step = Math.min(STEPS.length - 1, Math.max(0, Number(params.get('step') ?? 1) - 1 || 0));
+  const goTo = (i: number) => {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (i === 0) next.delete('step');
+        else next.set('step', String(i + 1));
+        return next;
+      },
+      { replace: true },
+    );
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  const [moreOpen, setMoreOpen] = useState(false);
   // Specs the category does not ask for, edited as free rows.
   const [extraSpecs, setExtraSpecs] = useState<{ label: string; value: string }[]>([]);
 
@@ -539,12 +591,12 @@ function ProductFormPage() {
       applyLoaded(result);
       setSaved(
         to === 'ACTIVE' && status !== 'ACTIVE'
-          ? 'Published. The product shows on the shop within a minute.'
+          ? 'It is live on the website now.'
           : to === 'INACTIVE' && status === 'ACTIVE'
-            ? 'Taken off the shop.'
+            ? 'Hidden from the website.'
             : 'Saved.',
       );
-      if (isNew) navigate(`/admin/products/${result.slug}`, { replace: true });
+      if (isNew) navigate(`/admin/products/${result.slug}${step ? `?step=${step + 1}` : ''}`, { replace: true });
     } catch (err) {
       const data = err instanceof ApiError ? (err.body as { message?: unknown; problems?: string[]; needsConfirmation?: boolean } | undefined) : undefined;
       if (data?.needsConfirmation) setConfirm({ message: String(data.message), status: to });
@@ -605,7 +657,14 @@ function ProductFormPage() {
   // RAM and storage are asked for with the variant; the other spec fields
   // under their headings.
   const variantFields = specFields.filter((f) => f.variant);
-  const specGroups = [...specFields.filter((f) => !f.variant).reduce((groups, f) => groups.set(f.group ?? '', [...(groups.get(f.group ?? '') ?? []), f]), new Map<string, SpecField[]>())];
+  // The specs every new listing needs are asked for in step 4; the rest
+  // under "More details", in their groups.
+  const mainSpecFields = specFields.filter((f) => f.required && !f.variant);
+  const specGroups = [
+    ...specFields
+      .filter((f) => !f.variant && !f.required)
+      .reduce((groups, f) => groups.set(f.group ?? '', [...(groups.get(f.group ?? '') ?? []), f]), new Map<string, SpecField[]>()),
+  ];
 
   const suggested = suggestHighlights(form.categorySlug, orderedSpecs);
   /** Adds the highlights the specs give that are not there yet, into the
@@ -634,62 +693,95 @@ function ProductFormPage() {
           </h1>
           {!isNew && <p className="mt-1 font-mono text-xs text-[#6B7280]">/product/{loaded!.slug}</p>}
         </div>
-        {!isNew && <StatusPill status={status} />}
+        {!isNew && <StatusBadge status={status} size="md" />}
       </div>
 
-      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
-        <div className="flex min-w-0 flex-col gap-5">
-          {/* 1-3: brand, SKU, model and variant */}
-          <Section id="basics" icon={Tag} title="Brand, SKU, model & variant" hint="What the product is. The title below is built from these.">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Category" required hint="Decides the spec fields asked for below.">
-                <select value={form.categorySlug} onChange={(e) => update({ categorySlug: e.target.value })} className={INPUT}>
-                  <option value="">Choose a category</option>
-                  {options.categories.map((c) => (
-                    <option key={c.slug} value={c.slug}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="Brand" required hint="Pick one, or type a new brand.">
-                <input list="brand-options" value={form.brandName} onChange={(e) => update({ brandName: e.target.value })} maxLength={60} placeholder="e.g. Samsung" className={INPUT} />
-                <datalist id="brand-options">
-                  {options.brands.map((b) => (
-                    <option key={b} value={b} />
-                  ))}
-                </datalist>
-              </Field>
-              <div className="sm:col-span-2">
-                <span className="mb-1.5 block text-xs font-semibold text-[#374151]">SKU (SAP / ERP code)</span>
-                <SkuLinker slug={loaded?.slug ?? null} colours={loaded?.colours ?? []} codes={sapCodes} onChanged={refreshSap} />
-              </div>
-              <Field label="Model name" required hint={'As the maker names it, e.g. "Galaxy S24 5G".'}>
-                <TextInput value={form.modelName} onChange={(v) => update({ modelName: v })} maxLength={120} placeholder="e.g. Galaxy S24 5G" />
-              </Field>
-              <Field label="Model number (model ID)" hint={'The maker\'s code, e.g. "SM-S921BZKCINS".'}>
-                <TextInput value={form.modelNumber} onChange={(v) => update({ modelNumber: v })} maxLength={60} placeholder="e.g. SM-S921BZKCINS" />
-              </Field>
-              <Field label="Manufacturer part number">
-                <TextInput value={form.partNumber} onChange={(v) => update({ partNumber: v })} maxLength={60} placeholder="e.g. 7K0Y1PA" />
-              </Field>
-              {variantFields.length > 0 ? (
-                variantFields.map((f) => (
-                  <Field key={f.label} label={`Variant: ${f.label}`} required={f.required}>
-                    <input value={specValue(f.label)} onChange={(e) => setSpec(f.label, e.target.value)} maxLength={100} placeholder={f.placeholder} className={INPUT} />
-                  </Field>
-                ))
-              ) : (
-                <Field label="Variant" hint="What sets this version apart, if anything.">
-                  <TextInput value={form.variant} onChange={(v) => update({ variant: v })} maxLength={80} placeholder="e.g. 650 VA, or 1 Year 1 User" />
-                </Field>
-              )}
-            </div>
-          </Section>
+      {/* The steps: each can be opened at any time; a tick once it has
+          nothing missing, or how many things it still needs. */}
+      <nav aria-label="Steps" className="mt-6 overflow-x-auto [scrollbar-width:none]">
+        <ol className="flex min-w-max gap-2">
+          {STEPS.map((s, i) => {
+            const on = i === step;
+            const missing = i < STEPS.length - 1 ? checks.blocking.filter((m) => stepOf(m) === i).length : 0;
+            const done = i < STEPS.length - 1 && missing === 0;
+            return (
+              <li key={s.title}>
+                <button
+                  type="button"
+                  aria-current={on ? 'step' : undefined}
+                  onClick={() => goTo(i)}
+                  className={`flex items-center gap-3 rounded-2xl border px-4 py-3 text-left transition-colors ${
+                    on ? 'border-[#061A40] bg-[#061A40] text-white' : 'border-[#E5E7EB] bg-white text-[#061A40] hover:border-[#C7D2FE]'
+                  }`}
+                >
+                  <span
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                      on ? 'bg-white text-[#061A40]' : done ? 'bg-emerald-50 text-emerald-700' : 'bg-[#F1F2F6] text-[#6B7280]'
+                    }`}
+                  >
+                    {done && !on ? <Check className="h-4 w-4" /> : i + 1}
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold leading-tight">{s.title}</span>
+                    <span className={`block text-xs ${on ? 'text-white/65' : missing ? 'text-red-600' : 'text-[#6B7280]'}`}>
+                      {missing ? `${missing} to fill in` : s.hint}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
 
-          {/* 4: colour */}
-          {/* Colours */}
-          <Section id="colours" icon={Palette} title="Colour" hint="Each colour gets its own swatch, photos and EAN; shoppers pick one on the product page. Link a SAP code to a colour under SKU once saved.">
+      <div className="mt-5 grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+        <div className="flex min-w-0 flex-col gap-5">
+          {step === 0 && (
+            <>
+              {/* Step 1: what it is */}
+              <Section id="basics" icon={Tag} title="What is it?" hint="The title is written for you from these.">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Category" required hint="Decides which details are asked for.">
+                    <select value={form.categorySlug} onChange={(e) => update({ categorySlug: e.target.value })} className={INPUT}>
+                      <option value="">Choose a category</option>
+                      {options.categories.map((c) => (
+                        <option key={c.slug} value={c.slug}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field label="Brand" required hint="Pick one, or type a new brand.">
+                    <input list="brand-options" value={form.brandName} onChange={(e) => update({ brandName: e.target.value })} maxLength={60} placeholder="e.g. Samsung" className={INPUT} />
+                    <datalist id="brand-options">
+                      {options.brands.map((b) => (
+                        <option key={b} value={b} />
+                      ))}
+                    </datalist>
+                  </Field>
+                  <Field label="Model name" required help={HELP.modelName}>
+                    <TextInput value={form.modelName} onChange={(v) => update({ modelName: v })} maxLength={120} placeholder="e.g. Galaxy S24 5G" />
+                  </Field>
+                  <Field label="Model number" help={HELP.modelNumber}>
+                    <TextInput value={form.modelNumber} onChange={(v) => update({ modelNumber: v })} maxLength={60} placeholder="e.g. SM-S921BZKCINS" />
+                  </Field>
+                  {variantFields.length > 0 ? (
+                    variantFields.map((f, i) => (
+                      <Field key={f.label} label={f.label} required={f.required} help={i === 0 ? HELP.variant : undefined}>
+                        <input value={specValue(f.label)} onChange={(e) => setSpec(f.label, e.target.value)} maxLength={100} placeholder={f.placeholder} className={INPUT} />
+                      </Field>
+                    ))
+                  ) : (
+                    <Field label="Variant" help={HELP.variant}>
+                      <TextInput value={form.variant} onChange={(v) => update({ variant: v })} maxLength={80} placeholder="e.g. 650 VA, or 1 Year 1 User" />
+                    </Field>
+                  )}
+                  <Field label="Part number" hint="Only if the box shows one.">
+                    <TextInput value={form.partNumber} onChange={(v) => update({ partNumber: v })} maxLength={60} placeholder="e.g. 7K0Y1PA" />
+                  </Field>
+                </div>
+              </Section>
+          <Section id="colours" icon={Palette} title="Colour" hint="Add each colour it comes in. Each gets its own swatch, photos and barcode number; customers pick one on the website.">
             <div className="flex flex-col gap-4">
               {form.colours.map((c, i) => {
                 const lockedBySap = sapCodes.some((s) => s.websiteColour === c.key) && loaded?.colours.some((x) => x.key === c.key);
@@ -714,7 +806,7 @@ function ProductFormPage() {
                           className={INPUT}
                         />
                       </Field>
-                      <Field label="EAN" error={eanError}>
+                      <Field label="Barcode number" error={eanError}>
                         <TextInput value={c.ean} onChange={(v) => setColour({ ean: v?.replace(/\D/g, '') || null })} inputMode="numeric" maxLength={14} placeholder="e.g. 8901234567890" />
                       </Field>
                       <Field label="Availability">
@@ -753,9 +845,6 @@ function ProductFormPage() {
               </button>
             </div>
           </Section>
-
-
-          {/* 4: the title */}
           <Section id="title" icon={Type} title="Product title" hint="What shoppers see on the card and the product page.">
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-1 rounded-xl bg-[#F1F2F6] p-1 text-sm font-semibold sm:w-fit">
@@ -811,21 +900,29 @@ function ProductFormPage() {
               {isNew && <p className="text-xs text-[#6B7280]">The product's web address is made from the title when you first save.</p>}
             </div>
           </Section>
+            </>
+          )}
 
+          {step === 1 && (
+            <>
+              {/* Step 2: price and codes */}
+              <Section id="sku" icon={Link2} title="Item code (SAP)" hint="Link this product's code from SAP. Its price and stock then come from the SAP sheet, and customers can order it.">
+                <SkuLinker slug={loaded?.slug ?? null} colours={loaded?.colours ?? []} codes={sapCodes} onChanged={refreshSap} />
+              </Section>
           {/* 5-7: MRP, selling price, discount */}
-          <Section id="price" icon={ReceiptText} title="MRP, selling price & discount" hint="Prices include GST.">
+          <Section id="price" icon={ReceiptText} title="Price" hint="Prices include GST.">
             {linked && (
               <p className="mb-4 flex items-start gap-2 rounded-xl border border-[#C7D2FE] bg-[#EEF1FF] px-4 py-3 text-xs leading-relaxed text-[#374151]">
                 <Link2 className="mt-0.5 h-4 w-4 shrink-0 text-[#3D4FE0]" />
-                The SAP sheet sets the price, MRP and stock of this product (SKU above). The shop shows {rupees(shownPrice)}
+                The SAP sheet sets this product's price, MRP and stock (item code above). The shop shows {rupees(shownPrice)}
                 {shownMrp ? `, MRP ${rupees(shownMrp)}` : ''}. The boxes below are used only if the SAP code is unlinked.
               </p>
             )}
             <div className="grid gap-4 sm:grid-cols-4">
-              <Field label="MRP" required={!linked} hint="The printed maximum retail price.">
+              <Field label="MRP" required={!linked} help={HELP.mrp}>
                 <MoneyInput paise={form.mrpInPaise} onChange={(p) => update({ mrpInPaise: p })} disabled={linked} placeholder="e.g. 61990" />
               </Field>
-              <Field label="Selling price" required={!linked} error={mrpError}>
+              <Field label="Selling price" required={!linked} error={mrpError} help={HELP.sellingPrice}>
                 <MoneyInput paise={form.priceInPaise || null} onChange={(p) => update({ priceInPaise: p ?? 0 })} disabled={linked} placeholder="e.g. 52990" />
               </Field>
               <Field label="Discount" hint="Worked out from the two prices.">
@@ -841,21 +938,20 @@ function ProductFormPage() {
               </Field>
             </div>
           </Section>
-
           {/* 8-10: EAN, tax, HSN */}
-          <Section id="barcode" icon={Barcode} title="EAN, tax & HSN" hint="The EAN is the number under the barcode on the box (8, 12, 13 or 14 digits).">
+          <Section id="barcode" icon={Barcode} title="Barcode & tax" hint="You will find these on the box and on the purchase bill.">
             <div className="grid gap-4 sm:grid-cols-3">
               {form.colours.length === 0 ? (
-                <Field label="EAN / UPC" required error={singleEanError}>
+                <Field label="Barcode number (EAN)" required error={singleEanError} help={HELP.barcode}>
                   <TextInput value={form.ean} onChange={(v) => update({ ean: v?.replace(/\D/g, '') || null })} inputMode="numeric" maxLength={14} placeholder="e.g. 8901234567890" />
                 </Field>
               ) : (
                 <div className="flex items-start gap-2 rounded-xl bg-[#F5F8FC] px-3.5 py-3 text-xs leading-relaxed text-[#6B7280]">
                   <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                  Each colour has its own EAN, under Colour above.
+                  Each colour has its own barcode number, in step 1 under Colour.
                 </div>
               )}
-              <Field label="Tax (GST rate)" required>
+              <Field label="GST %" required help={HELP.gst}>
                 <select value={form.gstRatePercent ?? ''} onChange={(e) => update({ gstRatePercent: e.target.value === '' ? null : Number(e.target.value) })} className={INPUT}>
                   <option value="">Choose</option>
                   {options.gstRates.map((r) => (
@@ -865,14 +961,17 @@ function ProductFormPage() {
                   ))}
                 </select>
               </Field>
-              <Field label="HSN code" required hint="4 to 8 digits, for GST invoices.">
+              <Field label="Tax code (HSN)" required help={HELP.hsn}>
                 <TextInput value={form.hsnCode} onChange={(v) => update({ hsnCode: v?.replace(/\D/g, '') || null })} inputMode="numeric" maxLength={8} placeholder="e.g. 85171300" />
               </Field>
             </div>
           </Section>
+            </>
+          )}
 
-          {/* 11: photos */}
-          {/* Photos */}
+          {step === 2 && (
+            <>
+              {/* Step 3: photos */}
           <Section id="photos" icon={ImagePlus} title="Photos" hint="In this order: main (front), back, side, diagonal, close-up. JPG, PNG or WebP, at least 500 × 500 pixels, up to 5 MB each, on a plain white background. Drag photos here, or use Add photos.">
             <PhotoStrip photos={form.gallery} onChange={(gallery) => update({ gallery })} labels={PHOTO_VIEWS} onError={photoError} />
             {photoErrors.length > 0 && (
@@ -888,9 +987,12 @@ function ProductFormPage() {
               </ul>
             )}
           </Section>
+            </>
+          )}
 
-
-          {/* 12: highlights */}
+          {step === 3 && (
+            <>
+              {/* Step 4: details */}
           <Section
             id="highlights"
             icon={ListChecks}
@@ -931,8 +1033,6 @@ function ProductFormPage() {
               </div>
             </div>
           </Section>
-
-          {/* 13: description */}
           <Section id="description" icon={FileText} title="Product description" hint="Shown under the specifications.">
             <textarea
               value={form.description}
@@ -944,17 +1044,75 @@ function ProductFormPage() {
               className={`${INPUT} h-auto py-3 leading-relaxed`}
             />
           </Section>
-
-          {/* 14: in the box */}
           <Section id="box" icon={Package} title="What's in the box">
             <TextInput value={form.inTheBox} onChange={(v) => update({ inTheBox: v })} maxLength={500} placeholder="e.g. Handset, USB Type-C cable, SIM ejector pin, user guide" aria-label="What's in the box" />
           </Section>
+              {mainSpecFields.length > 0 && (
+                <Section id="main-specs" icon={ListChecks} title="Main specifications" hint="What customers compare first. All of them are needed for a new product.">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {mainSpecFields.map((f) => {
+                      const listId = f.options ? `main-${f.label.replace(/\W+/g, '-')}` : undefined;
+                      return (
+                        <Field key={f.label} label={f.label} required>
+                          <input list={listId} value={specValue(f.label)} onChange={(e) => setSpec(f.label, e.target.value)} maxLength={3000} placeholder={f.placeholder} className={INPUT} />
+                          {f.options && (
+                            <datalist id={listId}>
+                              {f.options.map((o) => (
+                                <option key={o} value={o} />
+                              ))}
+                            </datalist>
+                          )}
+                        </Field>
+                      );
+                    })}
+                  </div>
+                </Section>
+              )}
+          <Section id="legal" icon={Landmark} title="Maker & origin" hint="Shown to customers, as Indian rules require. Copy them from the box.">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Country of origin" required help={HELP.origin}>
+                <input list="countries" value={form.countryOfOrigin ?? ''} onChange={(e) => update({ countryOfOrigin: e.target.value || null })} maxLength={60} placeholder="e.g. India" className={INPUT} />
+                <datalist id="countries">
+                  {['India', 'China', 'Vietnam', 'Taiwan', 'South Korea', 'Thailand', 'Malaysia', 'Japan', 'United States'].map((c) => (
+                    <option key={c} value={c} />
+                  ))}
+                </datalist>
+              </Field>
+              <Field label="Manufacturer details" required help={HELP.manufacturer}>
+                <TextInput value={form.manufacturerDetails} onChange={(v) => update({ manufacturerDetails: v })} maxLength={500} placeholder="e.g. Samsung India Electronics Pvt. Ltd., Noida, UP" />
+              </Field>
+              <Field label="Packer details" hint="Name and address, if not the manufacturer.">
+                <TextInput value={form.packerDetails} onChange={(v) => update({ packerDetails: v })} maxLength={500} placeholder="Name and address" />
+              </Field>
+              <Field label="Importer details" hint="Name and address, for an imported product.">
+                <TextInput value={form.importerDetails} onChange={(v) => update({ importerDetails: v })} maxLength={500} placeholder="Name and address" />
+              </Field>
+            </div>
+          </Section>
 
-          {/* Then the rest of the listing sheet: specs */}
+              {/* The rest: asked for by marketplaces, not needed to go live. */}
+              <div className={`${CARD} overflow-hidden`}>
+                <button
+                  type="button"
+                  aria-expanded={moreOpen}
+                  onClick={() => setMoreOpen((o) => !o)}
+                  className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-[#FAFBFE] sm:px-6"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F1F2F6] text-[#6B7280]">
+                    <Plus className={`h-4 w-4 transition-transform ${moreOpen ? 'rotate-45' : ''}`} />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-dm-sans text-[17px] font-bold text-[#061A40]">More details (optional)</span>
+                    <span className="block text-xs text-[#6B7280]">Other specifications, warranty, package size and weight, video.</span>
+                  </span>
+                </button>
+              </div>
+              {moreOpen && (
+                <>
           <Section
             id="specs"
             icon={FileText}
-            title="Specifications"
+            title="Other specifications"
             hint={category ? (specFields.length ? `The details shoppers compare for ${category.name.toLowerCase()}. Starred ones are needed to publish a new product.` : 'Add the details shoppers compare, as label and value.') : 'Choose a category first.'}
           >
             {specGroups.map(([group, fields]) => (
@@ -997,8 +1155,6 @@ function ProductFormPage() {
               </div>
             </div>
           </Section>
-
-          {/* Warranty */}
           <Section id="warranty" icon={ShieldCheck} title="Warranty">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
@@ -1019,31 +1175,6 @@ function ProductFormPage() {
               </div>
             </div>
           </Section>
-
-          {/* Origin and legal details */}
-          <Section id="legal" icon={Landmark} title="Origin & legal details" hint="Shown to shoppers, as Indian e-commerce rules require.">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Country of origin" required hint="Where it was made, or assembled for an import.">
-                <input list="countries" value={form.countryOfOrigin ?? ''} onChange={(e) => update({ countryOfOrigin: e.target.value || null })} maxLength={60} placeholder="e.g. India" className={INPUT} />
-                <datalist id="countries">
-                  {['India', 'China', 'Vietnam', 'Taiwan', 'South Korea', 'Thailand', 'Malaysia', 'Japan', 'United States'].map((c) => (
-                    <option key={c} value={c} />
-                  ))}
-                </datalist>
-              </Field>
-              <Field label="Manufacturer details" required hint="Name and address.">
-                <TextInput value={form.manufacturerDetails} onChange={(v) => update({ manufacturerDetails: v })} maxLength={500} placeholder="e.g. Samsung India Electronics Pvt. Ltd., Noida, UP" />
-              </Field>
-              <Field label="Packer details" hint="Name and address, if not the manufacturer.">
-                <TextInput value={form.packerDetails} onChange={(v) => update({ packerDetails: v })} maxLength={500} placeholder="Name and address" />
-              </Field>
-              <Field label="Importer details" hint="Name and address, for an imported product.">
-                <TextInput value={form.importerDetails} onChange={(v) => update({ importerDetails: v })} maxLength={500} placeholder="Name and address" />
-              </Field>
-            </div>
-          </Section>
-
-          {/* Shipping */}
           <Section id="shipping" icon={Truck} title="Package size & weight" hint="Of the box as shipped, for courier charges.">
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <Field label="Length (cm)">
@@ -1060,43 +1191,128 @@ function ProductFormPage() {
               </Field>
             </div>
           </Section>
-
-          {/* Video */}
           <Section id="video" icon={Video} title="Product video" hint="A link to the product's video, such as on YouTube.">
             <Field label="Video link" error={form.videoUrl && !/^https:\/\/\S{4,}$/.test(form.videoUrl) ? 'A video link starts with https://' : null}>
               <TextInput value={form.videoUrl} onChange={(v) => update({ videoUrl: v?.trim() || null })} maxLength={500} placeholder="e.g. https://www.youtube.com/watch?v=…" />
             </Field>
           </Section>
+                </>
+              )}
+            </>
+          )}
 
+          {step === 4 && (
+            <>
+              {/* Step 5: check everything, then go live (buttons on the right) */}
+              <section className={`${CARD} overflow-hidden`}>
+                <div className="border-b border-[#EEF0F6] px-5 py-4 sm:px-6">
+                  <h2 className="font-dm-sans text-[17px] font-bold text-[#061A40]">
+                    {!ready ? 'A few things are still needed' : status === 'ACTIVE' ? 'All in order: it is live' : 'All set: it can go live'}
+                  </h2>
+                  <p className="mt-0.5 text-xs text-[#6B7280]">
+                    {!ready
+                      ? 'Press "Fix" to go straight to each one.'
+                      : status === 'ACTIVE'
+                        ? 'After changing anything, press "Save changes" on the right.'
+                        : 'Check the preview, then press "Make it live" on the right.'}
+                  </p>
+                </div>
+                <ul className="divide-y divide-[#EEF0F6]">
+                  {STEPS.slice(0, 4).map((s, i) => {
+                    const needs = checks.blocking.filter((m) => stepOf(m) === i);
+                    const nice = checks.warnings.filter((m) => stepOf(m) === i);
+                    return (
+                      <li key={s.title} className="flex items-start gap-3 px-5 py-4 sm:px-6">
+                        <span
+                          className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                            needs.length ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-700'
+                          }`}
+                        >
+                          {needs.length ? needs.length : <Check className="h-3.5 w-3.5" />}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-[#061A40]">
+                            {i + 1}. {s.title}
+                          </p>
+                          {needs.length === 0 && nice.length === 0 && <p className="text-xs text-emerald-700">All done.</p>}
+                          {needs.map((m) => (
+                            <p key={m} className="text-sm text-red-600">
+                              {m}
+                            </p>
+                          ))}
+                          {nice.map((m) => (
+                            <p key={m} className="text-xs text-amber-700">
+                              Good to add: {m.replace(/\.$/, '').replace(/^\w/, (c) => c.toLowerCase())}.
+                            </p>
+                          ))}
+                        </div>
+                        {(needs.length > 0 || nice.length > 0) && (
+                          <button type="button" onClick={() => goTo(i)} className="shrink-0 rounded-lg px-2.5 py-1 text-sm font-semibold text-[#3D4FE0] hover:bg-[#EEF1FF]">
+                            Fix
+                          </button>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
           {!isNew && loaded && <ProductHistory slug={loaded.slug} refreshKey={loaded.updatedAt ?? ''} />}
+            </>
+          )}
+
+          {/* Back and next, under every step */}
+          <div className="flex items-center justify-between gap-3">
+            {step > 0 ? (
+              <button type="button" onClick={() => goTo(step - 1)} className="flex h-11 items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 text-sm font-semibold text-[#061A40] transition-colors hover:border-[#C7D2FE] hover:text-[#3D4FE0]">
+                <ArrowLeft className="h-4 w-4" /> Back
+              </button>
+            ) : (
+              <span />
+            )}
+            {step < STEPS.length - 1 && (
+              <button
+                type="button"
+                onClick={() => goTo(step + 1)}
+                className="flex h-11 items-center gap-2 rounded-xl bg-[#061A40] px-5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(6,26,64,0.6)] transition-colors hover:bg-[#3D4FE0]"
+              >
+                Next: {STEPS[step + 1].title} <ArrowRight className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Right: checklist, preview, actions */}
         <aside className="flex flex-col gap-4 lg:sticky lg:top-6">
           <div className={`${CARD} overflow-hidden`}>
             <div className="border-b border-[#EEF0F6] px-5 py-4">
-              <h2 className="font-dm-sans text-[17px] font-bold text-[#061A40]">{ready ? 'Ready to publish' : 'Before publishing'}</h2>
+              <h2 className="font-dm-sans text-[17px] font-bold text-[#061A40]">{ready ? 'Ready to go live' : 'Still needed'}</h2>
               <p className="mt-0.5 text-xs text-[#6B7280]">
-                {ready ? (checks.warnings.length ? 'A few things would make the listing better.' : 'Everything is filled in.') : 'These are needed for the shop.'}
+                {ready ? (checks.warnings.length ? 'It can go live. These would make it better:' : 'Everything is filled in.') : 'Press one to go to where it is filled in.'}
               </p>
             </div>
-            <ul className="max-h-[40vh] space-y-2 overflow-y-auto px-5 py-4 text-sm">
+            <ul className="max-h-[40vh] space-y-1 overflow-y-auto px-3 py-3 text-sm">
               {checks.blocking.map((b) => (
-                <li key={b} className="flex items-start gap-2 text-red-600">
-                  <X className="mt-0.5 h-4 w-4 shrink-0" />
-                  {b}
+                <li key={b}>
+                  <button type="button" onClick={() => goTo(stepOf(b))} className="flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-left text-red-600 hover:bg-red-50">
+                    <X className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span className="flex-1">{b}</span>
+                    <span className="shrink-0 text-xs font-semibold text-[#6B7280]">Step {stepOf(b) + 1}</span>
+                  </button>
                 </li>
               ))}
               {checks.warnings.map((w) => (
-                <li key={w} className="flex items-start gap-2 text-amber-700">
-                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-                  {w}
+                <li key={w}>
+                  <button type="button" onClick={() => goTo(stepOf(w))} className="flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-left text-amber-700 hover:bg-amber-50">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span className="flex-1">{w}</span>
+                    <span className="shrink-0 text-xs font-semibold text-[#6B7280]">Step {stepOf(w) + 1}</span>
+                  </button>
                 </li>
               ))}
               {ready && checks.warnings.length === 0 && (
-                <li className="flex items-start gap-2 text-emerald-700">
+                <li className="flex items-start gap-2 px-2 py-1.5 text-emerald-700">
                   <Check className="mt-0.5 h-4 w-4 shrink-0" />
-                  Title, photos, price, specs, barcode and tax details are all in.
+                  Title, photos, price, barcode, tax and details are all in.
                 </li>
               )}
             </ul>
@@ -1134,17 +1350,17 @@ function ProductFormPage() {
                     {saving === 'ACTIVE' ? 'Saving…' : 'Save changes'}
                   </button>
                   <button type="button" disabled={!!saving} onClick={() => void save('INACTIVE')} className={SECONDARY}>
-                    {saving === 'INACTIVE' ? 'Saving…' : 'Take off the shop'}
+                    {saving === 'INACTIVE' ? 'Saving…' : 'Hide from website'}
                   </button>
                 </>
               ) : (
                 <>
                   <button type="button" disabled={!!saving || !ready} onClick={() => void save('ACTIVE')} className={PRIMARY}>
-                    {saving === 'ACTIVE' ? 'Publishing…' : status === 'INACTIVE' ? 'Put back on the shop' : 'Publish'}
+                    {saving === 'ACTIVE' ? 'Saving…' : status === 'INACTIVE' ? 'Make live again' : 'Make it live'}
                     {saving !== 'ACTIVE' && <ArrowRight className="h-4 w-4" />}
                   </button>
                   <button type="button" disabled={!!saving || (!dirty && !isNew)} onClick={() => void save(status)} className={SECONDARY}>
-                    {saving === status ? 'Saving…' : status === 'INACTIVE' ? 'Save' : 'Save draft'}
+                    {saving === status ? 'Saving…' : status === 'INACTIVE' ? 'Save (stays hidden)' : 'Save for later'}
                   </button>
                 </>
               )}
@@ -1157,7 +1373,7 @@ function ProductFormPage() {
                   <div className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-xs text-red-800" role="alert">
                     <p className="font-semibold">Delete this product?</p>
                     <p className="mt-1">
-                      It comes off the shop and out of the products list. Its history is kept, and it can be restored from the Deleted tab.
+                      It comes off the website and out of the products list. It can be brought back from More tools → Deleted products.
                     </p>
                     <div className="mt-2 flex gap-2">
                       <button type="button" onClick={() => void remove()} className="rounded-lg bg-red-600 px-3 py-1.5 font-semibold text-white hover:bg-red-700">
@@ -1227,12 +1443,6 @@ function ProductFormPage() {
       </div>
     </main>
   );
-}
-
-function StatusPill({ status }: { status: Status }) {
-  const style = { ACTIVE: 'bg-emerald-50 text-emerald-700', DRAFT: 'bg-amber-50 text-amber-700', INACTIVE: 'bg-[#F1F2F6] text-[#6B7280]' }[status];
-  const label = { ACTIVE: 'On the shop', DRAFT: 'Draft', INACTIVE: 'Off the shop' }[status];
-  return <span className={`rounded-full px-3 py-1.5 text-sm font-semibold ${style}`}>{label}</span>;
 }
 
 export default function ProductForm() {

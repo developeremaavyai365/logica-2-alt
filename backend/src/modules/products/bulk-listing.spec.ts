@@ -149,7 +149,7 @@ describe('adding products', () => {
     const result = plan(sheet(['Title', 'Category', 'Brand', 'Status', 'Selling price'], ['Dell Inspiron 15', 'Laptops', 'Dell', 'Active', 45990]));
     expect(result.rejected).toBe(1);
     const message = errorsOf(result)[0];
-    expect(message).toMatch(/^Not ready to be Active: Add the model name\. Fill in the RAM of the variant\./);
+    expect(message).toMatch(/^Not ready to be Active: Add the model name\. Fill in the RAM\./);
     expect(message).toContain('Add at least one photo.');
     expect(message).toMatch(/Set its Status to Draft to save it anyway\.$/);
   });

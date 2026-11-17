@@ -3,6 +3,7 @@ import { Prisma, SapImportMode } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { locateHeader } from './column-mapping';
 import { ImportPlan, largeRemovalWarning, planImport } from './import-plan';
+import { suggestLinks } from './link-suggestions';
 import { LiveEntry, toLiveEntries } from './live-catalogue';
 import { validateRows } from './row-validator';
 import { FIELD_LABELS, ImportMode, ParsedItem, RowIssue, SapField, StoredItem } from './sap-import.types';
@@ -399,6 +400,32 @@ export class SapImportService {
     });
 
     return updated;
+  }
+
+  /** Suggested shop products for the codes in the feed that are not linked
+   *  yet, for a person to confirm (link-suggestions.ts). */
+  async suggestions() {
+    const [items, products, links] = await Promise.all([
+      this.prisma.sapItem.findMany({
+        where: { websiteProductId: null, inLatestFeed: true },
+        select: { sapCode: true, sapName: true, modelName: true, ean: true, partNumber: true, mopInPaise: true, stock: true },
+      }),
+      this.prisma.product.findMany({
+        where: { deletedAt: null },
+        select: {
+          slug: true,
+          name: true,
+          imageUrl: true,
+          ean: true,
+          partNumber: true,
+          modelNumber: true,
+          colours: { select: { key: true, name: true, family: true, ean: true } },
+        },
+      }),
+      this.prisma.sapItem.findMany({ where: { websiteProductId: { not: null } }, select: { websiteProductId: true, websiteColour: true } }),
+    ]);
+    const taken = new Set(links.map((l) => `${l.websiteProductId}|${l.websiteColour ?? ''}`));
+    return { waiting: items.length, suggestions: suggestLinks(items, products, taken) };
   }
 
   /** Name, price, MRP and availability of every linked code, for the shop. */

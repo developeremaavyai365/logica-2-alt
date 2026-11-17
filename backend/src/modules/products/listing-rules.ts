@@ -378,22 +378,22 @@ export function checkListing(listing: ListingForChecks, linkedToSap: boolean, al
   if (!listing.categorySlug) blocking.push('Choose a category.');
   if (!listing.brandName.trim()) blocking.push('Choose a brand.');
   if (!listing.modelName?.trim()) need('Add the model name.');
-  for (const field of template.filter((x) => x.variant && missingSpec(x))) need(`Fill in the ${field.label} of the variant.`);
+  for (const field of template.filter((x) => x.variant && missingSpec(x))) need(`Fill in the ${field.label}.`);
   if (COLOUR_CATEGORIES.includes(listing.categorySlug) && listing.colours.length === 0) need('Add the colour.');
   if (listing.name.trim().length < 3) blocking.push('Add a product title.');
 
   // 5-10: price, barcode and tax.
   if (!linkedToSap && listing.mrpInPaise == null) need('Add the MRP.');
-  if (!linkedToSap && listing.priceInPaise <= 0) blocking.push('Set a selling price, or link a SAP code on the SAP import page.');
+  if (!linkedToSap && listing.priceInPaise <= 0) blocking.push('Add the selling price, or link the item code (SAP).');
   if (listing.mrpInPaise != null && listing.priceInPaise > listing.mrpInPaise) blocking.push('The selling price cannot be above the MRP.');
   if (listing.colours.length === 0) {
-    if (!listing.ean) need('Add the EAN / barcode.');
+    if (!listing.ean) need('Add the barcode number.');
   } else {
     const without = listing.colours.filter((c) => !c.ean).map((c) => c.name);
-    if (without.length) need(`Add the EAN for ${without.join(', ')}.`);
+    if (without.length) need(`Add the barcode number for ${without.join(', ')}.`);
   }
-  if (listing.gstRatePercent == null) need('Choose the GST rate.');
-  if (!listing.hsnCode) need('Add the HSN code.');
+  if (listing.gstRatePercent == null) need('Choose the GST %.');
+  if (!listing.hsnCode) need('Add the tax code (HSN).');
 
   // 11-14: photos, highlights, description, box.
   if (listing.gallery.length === 0) blocking.push('Add at least one photo.');
@@ -404,11 +404,11 @@ export function checkListing(listing: ListingForChecks, linkedToSap: boolean, al
   if (!listing.inTheBox?.trim()) need('Add what is in the box.');
 
   // Then the category's specs and the legal details.
-  for (const field of template.filter((x) => !x.variant && missingSpec(x))) need(`Fill in the spec "${field.label}".`);
+  for (const field of template.filter((x) => !x.variant && missingSpec(x))) need(`Fill in "${field.label}".`);
   if (!listing.countryOfOrigin?.trim()) need('Add the country of origin.');
   if (!listing.manufacturerDetails?.trim()) need("Add the manufacturer's name and address.");
 
-  if (!linkedToSap) warnings.push('Link a SAP code (the SKU): until then shoppers can see it but not order it.');
+  if (!linkedToSap) warnings.push('Link the item code (SAP), so shoppers can order it.');
   return { blocking, warnings };
 }
 

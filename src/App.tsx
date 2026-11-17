@@ -28,6 +28,7 @@ const AdminProducts = lazy(() => import('./pages/admin/Products'));
 const AdminProductForm = lazy(() => import('./pages/admin/ProductForm'));
 const AdminBulkUpload = lazy(() => import('./pages/admin/BulkUpload'));
 const AdminTitleFormats = lazy(() => import('./pages/admin/TitleFormats'));
+const AdminTools = lazy(() => import('./pages/admin/AdminTools'));
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
@@ -106,6 +107,14 @@ function App() {
           element={
             <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
               <AdminProductForm />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/tools"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <AdminTools />
             </Suspense>
           }
         />

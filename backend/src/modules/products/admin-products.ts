@@ -32,7 +32,7 @@ export interface LinkedSapInput {
   ean: string | null;
 }
 
-export type ProductIssue = 'missing-ean' | 'not-linked' | 'out-of-stock';
+export type ProductIssue = 'missing-ean' | 'not-linked' | 'out-of-stock' | 'no-photo';
 export type ProductSort = 'shop' | 'name' | 'recent' | 'price';
 
 export interface AdminProductRow {
@@ -99,6 +99,7 @@ export function summariseProduct(product: ProductRowInput, linked: LinkedSapInpu
   if (ean.have < ean.need) issues.push('missing-ean');
   if (codes.length === 0) issues.push('not-linked');
   if (!inStock) issues.push('out-of-stock');
+  if (!product.imageUrl) issues.push('no-photo');
 
   return {
     slug: product.slug,
@@ -191,6 +192,7 @@ export function listProducts(rows: AdminProductRow[], query: ListQuery) {
       'missing-ean': countIssue('missing-ean'),
       'not-linked': countIssue('not-linked'),
       'out-of-stock': countIssue('out-of-stock'),
+      'no-photo': countIssue('no-photo'),
     },
     items: sorted.slice(start, start + query.pageSize),
   };

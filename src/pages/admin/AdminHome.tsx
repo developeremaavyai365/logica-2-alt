@@ -1,94 +1,230 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Download, FileSpreadsheet, Link2, Store } from 'lucide-react';
+import {
+  ArrowRight,
+  Barcode,
+  CheckCircle2,
+  FileSpreadsheet,
+  ImageOff,
+  IndianRupee,
+  Link2,
+  Link2Off,
+  Loader2,
+  PackageX,
+  PencilLine,
+  Plus,
+  Rocket,
+  type LucideIcon,
+} from 'lucide-react';
 import { apiFetch } from '../../lib/api-client';
 import { useAuthStore } from '../../auth-store';
 import AdminShell from './AdminShell';
+import { STATUS_WORDS } from './admin-ui';
 
-interface Catalogue {
-  inFeed: number;
-  inStock: number;
-  linked: number;
+/* The admin home: the jobs people come here to do, as big buttons, and what
+   needs doing, in plain words, each with a way to fix it. */
+
+interface Counts {
+  all: number;
+  ACTIVE: number;
+  DRAFT: number;
+  INACTIVE: number;
+  deleted: number;
+  'not-linked': number;
+  'missing-ean': number;
+  'out-of-stock': number;
+  'no-photo': number;
 }
 
-function Stat({ label, value, hint }: { label: string; value: number | null; hint: string }) {
+const CARD = 'rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_10px_30px_-12px_rgba(6,26,64,0.12)]';
+
+function TaskCard({ to, icon: Icon, title, text, primary }: { to: string; icon: LucideIcon; title: string; text: string; primary?: boolean }) {
   return (
-    <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-[0_10px_30px_-12px_rgba(6,26,64,0.12)]">
-      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#3D4FE0]">{label}</span>
-      <p className="mt-2 font-dm-sans text-4xl font-bold tabular-nums text-[#061A40]" style={{ letterSpacing: '-0.03em' }}>
-        {value === null ? '–' : value.toLocaleString('en-IN')}
-      </p>
-      <p className="mt-1 text-sm text-[#6B7280]">{hint}</p>
-    </div>
+    <Link
+      to={to}
+      className={`group flex items-center gap-4 rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-0.5 sm:p-6 ${
+        primary
+          ? 'border-[#061A40] bg-[#061A40] text-white shadow-[0_18px_36px_-16px_rgba(6,26,64,0.7)] hover:bg-[#0B2556]'
+          : 'border-[#E5E7EB] bg-white text-[#061A40] shadow-[0_10px_30px_-12px_rgba(6,26,64,0.12)] hover:border-[#C7D2FE]'
+      }`}
+    >
+      <span
+        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl transition-colors ${
+          primary ? 'bg-white/10 text-white' : 'bg-[#EEF1FF] text-[#3D4FE0] group-hover:bg-[#3D4FE0] group-hover:text-white'
+        }`}
+      >
+        <Icon className="h-6 w-6" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block font-dm-sans text-lg font-bold leading-snug">{title}</span>
+        <span className={`mt-0.5 block text-sm leading-relaxed ${primary ? 'text-white/70' : 'text-[#6B7280]'}`}>{text}</span>
+      </span>
+      <ArrowRight className={`h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1 ${primary ? 'text-white/70' : 'text-[#9CA3AF] group-hover:text-[#3D4FE0]'}`} />
+    </Link>
   );
 }
 
-function Dashboard() {
+function TodoRow({ icon: Icon, tone, children, to, action }: { icon: LucideIcon; tone: 'red' | 'amber' | 'blue'; children: ReactNode; to: string; action: string }) {
+  const tones = { red: 'bg-red-50 text-red-600', amber: 'bg-amber-50 text-amber-600', blue: 'bg-[#EEF1FF] text-[#3D4FE0]' };
+  return (
+    <li>
+      <Link to={to} className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[#FAFBFE] sm:px-6">
+        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${tones[tone]}`}>
+          <Icon className="h-5 w-5" />
+        </span>
+        <span className="min-w-0 flex-1 text-[15px] leading-snug text-[#061A40]">{children}</span>
+        <span className="flex shrink-0 items-center gap-1 text-sm font-semibold text-[#3D4FE0]">
+          {action} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </Link>
+    </li>
+  );
+}
+
+const plural = (n: number, one: string, many: string) => `${n.toLocaleString('en-IN')} ${n === 1 ? one : many}`;
+
+function Home() {
   const { user } = useAuthStore();
-  const [catalogue, setCatalogue] = useState<Catalogue | null>(null);
+  const [counts, setCounts] = useState<Counts | null>(null);
+  const [toMatch, setToMatch] = useState<number | null>(null);
 
   useEffect(() => {
-    apiFetch<{ catalogue: Catalogue }>('/admin/sap-import/items?pageSize=1')
-      .then((data) => setCatalogue(data.catalogue))
-      .catch(() => setCatalogue(null));
+    apiFetch<{ counts: Counts }>('/admin/products?pageSize=1')
+      .then((data) => setCounts(data.counts))
+      .catch(() => setCounts(null));
+    apiFetch<{ suggestions: unknown[] }>('/admin/sap-import/suggestions')
+      .then((data) => setToMatch(data.suggestions.length))
+      .catch(() => setToMatch(0));
   }, []);
+
+  const todo = counts
+    ? [
+        toMatch
+          ? {
+              icon: Link2,
+              tone: 'blue' as const,
+              to: '/admin/sap-import#matches',
+              action: 'Check',
+              text: (
+                <>
+                  <strong>{plural(toMatch, 'new item code', 'new item codes')}</strong> from SAP look like products on the website. Confirm them so
+                  customers can order.
+                </>
+              ),
+            }
+          : null,
+        counts['not-linked']
+          ? {
+              icon: Link2Off,
+              tone: 'red' as const,
+              to: '/admin/products?issue=not-linked',
+              action: 'Fix',
+              text: (
+                <>
+                  <strong>{plural(counts['not-linked'], 'product', 'products')}</strong> can't be ordered yet: no item code (SAP) linked.
+                </>
+              ),
+            }
+          : null,
+        counts['no-photo']
+          ? {
+              icon: ImageOff,
+              tone: 'red' as const,
+              to: '/admin/products?issue=no-photo',
+              action: 'Add photos',
+              text: (
+                <>
+                  <strong>{plural(counts['no-photo'], 'product has', 'products have')}</strong> no photo.
+                </>
+              ),
+            }
+          : null,
+        counts.DRAFT
+          ? {
+              icon: Rocket,
+              tone: 'amber' as const,
+              to: '/admin/products?status=DRAFT',
+              action: 'Review',
+              text: (
+                <>
+                  <strong>{plural(counts.DRAFT, 'product is', 'products are')}</strong> not live yet.
+                </>
+              ),
+            }
+          : null,
+        counts['out-of-stock']
+          ? {
+              icon: PackageX,
+              tone: 'amber' as const,
+              to: '/admin/products?issue=out-of-stock',
+              action: 'See',
+              text: (
+                <>
+                  <strong>{plural(counts['out-of-stock'], 'product is', 'products are')}</strong> out of stock.
+                </>
+              ),
+            }
+          : null,
+        counts['missing-ean']
+          ? {
+              icon: Barcode,
+              tone: 'amber' as const,
+              to: '/admin/products?issue=missing-ean',
+              action: 'Fix',
+              text: (
+                <>
+                  <strong>{plural(counts['missing-ean'], 'product has', 'products have')}</strong> no barcode number.
+                </>
+              ),
+            }
+          : null,
+      ].filter((x): x is NonNullable<typeof x> => x !== null)
+    : [];
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-dm-sans text-3xl font-bold text-[#061A40]" style={{ letterSpacing: '-0.03em' }}>
-            Welcome{user?.name ? `, ${user.name}` : ''}
-          </h1>
-          <p className="mt-1 text-[#6B7280]">Manage the products, prices and stock shown on logicainfoway.com.</p>
-        </div>
-        {/* The blank product sheet to send to whoever fills in the list. */}
-        <a
-          href="/admin/logica-product-update-template.xlsx"
-          download="Logica Product Update Template.xlsx"
-          className="flex items-center gap-2 rounded-xl bg-[#061A40] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[#3D4FE0]"
-        >
-          <Download className="h-4 w-4" />
-          Download template
-        </a>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Stat label="In the SAP feed" value={catalogue?.inFeed ?? null} hint="SAP codes from the latest sheets" />
-        <Stat label="In stock" value={catalogue?.inStock ?? null} hint="Codes with stock above zero" />
-        <Stat label="On the website" value={catalogue?.linked ?? null} hint="Codes linked to a shop product" />
+      <div>
+        <h1 className="font-dm-sans text-3xl font-bold text-[#061A40]" style={{ letterSpacing: '-0.03em' }}>
+          Welcome{user?.name ? `, ${user.name.split(' ')[0]}` : ''}
+        </h1>
+        <p className="mt-1 text-[#6B7280]">What would you like to do today?</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Link
-          to="/admin/sap-import"
-          className="group flex items-start gap-4 rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0_10px_30px_-12px_rgba(6,26,64,0.12)] transition-all hover:-translate-y-0.5 hover:border-[#C7D2FE]"
-        >
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#061A40] text-white transition-colors group-hover:bg-[#3D4FE0]">
-            <FileSpreadsheet className="h-5 w-5" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block font-dm-sans text-lg font-bold text-[#061A40]">SAP product import</span>
-            <span className="mt-1 block text-sm leading-relaxed text-[#6B7280]">
-              Upload the product sheet to update stock, MRP and selling price, then link each SAP code to its shop product.
-            </span>
-          </span>
-          <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-[#9CA3AF] transition-transform group-hover:translate-x-1 group-hover:text-[#3D4FE0]" />
-        </Link>
-
-        <div className="flex items-start gap-4 rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0_10px_30px_-12px_rgba(6,26,64,0.12)]">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EEF1FF] text-[#3D4FE0]">
-            {catalogue && catalogue.linked > 0 ? <Store className="h-5 w-5" /> : <Link2 className="h-5 w-5" />}
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block font-dm-sans text-lg font-bold text-[#061A40]">How prices reach the shop</span>
-            <span className="mt-1 block text-sm leading-relaxed text-[#6B7280]">
-              Only SAP codes linked to a shop product change what customers see. Products with no linked code keep their current
-              price. Changes show on the website within about a minute.
-            </span>
-          </span>
-        </div>
+        <TaskCard to="/admin/products/new" icon={Plus} title="Add a new product" text="Step by step: what it is, price, photos and details." primary />
+        <TaskCard to="/admin/sap-import" icon={IndianRupee} title="Update prices & stock" text="Upload the SAP sheet. Prices on the website change at once." />
+        <TaskCard to="/admin/products" icon={PencilLine} title="Find & edit a product" text="Change photos, price, details, or take a product off the website." />
+        <TaskCard to="/admin/products/bulk" icon={FileSpreadsheet} title="Add many products from Excel" text="Fill in one sheet to add or change many products at once." />
       </div>
+
+      <section className={`${CARD} overflow-hidden`}>
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#EEF0F6] px-5 py-4 sm:px-6">
+          <h2 className="font-dm-sans text-lg font-bold text-[#061A40]">Needs your attention</h2>
+          {counts && (
+            <span className="text-sm text-[#6B7280]">
+              {counts.ACTIVE.toLocaleString('en-IN')} {STATUS_WORDS.ACTIVE.toLowerCase()} · {counts.DRAFT.toLocaleString('en-IN')} {STATUS_WORDS.DRAFT.toLowerCase()} ·{' '}
+              {counts.INACTIVE.toLocaleString('en-IN')} {STATUS_WORDS.INACTIVE.toLowerCase()}
+            </span>
+          )}
+        </div>
+        {!counts ? (
+          <div className="flex justify-center py-10">
+            <Loader2 className="h-5 w-5 animate-spin text-[#9CA3AF]" />
+          </div>
+        ) : todo.length === 0 ? (
+          <p className="flex items-center gap-3 px-6 py-6 text-[15px] text-[#061A40]">
+            <CheckCircle2 className="h-6 w-6 text-emerald-600" /> Everything looks good. Nothing needs fixing right now.
+          </p>
+        ) : (
+          <ul className="divide-y divide-[#EEF0F6]">
+            {todo.map((t, i) => (
+              <TodoRow key={i} icon={t.icon} tone={t.tone} to={t.to} action={t.action}>
+                {t.text}
+              </TodoRow>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   );
 }
@@ -96,7 +232,7 @@ function Dashboard() {
 export default function AdminHome() {
   return (
     <AdminShell>
-      <Dashboard />
+      <Home />
     </AdminShell>
   );
 }

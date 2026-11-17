@@ -7,17 +7,17 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
-  FileSpreadsheet,
+  ImageOff,
   Link2Off,
   Loader2,
   PackageX,
   Plus,
   RotateCcw,
   Search,
-  Type,
   X,
 } from 'lucide-react';
 import AdminShell from './AdminShell';
+import { StatusBadge, STATUS_WORDS } from './admin-ui';
 import { ApiError, apiFetch } from '../../lib/api-client';
 
 /* The admin products page: every product on the shop, what it shows there
@@ -28,7 +28,7 @@ import { ApiError, apiFetch } from '../../lib/api-client';
    and can be shared. */
 
 type Status = 'ACTIVE' | 'DRAFT' | 'INACTIVE';
-type Issue = 'missing-ean' | 'not-linked' | 'out-of-stock';
+type Issue = 'missing-ean' | 'not-linked' | 'out-of-stock' | 'no-photo';
 type Sort = 'shop' | 'name' | 'recent' | 'price';
 
 interface Row {
@@ -67,26 +67,22 @@ type Tab = Status | 'deleted';
 
 const STATUS_TABS: { key: Tab | null; label: string }[] = [
   { key: null, label: 'All' },
-  { key: 'ACTIVE', label: 'Active' },
-  { key: 'DRAFT', label: 'Draft' },
-  { key: 'INACTIVE', label: 'Inactive' },
+  { key: 'ACTIVE', label: STATUS_WORDS.ACTIVE },
+  { key: 'DRAFT', label: STATUS_WORDS.DRAFT },
+  { key: 'INACTIVE', label: STATUS_WORDS.INACTIVE },
   { key: 'deleted', label: 'Deleted' },
 ];
 
 const when = (iso: string) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
-const ISSUES: { key: Issue; label: string; icon: typeof Barcode }[] = [
-  { key: 'missing-ean', label: 'Missing EAN', icon: Barcode },
-  { key: 'not-linked', label: 'Not linked to SAP', icon: Link2Off },
-  { key: 'out-of-stock', label: 'Out of stock', icon: PackageX },
+/** What a product can be missing, in plain words: the filter chips, and
+ *  the short badges under a product's name. */
+const ISSUES: { key: Issue; label: string; badge: string; icon: typeof Barcode }[] = [
+  { key: 'not-linked', label: "Can't be ordered", badge: 'No item code', icon: Link2Off },
+  { key: 'no-photo', label: 'No photo', badge: 'No photo', icon: ImageOff },
+  { key: 'missing-ean', label: 'No barcode', badge: 'No barcode', icon: Barcode },
+  { key: 'out-of-stock', label: 'Out of stock', badge: 'Out of stock', icon: PackageX },
 ];
-
-const STATUS_PILL: Record<Status, string> = {
-  ACTIVE: 'bg-emerald-50 text-emerald-700',
-  DRAFT: 'bg-amber-50 text-amber-700',
-  INACTIVE: 'bg-[#F1F2F6] text-[#6B7280]',
-};
-const STATUS_LABEL: Record<Status, string> = { ACTIVE: 'Active', DRAFT: 'Draft', INACTIVE: 'Inactive' };
 
 const CARD = 'rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_10px_30px_-12px_rgba(6,26,64,0.12)]';
 const SELECT =
@@ -242,8 +238,8 @@ function ProductsPage() {
         ok: true,
         text:
           updated === 0
-            ? 'Nothing to change: those products were already ' + (to === 'ACTIVE' ? 'active.' : 'off the shop.')
-            : `${updated} product${updated === 1 ? '' : 's'} ${to === 'ACTIVE' ? 'put on the shop' : 'taken off the shop'}. The shop shows it within a minute.`,
+            ? 'Nothing to change: those products were already ' + (to === 'ACTIVE' ? 'live.' : 'hidden.')
+            : `${updated} product${updated === 1 ? ' is' : 's are'} now ${to === 'ACTIVE' ? 'live on the website' : 'hidden from the website'}.`,
       });
       setSelected(new Set());
       setConfirmOff(false);
@@ -266,31 +262,15 @@ function ProductsPage() {
           <h1 className="font-dm-sans text-3xl font-bold text-[#061A40]" style={{ letterSpacing: '-0.03em' }}>
             Products
           </h1>
-          <p className="mt-1 max-w-2xl text-[#6B7280]">
-            Everything listed on the shop. Where a SAP code is linked, its price and stock come from the SAP sheet.
-          </p>
+          <p className="mt-1 max-w-2xl text-[#6B7280]">Find a product to edit it, or tick some to make them live or hide them.</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link
-            to="/admin/title-formats"
-            className="flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#061A40] transition-colors duration-300 hover:border-[#3D4FE0] hover:text-[#3D4FE0]"
-          >
-            <Type className="h-4 w-4" />
-            Title formats
-          </Link>
-          <Link
-            to="/admin/products/bulk"
-            className="flex items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#061A40] transition-colors duration-300 hover:border-[#3D4FE0] hover:text-[#3D4FE0]"
-          >
-            <FileSpreadsheet className="h-4 w-4" />
-            Bulk upload
-          </Link>
           <Link
             to="/admin/products/new"
             className="flex items-center gap-2 rounded-xl bg-[#061A40] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_-12px_rgba(6,26,64,0.6)] transition-colors duration-300 hover:bg-[#3D4FE0]"
           >
             <Plus className="h-4 w-4" />
-            Add product
+            Add a product
           </Link>
         </div>
       </div>
@@ -330,7 +310,7 @@ function ProductsPage() {
             type="search"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search name, brand, SAP code or EAN"
+            placeholder="Search by name, brand, item code or barcode"
             aria-label="Search products"
             className="h-10 w-full rounded-xl border border-[#E5E7EB] bg-white pl-10 pr-3 text-sm text-[#061A40] outline-none transition-colors placeholder:text-[#9CA3AF] hover:border-[#C7D2FE] focus:border-[#3D4FE0]"
           />
@@ -353,7 +333,7 @@ function ProductsPage() {
             ))}
           </select>
           <select aria-label="Sort" value={sort} onChange={(e) => update({ sort: e.target.value === 'shop' ? null : e.target.value })} className={`${SELECT} col-span-2`}>
-            <option value="shop">Shop order</option>
+            <option value="shop">Website order</option>
             <option value="name">Name A–Z</option>
             <option value="price">Price: low to high</option>
             <option value="recent">Recently changed</option>
@@ -363,7 +343,7 @@ function ProductsPage() {
 
       {/* Needs attention */}
       <div className={`flex flex-wrap items-center gap-2 ${deletedView ? 'hidden' : ''}`}>
-        <span className="mr-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#6B7280]">Needs attention</span>
+        <span className="mr-1 text-sm font-semibold text-[#6B7280]">Show only:</span>
         {ISSUES.map(({ key, label, icon: Icon }) => {
           const on = issue === key;
           const count = data?.counts[key];
@@ -421,7 +401,7 @@ function ProductsPage() {
           </div>
         ) : (
           <div className={`overflow-x-auto transition-opacity ${loading ? 'opacity-60' : ''}`}>
-            <table className="w-full min-w-[860px] text-sm">
+            <table className="w-full min-w-[760px] text-sm">
               <thead>
                 <tr className="border-b border-[#EEF0F6] bg-[#FAFBFE] text-left text-xs font-semibold uppercase tracking-[0.08em] text-[#6B7280]">
                   <th className="w-10 py-3 pl-5">
@@ -432,7 +412,6 @@ function ProductsPage() {
                   <th className="py-3 pl-2 pr-4">Product</th>
                   <th className="px-4 py-3">Price</th>
                   <th className="px-4 py-3">Stock</th>
-                  <th className="px-4 py-3">EAN</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="py-3 pl-4 pr-5 text-right">
                     <span className="sr-only">Actions</span>
@@ -469,6 +448,16 @@ function ProductsPage() {
                               {row.brand || 'No brand'} · {row.category.name}
                               {row.colourCount > 0 && ` · ${row.colourCount} colours`}
                             </span>
+                            {/* What it still needs, in a word or two. */}
+                            {!row.deletedAt && row.issues.some((i) => i !== 'out-of-stock') && (
+                              <span className="mt-1.5 flex flex-wrap gap-1">
+                                {ISSUES.filter((x) => x.key !== 'out-of-stock' && row.issues.includes(x.key)).map(({ key, badge, icon: Icon }) => (
+                                  <span key={key} className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-600">
+                                    <Icon className="h-3 w-3" /> {badge}
+                                  </span>
+                                ))}
+                              </span>
+                            )}
                           </span>
                         </div>
                       </td>
@@ -476,50 +465,27 @@ function ProductsPage() {
                         <span className="block font-semibold tabular-nums text-[#061A40]">{rupees(row.pricePaise)}</span>
                         <span className="mt-0.5 flex items-center gap-1.5 text-xs">
                           {row.mrpPaise && row.mrpPaise > row.pricePaise && <span className="tabular-nums text-[#9CA3AF] line-through">{rupees(row.mrpPaise)}</span>}
-                          <span
-                            className={`rounded px-1.5 py-px text-[10px] font-semibold uppercase tracking-[0.06em] ${
-                              row.source === 'sap' ? 'bg-[#EEF1FF] text-[#3D4FE0]' : 'bg-[#F1F2F6] text-[#6B7280]'
-                            }`}
-                            title={row.source === 'sap' ? `From SAP: ${row.sapCodes.map((s) => s.sapCode).join(', ')}` : 'The catalogue price: no SAP code is linked'}
-                          >
-                            {row.source === 'sap' ? 'SAP' : 'Catalogue'}
-                          </span>
+                          {row.source === 'sap' && (
+                            <span className="rounded bg-[#EEF1FF] px-1.5 py-px text-[10px] font-semibold text-[#3D4FE0]" title={`Item code: ${row.sapCodes.map((x) => x.sapCode).join(', ')}`}>
+                              from SAP
+                            </span>
+                          )}
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
                         {row.stock !== null ? (
                           <span className={`font-semibold tabular-nums ${row.stock > 0 ? 'text-[#061A40]' : 'text-red-600'}`}>
-                            {row.stock} <span className="font-normal text-[#6B7280]">in SAP</span>
+                            {row.stock} <span className="font-normal text-[#6B7280]">in stock</span>
                           </span>
                         ) : (
                           <span className={`text-sm ${row.inStock ? 'text-[#061A40]' : 'text-red-600'}`}>{row.inStock ? 'In stock' : 'Out of stock'}</span>
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        {row.ean.need === 1 ? (
-                          row.ean.value ? (
-                            <span className="font-mono text-xs text-[#061A40]">{row.ean.value}</span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-600">
-                              <Barcode className="h-3 w-3" /> Missing
-                            </span>
-                          )
-                        ) : (
-                          <span
-                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${
-                              row.ean.have === row.ean.need ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'
-                            }`}
-                          >
-                            <Barcode className="h-3 w-3" />
-                            {row.ean.have} of {row.ean.need} colours
-                          </span>
                         )}
                       </td>
                       <td className="px-4 py-3">
                         {row.deletedAt ? (
                           <span className="whitespace-nowrap rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">Deleted {when(row.deletedAt)}</span>
                         ) : (
-                          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_PILL[row.status]}`}>{STATUS_LABEL[row.status]}</span>
+                          <StatusBadge status={row.status} />
                         )}
                       </td>
                       <td className="py-3 pl-4 pr-5 text-right">
@@ -605,7 +571,7 @@ function ProductsPage() {
               {confirmOff ? (
                 <>
                   <span className="text-sm text-[#061A40]">
-                    Take {selected.size} product{selected.size === 1 ? '' : 's'} off the shop?
+                    Hide {selected.size} product{selected.size === 1 ? '' : 's'} from the website?
                   </span>
                   <button
                     type="button"
@@ -613,7 +579,7 @@ function ProductsPage() {
                     onClick={() => void setStatus('INACTIVE')}
                     className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
                   >
-                    {busy ? 'Saving…' : 'Yes, take off'}
+                    {busy ? 'Saving…' : 'Yes, hide'}
                   </button>
                   <button type="button" onClick={() => setConfirmOff(false)} className="rounded-xl px-3 py-2 text-sm font-semibold text-[#6B7280] hover:bg-[#F1F2F6]">
                     Cancel
@@ -627,7 +593,7 @@ function ProductsPage() {
                     onClick={() => void setStatus('ACTIVE')}
                     className="rounded-xl bg-[#061A40] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#3D4FE0] disabled:opacity-50"
                   >
-                    {busy ? 'Saving…' : 'Put on the shop'}
+                    {busy ? 'Saving…' : 'Make live'}
                   </button>
                   <button
                     type="button"
@@ -635,7 +601,7 @@ function ProductsPage() {
                     onClick={() => setConfirmOff(true)}
                     className="rounded-xl border border-[#E5E7EB] bg-white px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:border-red-200 hover:bg-red-50 disabled:opacity-50"
                   >
-                    Take off the shop
+                    Hide from website
                   </button>
                 </>
               )}
