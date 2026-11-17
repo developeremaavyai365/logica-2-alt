@@ -15,6 +15,7 @@ import {
   PencilLine,
   Plus,
   Rocket,
+  ShoppingBag,
   type LucideIcon,
 } from 'lucide-react';
 import { apiFetch } from '../../lib/api-client';
@@ -89,11 +90,15 @@ function Home() {
   const { user } = useAuthStore();
   const [counts, setCounts] = useState<Counts | null>(null);
   const [toMatch, setToMatch] = useState<number | null>(null);
+  const [orders, setOrders] = useState<Record<string, number> | null>(null);
 
   useEffect(() => {
     apiFetch<{ counts: Counts }>('/admin/products?pageSize=1')
       .then((data) => setCounts(data.counts))
       .catch(() => setCounts(null));
+    apiFetch<{ counts: Record<string, number> }>('/admin/orders?tab=new')
+      .then((data) => setOrders(data.counts))
+      .catch(() => setOrders(null));
     apiFetch<{ suggestions: unknown[] }>('/admin/sap-import/suggestions')
       .then((data) => setToMatch(data.suggestions.length))
       .catch(() => setToMatch(0));
@@ -101,6 +106,32 @@ function Home() {
 
   const todo = counts
     ? [
+        orders?.new
+          ? {
+              icon: ShoppingBag,
+              tone: 'blue' as const,
+              to: '/admin/orders?tab=new',
+              action: 'Open',
+              text: (
+                <>
+                  <strong>{plural(orders.new, 'new order', 'new orders')}</strong> to confirm.
+                </>
+              ),
+            }
+          : null,
+        orders && orders['to-pack'] + orders['to-ship'] > 0
+          ? {
+              icon: ShoppingBag,
+              tone: 'amber' as const,
+              to: orders['to-pack'] ? '/admin/orders?tab=to-pack' : '/admin/orders?tab=to-ship',
+              action: 'Open',
+              text: (
+                <>
+                  <strong>{plural(orders['to-pack'] + orders['to-ship'], 'order', 'orders')}</strong> to pack or ship.
+                </>
+              ),
+            }
+          : null,
         toMatch
           ? {
               icon: Link2,

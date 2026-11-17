@@ -11,6 +11,7 @@ import { OrderStatus, PaymentMethod, PaymentStatus, Prisma, ProductStatus } from
 import { randomBytes, randomInt } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AddressesService } from '../account/addresses.service';
+import { OrderNotifier } from './order-notifier.service';
 import { AddressSnapshot, OrderView, toOrderView } from './order-view';
 import {
   CartLineInput,
@@ -76,6 +77,7 @@ export class CheckoutService {
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
     private readonly addresses: AddressesService,
+    private readonly notifier: OrderNotifier,
   ) {}
 
   settings(): CheckoutSettings {
@@ -109,7 +111,10 @@ export class CheckoutService {
     // idempotency key means the same attempt arrived twice at once.
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        return await this.prisma.$transaction((tx) => this.create(tx, userId, input, settings), { timeout: 15_000 });
+        const placed = await this.prisma.$transaction((tx) => this.create(tx, userId, input, settings), { timeout: 15_000 });
+        // Cash on delivery is a new order at once; an online one once paid.
+        if (placed.status === OrderStatus.PLACED) void this.notifier.orderPlaced(placed.orderNumber);
+        return placed;
       } catch (err) {
         if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
           const target = String(err.meta?.target ?? '');
@@ -156,6 +161,7 @@ export class CheckoutService {
         }),
       ]);
       this.logger.log(`[ORDER] ${order.orderNumber} paid (test) — ${rupees(order.totalPaise)}`);
+      void this.notifier.orderPlaced(order.orderNumber);
     }
     return this.orderFor(userId, orderNumber);
   }

@@ -53,6 +53,17 @@ export const envSchema = z.object({
   // Delivery charge per order. 0 = free delivery.
   SHIPPING_FEE_RUPEES: z.coerce.number().int().nonnegative().default(0),
 
+  // ── Orders ────────────────────────────────────────────────────────────
+  // Who is emailed about every new order (the warehouse), comma-separated.
+  // Unset: no one is emailed; new orders still show on the admin Orders page.
+  ORDER_ALERT_EMAILS: z.string().optional(),
+  // The seller on GST invoices. The GSTIN decides the seller's state, and
+  // so whether an invoice charges CGST + SGST or IGST. Use the GSTIN of the
+  // place the goods are sent from.
+  SELLER_NAME: z.string().default('Logica Infoway Limited'),
+  SELLER_GSTIN: z.string().default('19AABCE0772B1Z1'),
+  SELLER_ADDRESS: z.string().default('2 Saklat Place, 1st Floor, Kolkata, West Bengal 700072'),
+
   // ── Product photos (admin listing form) ──────────────────────────────
   // Where uploaded photos are kept. "local": the backend's own uploads/
   // folder, served at LOCAL_UPLOADS_URL — for development, as a server's

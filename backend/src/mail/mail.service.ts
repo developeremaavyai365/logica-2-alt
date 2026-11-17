@@ -64,6 +64,12 @@ export class MailService {
     });
   }
 
+  /** Any other email: an order alert or an order update. Same providers;
+   *  the console provider logs the subject instead of sending. */
+  async sendHtml(args: { to: string; subject: string; html: string; logLabel: string }): Promise<void> {
+    await this.dispatch({ ...args, link: `(subject) ${args.subject}` });
+  }
+
   private frontendUrl(): string {
     return this.config.getOrThrow<string>('FRONTEND_URL');
   }

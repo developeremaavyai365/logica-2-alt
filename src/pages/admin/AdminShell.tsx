@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BadgePercent, ExternalLink, Home, IndianRupee, Loader2, Lock, LogOut, Mail, Package, ShieldCheck, Wrench } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BadgePercent, ExternalLink, Home, IndianRupee, Loader2, Lock, LogOut, Mail, Package, ShieldCheck, ShoppingBag, Wrench } from 'lucide-react';
 import { useAuthStore } from '../../auth-store';
 import { AUTH_SUBMIT, IconField } from '../../components/auth/fields';
 
@@ -15,6 +15,7 @@ const NAVY = '#061A40';
  *  formats and deleted products are under More tools. */
 const NAV = [
   { to: '/admin', label: 'Home', icon: Home, end: true },
+  { to: '/admin/orders', label: 'Orders', icon: ShoppingBag, end: false },
   { to: '/admin/products', label: 'Products', icon: Package, end: false },
   { to: '/admin/sap-import', label: 'Prices & stock', icon: IndianRupee, end: false },
   { to: '/admin/offers', label: 'Offers', icon: BadgePercent, end: false },
@@ -145,8 +146,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   if (user?.role !== 'ADMIN') return <AdminLogin />;
 
   return (
-    <div className="min-h-screen bg-[#F5F8FC]">
-      <header style={{ backgroundColor: NAVY }} className="text-white">
+    <div className="min-h-screen bg-[#F5F8FC] print:bg-white">
+      <header style={{ backgroundColor: NAVY }} className="text-white print:hidden">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
           <Link to="/admin" className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
@@ -172,7 +173,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
             ))}
           </nav>
           <div className="flex items-center gap-2 text-sm">
-            <span className="hidden text-white/60 xl:inline">{user.email}</span>
+            <span className="hidden text-white/60 2xl:inline">{user.email}</span>
             <Link to="/" className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-white/75 hover:bg-white/10 hover:text-white">
               <ExternalLink className="h-4 w-4" /> Website
             </Link>

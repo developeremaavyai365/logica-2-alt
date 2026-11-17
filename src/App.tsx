@@ -30,6 +30,9 @@ const AdminBulkUpload = lazy(() => import('./pages/admin/BulkUpload'));
 const AdminTitleFormats = lazy(() => import('./pages/admin/TitleFormats'));
 const AdminTools = lazy(() => import('./pages/admin/AdminTools'));
 const AdminOffers = lazy(() => import('./pages/admin/Offers'));
+const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
+const AdminOrderDetail = lazy(() => import('./pages/admin/AdminOrderDetail'));
+const OrderPrint = lazy(() => import('./pages/admin/OrderPrint'));
 import NotFound from './pages/NotFound';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
@@ -116,6 +119,30 @@ function App() {
           element={
             <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
               <AdminTools />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <AdminOrders />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/orders/:orderNumber"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <AdminOrderDetail />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin/orders/:orderNumber/print/:doc"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#F5F8FC]" />}>
+              <OrderPrint />
             </Suspense>
           }
         />

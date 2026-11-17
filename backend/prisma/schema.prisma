@@ -361,6 +361,10 @@ model Order {
   /// Sent by the checkout page with each attempt, so a double click or a
   /// retried request never places the same order twice.
   idempotencyKey  String?       @unique
+  /// Who carries the parcel and its tracking number, filled in when the
+  /// warehouse marks the order shipped.
+  courierName     String?
+  trackingNumber  String?
   items           OrderItem[]
   statusHistory   OrderStatusHistory[]
   payment         Payment?

@@ -467,6 +467,16 @@ html, body, #root {
 [data-floating-widget] {
   transition: transform 0.3s ease;
 }
+/* Printed papers (invoices, packing slips) carry no chat or feedback buttons. */
+@media print {
+  [data-floating-widget] {
+    display: none !important;
+  }
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+}
 @media (max-width: 1023px) {
   body:has([data-sticky-bar]) [data-floating-widget] {
     transform: translateY(-80px);
