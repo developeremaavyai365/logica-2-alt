@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, ExternalLink, Home, IndianRupee, Loader2, Lock, LogOut, Mail, Package, ShieldCheck, Wrench } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BadgePercent, ExternalLink, Home, IndianRupee, Loader2, Lock, LogOut, Mail, Package, ShieldCheck, Wrench } from 'lucide-react';
 import { useAuthStore } from '../../auth-store';
 import { AUTH_SUBMIT, IconField } from '../../components/auth/fields';
 
@@ -17,6 +17,7 @@ const NAV = [
   { to: '/admin', label: 'Home', icon: Home, end: true },
   { to: '/admin/products', label: 'Products', icon: Package, end: false },
   { to: '/admin/sap-import', label: 'Prices & stock', icon: IndianRupee, end: false },
+  { to: '/admin/offers', label: 'Offers', icon: BadgePercent, end: false },
   { to: '/admin/tools', label: 'More tools', icon: Wrench, end: false },
 ];
 

@@ -515,3 +515,56 @@ model SapImport {
 
   @@index([createdAt])
 }
+
+/// What kind of offer a ShopOffer is.
+enum OfferKind {
+  /// A bank card discount, e.g. ₹3,000 off with HDFC Bank credit cards.
+  BANK
+  /// Monthly instalments with a bank, with or without interest.
+  EMI
+  /// Money off for handing in an old device.
+  EXCHANGE
+  /// A protection or extended-warranty plan sold with the product.
+  PROTECTION
+}
+
+/// An offer shown on product pages, set up on the admin's Offers page.
+/// Which fields count depends on the kind; offer-rules.ts checks them.
+model ShopOffer {
+  id               String    @id @default(uuid())
+  kind             OfferKind
+  /// The bank (bank offers, EMI) or the company behind a protection plan.
+  provider         String    @default("")
+  /// How it is paid: "Credit card", "Debit card", "UPI"…
+  paymentType      String    @default("")
+  /// A protection plan's name, or a headline of the admin's own.
+  title            String    @default("")
+  /// The conditions, in plain words, under the offer.
+  terms            String    @default("")
+  /// Bank offers: a flat amount off, or a percent with an optional cap.
+  flatOffInPaise   Int?
+  percentOff       Float?
+  /// The cap on a percent discount; for an exchange offer, the most off.
+  maxOffInPaise    Int?
+  /// Only for products at or above this price.
+  minPriceInPaise  Int?
+  /// EMI: the numbers of months on offer and the yearly interest (0 = no cost).
+  emiMonths        Int[]     @default([])
+  interestPercent  Float?
+  /// Protection plans: a fixed price or a percent of the product's price,
+  /// and how many months the plan covers.
+  planPriceInPaise Int?
+  planPricePercent Float?
+  coverMonths      Int?
+  /// Which products: category slugs and brand names; empty means every one.
+  categories       String[]  @default([])
+  brands           String[]  @default([])
+  active           Boolean   @default(true)
+  /// The last moment the offer is shown; null for no end.
+  endsAt           DateTime?
+  position         Int       @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([kind, active])
+}

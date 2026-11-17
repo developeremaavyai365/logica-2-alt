@@ -19,3 +19,7 @@ const EXPRESS_PINCODE_PREFIXES = ['110', '121', '122', '201'];
 export function isExpressPincode(pincode: string): boolean {
   return /^\d{6}$/.test(pincode) && EXPRESS_PINCODE_PREFIXES.includes(pincode.slice(0, 3));
 }
+
+/** Where the shop remembers the last pincode a visitor checked, so the
+ *  express banner and the product page both open on it. */
+export const LAST_PINCODE_KEY = 'logica2-last-pincode';

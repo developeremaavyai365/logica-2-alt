@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, Check, Zap } from 'lucide-react';
-import { EXPRESS_DELIVERY, isExpressPincode } from '../../stores-config';
+import { EXPRESS_DELIVERY, LAST_PINCODE_KEY, isExpressPincode } from '../../stores-config';
 import ExpressScene from './ExpressScene';
 
-const LAST_PINCODE_KEY = 'logica2-last-pincode';
 const MICRO_LABEL = 'font-mono text-[10px] font-medium uppercase tracking-[0.14em]';
 
 /** The yellow from the Logica mark — on this banner it is the clock, the lit

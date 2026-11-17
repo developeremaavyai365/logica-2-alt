@@ -1,5 +1,5 @@
 import { ProductStatus } from '@prisma/client';
-import { LinkedSapInput, ProductRowInput, listProducts, summariseProduct } from './admin-products';
+import { LinkedSapInput, ProductRowInput, listProducts, photoCount, summariseProduct } from './admin-products';
 import { AdminProductsService } from './admin-products.service';
 
 const product = (overrides: Partial<ProductRowInput> & { slug: string }): ProductRowInput => ({
@@ -15,6 +15,7 @@ const product = (overrides: Partial<ProductRowInput> & { slug: string }): Produc
   brand: { name: 'HP' },
   category: { slug: 'laptops', name: 'Laptops' },
   colours: [],
+  gallery: ['/1.jpg', '/2.jpg', '/3.jpg'],
   ...overrides,
 });
 
@@ -165,5 +166,26 @@ describe('activating and deactivating products', () => {
     expect(await db.service.setStatus(['a'], 'ACTIVE', 'admin-1')).toEqual({ updated: 0 });
     expect(db.audit).toHaveLength(0);
     expect(db.forgotten()).toBe(0);
+  });
+});
+
+describe('photoCount', () => {
+  it('counts what a shopper sees: the gallery, or the colour with the fewest photos', () => {
+    expect(photoCount(product({ slug: 'a', imageUrl: '' }))).toBe(0);
+    expect(photoCount(product({ slug: 'a', gallery: ['1', '2', '3', '4'] }))).toBe(4);
+    const colours = [
+      { key: 'black', name: 'Black', ean: null, images: ['b1', 'b2', 'b3'] },
+      { key: 'blue', name: 'Blue', ean: null, images: ['u1'] },
+    ];
+    expect(photoCount(product({ slug: 'a', colours }))).toBe(1);
+    expect(photoCount(product({ slug: 'a', colours, sharedImages: ['box', 'side'] }))).toBe(3);
+    // A colour with no photos of its own shows the whole gallery.
+    expect(photoCount(product({ slug: 'a', gallery: ['1', '2', '3'], colours: [{ key: 'red', name: 'Red', ean: null, images: [] }] }))).toBe(3);
+  });
+
+  it('flags a product with only one or two photos', () => {
+    expect(summariseProduct(product({ slug: 'a', gallery: ['1'] }), []).issues).toContain('few-photos');
+    expect(summariseProduct(product({ slug: 'a', gallery: ['1', '2', '3'] }), []).issues).not.toContain('few-photos');
+    expect(summariseProduct(product({ slug: 'a', imageUrl: '' }), []).issues).not.toContain('few-photos');
   });
 });

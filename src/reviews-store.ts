@@ -10,6 +10,9 @@ export interface Review {
 }
 
 const KEY = 'logica2-reviews-v1';
+/** Told when a review is added, so every part of the page showing reviews
+ *  (the rating by the name, the reviews list) updates together. */
+const CHANGED = 'logica2-reviews-changed';
 
 type ReviewsByProduct = Record<string, Review[]>;
 
@@ -34,7 +37,10 @@ export function useProductReviews(productId: string) {
   const [reviews, setReviews] = useState<Review[]>(() => readAll()[productId] ?? []);
 
   useEffect(() => {
-    setReviews(readAll()[productId] ?? []);
+    const load = () => setReviews(readAll()[productId] ?? []);
+    load();
+    window.addEventListener(CHANGED, load);
+    return () => window.removeEventListener(CHANGED, load);
   }, [productId]);
 
   const addReview = useCallback(
@@ -52,6 +58,7 @@ export function useProductReviews(productId: string) {
       all[productId] = next;
       writeAll(all);
       setReviews(next);
+      window.dispatchEvent(new Event(CHANGED));
     },
     [productId],
   );

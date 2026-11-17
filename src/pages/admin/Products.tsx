@@ -8,6 +8,7 @@ import {
   ChevronRight,
   ExternalLink,
   ImageOff,
+  Images,
   Link2Off,
   Loader2,
   PackageX,
@@ -28,7 +29,7 @@ import { ApiError, apiFetch } from '../../lib/api-client';
    and can be shared. */
 
 type Status = 'ACTIVE' | 'DRAFT' | 'INACTIVE';
-type Issue = 'missing-ean' | 'not-linked' | 'out-of-stock' | 'no-photo';
+type Issue = 'missing-ean' | 'not-linked' | 'out-of-stock' | 'no-photo' | 'few-photos';
 type Sort = 'shop' | 'name' | 'recent' | 'price';
 
 interface Row {
@@ -80,6 +81,7 @@ const when = (iso: string) => new Date(iso).toLocaleDateString('en-IN', { day: '
 const ISSUES: { key: Issue; label: string; badge: string; icon: typeof Barcode }[] = [
   { key: 'not-linked', label: "Can't be ordered", badge: 'No item code', icon: Link2Off },
   { key: 'no-photo', label: 'No photo', badge: 'No photo', icon: ImageOff },
+  { key: 'few-photos', label: 'Only 1 or 2 photos', badge: 'Few photos', icon: Images },
   { key: 'missing-ean', label: 'No barcode', badge: 'No barcode', icon: Barcode },
   { key: 'out-of-stock', label: 'Out of stock', badge: 'Out of stock', icon: PackageX },
 ];

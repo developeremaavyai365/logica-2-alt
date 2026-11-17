@@ -18,7 +18,10 @@ export interface ProductRowInput {
   deletedAt?: Date | null;
   brand: { name: string } | null;
   category: { slug: string; name: string };
-  colours: { key: string; name: string; ean: string | null }[];
+  colours: { key: string; name: string; ean: string | null; images?: string[] }[];
+  /** The gallery (main photo included) and the photos not of one colour. */
+  gallery?: string[];
+  sharedImages?: string[];
 }
 
 /** A SAP code linked to a website product. */
@@ -32,7 +35,21 @@ export interface LinkedSapInput {
   ean: string | null;
 }
 
-export type ProductIssue = 'missing-ean' | 'not-linked' | 'out-of-stock' | 'no-photo';
+export type ProductIssue = 'missing-ean' | 'not-linked' | 'out-of-stock' | 'no-photo' | 'few-photos';
+
+/** With this many photos the product page shows them as a grid. */
+export const ENOUGH_PHOTOS = 3;
+
+/** How many photos a shopper sees, as the product page picks them: a
+ *  colour's own photos and the shared ones, else the whole gallery. For a
+ *  product with colours, the colour with the fewest counts. */
+export function photoCount(product: Pick<ProductRowInput, 'imageUrl' | 'colours' | 'gallery' | 'sharedImages'>): number {
+  if (!product.imageUrl) return 0;
+  const gallery = Math.max(1, product.gallery?.length ?? 1);
+  if (product.colours.length === 0) return gallery;
+  const shared = product.sharedImages?.length ?? 0;
+  return Math.min(...product.colours.map((c) => (c.images?.length ?? 0) + shared || gallery));
+}
 export type ProductSort = 'shop' | 'name' | 'recent' | 'price';
 
 export interface AdminProductRow {
@@ -100,6 +117,7 @@ export function summariseProduct(product: ProductRowInput, linked: LinkedSapInpu
   if (codes.length === 0) issues.push('not-linked');
   if (!inStock) issues.push('out-of-stock');
   if (!product.imageUrl) issues.push('no-photo');
+  else if (photoCount(product) < ENOUGH_PHOTOS) issues.push('few-photos');
 
   return {
     slug: product.slug,
@@ -193,6 +211,7 @@ export function listProducts(rows: AdminProductRow[], query: ListQuery) {
       'not-linked': countIssue('not-linked'),
       'out-of-stock': countIssue('out-of-stock'),
       'no-photo': countIssue('no-photo'),
+      'few-photos': countIssue('few-photos'),
     },
     items: sorted.slice(start, start + query.pageSize),
   };

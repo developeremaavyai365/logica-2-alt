@@ -26,6 +26,8 @@ export class AdminProductsService {
           name: true,
           status: true,
           imageUrl: true,
+          gallery: true,
+          sharedImages: true,
           position: true,
           priceInPaise: true,
           mrpInPaise: true,
@@ -35,7 +37,7 @@ export class AdminProductsService {
           deletedAt: true,
           brand: { select: { name: true } },
           category: { select: { slug: true, name: true } },
-          colours: { select: { key: true, name: true, ean: true }, orderBy: { position: 'asc' } },
+          colours: { select: { key: true, name: true, ean: true, images: true }, orderBy: { position: 'asc' } },
         },
       }),
       this.prisma.sapItem.findMany({

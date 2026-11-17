@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   FileSpreadsheet,
   ImageOff,
+  Images,
   IndianRupee,
   Link2,
   Link2Off,
@@ -34,6 +35,7 @@ interface Counts {
   'missing-ean': number;
   'out-of-stock': number;
   'no-photo': number;
+  'few-photos'?: number;
 }
 
 const CARD = 'rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_10px_30px_-12px_rgba(6,26,64,0.12)]';
@@ -135,6 +137,19 @@ function Home() {
               text: (
                 <>
                   <strong>{plural(counts['no-photo'], 'product has', 'products have')}</strong> no photo.
+                </>
+              ),
+            }
+          : null,
+        counts['few-photos']
+          ? {
+              icon: Images,
+              tone: 'amber' as const,
+              to: '/admin/products?issue=few-photos',
+              action: 'Add photos',
+              text: (
+                <>
+                  <strong>{plural(counts['few-photos'], 'product has', 'products have')}</strong> only 1 or 2 photos. With 3 or more (front, back, side, box) shoppers see them all at once.
                 </>
               ),
             }

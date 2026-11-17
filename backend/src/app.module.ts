@@ -12,6 +12,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { CheckoutModule } from './modules/checkout/checkout.module';
 import { SapImportModule } from './modules/sap-import/sap-import.module';
 import { ProductsModule } from './modules/products/products.module';
+import { OffersModule } from './modules/offers/offers.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { GlobalExceptionFilter } from './common/filters/http-exception.filter';
 import { CsrfMiddleware } from './common/middleware/csrf.middleware';
@@ -31,6 +32,7 @@ import { CsrfMiddleware } from './common/middleware/csrf.middleware';
     OrdersModule,
     SapImportModule,
     ProductsModule,
+    OffersModule,
   ],
   providers: [
     // Every route requires a valid access token by default; opt out

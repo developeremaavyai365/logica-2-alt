@@ -1,21 +1,31 @@
-import { useRef, useState, type ReactNode } from 'react';
-import { Star, ImagePlus, X, Check } from 'lucide-react';
+import { useRef, useState, type FormEvent } from 'react';
+import { Check, ImagePlus, PenLine, Star, X } from 'lucide-react';
 import { useProductReviews } from '../reviews-store';
-import SectionHeading from './shop/SectionHeading';
 
 const MAX_PHOTOS = 4;
 
-const MICRO_LABEL = 'font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-shop-ink/45';
+const LABEL = 'block text-sm font-medium text-shop-ink';
 const FIELD =
-  'w-full rounded-xl border border-shop-line bg-shop-canvas px-3.5 text-sm text-shop-ink outline-none transition-colors placeholder:text-shop-ink/35 focus:border-shop-accent focus:bg-white';
+  'w-full rounded-xl border border-shop-line bg-white px-3.5 text-sm text-shop-ink outline-none transition-colors placeholder:text-shop-ink/35 focus:border-shop-accent';
 
-function StarRow({ rating, size = 'w-4 h-4' }: { rating: number; size?: string }) {
+/** What each star rating means, shown as the shopper picks one. */
+const RATING_WORDS = ['', 'Very bad', 'Bad', 'Good', 'Very good', 'Excellent'];
+
+/** Green for a good rating, amber for middling, red for a poor one. */
+const toneOf = (rating: number) => (rating >= 4 ? 'bg-emerald-600' : rating >= 3 ? 'bg-amber-500' : 'bg-red-500');
+
+/** The rating as a small coloured chip: "4.5 ★". */
+function RatingChip({ rating, large = false }: { rating: number; large?: boolean }) {
   return (
-    <div className="flex items-center gap-0.5" role="img" aria-label={`${rating} out of 5 stars`}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <Star key={n} className={size} fill={n <= rating ? '#FFC107' : 'none'} stroke={n <= rating ? '#FFC107' : '#C8C8C8'} />
-      ))}
-    </div>
+    <span
+      className={`inline-flex items-center gap-1 rounded-md font-bold text-white ${toneOf(rating)} ${
+        large ? 'px-2.5 py-1 text-2xl' : 'px-1.5 py-0.5 text-xs'
+      }`}
+      aria-label={`${rating} out of 5`}
+    >
+      {Number.isInteger(rating) ? rating : rating.toFixed(1)}
+      <Star className={large ? 'h-5 w-5' : 'h-3 w-3'} fill="currentColor" />
+    </span>
   );
 }
 
@@ -24,19 +34,23 @@ function StarRatingInput({ value, onChange }: { value: number; onChange: (n: num
   const shown = hover || value;
 
   return (
-    <div className="flex items-center gap-1" onMouseLeave={() => setHover(0)}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <button
-          key={n}
-          type="button"
-          onClick={() => onChange(n)}
-          onMouseEnter={() => setHover(n)}
-          aria-label={`Rate ${n} star${n > 1 ? 's' : ''}`}
-          className="p-0.5"
-        >
-          <Star className="w-7 h-7 transition-colors" fill={n <= shown ? '#FFC107' : 'none'} stroke={n <= shown ? '#FFC107' : '#C8C8C8'} />
-        </button>
-      ))}
+    <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1" onMouseLeave={() => setHover(0)}>
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => onChange(n)}
+            onMouseEnter={() => setHover(n)}
+            aria-label={`Rate ${n} star${n > 1 ? 's' : ''}`}
+            aria-pressed={value === n}
+            className="rounded-md p-0.5 transition-transform hover:scale-110"
+          >
+            <Star className="h-7 w-7" fill={n <= shown ? '#FFC107' : 'none'} stroke={n <= shown ? '#FFC107' : '#C8C8C8'} />
+          </button>
+        ))}
+      </div>
+      {shown > 0 && <span className="text-sm font-medium text-shop-ink/70">{RATING_WORDS[shown]}</span>}
     </div>
   );
 }
@@ -50,58 +64,37 @@ function readAsDataUrl(file: File): Promise<string> {
   });
 }
 
-/** A card in the shop's modular language: header strip over content. */
-function Card({ title, aside, children }: { title: string; aside?: ReactNode; children: ReactNode }) {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-shop-line bg-white">
-      <div className="flex items-center justify-between gap-3 border-b border-shop-line px-5 py-2.5">
-        <h3 className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-shop-ink">{title}</h3>
-        {aside}
-      </div>
-      {children}
-    </div>
-  );
-}
-
 export default function ProductReviews({ productId }: { productId: string }) {
   const { reviews, addReview } = useProductReviews(productId);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [writing, setWriting] = useState(false);
   const [name, setName] = useState('');
   const [rating, setRating] = useState(0);
   const [text, setText] = useState('');
   const [photos, setPhotos] = useState<string[]>([]);
   const [error, setError] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [thanks, setThanks] = useState(false);
 
   const average = reviews.length ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
-  // How many reviews gave each star rating, 5 down to 1 — counted from the
-  // reviews themselves.
-  const breakdown = [5, 4, 3, 2, 1].map((stars) => ({
-    stars,
-    count: reviews.filter((r) => r.rating === stars).length,
-  }));
+  // How many reviews gave each star rating, 5 down to 1.
+  const breakdown = [5, 4, 3, 2, 1].map((stars) => ({ stars, count: reviews.filter((r) => r.rating === stars).length }));
 
   async function handleFiles(files: FileList | null) {
     if (!files) return;
-    const remaining = MAX_PHOTOS - photos.length;
-    const picked = Array.from(files).slice(0, remaining);
+    const picked = Array.from(files).slice(0, MAX_PHOTOS - photos.length);
     const dataUrls = await Promise.all(picked.map(readAsDataUrl));
     setPhotos((prev) => [...prev, ...dataUrls]);
   }
 
-  function removePhoto(i: number) {
-    setPhotos((prev) => prev.filter((_, idx) => idx !== i));
-  }
-
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (rating === 0) {
-      setError('Please select a star rating.');
+      setError('Please choose a star rating.');
       return;
     }
     if (!text.trim()) {
-      setError('Please write a short review.');
+      setError('Please write a few words about the product.');
       return;
     }
     setError('');
@@ -110,118 +103,93 @@ export default function ProductReviews({ productId }: { productId: string }) {
     setRating(0);
     setText('');
     setPhotos([]);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 2500);
+    setWriting(false);
+    setThanks(true);
+    setTimeout(() => setThanks(false), 3000);
   }
 
   return (
-    <div className="mt-14">
-      <SectionHeading className="mb-5">
-        Ratings <span className="text-shop-accent">&amp;</span> reviews
-      </SectionHeading>
-
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-        {/* Left column — summary + write a review */}
-        <div className="flex flex-col gap-5 lg:col-span-5">
-          {/* Summary card */}
-          <Card
-            title="Summary"
-            aside={
-              <span className="font-mono text-[11px] tabular-nums text-shop-ink/45">
-                {reviews.length} review{reviews.length !== 1 ? 's' : ''}
-              </span>
-            }
+    <section className="mt-10 rounded-2xl border border-shop-line bg-white">
+      {/* Heading, with the summary in a line and the way to add one */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-shop-line px-5 py-4 sm:px-6">
+        <div>
+          <h2 className="text-xl font-semibold text-shop-ink" style={{ letterSpacing: '-0.015em' }}>
+            Ratings &amp; reviews
+          </h2>
+          <p className="mt-0.5 text-sm text-shop-ink/55">
+            {reviews.length
+              ? `${reviews.length.toLocaleString('en-IN')} review${reviews.length === 1 ? '' : 's'} from shoppers`
+              : 'No reviews yet. Bought this? Be the first to rate it.'}
+          </p>
+        </div>
+        {!writing && (
+          <button
+            type="button"
+            onClick={() => setWriting(true)}
+            className="flex h-11 items-center gap-2 rounded-xl border border-shop-ink px-4 text-sm font-semibold text-shop-ink transition-colors duration-300 hover:bg-shop-ink hover:text-white"
           >
-            {reviews.length === 0 ? (
-              <p className="px-5 py-6 text-sm text-shop-ink/55">No ratings yet for this product.</p>
-            ) : (
-              <div className="flex items-stretch">
-                {/* Module — average */}
-                <div className="flex w-36 shrink-0 flex-col items-center justify-center border-r border-shop-line px-4 py-5">
-                  <span className="font-dm-sans text-5xl font-bold tabular-nums leading-none text-shop-ink" style={{ letterSpacing: '-0.04em' }}>
-                    {average.toFixed(1)}
-                  </span>
-                  <div className="mt-2">
-                    <StarRow rating={Math.round(average)} />
-                  </div>
-                  <span className={`mt-1.5 ${MICRO_LABEL}`}>out of 5</span>
-                </div>
+            <PenLine className="h-4 w-4" />
+            Write a review
+          </button>
+        )}
+      </div>
 
-                {/* Module — breakdown */}
-                <ul className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 px-5 py-4">
-                  {breakdown.map(({ stars, count }) => (
-                    <li key={stars} className="flex items-center gap-2.5">
-                      <span className="w-3 shrink-0 font-mono text-[11px] tabular-nums text-shop-ink/60">{stars}</span>
-                      <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-shop-canvas">
-                        <span
-                          className="block h-full rounded-full bg-shop-accent"
-                          style={{ width: `${(count / reviews.length) * 100}%` }}
-                        />
-                      </span>
-                      <span className="w-5 shrink-0 text-right font-mono text-[11px] tabular-nums text-shop-ink/45">{count}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </Card>
+      {thanks && (
+        <p className="flex items-center gap-2 border-b border-shop-line bg-emerald-50 px-5 py-3 text-sm font-medium text-emerald-800 sm:px-6" role="status">
+          <Check className="h-4 w-4" /> Thank you, your review is up.
+        </p>
+      )}
 
-          {/* Write a review card */}
-          <form onSubmit={handleSubmit}>
-            <Card title="Write a review">
-              {/* Module — rating */}
-              <div className="px-5 py-4">
-                <span className={`block ${MICRO_LABEL}`}>Your rating</span>
+      {/* The form, opened by "Write a review" */}
+      {writing && (
+        <form onSubmit={handleSubmit} className="border-b border-shop-line bg-shop-canvas/60 px-5 py-5 sm:px-6">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-base font-semibold text-shop-ink">Write a review</h3>
+            <button
+              type="button"
+              onClick={() => {
+                setWriting(false);
+                setError('');
+              }}
+              aria-label="Close the review form"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-shop-ink/50 transition-colors hover:bg-white hover:text-shop-ink"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="mt-4 grid gap-5 lg:grid-cols-2">
+            <div className="flex flex-col gap-4">
+              <div>
+                <span className={LABEL}>How would you rate it?</span>
                 <div className="mt-1.5">
                   <StarRatingInput value={rating} onChange={setRating} />
                 </div>
               </div>
-
-              {/* Module — name + review */}
-              <div className="space-y-4 border-t border-shop-line px-5 py-4">
-                <div>
-                  <label htmlFor="review-name" className={`block ${MICRO_LABEL}`}>
-                    Your name (optional)
-                  </label>
-                  <input
-                    id="review-name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="John Doe"
-                    className={`mt-1.5 h-11 ${FIELD}`}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="review-text" className={`block ${MICRO_LABEL}`}>
-                    Your review
-                  </label>
-                  <textarea
-                    id="review-text"
-                    rows={4}
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    placeholder="How was the product you received? Quality, packaging, delivery..."
-                    className={`mt-1.5 resize-none py-2.5 ${FIELD}`}
-                  />
-                </div>
+              <div>
+                <label htmlFor="review-name" className={LABEL}>
+                  Your name <span className="font-normal text-shop-ink/45">(optional)</span>
+                </label>
+                <input
+                  id="review-name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  className={`mt-1.5 h-11 ${FIELD}`}
+                />
               </div>
-
-              {/* Module — photos */}
-              <div className="border-t border-shop-line px-5 py-4">
-                <div className="flex items-center justify-between gap-3">
-                  <span className={MICRO_LABEL}>Photos of the product you received</span>
-                  <span className="shrink-0 font-mono text-[11px] tabular-nums text-shop-ink/45">
-                    {photos.length} / {MAX_PHOTOS}
-                  </span>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-2.5">
+              <div>
+                <span className={LABEL}>
+                  Photos of what you received <span className="font-normal text-shop-ink/45">(up to {MAX_PHOTOS})</span>
+                </span>
+                <div className="mt-1.5 flex flex-wrap gap-2.5">
                   {photos.map((p, i) => (
-                    <div key={i} className="relative h-16 w-16 overflow-hidden rounded-xl border border-shop-line">
+                    <div key={i} className="relative h-16 w-16 overflow-hidden rounded-xl border border-shop-line bg-white">
                       <img src={p} alt="" className="h-full w-full object-cover" />
                       <button
                         type="button"
-                        onClick={() => removePhoto(i)}
+                        onClick={() => setPhotos((prev) => prev.filter((_, idx) => idx !== i))}
                         aria-label="Remove photo"
                         className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white"
                       >
@@ -233,10 +201,10 @@ export default function ProductReviews({ productId }: { productId: string }) {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex h-16 w-16 flex-col items-center justify-center gap-0.5 rounded-xl border border-dashed border-shop-ink/25 bg-shop-canvas text-shop-ink/55 transition-colors hover:border-shop-accent hover:text-shop-accent"
+                      className="flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-shop-ink/25 bg-white text-shop-ink/55 transition-colors hover:border-shop-accent hover:text-shop-accent"
                     >
                       <ImagePlus className="h-4 w-4" />
-                      <span className="font-mono text-[9px] uppercase tracking-[0.14em]">Add</span>
+                      <span className="text-[11px] font-medium">Add</span>
                     </button>
                   )}
                 </div>
@@ -246,91 +214,100 @@ export default function ProductReviews({ productId }: { productId: string }) {
                   accept="image/*"
                   multiple
                   onChange={(e) => {
-                    handleFiles(e.target.files);
+                    void handleFiles(e.target.files);
                     e.target.value = '';
                   }}
                   className="hidden"
                 />
               </div>
-
-              {/* Module — submit row */}
-              <div className="border-t border-shop-line p-3">
-                {error && <p className="mb-2 px-2 text-xs font-medium text-red-600">{error}</p>}
-                <button
-                  type="submit"
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-shop-ink text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent"
-                >
-                  {submitted ? (
-                    <>
-                      Submitted <Check className="h-4 w-4" />
-                    </>
-                  ) : (
-                    'Submit Review'
-                  )}
-                </button>
-              </div>
-            </Card>
-          </form>
-        </div>
-
-        {/* Right column — the reviews */}
-        <div className="lg:col-span-7">
-          {reviews.length === 0 ? (
-            <div className="flex h-full min-h-[200px] flex-col items-center justify-center rounded-2xl border border-dashed border-shop-ink/20 bg-white px-6 py-12 text-center">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-shop-canvas">
-                <Star className="h-5 w-5 text-shop-ink/40" />
-              </span>
-              <p className="mt-3 text-sm font-semibold text-shop-ink">No reviews yet</p>
-              <p className="mt-1 text-sm text-shop-ink/55">Be the first to share your experience.</p>
             </div>
-          ) : (
-            <ul className="flex flex-col gap-4">
-              {reviews.map((r) => (
-                <li key={r.id} className="overflow-hidden rounded-2xl border border-shop-line bg-white">
-                  {/* Module — header strip: who and when */}
-                  <div className="flex items-center justify-between gap-3 border-b border-shop-line px-5 py-3">
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-shop-ink text-xs font-semibold text-white">
-                        {r.name.slice(0, 1).toUpperCase()}
-                      </span>
-                      <p className="truncate text-sm font-semibold text-shop-ink">{r.name}</p>
-                    </div>
-                    <span className="shrink-0 font-mono text-[11px] tabular-nums text-shop-ink/45">
-                      {new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </span>
-                  </div>
 
-                  {/* Module — rating + text */}
-                  <div className="px-5 py-4">
-                    <div className="flex items-center gap-2">
-                      <StarRow rating={r.rating} />
-                      <span className="font-mono text-[11px] tabular-nums text-shop-ink/45">{r.rating}.0</span>
-                    </div>
-                    {r.text && <p className="mt-2.5 text-sm leading-relaxed text-shop-ink/75">{r.text}</p>}
-                  </div>
+            <div className="flex flex-col">
+              <label htmlFor="review-text" className={LABEL}>
+                Your review
+              </label>
+              <textarea
+                id="review-text"
+                rows={6}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="How was the product? Quality, packaging, delivery…"
+                className={`mt-1.5 flex-1 resize-none py-2.5 ${FIELD}`}
+              />
+            </div>
+          </div>
 
-                  {/* Module — photos */}
-                  {r.photos.length > 0 && (
-                    <div className="flex flex-wrap gap-2.5 border-t border-shop-line px-5 py-3">
-                      {r.photos.map((p, i) => (
-                        <a
-                          key={i}
-                          href={p}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block h-16 w-16 overflow-hidden rounded-xl border border-shop-line transition-colors hover:border-shop-ink/40"
-                        >
-                          <img src={p} alt="" className="h-full w-full object-cover" />
-                        </a>
-                      ))}
-                    </div>
-                  )}
+          {error && <p className="mt-3 text-sm font-medium text-red-600">{error}</p>}
+          <div className="mt-4 flex justify-end">
+            <button
+              type="submit"
+              className="flex h-11 w-full items-center justify-center rounded-xl bg-shop-ink px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-shop-accent sm:w-auto"
+            >
+              Post review
+            </button>
+          </div>
+        </form>
+      )}
+
+      {reviews.length > 0 && (
+        <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+          {/* Summary: the average and how the stars are spread */}
+          <div className="flex items-center gap-6 border-b border-shop-line px-5 py-5 sm:px-6 lg:flex-col lg:items-start lg:border-b-0 lg:border-r">
+            <div className="shrink-0">
+              <RatingChip rating={Number(average.toFixed(1))} large />
+              <p className="mt-1.5 text-xs text-shop-ink/55">
+                out of 5 · {reviews.length} review{reviews.length === 1 ? '' : 's'}
+              </p>
+            </div>
+            <ul className="flex w-full min-w-0 flex-col gap-1.5">
+              {breakdown.map(({ stars, count }) => (
+                <li key={stars} className="flex items-center gap-2.5 text-xs text-shop-ink/60">
+                  <span className="flex w-7 shrink-0 items-center gap-0.5 tabular-nums">
+                    {stars}
+                    <Star className="h-3 w-3" fill="currentColor" />
+                  </span>
+                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-shop-canvas">
+                    <span className={`block h-full rounded-full ${toneOf(stars)}`} style={{ width: `${(count / reviews.length) * 100}%` }} />
+                  </span>
+                  <span className="w-6 shrink-0 text-right tabular-nums">{count}</span>
                 </li>
               ))}
             </ul>
-          )}
+          </div>
+
+          {/* The reviews, newest first */}
+          <ul className="divide-y divide-shop-line">
+            {reviews.map((r) => (
+              <li key={r.id} className="px-5 py-4 sm:px-6">
+                <div className="flex items-center gap-2.5">
+                  <RatingChip rating={r.rating} />
+                  <span className="text-sm font-semibold text-shop-ink">{RATING_WORDS[r.rating]}</span>
+                </div>
+                {r.text && <p className="mt-2 text-sm leading-relaxed text-shop-ink/80">{r.text}</p>}
+                {r.photos.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {r.photos.map((p, i) => (
+                      <a
+                        key={i}
+                        href={p}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block h-16 w-16 overflow-hidden rounded-xl border border-shop-line transition-colors hover:border-shop-ink/40"
+                      >
+                        <img src={p} alt="" className="h-full w-full object-cover" />
+                      </a>
+                    ))}
+                  </div>
+                )}
+                <p className="mt-2.5 text-xs text-shop-ink/50">
+                  <span className="font-medium text-shop-ink/70">{r.name}</span> ·{' '}
+                  {new Date(r.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </p>
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-    </div>
+      )}
+    </section>
   );
 }
