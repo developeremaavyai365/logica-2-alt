@@ -472,7 +472,3 @@ html, body, #root {
     transform: translateY(-80px);
   }
 }
-/* The product page's Add to cart / Buy now bar is pinned on every screen. */
-body:has([data-sticky-bar='always']) [data-floating-widget] {
-  transform: translateY(-80px);
-}

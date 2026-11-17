@@ -1,6 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Check, ImagePlus, PenLine, Star, X } from 'lucide-react';
 import { useProductReviews } from '../reviews-store';
+import SectionHeading from './shop/SectionHeading';
 
 const MAX_PHOTOS = 4;
 
@@ -11,20 +12,18 @@ const FIELD =
 /** What each star rating means, shown as the shopper picks one. */
 const RATING_WORDS = ['', 'Very bad', 'Bad', 'Good', 'Very good', 'Excellent'];
 
-/** Green for a good rating, amber for middling, red for a poor one. */
-const toneOf = (rating: number) => (rating >= 4 ? 'bg-emerald-600' : rating >= 3 ? 'bg-amber-500' : 'bg-red-500');
 
 /** The rating as a small coloured chip: "4.5 ★". */
 function RatingChip({ rating, large = false }: { rating: number; large?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md font-bold text-white ${toneOf(rating)} ${
-        large ? 'px-2.5 py-1 text-2xl' : 'px-1.5 py-0.5 text-xs'
+      className={`inline-flex items-center gap-1 rounded-full bg-shop-ink font-bold tabular-nums text-white ${
+        large ? 'px-3.5 py-1.5 text-2xl' : 'px-2 py-0.5 text-xs'
       }`}
       aria-label={`${rating} out of 5`}
     >
       {Number.isInteger(rating) ? rating : rating.toFixed(1)}
-      <Star className={large ? 'h-5 w-5' : 'h-3 w-3'} fill="currentColor" />
+      <Star className={large ? 'h-5 w-5' : 'h-3 w-3'} fill="#FFC107" stroke="#FFC107" />
     </span>
   );
 }
@@ -109,24 +108,26 @@ export default function ProductReviews({ productId }: { productId: string }) {
   }
 
   return (
-    <section className="mt-10 rounded-2xl border border-shop-line bg-white">
-      {/* Heading, with the summary in a line and the way to add one */}
+    <section className="mt-14">
+      <SectionHeading className="mb-5">
+        Ratings <span className="text-shop-accent">&amp;</span> reviews
+      </SectionHeading>
+      <div className="overflow-hidden rounded-2xl border border-shop-line bg-white">
+      {/* Heading strip, with the summary in a line and the way to add one */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-shop-line px-5 py-4 sm:px-6">
         <div>
-          <h2 className="text-xl font-semibold text-shop-ink" style={{ letterSpacing: '-0.015em' }}>
-            Ratings &amp; reviews
-          </h2>
+          <h3 className="font-dm-sans text-lg font-bold text-shop-ink" style={{ letterSpacing: '-0.02em' }}>
+            {reviews.length ? `${reviews.length.toLocaleString('en-IN')} review${reviews.length === 1 ? '' : 's'}` : 'No reviews yet'}
+          </h3>
           <p className="mt-0.5 text-sm text-shop-ink/55">
-            {reviews.length
-              ? `${reviews.length.toLocaleString('en-IN')} review${reviews.length === 1 ? '' : 's'} from shoppers`
-              : 'No reviews yet. Bought this? Be the first to rate it.'}
+            {reviews.length ? 'What shoppers say about it.' : 'Bought this? Be the first to rate it.'}
           </p>
         </div>
         {!writing && (
           <button
             type="button"
             onClick={() => setWriting(true)}
-            className="flex h-11 items-center gap-2 rounded-xl border border-shop-ink px-4 text-sm font-semibold text-shop-ink transition-colors duration-300 hover:bg-shop-ink hover:text-white"
+            className="flex h-10 items-center gap-2 rounded-xl border border-shop-ink px-4 text-sm font-semibold text-shop-ink transition-colors duration-300 hover:bg-shop-ink hover:text-white"
           >
             <PenLine className="h-4 w-4" />
             Write a review
@@ -267,7 +268,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                     <Star className="h-3 w-3" fill="currentColor" />
                   </span>
                   <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-shop-canvas">
-                    <span className={`block h-full rounded-full ${toneOf(stars)}`} style={{ width: `${(count / reviews.length) * 100}%` }} />
+                    <span className="block h-full rounded-full bg-shop-accent" style={{ width: `${(count / reviews.length) * 100}%` }} />
                   </span>
                   <span className="w-6 shrink-0 text-right tabular-nums">{count}</span>
                 </li>
@@ -308,6 +309,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
           </ul>
         </div>
       )}
+      </div>
     </section>
   );
 }
