@@ -1121,6 +1121,16 @@ export const PROSPECTUS_DOC: AnnualReport = {
  *  documents (Regulation 30/57/74 disclosures, trading-window closures,
  *  MD&A submissions, etc.), newest first. */
 export const COMPLIANCE_DISCLOSURES: AnnualReport[] = [
+  /* Investor presentation on the unaudited results for the half year ended
+     30.09.2026 (H1 FY27), filed under Regulation 30; letter to BSE dated
+     20.11.2026. Named like the previous year's "Announcement under
+     Regulation 30 LODR Investor Presentation". */
+  {
+    title: "Announcement under Regulation 30 LODR — Investor Presentation for Half Year Ended September 30, 2026",
+    year: "2026-27",
+    date: "2026-11-20",
+    url: "/investor/compliance-disclosures/announcement-under-regulation-30-lodr-investor-presentation-hy-september-2026.pdf",
+  },
   /* Regulation 32 statement of NIL deviation in the use of the funds from the
      preferential allotment of 01.03.2025, for the half year ended
      30.09.2026; letter to BSE dated 14.11.2026. */
@@ -1992,6 +2002,7 @@ export const REG_46: Reg46Row[] = [
       "Schedule of analysts or institutional investors meet and presentations made by the listed entity to analysts or institutional investors",
     href: "/investor/corporate-announcement",
     docs: [
+      { url: "/investor/compliance-disclosures/announcement-under-regulation-30-lodr-investor-presentation-hy-september-2026.pdf" },
       { url: "https://www.logicainfoway.com/wp-content/uploads/2026/03/Outcome-of-AnalystInstitutional-Investor-Meeting-under-the-SEBI-Listing-Obligations-and-Disclosure-Requirements-Regulations-2015.pdf" },
       { url: "https://www.logicainfoway.com/wp-content/uploads/2025/11/Announcement-under-Regulation-30-LODR-Investor-Presentation.pdf" },
     ],
